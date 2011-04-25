@@ -1,1 +1,3 @@
-libraryDependencies += "org.scala-tools.sbt" %% "scripted-plugin" % "0.9.5-SNAPSHOT"
+resolvers += "Scripted Repo" at "http://siasia.github.com/maven2"
+
+libraryDependencies <<= (libraryDependencies, appConfiguration) { (deps, app) => deps :+ "org.scala-tools.sbt" %% "scripted-plugin" % app.provider.id.version }
