@@ -5,6 +5,7 @@ import Keys._
 import Defaults._
 
 object WebPlugin extends Plugin {
+  def descendents(defaultExcludes: FileFilter) = (parent: PathFinder, include: FileFilter) => parent.descendentsExcept(include, defaultExcludes)
   val jettyConf = config("jetty") hide
 
   val temporaryWarPath = SettingKey[Path]("temporary-war-path")
@@ -27,15 +28,14 @@ object WebPlugin extends Plugin {
   val jettyReload = TaskKey[Unit]("jetty-reload")
 
   def prepareWebappTask(webappContents: PathFinder, warPath: Path, classpath: PathFinder, extraJars: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger) {
-    val log = slog.asInstanceOf[AbstractLogger]
-    def descendents(parent: PathFinder, include: FileFilter) = parent.descendentsExcept(include, defaultExcludes)
+    val log = slog.asInstanceOf[AbstractLogger]    
     import sbt.classpath.ClasspathUtilities
     val webInfPath = warPath / "WEB-INF"
     val webLibDirectory = webInfPath / "lib"
     val classesTargetDirectory = webInfPath / "classes"
 
     val (libs, directories) = classpath.get.toList.partition(ClasspathUtilities.isArchive)
-    val classesAndResources = descendents(Path.lazyPathFinder(directories) ###, "*")
+    val classesAndResources = descendents(defaultExcludes)(Path.lazyPathFinder(directories) ###, "*")
     if(log.atLevel(Level.Debug))
       directories.foreach(d => log.debug(" Copying the contents of directory " + d + " to " + classesTargetDirectory))
 
@@ -61,6 +61,9 @@ object WebPlugin extends Plugin {
 	  }
 	}}).left.toOption foreach error
   }
+
+  def packageWarTask(stagedWarPath: Path, ignore: PathFinder, defaultExcludes: FileFilter): Seq[(File, String)] = 
+    (descendents(defaultExcludes)(stagedWarPath, "*") --- ignore) x (relativeTo(stagedWarPath)|flat)
 
   def jettyClasspathsTask(cp: Classpath, jettyCp: Classpath) =
     JettyClasspaths(cp.map(_.data), jettyCp.map(_.data))
@@ -108,12 +111,13 @@ object WebPlugin extends Plugin {
     temporaryWarPath <<= (target){ (target) => Path.fromFile(target / "webapp") },
     webappResources <<= (sourceDirectory in Runtime, defaultExcludes) {
       (sd, defaultExcludes) =>
-        ((sd / "webapp") ###).descendentsExcept("*", defaultExcludes)
+        descendents(defaultExcludes)((sd / "webapp") ###, "*")
     },
     webappUnmanaged := Seq(),
     prepareWebapp <<= (compile in Runtime, copyResources in Runtime, webappResources, temporaryWarPath, jettyClasspaths, scalaInstance, webappUnmanaged, defaultExcludes, streams) map {
       (c, r, w, wp, cp, si, wu, excludes, s) =>
         prepareWebappTask(w, wp, cp.classpath, Seq(si.libraryJar, si.compilerJar), wu, excludes, s.log) },
+    mappings in (Compile, packageBin) <<= (prepareWebapp, temporaryWarPath, webappUnmanaged, defaultExcludes) map { (_, wp, wu, de) => packageWarTask(wp, wu, de) },
     managedClasspath in jettyConf <<= (classpathTypes, update) map { (ct, report) => Classpaths.managedJars(jettyConf, ct, report)},
     jettyClasspaths <<= (fullClasspath in Runtime, managedClasspath in jettyConf) map jettyClasspathsTask,
     jettyContext := "/",
