@@ -8,13 +8,15 @@ object WebBuild extends Build {
   
   lazy val root = Project("root", file(".")) aggregate(web) dependsOn(web)
 
-  val generateJettyRun = TaskKey[Unit]("generate-jetty-run")
+  val generateJettyRun = TaskKey[Seq[File]]("generate-jetty-run")
 
-  def generateJettyRunTask: Initialize[Task[Unit]] = (scalaSource in Compile) map {
+  def generateJettyRunTask: Initialize[Task[Seq[File]]] = (scalaSource in Compile) map {
     (srcDir) =>
-    Seq("6", "7").foreach{
+    Seq("6", "7").map{
       n =>
-      generateJettyRun(srcDir / "LazyJettyRun.scala.templ", srcDir / ("LazyJettyRun" + n + ".scala"), n, srcDir / ("jetty" + n + ".imports"))
+      val target = srcDir / ("LazyJettyRun" + n + ".scala")
+      generateJettyRun(srcDir / "LazyJettyRun.scala.templ", target, n, srcDir / ("jetty" + n + ".imports"))
+      target
     }
   }
 
@@ -28,6 +30,6 @@ object WebBuild extends Build {
   
   lazy val web = Project("web", file("web")) settings(
     generateJettyRun <<= generateJettyRunTask,
-    compile in Compile <<= (generateJettyRun, compile in Compile) map {(_, compile) => compile}
+    sources in Compile <<= (generateJettyRun, sources in Compile) map {(generated, sources) => (sources ++ generated) distinct}
   )
 }
