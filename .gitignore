@@ -2,3 +2,4 @@ project/boot/
 project/plugins/project/target/
 project/plugins/target/
 target/
+web/src/main/scala/LazyJettyRun*.scala
