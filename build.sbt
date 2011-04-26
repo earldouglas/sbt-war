@@ -2,6 +2,8 @@ seq(ScriptedPlugin.scriptedSettings :_*)
 
 sbtPlugin := true
 
+ScriptedPlugin.scriptedBufferLog := false
+
 organization := "com.github.siasia"
 
 name := "xsbt-web-plugin"

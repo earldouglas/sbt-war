@@ -3,6 +3,7 @@ import sbt._
 import Project.Initialize
 import Keys._
 import Defaults._
+import Scope.GlobalScope
 
 object WebPlugin extends Plugin {
   def descendents(defaultExcludes: FileFilter) = (parent: PathFinder, include: FileFilter) => parent.descendentsExcept(include, defaultExcludes)
@@ -21,11 +22,7 @@ object WebPlugin extends Plugin {
   val jettyConfFiles = SettingKey[JettyConfFiles]("jetty-conf-files")
   final case class JettyConfFiles(env: Option[File], webDefaultXml: Option[File])
   val jettyConfiguration = TaskKey[JettyConfiguration]("jetty-configuration")
-  private var _jettyInstance: Option[JettyRunner] = None
-  val jettyInstance = TaskKey[JettyRunner]("jetty-instance")
-  val jettyRun = TaskKey[Unit]("jetty-run")
-  val jettyStop = TaskKey[Unit]("jetty-stop")
-  val jettyReload = TaskKey[Unit]("jetty-reload")
+  val jettyInstance = AttributeKey[JettyRunner]("jetty-instance")
 
   def prepareWebappTask(webappContents: PathFinder, warPath: Path, classpath: PathFinder, extraJars: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger): Seq[(File, String)] = {
     val log = slog.asInstanceOf[AbstractLogger]    
@@ -66,8 +63,8 @@ object WebPlugin extends Plugin {
   def jettyClasspathsTask(cp: Classpath, jettyCp: Classpath) =
     JettyClasspaths(cp.map(_.data), jettyCp.map(_.data))
 
-  def jettyConfigurationTask: Initialize[Task[JettyConfiguration]] = (jettyClasspaths, temporaryWarPath, jettyContext, scalaInstance, jettyScanDirs, jettyScanInterval, jettyPort, jettyConfFiles, streams) map {
-    (classpaths, warPath, context, scalaInstance, scanDirs, interval, jettyPort, confs, s) =>
+  def jettyConfigurationTask: Initialize[Task[JettyConfiguration]] = (jettyClasspaths, temporaryWarPath, jettyContext, scalaInstance, jettyScanDirs, jettyScanInterval, jettyPort, jettyConfFiles) map {
+    (classpaths, warPath, context, scalaInstance, scanDirs, interval, jettyPort, confs) =>
     new DefaultJettyConfiguration {
       def classpath = classpaths.classpath
       def jettyClasspath = classpaths.jettyClasspath
@@ -78,35 +75,48 @@ object WebPlugin extends Plugin {
       def scanDirectories = scanDirs
       def scanInterval = interval
       def port = jettyPort
-      def log = s.log.asInstanceOf[AbstractLogger]
+      def log = ConsoleLogger()
       def jettyEnv = confs.env
       def webDefaultXml = confs.webDefaultXml
     }
   }
 
-
-  def jettyInstanceTask: Initialize[Task[JettyRunner]] = (jettyConfiguration) map {
-    (conf) =>
-      if(_jettyInstance.isEmpty) 
-        _jettyInstance = Some(new JettyRunner(conf))
-    _jettyInstance.get
+  def addJettyInstance(state: State): State = {
+    if(!state.get(jettyInstance).isEmpty)
+      return state
+    val result = Project.evaluateTask(jettyConfiguration in Compile, state)
+    result match
+    {
+      case Some(Value(jettyConfiguration)) =>
+        val instance = new JettyRunner(jettyConfiguration)
+        state.addExitHook(instance.runBeforeExiting).put(jettyInstance, instance)
+      case _ => state.fail
+    }
   }
 
-  def jettyRunTask: Initialize[Task[Unit]] = (prepareWebapp, jettyInstance) map {
-    (pw, instance) =>
-    instance() foreach error
+  def withJettyInstance(action: (JettyRunner) => Unit)(state: State): State = {
+    val withInstance = addJettyInstance(state)
+    action(withInstance.get(jettyInstance).get)
+    withInstance
   }
 
-  def jettyStopTask: Initialize[Task[Unit]] = (jettyInstance) map {
-    (instance) =>
-    instance.stop()
-    _jettyInstance = None
+  def jettyRunAction(state: State): State = {
+    val withInstance = addJettyInstance(state)
+    val result = Project.evaluateTask(prepareWebapp, state)
+    result match
+    {
+      case Some(Value(_)) =>
+        withInstance.get(jettyInstance).get.apply()
+        withInstance
+      case _ => state.fail
+    }
   }
 
-  def jettyReloadTask: Initialize[Task[Unit]] = (jettyInstance) map {
-    (instance) =>
-    instance.reload()                                      
-  }
+  
+  
+  val jettyRun: Command = Command.command("jetty-run")(jettyRunAction)
+  val jettyStop: Command = Command.command("jetty-stop")(withJettyInstance(_.stop()))
+  val jettyReload: Command = Command.command("jetty-reload")(withJettyInstance(_.reload()))
 
   val webSettings = Seq(
     ivyConfigurations += jettyConf,
@@ -130,9 +140,6 @@ object WebPlugin extends Plugin {
     jettyPort := JettyRunner.DefaultPort,
     jettyConfFiles := JettyConfFiles(None, None),
     jettyConfiguration <<= jettyConfigurationTask,
-    jettyInstance <<= jettyInstanceTask,
-    jettyRun <<= jettyRunTask,
-    jettyStop <<= jettyStopTask,
-    jettyReload <<= jettyReloadTask
+    commands ++= Seq(jettyRun, jettyStop, jettyReload)
   )
 }
