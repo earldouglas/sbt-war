@@ -7,7 +7,9 @@ object WebBuild extends Build {
 	lazy val projects = Seq(root, web)
 
 	val sharedSettings = Seq(
-		version <<= appConfiguration(_.provider.id.version)		
+		version <<= appConfiguration(_.provider.id.version),
+		publishMavenStyle := true,
+		publishTo := Some(Resolver.file("Local", Path.userHome / "projects" / "siasia.github.com" / "maven2" asFile)(Patterns(true, Resolver.mavenStyleBasePattern)))
 	)
 
 	lazy val root = Project(
@@ -16,6 +18,7 @@ object WebBuild extends Build {
 		sbtPlugin := true,
 		ScriptedPlugin.scriptedBufferLog := false,
 		publishLocal <<= (publishLocal in web, publishLocal) map {(_, p) => p },
+		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
 		libraryDependencies <<= (libraryDependencies, appConfiguration) {
 			(deps, app) =>
