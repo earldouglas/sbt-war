@@ -79,7 +79,7 @@ private object LazyJettyRun${jetty.version} extends JettyRun
 
 					val listener = new Scanner.BulkListener with Reload {
 						def reloadApp() = reload(server, setLoader(), log)
-						def filesChanged(files: java.util.List[_]) { reloadApp() }
+						def filesChanged(files: java.util.List[${filesChanged.type}]) { reloadApp() }
 					}
 					(Some(listener), configureScanner(listener, c.scanDirectories, c.scanInterval))
 				case c: CustomJettyConfiguration =>

@@ -117,23 +117,32 @@ private class JettyLoggerBase(delegate: AbstractLogger)
 	def isDebugEnabled = delegate.atLevel(Level.Debug)
 	def setDebugEnabled(enabled: Boolean) = delegate.setLevel(if(enabled) Level.Debug else Level.Info)
 
+	def ignore(th: Throwable) { delegate.trace(th) }
+	def info(th: Throwable) { delegate.trace(th) }
+	def debug(th: Throwable) { delegate.trace(th) }
+	def warn(th: Throwable) { delegate.trace(th) }
 	def info(msg: String) { delegate.info(msg) }
 	def debug(msg: String) { delegate.warn(msg) }
 	def warn(msg: String) { delegate.warn(msg) }
 	def info(msg: String, arg0: AnyRef, arg1: AnyRef) { delegate.info(format(msg, arg0, arg1)) }
 	def debug(msg: String, arg0: AnyRef, arg1: AnyRef) { delegate.debug(format(msg, arg0, arg1)) }
 	def warn(msg: String, arg0: AnyRef, arg1: AnyRef) { delegate.warn(format(msg, arg0, arg1)) }
-	def info(msg: String, args: Array[AnyRef]) { delegate.info(format(msg, args: _*)) }
-	def debug(msg: String, args: Array[AnyRef]) { delegate.debug(format(msg, args: _*)) }
-	def warn(msg: String, args: Array[AnyRef]) { delegate.warn(format(msg, args: _*)) }
-	def warn(msg: String, th: Throwable)
+	def info(msg: String, args: AnyRef*) { delegate.info(format(msg, args: _*)) }
+	def debug(msg: String, args: AnyRef*) { delegate.debug(format(msg, args: _*)) }
+	def warn(msg: String, args: AnyRef*) { delegate.warn(format(msg, args: _*)) }
+	def info(msg: String, th: Throwable)
 	{
-		delegate.warn(msg)
+		delegate.info(msg)
 		delegate.trace(th)
 	}
 	def debug(msg: String, th: Throwable)
 	{
 		delegate.debug(msg)
+		delegate.trace(th)
+	}
+	def warn(msg: String, th: Throwable)
+	{
+		delegate.warn(msg)
 		delegate.trace(th)
 	}
 	private def format(msg: String, args: AnyRef*) =
