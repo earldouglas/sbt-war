@@ -126,7 +126,7 @@ object WebPlugin extends Plugin {
 				((sd / "webapp") ###).descendentsExcept("*", defaultExcludes)
 		},
 		webappResourcesWatcher <<= (webappResources) map { (rs) => rs.getFiles },
-		watchSources <<= Seq(sources, resources, webappResourcesWatcher).map(inAllConfigurations).join { _.join.map(_.flatten.flatten) },
+		watchSources <<= Seq(watchSources, webappResourcesWatcher).join.map { _.map(_.flatten.distinct) },
 		webappUnmanaged := Nil,
 		prepareWebapp <<= (compile in Runtime, copyResources in Runtime, webappResources, temporaryWarPath, jettyClasspaths, scalaInstance, webappUnmanaged, defaultExcludes, streams) map {
 			(c, r, w, wp, cp, si, wu, excludes, s) =>
