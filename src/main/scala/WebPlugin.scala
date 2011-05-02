@@ -84,14 +84,10 @@ object WebPlugin extends Plugin {
 	def addJettyInstance(state: State): State = {
 		if(!state.get(jettyInstance).isEmpty)
 			return state
-		val result = Project.evaluateTask(jettyConfiguration in Compile, state)
-		result match
-		{
-			case Some(Value(jettyConfiguration)) =>
-				val instance = new JettyRunner(jettyConfiguration)
-			state.addExitHook(instance.runBeforeExiting).put(jettyInstance, instance)
-			case _ => state.fail
-		}
+		val result = Project.evaluateTask(jettyConfiguration in Compile, state) getOrElse error("Failed to get jetty configuration.")
+		val conf = EvaluateTask.processResult(result, ConsoleLogger())
+		val instance = new JettyRunner(conf)
+		state.addExitHook(instance.runBeforeExiting).put(jettyInstance, instance)
 	}
 
 	def withJettyInstance(action: (JettyRunner) => Unit)(state: State): State = {
@@ -102,14 +98,10 @@ object WebPlugin extends Plugin {
 
 	def jettyRunAction(state: State): State = {
 		val withInstance = addJettyInstance(state)
-		val result = Project.evaluateTask(prepareWebapp, state)
-		result match
-		{
-			case Some(Value(_)) =>
-				withInstance.get(jettyInstance).get.apply()
-			withInstance
-			case _ => state.fail
-		}
+		val result = Project.evaluateTask(prepareWebapp, state) getOrElse error("Cannot prepare webapp.")
+		EvaluateTask.processResult(result, ConsoleLogger())
+		withInstance.get(jettyInstance).get.apply()
+		withInstance
 	}
 
 
@@ -139,7 +131,7 @@ object WebPlugin extends Plugin {
 		fullClasspath in Configurations.RuntimeInternal <<= Classpaths.concat(products in Runtime, managedClasspath in Configurations.RuntimeInternal),
 		jettyClasspaths <<= (fullClasspath in Configurations.RuntimeInternal, managedClasspath in jettyConf) map jettyClasspathsTask,
 		jettyContext := "/",
-		jettyScanDirs <<= (temporaryWarPath) { (warPath) => Seq(warPath) },
+		jettyScanDirs <<= Seq(temporaryWarPath).join,
 		jettyScanInterval := JettyRunner.DefaultScanInterval,
 		jettyPort := JettyRunner.DefaultPort,
 		jettyConfFiles := JettyConfFiles(None, None),
