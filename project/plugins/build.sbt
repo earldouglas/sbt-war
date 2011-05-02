@@ -1,5 +1,4 @@
 resolvers ++= Seq(
-	Resolver.url("Sbt repository", new java.net.URL("http://siasia.github.com/ivy2/"))(Resolver.ivyStylePatterns),
 	"Scripted Repo" at "http://siasia.github.com/maven2"
 )
 
