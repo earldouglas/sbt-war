@@ -73,6 +73,20 @@ private object LazyJettyRun${jetty.version} extends JettyRun
 						new SbtWebAppLoader(classpath.getURLs)
 					}
 					def setLoader() = webapp.setClassLoader(createLoader)
+
+					// enable loading of custom jetty-env.xml file.
+					jettyEnv.foreach{jettyEnvFile:File => 
+					val envConfig = new EnvConfiguration
+					envConfig.setJettyEnvXml(jettyEnvFile.toURI.toURL)
+					val confArray : Array[Configuration] = Array(
+						new WebInfConfiguration, 
+						new WebXmlConfiguration,  
+						envConfig, 
+						new PlusConfiguration, 
+						new JettyWebXmlConfiguration, 
+						new TagLibConfiguration)
+					webapp.setConfigurations(confArray)
+					}
 					
 					setLoader()
 					server.setHandler(webapp)
