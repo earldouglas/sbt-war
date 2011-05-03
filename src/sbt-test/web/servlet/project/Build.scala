@@ -11,6 +11,7 @@ object MyBuild extends Build {
 
 	lazy val rootSettings = Seq(
 		jettyPort := port,
+		jettyScanInterval := 60,
 		libraryDependencies ++= libDeps,
 		getPage := getPageTask,
 		checkPage <<= checkPageTask
