@@ -63,8 +63,8 @@ object WebPlugin extends Plugin {
 	def jettyClasspathsTask(cp: Classpath, jettyCp: Classpath) =
 		JettyClasspaths(cp.map(_.data), jettyCp.map(_.data))
 
-	def jettyConfigurationTask: Initialize[Task[JettyConfiguration]] = (jettyClasspaths, temporaryWarPath, jettyContext, scalaInstance, jettyScanDirs, jettyScanInterval, jettyPort, jettyConfFiles) map {
-		(classpaths, warPath, context, scalaInstance, scanDirs, interval, jettyPort, confs) =>
+	def jettyConfigurationTask: Initialize[Task[JettyConfiguration]] = (jettyClasspaths, temporaryWarPath, jettyContext, scalaInstance, jettyScanDirs, jettyScanInterval, jettyPort, jettyConfFiles, state) map {
+		(classpaths, warPath, context, scalaInstance, scanDirs, interval, jettyPort, confs, state) =>
 			new DefaultJettyConfiguration {
 				def classpath = classpaths.classpath
 				def jettyClasspath = classpaths.jettyClasspath
@@ -75,7 +75,7 @@ object WebPlugin extends Plugin {
 				def scanDirectories = scanDirs
 				def scanInterval = interval
 				def port = jettyPort
-				def log = ConsoleLogger()
+				def log = CommandSupport.logger(state).asInstanceOf[AbstractLogger]
 				def jettyEnv = confs.env
 				def webDefaultXml = confs.webDefaultXml
 			}
@@ -85,7 +85,7 @@ object WebPlugin extends Plugin {
 		if(!state.get(jettyInstance).isEmpty)
 			return state
 		val result = Project.evaluateTask(jettyConfiguration in Compile, state) getOrElse error("Failed to get jetty configuration.")
-		val conf = EvaluateTask.processResult(result, ConsoleLogger())
+		val conf = EvaluateTask.processResult(result, CommandSupport.logger(state))
 		val instance = new JettyRunner(conf)
 		state.addExitHook(instance.runBeforeExiting).put(jettyInstance, instance)
 	}
@@ -99,7 +99,7 @@ object WebPlugin extends Plugin {
 	def jettyRunAction(state: State): State = {
 		val withInstance = addJettyInstance(state)
 		val result = Project.evaluateTask(prepareWebapp, state) getOrElse error("Cannot prepare webapp.")
-		EvaluateTask.processResult(result, ConsoleLogger())
+		EvaluateTask.processResult(result, CommandSupport.logger(withInstance))
 		withInstance.get(jettyInstance).get.apply()
 		withInstance
 	}
