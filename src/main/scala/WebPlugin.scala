@@ -10,7 +10,7 @@ object WebPlugin extends Plugin {
 
 	val temporaryWarPath = SettingKey[Path]("temporary-war-path")
 	val webappResources = SettingKey[PathFinder]("webapp-resources")
-	val webappResourcesWatcher = TaskKey[Seq[File]]("webapp-resources-watcher")
+	val watchWebappResources = TaskKey[Seq[File]]("watch-webapp-resources")
 	val webappUnmanaged = SettingKey[PathFinder]("webapp-unmanaged")
 	val prepareWebapp = TaskKey[Seq[(File, String)]]("prepare-webapp")
 	val jettyClasspaths = TaskKey[JettyClasspaths]("jetty-classpaths")
@@ -117,8 +117,8 @@ object WebPlugin extends Plugin {
 			(sd, defaultExcludes) =>
 				((sd / "webapp") ###).descendentsExcept("*", defaultExcludes)
 		},
-		webappResourcesWatcher <<= (webappResources) map { (rs) => rs.getFiles },
-		watchSources <<= Seq(watchSources, webappResourcesWatcher).join.map { _.map(_.flatten.distinct) },
+		watchWebappResources <<= (webappResources) map { (rs) => rs.getFiles },
+		watchSources <<= Seq(watchSources, watchWebappResources).join.map { _.map(_.flatten.distinct) },
 		webappUnmanaged := Path.emptyPathFinder,
 		prepareWebapp <<= (compile in Runtime, copyResources in Runtime, webappResources, temporaryWarPath, jettyClasspaths, scalaInstance, webappUnmanaged, defaultExcludes, streams) map {
 			(c, r, w, wp, cp, si, wu, excludes, s) =>
