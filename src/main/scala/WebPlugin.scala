@@ -98,7 +98,7 @@ object WebPlugin extends Plugin {
 
 	def jettyRunAction(state: State): State = {
 		val withInstance = addJettyInstance(state)
-		val result = Project.evaluateTask(prepareWebapp, state) getOrElse error("Cannot prepare webapp.")
+		val result = Project.evaluateTask(prepareWebapp, withInstance) getOrElse error("Cannot prepare webapp.")
 		EvaluateTask.processResult(result, CommandSupport.logger(withInstance))
 		withInstance.get(jettyInstance).get.apply()
 		withInstance
