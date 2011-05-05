@@ -22,7 +22,7 @@ object WebPlugin extends Plugin {
 	val jettyConfFiles = SettingKey[JettyConfFiles]("jetty-conf-files")
 	final case class JettyConfFiles(env: Option[File], webDefaultXml: Option[File])
 	val jettyConfiguration = TaskKey[JettyConfiguration]("jetty-configuration")
-	val jettyInstance = AttributeKey[JettyRunner]("jetty-instance")
+	val jettyInstances = AttributeKey[Map[ProjectRef,JettyRunner]]("jetty-instance")
 
 	def prepareWebappTask(webappContents: PathFinder, warPath: Path, classpath: PathFinder, extraJars: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger): Seq[(File, String)] = {
 		val log = slog.asInstanceOf[AbstractLogger]    
@@ -82,17 +82,29 @@ object WebPlugin extends Plugin {
 	}
 
 	def addJettyInstance(state: State): State = {
-		if(!state.get(jettyInstance).isEmpty)
-			return state
-		val result = Project.evaluateTask(jettyConfiguration in Compile, state) getOrElse error("Failed to get jetty configuration.")
-		val conf = EvaluateTask.processResult(result, CommandSupport.logger(state))
-		val instance = new JettyRunner(conf)
-		state.addExitHook(instance.runBeforeExiting).put(jettyInstance, instance)
+		val extracted: Extracted = Project.extract(state)
+		import extracted._
+		val instances = state.get(jettyInstances) getOrElse(Map())
+		instances.get(currentRef) match {
+			case Some(_) => state
+			case None =>
+				val result = Project.evaluateTask(jettyConfiguration in Compile, state) getOrElse error("Failed to get jetty configuration.")
+				val conf = EvaluateTask.processResult(result, CommandSupport.logger(state))
+				val instance = new JettyRunner(conf)			
+				state.addExitHook(instance.runBeforeExiting).put(jettyInstances, instances + (currentRef -> instance))
+		}
+		
+	}
+
+	def getInstance(state: State): JettyRunner = {
+		val extracted: Extracted = Project.extract(state)
+		import extracted._
+		state.get(jettyInstances).get.apply(currentRef)
 	}
 
 	def withJettyInstance(action: (JettyRunner) => Unit)(state: State): State = {
 		val withInstance = addJettyInstance(state)
-		action(withInstance.get(jettyInstance).get)
+		action(getInstance(withInstance))
 		withInstance
 	}
 
@@ -100,7 +112,7 @@ object WebPlugin extends Plugin {
 		val withInstance = addJettyInstance(state)
 		val result = Project.evaluateTask(prepareWebapp, withInstance) getOrElse error("Cannot prepare webapp.")
 		EvaluateTask.processResult(result, CommandSupport.logger(withInstance))
-		withInstance.get(jettyInstance).get.apply()
+		getInstance(withInstance).apply()
 		withInstance
 	}
 

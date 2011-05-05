@@ -1,0 +1,18 @@
+> ++ 2.8.0
+
+> jetty-run
+> check-page Hello, Scala!
+
+> project sub
+> jetty-run
+> check-page Hello, Scala!
+
+> project root
+> check-page Hello, Scala!
+> jetty-stop
+-> check-page Hello, Scala!
+
+> project sub
+> check-page Hello, Scala!
+> jetty-stop
+-> check-page Hello, Scala!
