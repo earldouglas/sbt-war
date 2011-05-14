@@ -20,6 +20,7 @@ object WebBuild extends Build {
 	lazy val rootOnlySettings = Seq(
 		sbtPlugin := true,
 		ScriptedPlugin.scriptedBufferLog := false,
+		resolvers += Resolver.url("Typesafe repository", new java.net.URL("http://typesafe.artifactoryonline.com/typesafe/ivy-releases/"))(Resolver.defaultIvyPatterns),
 		publishLocal <<= (publishLocal in web, publishLocal) map {(_, p) => p },
 		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
