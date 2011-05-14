@@ -11,7 +11,7 @@ Add plugin to project in `project/build/plugins/build.sbt`:
       deps :+ "com.github.siasia" %% "xsbt-web-plugin" % app.provider.id.version
     }
 
-Currently artifacts exist only for 0.9.5-SNAPSHOT version which contains some sensitive fixes in contrast to 0.9.4.
+Artifacts are available for 0.9.6 XSBT version.
 
 Inject plugin settings into project in `build.sbt`:
 
