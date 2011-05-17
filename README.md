@@ -1,7 +1,7 @@
 # Usage
 Setup [XSBT](http://github.com/harrah/xsbt/tree/0.9).
 
-Add plugin to project in `project/build/plugins/build.sbt`:
+Add plugin to project in `project/plugins/build.sbt`:
 
     resolvers += "Web plugin repo" at "http://siasia.github.com/maven2"
 		
