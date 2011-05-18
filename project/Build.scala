@@ -74,7 +74,7 @@ object WebBuild extends Build {
 		}
 	}
 
-	def generateJettyRun(in: Path, out: Path, version: String, importsPath: Path, filesChangedTypePath: Path) {
+	def generateJettyRun(in: File, out: File, version: String, importsPath: File, filesChangedTypePath: File) {
 		val template = IO.read(in asFile)
 		val imports = IO.read(importsPath asFile)
 		val filesChanged = IO.read(filesChangedTypePath asFile)
