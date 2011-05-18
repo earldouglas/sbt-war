@@ -92,7 +92,7 @@ sealed trait JettyConfiguration extends NotNull
 }
 trait DefaultJettyConfiguration extends JettyConfiguration
 {
-	def war: Path
+	def war: File
 	def scanDirectories: Seq[File]
 	def scanInterval: Int
 	
