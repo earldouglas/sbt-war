@@ -57,6 +57,7 @@ object WebPlugin extends Plugin {
 		if(log.atLevel(Level.Debug))
 			files.foreach(r => log.debug("Pruning file " + r))
 		IO.delete(files)
+		IO.deleteIfEmpty(dirs.toSet)
 		((warPath).descendentsExcept("*", defaultExcludes) --- ignore) x (relativeTo(warPath)|flat)
 	}
 
