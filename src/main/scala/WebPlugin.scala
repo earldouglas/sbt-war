@@ -8,7 +8,7 @@ import Scope.GlobalScope
 object WebPlugin extends Plugin {
 	val jettyConf = config("jetty") hide
 
-	val temporaryWarPath = SettingKey[Path]("temporary-war-path")
+	val temporaryWarPath = SettingKey[File]("temporary-war-path")
 	val webappResources = SettingKey[PathFinder]("webapp-resources")
 	val watchWebappResources = TaskKey[Seq[File]]("watch-webapp-resources")
 	val webappUnmanaged = SettingKey[PathFinder]("webapp-unmanaged")
@@ -16,7 +16,7 @@ object WebPlugin extends Plugin {
 	val jettyClasspaths = TaskKey[JettyClasspaths]("jetty-classpaths")
 	final case class JettyClasspaths(classpath: PathFinder, jettyClasspath: PathFinder)
 	val jettyContext = SettingKey[String]("jetty-context")
-	val jettyScanDirs = SettingKey[Seq[Path]]("jetty-scan-dirs")
+	val jettyScanDirs = SettingKey[Seq[File]]("jetty-scan-dirs")
 	val jettyScanInterval = SettingKey[Int]("jetty-scan-interval")
 	val jettyPort = SettingKey[Int]("jetty-port")
 	val jettyConfFiles = SettingKey[JettyConfFiles]("jetty-conf-files")
@@ -24,7 +24,7 @@ object WebPlugin extends Plugin {
 	val jettyConfiguration = TaskKey[JettyConfiguration]("jetty-configuration")
 	val jettyInstances = AttributeKey[Map[ProjectRef,JettyRunner]]("jetty-instance")
 
-	def prepareWebappTask(webappContents: PathFinder, warPath: Path, classpath: PathFinder, extraJars: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger): Seq[(File, String)] = {
+	def prepareWebappTask(webappContents: PathFinder, warPath: File, classpath: PathFinder, extraJars: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger): Seq[(File, String)] = {
 		val log = slog.asInstanceOf[AbstractLogger]    
 		import sbt.classpath.ClasspathUtilities
 		val webInfPath = warPath / "WEB-INF"
@@ -32,32 +32,32 @@ object WebPlugin extends Plugin {
 		val classesTargetDirectory = webInfPath / "classes"
 
 		val (libs, directories) = classpath.get.toList.partition(ClasspathUtilities.isArchive)
-		val classesAndResources = (Path.lazyPathFinder(directories) ###).descendentsExcept("*", defaultExcludes)
+		val wcToCopy = for {
+			dir <- webappContents.get
+			file <- dir.descendentsExcept("*", defaultExcludes).get
+			val target = Path.rebase(dir, warPath)(file).get
+		} yield (file, target)
+		val classesAndResources = for {
+			dir <- directories
+			file <- dir.descendentsExcept("*", defaultExcludes).get
+			val target = Path.rebase(dir, classesTargetDirectory)(file).get
+		} yield (file, target)
 		if(log.atLevel(Level.Debug))
 			directories.foreach(d => log.debug(" Copying the contents of directory " + d + " to " + classesTargetDirectory))
 
-		import sbt.oldcompat.{copy, copyFlat, clean}
-		(copy(webappContents.get, warPath, log).right flatMap { copiedWebapp =>
-			copy(classesAndResources.get, classesTargetDirectory, log).right flatMap { copiedClasses =>
-				copyFlat(libs ++ extraJars.get, webLibDirectory, log).right flatMap {
-					copiedLibs =>
-						val toRemove = scala.collection.mutable.HashSet(((warPath ** "*") --- ignore).get.toSeq : _*)
-					toRemove --= copiedWebapp
-					toRemove --= copiedClasses
-					toRemove --= copiedLibs
-					val (directories, files) = toRemove.toList.partition(_.isDirectory)
-					if(log.atLevel(Level.Debug))
-						files.foreach(r => log.debug("Pruning file " + r))
-					val result =
-						clean(files, log) orElse {
-							val emptyDirectories = directories.filter(directory => directory.asFile.listFiles.isEmpty)
-							if(log.atLevel(Level.Debug))
-								emptyDirectories.foreach(r => log.debug("Pruning directory " + r))
-							clean(emptyDirectories, log)
-						}
-					result.toLeft(())
-				}}}).left.toOption foreach error
-		((warPath ###).descendentsExcept("*", defaultExcludes) --- ignore) x (relativeTo(warPath)|flat)
+		import sbt.oldcompat.copyFlat
+		val copiedWebapp = IO.copy(wcToCopy)
+		val copiedClasses = IO.copy(classesAndResources)
+		val copiedLibs = copyFlat(libs ++ extraJars.get, webLibDirectory)
+		val toRemove = scala.collection.mutable.HashSet(((warPath ** "*") --- ignore).get.toSeq : _*)
+		toRemove --= copiedWebapp
+		toRemove --= copiedClasses
+		toRemove --= copiedLibs
+		val (dirs, files) = toRemove.toList.partition(_.isDirectory)
+		if(log.atLevel(Level.Debug))
+			files.foreach(r => log.debug("Pruning file " + r))
+		IO.delete(files)
+		((warPath).descendentsExcept("*", defaultExcludes) --- ignore) x (relativeTo(warPath)|flat)
 	}
 
 	def jettyClasspathsTask(cp: Classpath, jettyCp: Classpath) =
@@ -124,14 +124,14 @@ object WebPlugin extends Plugin {
 
 	val webSettings = Seq(
 		ivyConfigurations += jettyConf,
-		temporaryWarPath <<= (target){ (target) => Path.fromFile(target / "webapp") },
+		temporaryWarPath <<= (target){ (target) => target / "webapp" },
 		webappResources <<= (sourceDirectory in Runtime, defaultExcludes) {
 			(sd, defaultExcludes) =>
-				((sd / "webapp") ###).descendentsExcept("*", defaultExcludes)
+				sd / "webapp"
 		},
-		watchWebappResources <<= (webappResources) map { (rs) => rs.getFiles },
+		watchWebappResources <<= (webappResources, defaultExcludes) map { (rs, de) => rs.descendentsExcept("*", de).get },
 		watchSources <<= Seq(watchSources, watchWebappResources).join.map { _.map(_.flatten.distinct) },
-		webappUnmanaged := Path.emptyPathFinder,
+		webappUnmanaged := PathFinder.empty,
 		prepareWebapp <<= (compile in Runtime, copyResources in Runtime, webappResources, temporaryWarPath, jettyClasspaths, scalaInstance, webappUnmanaged, defaultExcludes, streams) map {
 			(c, r, w, wp, cp, si, wu, excludes, s) =>
 				prepareWebappTask(w, wp, cp.classpath, Seq(si.libraryJar, si.compilerJar), wu, excludes, s.log) },
