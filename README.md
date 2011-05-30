@@ -6,10 +6,7 @@ Add plugin to project in `project/plugins/build.sbt`:
     resolvers += "Web plugin repo" at "http://siasia.github.com/maven2"
 		
     //Following means libraryDependencies += "com.github.siasia" %% "xsbt-web-plugin" % <sbt version>
-    libraryDependencies <<= (libraryDependencies, appConfiguration) {
-      (deps, app) =>
-      deps :+ "com.github.siasia" %% "xsbt-web-plugin" % app.provider.id.version
-    }
+    libraryDependencies <+= sbtVersion("com.github.siasia" %% "xsbt-web-plugin" % _)
 
 Artifacts are available for 0.9.6, 0.9.7, 0.9.8 and 0.9.9 XSBT version.
 
