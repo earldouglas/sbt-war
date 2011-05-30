@@ -4,7 +4,7 @@ import Keys._
 import Project.Initialize
 
 object WebBuild extends Build {
-	lazy val projects = Seq(root, web)
+	override def projects = Seq(root, web)
 
 	val generateJettyRun = TaskKey[Seq[File]]("generate-jetty-run")
 
@@ -23,13 +23,7 @@ object WebBuild extends Build {
 		publishLocal <<= (publishLocal in web, publishLocal) map {(_, p) => p },
 		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
-		libraryDependencies <<= (libraryDependencies, appConfiguration) {
-			(deps, app) =>
-			val version = app.provider.id.version
-			deps ++ Seq(
-				"org.scala-tools.sbt" %% "classpath" % version
-			)
-		}
+		libraryDependencies <+= sbtVersion("org.scala-tools.sbt" %% "classpath" % _)
 	)
 
 	lazy val webSettings = Defaults.defaultSettings ++ webOnlySettings ++ sharedSettings
@@ -37,10 +31,9 @@ object WebBuild extends Build {
 	lazy val webOnlySettings = Seq(
 		organization := "com.github.siasia.sbt",
 		name := "web-app",
-		libraryDependencies <<= (libraryDependencies, appConfiguration) {
-			(deps, app) =>
-			val version = app.provider.id.version
-			deps ++ Seq(
+		libraryDependencies <++= sbtVersion {
+			(version) =>
+			Seq(
 				"org.scala-tools.sbt" %% "io" % version,
 				"org.scala-tools.sbt" %% "logging" % version,
 				"org.scala-tools.sbt" %% "classpath" % version,
@@ -57,7 +50,7 @@ object WebBuild extends Build {
 	)
 
 	lazy val sharedSettings = Seq(
-		version <<= appConfiguration(_.provider.id.version),
+		version <<= sbtVersion(v => v),
 		publishMavenStyle := true,
 		publishTo := Some(Resolver.file("Local", Path.userHome / "projects" / "siasia.github.com" / "maven2" asFile)(Patterns(true, Resolver.mavenStyleBasePattern))),
 		scalacOptions += "-deprecation"
