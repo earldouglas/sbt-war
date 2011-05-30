@@ -4,6 +4,7 @@ import Project.Initialize
 import Keys._
 import Defaults._
 import Scope.GlobalScope
+import sys.error
 
 object WebPlugin extends Plugin {
 	val jettyConf = config("jetty") hide

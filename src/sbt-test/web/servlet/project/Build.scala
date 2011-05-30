@@ -3,7 +3,7 @@ import WebPlugin._
 import Keys._
 
 object MyBuild extends Build {
-	lazy val projects = Seq(root)
+	override def projects = Seq(root)
 
 	lazy val root = Project("root", file("."), settings = Defaults.defaultSettings ++ webSettings ++ rootSettings)
 

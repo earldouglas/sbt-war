@@ -4,7 +4,7 @@ import Keys._
 import Project.Initialize
 
 object MyBuild extends Build {
-	lazy val projects = Seq(root, sub)
+	override def projects = Seq(root, sub)
 
 	private val indexFile = SettingKey[File]("index-file")
 	private val indexUrl = SettingKey[java.net.URL]("index-page")
