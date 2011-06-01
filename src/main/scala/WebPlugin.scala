@@ -4,7 +4,6 @@ import Project.Initialize
 import Keys._
 import Defaults._
 import Scope.GlobalScope
-import sys.error
 
 object WebPlugin extends Plugin {
 	val jettyConf = config("jetty") hide
@@ -14,6 +13,7 @@ object WebPlugin extends Plugin {
 	val watchWebappResources = TaskKey[Seq[File]]("watch-webapp-resources")
 	val webappUnmanaged = SettingKey[PathFinder]("webapp-unmanaged")
 	val prepareWebapp = TaskKey[Seq[(File, String)]]("prepare-webapp")
+	val packageWar = TaskKey[File]("package-war")
 	val jettyClasspaths = TaskKey[JettyClasspaths]("jetty-classpaths")
 	final case class JettyClasspaths(classpath: PathFinder, jettyClasspath: PathFinder)
 	val jettyContext = SettingKey[String]("jetty-context")
@@ -61,6 +61,8 @@ object WebPlugin extends Plugin {
 		IO.deleteIfEmpty(dirs.toSet)
 		((warPath).descendentsExcept("*", defaultExcludes) --- ignore) x (relativeTo(warPath)|flat)
 	}
+
+	def packageWarTask: Initialize[Task[Seq[(File, String)]]] = prepareWebapp map { (pw) => pw }
 
 	def jettyClasspathsTask(cp: Classpath, jettyCp: Classpath) =
 		JettyClasspaths(cp.map(_.data), jettyCp.map(_.data))
@@ -119,12 +121,11 @@ object WebPlugin extends Plugin {
 	}
 
 
-
 	val jettyRun: Command = Command.command("jetty-run")(jettyRunAction)
 	val jettyStop: Command = Command.command("jetty-stop")(withJettyInstance(_.stop()))
 	val jettyReload: Command = Command.command("jetty-reload")(withJettyInstance(_.reload()))
 
-	val webSettings = Seq(
+	val webSettings: Seq[Project.Setting[_]] = Seq(
 		ivyConfigurations += jettyConf,
 		temporaryWarPath <<= (target){ (target) => target / "webapp" },
 		webappResources <<= (sourceDirectory in Runtime, defaultExcludes) {
@@ -137,9 +138,8 @@ object WebPlugin extends Plugin {
 		prepareWebapp <<= (compile in Runtime, copyResources in Runtime, webappResources, temporaryWarPath, jettyClasspaths, scalaInstance, webappUnmanaged, defaultExcludes, streams) map {
 			(c, r, w, wp, cp, si, wu, excludes, s) =>
 				prepareWebappTask(w, wp, cp.classpath, Seq(si.libraryJar, si.compilerJar), wu, excludes, s.log) },
-		mappings in (Compile, packageBin) <<= (prepareWebapp) map { (pw) => pw },
-		packageOptions in (Compile, packageBin) <<= (packageOptions) map { po => po },
-		artifact <<= name(n => Artifact(n, "war", "war")),
+		configuration in packageWar := Compile,
+		artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
 		managedClasspath in jettyClasspaths <<= (classpathTypes, update) map { (ct, report) => Classpaths.managedJars(jettyConf, ct, report) },
 		jettyClasspaths <<= (fullClasspath in Runtime, managedClasspath in jettyClasspaths) map jettyClasspathsTask,
 		jettyContext := "/",
@@ -149,5 +149,5 @@ object WebPlugin extends Plugin {
 		jettyConfFiles := JettyConfFiles(None, None),
 		jettyConfiguration <<= jettyConfigurationTask,
 		commands ++= Seq(jettyRun, jettyStop, jettyReload)
-	)
+	) ++ packageTasks(packageWar, packageWarTask)
 }
