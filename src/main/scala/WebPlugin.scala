@@ -25,7 +25,7 @@ object WebPlugin extends Plugin {
 	val jettyConfiguration = TaskKey[JettyConfiguration]("jetty-configuration")
 	val jettyInstances = AttributeKey[Map[ProjectRef,JettyRunner]]("jetty-instance")
 
-	def prepareWebappTask(webappContents: PathFinder, warPath: File, classpath: PathFinder, extraJars: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger): Seq[(File, String)] = {
+	def prepareWebappTask(webappContents: PathFinder, warPath: File, classpath: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger): Seq[(File, String)] = {
 		val log = slog.asInstanceOf[AbstractLogger]    
 		import sbt.classpath.ClasspathUtilities
 		val webInfPath = warPath / "WEB-INF"
@@ -49,7 +49,7 @@ object WebPlugin extends Plugin {
 		import sbt.oldcompat.copyFlat
 		val copiedWebapp = IO.copy(wcToCopy)
 		val copiedClasses = IO.copy(classesAndResources)
-		val copiedLibs = copyFlat(libs ++ extraJars.get, webLibDirectory)
+		val copiedLibs = copyFlat(libs, webLibDirectory)
 		val toRemove = scala.collection.mutable.HashSet(((warPath ** "*") --- ignore).get.toSeq : _*)
 		toRemove --= copiedWebapp
 		toRemove --= copiedClasses
@@ -134,9 +134,9 @@ object WebPlugin extends Plugin {
 		watchWebappResources <<= (webappResources, defaultExcludes) map { (rs, de) => rs.descendentsExcept("*", de).get },
 		watchSources <<= Seq(watchSources, watchWebappResources).join.map { _.map(_.flatten.distinct) },
 		webappUnmanaged := PathFinder.empty,
-		prepareWebapp <<= (compile in Runtime, copyResources in Runtime, webappResources, temporaryWarPath, jettyClasspaths, scalaInstance, webappUnmanaged, defaultExcludes, streams) map {
-			(c, r, w, wp, cp, si, wu, excludes, s) =>
-				prepareWebappTask(w, wp, cp.classpath, Seq(si.libraryJar, si.compilerJar), wu, excludes, s.log) },
+		prepareWebapp <<= (copyResources in Runtime, webappResources, temporaryWarPath, jettyClasspaths, webappUnmanaged, defaultExcludes, streams) map {
+			(r, w, wp, cp, wu, excludes, s) =>
+				prepareWebappTask(w, wp, cp.classpath, wu, excludes, s.log) },
 		configuration in packageWar := Compile,
 		artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
 		managedClasspath in jettyClasspaths <<= (classpathTypes, update) map { (ct, report) => Classpaths.managedJars(jettyConf, ct, report) },
