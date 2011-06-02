@@ -120,7 +120,6 @@ object WebPlugin extends Plugin {
 		withInstance
 	}
 
-
 	val jettyRun: Command = Command.command("jetty-run")(jettyRunAction)
 	val jettyStop: Command = Command.command("jetty-stop")(withJettyInstance(_.stop()))
 	val jettyReload: Command = Command.command("jetty-reload")(withJettyInstance(_.reload()))
