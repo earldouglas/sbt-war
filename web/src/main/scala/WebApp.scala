@@ -59,20 +59,21 @@ class JettyRunner(configuration: JettyConfiguration) extends ExitHook
 			}
 			catch
 			{
-				case e: NoClassDefFoundError => runError(e, "Jetty and its dependencies must be on the " + classpathName + " classpath: ", log)
-				case e => runError(e, "Error running Jetty: ", log)
+				case e: NoClassDefFoundError => runError(e, "Jetty and its dependencies must be on the " + classpathName + " classpath")
+				case e => runError(e, "Error running Jetty")
 			}
 		}
 	}
 	private val implClassName6 = "sbt.jetty.LazyJettyRun6"
 	private val implClassName7 = "sbt.jetty.LazyJettyRun7"
 
-	private def runError(e: Throwable, messageBase: String, log: Logger) =
+	private def runError(e: Throwable, messageBase: String) =
 	{
-		log.trace(e)
-		Some(messageBase + e.toString)
+		throw new JettyRunException(messageBase, e)
 	}
 }
+
+class JettyRunException(message: String, cause: Throwable) extends Exception(message, cause)
 
 private trait Stoppable
 {
