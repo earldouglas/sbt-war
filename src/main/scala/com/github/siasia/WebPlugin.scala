@@ -1,4 +1,6 @@
-import sbt._
+package com.github.siasia
+
+import _root_.sbt._
 
 import Project.Initialize
 import Keys._
@@ -27,7 +29,7 @@ object WebPlugin extends Plugin {
 
 	def prepareWebappTask(webappContents: PathFinder, warPath: File, classpath: PathFinder, ignore: PathFinder, defaultExcludes: FileFilter, slog: Logger): Seq[(File, String)] = {
 		val log = slog.asInstanceOf[AbstractLogger]    
-		import sbt.classpath.ClasspathUtilities
+		import _root_.sbt.classpath.ClasspathUtilities
 		val webInfPath = warPath / "WEB-INF"
 		val webLibDirectory = webInfPath / "lib"
 		val classesTargetDirectory = webInfPath / "classes"

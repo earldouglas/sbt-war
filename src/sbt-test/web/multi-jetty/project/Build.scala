@@ -1,5 +1,5 @@
 import sbt._
-import WebPlugin._
+import com.github.siasia.WebPlugin._
 import Keys._
 import Project.Initialize
 

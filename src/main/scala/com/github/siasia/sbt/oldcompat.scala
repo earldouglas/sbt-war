@@ -1,4 +1,4 @@
-package sbt
+package com.github.siasia.sbt
 
 import sbt._
 import IO.{copy, delete, wrapNull, createDirectory}
