@@ -1,18 +1,18 @@
 # Usage
-Setup [XSBT](http://github.com/harrah/xsbt/tree/0.9).
+Setup [SBT](http://github.com/harrah/xsbt/).
 
 Add plugin to project in `project/plugins/build.sbt`:
 
     resolvers += "Web plugin repo" at "http://siasia.github.com/maven2"
 		
-    //Following means libraryDependencies += "com.github.siasia" %% "xsbt-web-plugin" % <sbt version>
-    libraryDependencies <+= sbtVersion("com.github.siasia" %% "xsbt-web-plugin" % _)
+    //Following means libraryDependencies += "com.github.siasia" %% "xsbt-web-plugin" % "0.1.0-<sbt version>""
+    libraryDependencies <+= sbtVersion("com.github.siasia" %% "xsbt-web-plugin" % ("0.1.0-"+_))
 
-Artifacts are available for 0.9.6, 0.9.7, 0.9.8, 0.9.9, 0.9.10 and 0.10.0 XSBT version.
+Artifacts are available for 0.10.0 SBT version.
 
 Inject plugin settings into project in `build.sbt`:
 
-    seq(WebPlugin.webSettings :_*)
+    seq(webSettings :_*)
 		
 Add other required stuff like `web.xml`, properties and source code.
 		
@@ -42,6 +42,8 @@ Use `jetty-stop` to stop Jetty and `prepare-webapp` to build webapp after you've
     [info] stopped o.e.j.w.WebAppContext{/,file:/home/siasia/work/sample-copy/target/webapp/},/home/siasia/work/sample-copy/target/webapp
 		
 ## Running Lift
+
+**Please note that Jetty dependencies should go to `jetty` configuration instead of `test` as it was in 0.7.x version.**
 
 Add Lift and Jetty to project dependencies:
 

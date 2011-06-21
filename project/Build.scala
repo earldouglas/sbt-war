@@ -50,7 +50,7 @@ object WebBuild extends Build {
 	)
 
 	lazy val sharedSettings = Seq(
-		version := "0.1-SNAPSHOT",
+		version <<= sbtVersion("0.1.0-"+_),
 		publishMavenStyle := true,
 		publishTo := Some(Resolver.file("Local", Path.userHome / "projects" / "siasia.github.com" / "maven2" asFile)(Patterns(true, Resolver.mavenStyleBasePattern))),
 		scalacOptions += "-deprecation"
