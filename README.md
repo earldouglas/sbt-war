@@ -5,7 +5,7 @@ Setup [SBT](http://github.com/harrah/xsbt/).
 
 Add plugin to project in `project/plugins/build.sbt`:
 
-    resolvers += Seq(
+    resolvers ++= Seq(
       "Web plugin repo" at "http://siasia.github.com/maven2",
 			Resolver.url("Typesafe repository", new java.net.URL("http://typesafe.artifactoryonline.com/typesafe/ivy-releases/"))(Resolver.defaultIvyPatterns)
 		)
