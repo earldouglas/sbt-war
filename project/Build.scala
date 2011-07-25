@@ -22,8 +22,7 @@ object WebBuild extends Build {
 		ScriptedPlugin.scriptedBufferLog := false,
 		publishLocal <<= (publishLocal in web, publishLocal) map {(_, p) => p },
 		organization := "com.github.siasia",
-		name := "xsbt-web-plugin",
-		libraryDependencies <+= sbtVersion("org.scala-tools.sbt" %% "classpath" % _)
+		name := "xsbt-web-plugin"
 	)
 
 	lazy val webSettings = Defaults.defaultSettings ++ webOnlySettings ++ sharedSettings
@@ -34,10 +33,9 @@ object WebBuild extends Build {
 		libraryDependencies <++= sbtVersion {
 			(version) =>
 			Seq(
-				"org.scala-tools.sbt" %% "io" % version,
-				"org.scala-tools.sbt" %% "logging" % version,
-				"org.scala-tools.sbt" %% "classpath" % version,
-				"org.scala-tools.sbt" %% "process" % version,
+				"org.scala-tools.sbt" %% "io" % version % "provided",
+				"org.scala-tools.sbt" %% "logging" % version % "provided",
+				"org.scala-tools.sbt" %% "process" % version % "provided",
 				"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
 				"org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",
 				"org.eclipse.jetty" % "jetty-server" % "7.3.0.v20110203" % "optional",
@@ -50,9 +48,10 @@ object WebBuild extends Build {
 	)
 
 	lazy val sharedSettings = Seq(
-		version <<= sbtVersion("0.1.0-"+_),
+		version <<= sbtVersion("0.1.1-"+_),
 		publishMavenStyle := true,
 		publishTo := Some(Resolver.file("Local", Path.userHome / "projects" / "siasia.github.com" / "maven2" asFile)(Patterns(true, Resolver.mavenStyleBasePattern))),
+		libraryDependencies <+= sbtVersion("org.scala-tools.sbt" %% "classpath" % _ % "provided"),
 		scalacOptions += "-deprecation"
 	)
 
