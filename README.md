@@ -45,20 +45,7 @@ Use `jetty-stop` to stop Jetty and `prepare-webapp` to build webapp after you've
 
 **Please note that Jetty dependencies should go to `jetty` configuration instead of `test` as it was in 0.7.x version.**
 
-Add Lift and Jetty to project dependencies:
-
-    libraryDependencies ++= Seq(
-      "net.liftweb" %% "lift-webkit" % "2.3" % "compile",
-      "org.mortbay.jetty" % "jetty" % "6.1.22" % "jetty",
-      "ch.qos.logback" % "logback-classic" % "0.9.26"
-    )
+See [Using SBT](http://www.assembla.com/wiki/show/liftweb/Using_SBT) on the lift website for an example setup.
 		
-or in case if you want to use Jetty 7:
+Also you can download [Lift Basic Sample](http://github.com/downloads/siasia/xsbt-web-plugin/lift-basic-xsbt.zip) to see an example project (albeit an old one).
 
-    libraryDependencies ++= Seq(
-      "net.liftweb" %% "lift-webkit" % "2.3" % "compile",
-      "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "jetty",
-      "ch.qos.logback" % "logback-classic" % "0.9.26"
-    )
-		
-Check [Lift Basic Sample](http://github.com/downloads/siasia/xsbt-web-plugin/lift-basic-xsbt.zip) for further examples.
