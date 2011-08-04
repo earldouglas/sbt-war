@@ -1,14 +1,9 @@
 # Usage
 Setup [SBT](http://github.com/harrah/xsbt/).
 
-**Typesafe resolver is now also required to resolve SBT deps**
-
 Add plugin to project in `project/plugins/build.sbt`:
 
-    resolvers ++= Seq(
-      "Web plugin repo" at "http://siasia.github.com/maven2",
-      Resolver.url("Typesafe repository", new java.net.URL("http://typesafe.artifactoryonline.com/typesafe/ivy-releases/"))(Resolver.defaultIvyPatterns)
-    )
+    resolvers += "Web plugin repo" at "http://siasia.github.com/maven2"    
 		
     //Following means libraryDependencies += "com.github.siasia" %% "xsbt-web-plugin" % "0.1.1-<sbt version>""
     libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % ("0.1.1-"+v))
