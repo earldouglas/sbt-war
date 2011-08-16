@@ -126,6 +126,8 @@ object WebPlugin extends Plugin {
 	val jettyStop: Command = Command.command("jetty-stop")(withJettyInstance(_.stop()))
 	val jettyReload: Command = Command.command("jetty-reload")(withJettyInstance(_.reload()))
 
+	import Classpaths.{concat, managedJars}
+
 	val webSettings: Seq[Project.Setting[_]] = Seq(
 		ivyConfigurations += jettyConf,
 		temporaryWarPath <<= (target){ (target) => target / "webapp" },
@@ -141,9 +143,12 @@ object WebPlugin extends Plugin {
 				prepareWebappTask(w, wp, cp.classpath, wu, excludes, s.log) },
 		configuration in packageWar := Compile,
 		artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
-		managedClasspath in jettyClasspaths <<= (classpathTypes, update) map { (ct, report) => Classpaths.managedJars(jettyConf, ct, report) },
-		jettyClasspaths <<= (fullClasspath in Runtime, managedClasspath in jettyClasspaths) map jettyClasspathsTask,
 		jettyContext := "/",
+		managedClasspath in jettyClasspaths <<=
+			(classpathTypes, update) map { (ct, report) => managedJars(jettyConf, ct, report) },
+		unmanagedClasspath in jettyClasspaths := List[Attributed[File]](),
+		dependencyClasspath in jettyClasspaths <<= concat(unmanagedClasspath in jettyClasspaths, managedClasspath in jettyClasspaths),
+		jettyClasspaths <<= (fullClasspath in Runtime, dependencyClasspath in jettyClasspaths) map jettyClasspathsTask,
 		jettyScanDirs <<= Seq(temporaryWarPath).join,
 		jettyScanInterval := JettyRunner.DefaultScanInterval,
 		jettyPort := JettyRunner.DefaultPort,
