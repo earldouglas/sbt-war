@@ -17,6 +17,7 @@ object PluginBuild extends Build {
 				import org.mortbay.util.{Scanner => JScanner}
 				import org.mortbay.log.{Log, Logger => JLogger}
 				import org.mortbay.resource.ResourceCollection
+				import org.mortbay.xml.XmlConfiguration
 				import org.mortbay.jetty.plus.webapp.EnvConfiguration
 				""",
 				"filesChanged.type" -> "_",
@@ -34,6 +35,7 @@ object PluginBuild extends Build {
 				import org.eclipse.jetty.util.{Scanner => JScanner}
 				import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
 				import org.eclipse.jetty.util.resource.ResourceCollection
+				import org.eclipse.jetty.xml.XmlConfiguration
 				import org.eclipse.jetty.plus.webapp.EnvConfiguration
 				""",
 				"filesChanged.type" -> "String",

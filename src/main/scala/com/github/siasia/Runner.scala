@@ -5,6 +5,7 @@ import classpath._
 import ClasspathUtilities._
 import java.net.{URI, URL, URLClassLoader}
 import java.lang.reflect.InvocationTargetException
+import scala.xml.NodeSeq
 
 object Loaders
 {
@@ -71,7 +72,7 @@ object Runner {
 trait Runner {
 	protected var loader: ClassLoader = null
 	def setLoader(loader: ClassLoader) { this.loader = loader }
-	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)]): Unit
+	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq): Unit
 	def reload(context: String): Unit
 	def stop(): Unit
 }

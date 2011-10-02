@@ -9,6 +9,7 @@ import Scoped._
 import sbinary.DefaultProtocol.StringFormat
 import Cache.seqFormat
 import complete._
+import scala.xml.NodeSeq
 
 case class Container(name: String) {
 	def Configuration = config(name) hide
@@ -53,16 +54,19 @@ case class Container(name: String) {
 					onUnload(state)
 		},
 		port := 8080,
-		start <<= (state, port, apps) map {
-			(state, port, apps) =>
-			state.start(port, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps)
+		start <<= (state, port, apps, customConfiguration, configurationFiles, configurationXml) map {
+			(state, port, apps, cc, cf, cx) =>
+			state.start(port, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps, cc, cf, cx)
 		},
 		discoveredContexts <<= TaskData.write(apps map discoverContexts) triggeredBy start,
 		reload <<= reloadTask(state),
 		stop <<= (state) map {
 			(state) =>
 			state.stop()
-		}
+		},
+		customConfiguration := false,
+		configurationFiles := Seq(),
+		configurationXml := NodeSeq.Empty
 	)
 	def settings = globalSettings ++ inConfig(Configuration)(containerSettings)
 

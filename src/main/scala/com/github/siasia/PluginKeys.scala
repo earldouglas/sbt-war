@@ -1,6 +1,7 @@
 package com.github.siasia
 
 import sbt._
+import scala.xml.NodeSeq
 
 case class Deployment(
 	webappResources: Seq[File],
@@ -21,6 +22,9 @@ object PluginKeys {
 	lazy val discoveredContexts = TaskKey[Seq[String]]("discovered-contexts")
 	lazy val reload = InputKey[Unit]("reload")
 	lazy val stop = TaskKey[Unit]("stop")
+	lazy val customConfiguration = SettingKey[Boolean]("custom-configuration")
+	lazy val configurationFiles = SettingKey[Seq[File]]("configuration-files")
+	lazy val configurationXml = SettingKey[NodeSeq]("configuration-xml")
 	lazy val webappResources = SettingKey[Seq[File]]("webapp-resources")
 	lazy val packageWar = TaskKey[File]("package-war")
 	lazy val scanDirectories = SettingKey[Seq[File]]("scan-directories")

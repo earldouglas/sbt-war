@@ -4,6 +4,7 @@ ${imports}
 
 import sbt._
 import classpath.ClasspathUtilities.toLoader
+import scala.xml.NodeSeq
 
 class Jetty${version}Runner extends Runner {
 	private[this] val forceJettyLoad = classOf[Server]
@@ -33,17 +34,27 @@ class Jetty${version}Runner extends Runner {
 			new Scanner(scanDirectories, scanInterval, () => reload(contextPath))
 		contexts += contextPath -> (context, deployment)
 		context
-	}	
-	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)]) {
+	}
+	private def configureContexts(apps: Seq[(String, Deployment)]) {
+		val contexts = apps.map { case (contextPath, deployment) => deploy(contextPath, deployment) }
+		val coll = new ContextHandlerCollection()
+		coll.setHandlers(contexts.toArray)
+		server.setHandler(coll)
+	}
+	private def configureCustom(confFiles: Seq[File], confXml: NodeSeq) {
+		confXml.foreach(x => new XmlConfiguration(x.toString) configure(server))
+		confFiles.foreach(f => new XmlConfiguration(f.toURI.toURL) configure(server))
+	}
+	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
 		if(server != null)
 			return
 		try { 
 			Log.setLog(new DelegatingLogger(logger))
 			server = new Server(port)
-			val contexts = apps.map { case (contextPath, deployment) => deploy(contextPath, deployment) }
-			val coll = new ContextHandlerCollection()
-			coll.setHandlers(contexts.toArray)
-			server.setHandler(coll)
+			if(customConf)
+				configureCustom(confFiles, confXml)
+			else
+				configureContexts(apps)
 			server.start()
 		} catch {
 			case e =>
