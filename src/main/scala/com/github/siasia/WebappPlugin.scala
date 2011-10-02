@@ -10,9 +10,10 @@ object WebappPlugin extends Plugin {
 	def webappSettings0 = Seq(
 		scanDirectories <<= classDirectory(Seq(_)),
 		scanInterval := 3,
-		deployment <<= (webappResources, fullClasspath, scanDirectories, scanInterval) map {
-			(rs, cp, sd, si) =>
-			Deployment(rs, cp.map(_.data), sd, si)
+		env := None,
+		deployment <<= (webappResources, fullClasspath, scanDirectories, scanInterval, env) map {
+			(rs, cp, sd, si, env) =>
+			Deployment(rs, cp.map(_.data), sd, si, env)
 		}
 	)
 	def webappSettings = warSettings ++ inConfig(Defaults.conf)(webappSettings0)

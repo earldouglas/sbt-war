@@ -17,8 +17,13 @@ object PluginBuild extends Build {
 				import org.mortbay.util.{Scanner => JScanner}
 				import org.mortbay.log.{Log, Logger => JLogger}
 				import org.mortbay.resource.ResourceCollection
+				import org.mortbay.jetty.plus.webapp.EnvConfiguration
 				""",
-				"filesChanged.type" -> "_"
+				"filesChanged.type" -> "_",
+				"envConfig.init" -> """
+				setWebAppContext(context)
+				configureWebApp()
+				"""
 			),
 			Map(
 				"version" -> "7",
@@ -29,8 +34,12 @@ object PluginBuild extends Build {
 				import org.eclipse.jetty.util.{Scanner => JScanner}
 				import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
 				import org.eclipse.jetty.util.resource.ResourceCollection
+				import org.eclipse.jetty.plus.webapp.EnvConfiguration
 				""",
-				"filesChanged.type" -> "String"
+				"filesChanged.type" -> "String",
+				"envConfig.init" -> """
+				configure(context)
+				"""
 			))
 		val root = target / "templates"
 		data.zipWithIndex.flatMap {
@@ -57,7 +66,9 @@ object PluginBuild extends Build {
 		publishTo := Some(Resolver.file("Local", Path.userHome / "projects" / "siasia.github.com" / "maven2" asFile)(Patterns(true, Resolver.mavenStyleBasePattern))),
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
-			"org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "optional"
+			"org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",
+			"org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "optional",
+			"org.eclipse.jetty" % "jetty-plus" % "7.5.1.v20110908" % "optional"
 		),
 		templatesDirectory <<= (sourceDirectory in Runtime)(_ / "templates"),
 		generateJettyRunners <<= (templatesDirectory, target) map {

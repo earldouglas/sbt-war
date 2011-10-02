@@ -6,7 +6,8 @@ case class Deployment(
 	webappResources: Seq[File],
 	classpath: Seq[File],
 	scanDirectories: Seq[File],
-	scanInterval: Int
+	scanInterval: Int,
+	env: Option[File]
 )
 
 object Defaults {
@@ -21,8 +22,9 @@ object PluginKeys {
 	lazy val reload = InputKey[Unit]("reload")
 	lazy val stop = TaskKey[Unit]("stop")
 	lazy val webappResources = SettingKey[Seq[File]]("webapp-resources")
+	lazy val packageWar = TaskKey[File]("package-war")
 	lazy val scanDirectories = SettingKey[Seq[File]]("scan-directories")
 	lazy val scanInterval = SettingKey[Int]("scan-interval")
-	lazy val packageWar = TaskKey[File]("package-war")
+	lazy val env = SettingKey[Option[File]]("env")
 	lazy val deployment = TaskKey[Deployment]("deployment")
 }
