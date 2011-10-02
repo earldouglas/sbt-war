@@ -22,6 +22,7 @@ class Jetty${version}Runner extends Runner {
 				webappResources.map(_.getPath).toArray
 			))
 		setContextLoader(context, classpath)
+		new Scanner(scanDirectories, scanInterval, () => reload(contextPath))
 		contexts += contextPath -> (context, deployment)
 		context
 	}	
@@ -29,7 +30,7 @@ class Jetty${version}Runner extends Runner {
 		if(server != null)
 			return
 		try { 
-			Log.setLog(delegatingLogger(logger))
+			Log.setLog(new DelegatingLogger(logger))
 			server = new Server(port)
 			val contexts = apps.map { case (contextPath, deployment) => deploy(contextPath, deployment) }
 			val coll = new ContextHandlerCollection()
@@ -53,8 +54,20 @@ class Jetty${version}Runner extends Runner {
 			server.stop()
 		server = null
 	}
-	def delegatingLogger(delegate: AbstractLogger) = new LoggerBase(delegate) with JLogger {
+	class DelegatingLogger(delegate: AbstractLogger) extends LoggerBase(delegate) with JLogger {
 		def getLogger(name: String) = this
+	}
+	class Scanner(scanDirs: Seq[File], scanInterval: Int, thunk: () => Unit) extends JScanner {
+		import scala.collection.JavaConversions._
+		setScanDirs(scanDirs)
+		setRecursive(true)
+		setScanInterval(scanInterval)
+		setReportExistingFilesOnStartup(false)
+		val listener = new JScanner.BulkListener {
+			def filesChanged(files: java.util.List[${filesChanged.type}]) { thunk() }
+		}
+		addListener(listener)
+		start()
 	}
 }
 

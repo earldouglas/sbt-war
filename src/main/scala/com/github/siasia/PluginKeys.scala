@@ -4,7 +4,9 @@ import sbt._
 
 case class Deployment(
 	webappResources: Seq[File],
-	classpath: Seq[File]
+	classpath: Seq[File],
+	scanDirectories: Seq[File],
+	scanInterval: Int
 )
 	
 object PluginKeys {
@@ -15,5 +17,7 @@ object PluginKeys {
 	lazy val reload = InputKey[Unit]("reload")
 	lazy val stop = TaskKey[Unit]("stop")
 	lazy val webappResources = SettingKey[Seq[File]]("webapp-resources")
+	lazy val scanDirectories = SettingKey[Seq[File]]("scan-directories")
+	lazy val scanInterval = SettingKey[Int]("scan-interval")
 	lazy val deployment = TaskKey[Deployment]("deployment")
 }

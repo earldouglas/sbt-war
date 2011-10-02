@@ -14,9 +14,11 @@ object PluginBuild extends Build {
 				import org.mortbay.jetty.{Server, Handler}
 				import org.mortbay.jetty.handler.ContextHandlerCollection
 				import org.mortbay.jetty.webapp.WebAppContext
+				import org.mortbay.util.{Scanner => JScanner}
 				import org.mortbay.log.{Log, Logger => JLogger}
 				import org.mortbay.resource.ResourceCollection
-				"""
+				""",
+				"filesChanged.type" -> "_"
 			),
 			Map(
 				"version" -> "7",
@@ -24,9 +26,11 @@ object PluginBuild extends Build {
 				import org.eclipse.jetty.server.{Server, Handler}
 				import org.eclipse.jetty.server.handler.ContextHandlerCollection
 				import org.eclipse.jetty.webapp.WebAppContext
+				import org.eclipse.jetty.util.{Scanner => JScanner}
 				import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
 				import org.eclipse.jetty.util.resource.ResourceCollection
-				"""
+				""",
+				"filesChanged.type" -> "String"
 			))
 		val root = target / "templates"
 		data.zipWithIndex.flatMap {
