@@ -5,6 +5,7 @@ This is an attempt to rethink plugin architecture, clean out some mess and intro
 1. Existing plugin has been broken down into two separate facilities: container and webapp. Compound plugin is still available for simplicity
 2. Webapp is running directly from sources without intermediate exploded war assembly
 3. Breakdown into two parts allows to implement deployment of multiple projects into one web server
+5. And also multiple web servers in one project
 4. Web server runner interface is now little more abstract. This would allow to implement Tomcat support someday
 
 # Usage
