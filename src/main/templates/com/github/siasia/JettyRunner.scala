@@ -28,13 +28,19 @@ class Jetty${version}Runner extends Runner {
 	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)]) {
 		if(server != null)
 			return
-		Log.setLog(delegatingLogger(logger))
-		server = new Server(port)
-		val contexts = apps.map { case (contextPath, deployment) => deploy(contextPath, deployment) }
-		val coll = new ContextHandlerCollection()
-		coll.setHandlers(contexts.toArray)
-		server.setHandler(coll)
-		server.start()
+		try { 
+			Log.setLog(delegatingLogger(logger))
+			server = new Server(port)
+			val contexts = apps.map { case (contextPath, deployment) => deploy(contextPath, deployment) }
+			val coll = new ContextHandlerCollection()
+			coll.setHandlers(contexts.toArray)
+			server.setHandler(coll)
+			server.start()
+		} catch {
+			case e =>
+				server = null
+				throw e
+		}
 	}
 	def reload(contextPath: String) {
 		val (context, deployment) = contexts(contextPath)
