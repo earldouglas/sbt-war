@@ -8,6 +8,10 @@ case class Deployment(
 	scanDirectories: Seq[File],
 	scanInterval: Int
 )
+
+object Defaults {
+	val conf = Runtime
+}
 	
 object PluginKeys {
 	lazy val port = SettingKey[Int]("port")
@@ -19,5 +23,6 @@ object PluginKeys {
 	lazy val webappResources = SettingKey[Seq[File]]("webapp-resources")
 	lazy val scanDirectories = SettingKey[Seq[File]]("scan-directories")
 	lazy val scanInterval = SettingKey[Int]("scan-interval")
+	lazy val packageWar = TaskKey[File]("package-war")
 	lazy val deployment = TaskKey[Deployment]("deployment")
 }

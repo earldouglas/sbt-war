@@ -69,7 +69,7 @@ case class Container(name: String) {
 	def pairToTask(conf: Configuration)(p: (String, ProjectReference)): Initialize[Task[(String, Deployment)]] = (deployment in (p._2, conf)) map { (d) => (p._1, d) }
 	type SettingSeq = Seq[Setting[_]]
 	def deploy(map: (String, ProjectReference)*): SettingSeq =
-		deploy(Runtime)(map :_*)
+		deploy(Defaults.conf)(map :_*)
 	def deploy(conf: Configuration)(map: (String, ProjectReference)*): SettingSeq =
 		settings ++ inConfig(Configuration)(Seq(
 			apps <<= map.map(pairToTask(conf)).join

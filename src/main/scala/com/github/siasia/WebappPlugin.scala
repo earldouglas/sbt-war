@@ -4,10 +4,10 @@ import sbt._
 import Keys._
 import PluginKeys._
 import classpath.ClasspathUtilities._
+import WarPlugin.warSettings
 	
 object WebappPlugin extends Plugin {
 	def webappSettings0 = Seq(
-		webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
 		scanDirectories <<= classDirectory(Seq(_)),
 		scanInterval := 3,
 		deployment <<= (webappResources, fullClasspath, scanDirectories, scanInterval) map {
@@ -15,5 +15,5 @@ object WebappPlugin extends Plugin {
 			Deployment(rs, cp.map(_.data), sd, si)
 		}
 	)
-	def webappSettings = inConfig(Runtime)(webappSettings0)
+	def webappSettings = warSettings ++ inConfig(Defaults.conf)(webappSettings0)
 }
