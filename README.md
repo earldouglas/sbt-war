@@ -83,7 +83,7 @@ Here is an example of how multiple webapps could be deployed to a single Jetty i
       
       lazy val rootSettings = Seq(
         libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
-      ) ++ container.settings ++ container.deploy(
+      ) ++ container.deploy(
         "/sub1" -> sub1,
         "/sub2" -> sub2
       )    

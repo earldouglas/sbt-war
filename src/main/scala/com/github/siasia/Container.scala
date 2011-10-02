@@ -71,7 +71,7 @@ case class Container(name: String) {
 	def deploy(map: (String, ProjectReference)*): SettingSeq =
 		deploy(Runtime)(map :_*)
 	def deploy(conf: Configuration)(map: (String, ProjectReference)*): SettingSeq =
-		inConfig(Configuration)(Seq(
+		settings ++ inConfig(Configuration)(Seq(
 			apps <<= map.map(pairToTask(conf)).join
 		))
 	def discoverContexts(apps: Seq[(String, Deployment)]) = apps.map(_._1)
