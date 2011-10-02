@@ -46,6 +46,11 @@ object PluginBuild extends Build {
 	
 	def rootSettings = Seq(
 		sbtPlugin := true,
+		organization := "com.github.siasia",
+		name := "xsbt-web-plugin",
+		version := "0.2-SNAPSHOT",
+		publishMavenStyle := true,
+		publishTo := Some(Resolver.file("Local", Path.userHome / "projects" / "siasia.github.com" / "maven2" asFile)(Patterns(true, Resolver.mavenStyleBasePattern))),
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
 			"org.eclipse.jetty" % "jetty-webapp" % "7.5.1.v20110908" % "optional"
