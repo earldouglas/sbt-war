@@ -1,10 +1,11 @@
 package com.github.siasia
 
-import sbt._
+import sbt.{`package` => _, _}
 import Project.Initialize
 import Keys._
 import PluginKeys._
-import _root_.sbt.Defaults.packageTasks
+import _root_.sbt.Defaults.{packageTasks, packageBinTask}
+import _root_.sbt.Classpaths.analyzed
 
 object WarPlugin extends Plugin {
 	 private def copyFlat(sources: Iterable[File], destinationDirectory: File): Set[File] = {
@@ -51,15 +52,21 @@ object WarPlugin extends Plugin {
 			IO.deleteIfEmpty(dirs.toSet)
 			(warPath).descendentsExcept("*", filter) x (relativeTo(warPath)|flat)
 		}
-	def warSettings0 = Seq(
-		webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
-		configuration in packageWar := Defaults.conf,
-		artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
-		publishArtifact in (Compile, packageBin) := false,
-		publishArtifact in packageWar := true
-	) ++
-		packageTasks(packageWar, packageWarTask)
+	def exportProductsTask: Initialize[Task[Classpath]] =
+		(products.task, packageJar.task, exportJars, compile) flatMap { (psTask, pkgTask, useJars, analysis) =>
+			(if(useJars) Seq(pkgTask).join else psTask) map { _ map { f => analyzed(f, analysis) } }
+		}
+	def warSettings0 = packageTasks(packageBin, packageWarTask) ++ Seq(
+			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
+			configuration in packageBin := Defaults.conf,
+			artifact in packageBin <<= name(n => Artifact(n, "war", "war")),
+			publishArtifact in (Compile, packageBin) := false,
+			exportedProducts <<= exportProductsTask		
+		)
+		
 	def warSettings = inConfig(Defaults.conf)(warSettings0) ++
-		addArtifact(artifact in (Defaults.conf, packageWar), packageWar in Defaults.conf)
-
+		inConfig(Compile)(packageTasks(packageJar, packageBinTask)) ++
+		addArtifact(artifact in (Defaults.conf, packageBin), packageBin in Defaults.conf) ++ Seq(
+			
+			`package` <<= packageBin in Defaults.conf)
 }
