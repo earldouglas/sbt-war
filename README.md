@@ -1,5 +1,7 @@
 This is an attempt to rethink plugin architecture, clean out some mess and introduce flexibility along with separation of concerns.
 
+Old version moved to [0.1](https://github.com/siasia/xsbt-web-plugin/tree/0.1)
+
 # Changes summary
 
 1. Existing plugin has been broken down into two separate facilities: container and webapp. Compound plugin is still available for simplicity
