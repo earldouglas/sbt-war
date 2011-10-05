@@ -15,7 +15,7 @@ object Defaults {
 	val conf = Runtime
 }
 	
-object PluginKeys {
+object PluginKeys extends Plugin {
 	lazy val port = SettingKey[Int]("port")
 	lazy val apps = TaskKey[Seq[(String, Deployment)]]("apps")
 	lazy val start = TaskKey[Unit]("start")

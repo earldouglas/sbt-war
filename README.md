@@ -28,6 +28,8 @@ Inject plugin settings into project in `build.sbt`:
 		
 or in case if you're using full configuration `webSettings` are `com.github.siasia.WebPlugin.webSettings`.
 
+Plugin keys like `scanInterval` or `port` are located in `com.github.siasia.PluginKeys`.
+
 Add other required stuff like `web.xml`, properties and source code.
 
 This will add commands required to run web application. Invoke `container:start` to run web application:
