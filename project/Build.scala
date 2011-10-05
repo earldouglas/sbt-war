@@ -2,6 +2,7 @@ import sbt.{Node => _, _}
 
 import Keys._
 import scala.xml._
+import ScriptedPlugin._
 
 object PluginBuild extends Build {
 	val templatesDirectory = SettingKey[File]("templates-directory")
@@ -14,12 +15,12 @@ object PluginBuild extends Build {
 				"imports" -> """
 				import org.mortbay.jetty.{Server, Handler}
 				import org.mortbay.jetty.handler.ContextHandlerCollection
-				import org.mortbay.jetty.webapp.WebAppContext
+				import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
 				import org.mortbay.util.{Scanner => JScanner}
 				import org.mortbay.log.{Log, Logger => JLogger}
 				import org.mortbay.resource.ResourceCollection
 				import org.mortbay.xml.XmlConfiguration
-				import org.mortbay.jetty.plus.webapp.EnvConfiguration
+				import org.mortbay.jetty.plus.webapp.{EnvConfiguration, Configuration=>PlusConfiguration}
 				""",
 				"filesChanged.type" -> "_",
 				"envConfig.init" -> """
@@ -32,12 +33,12 @@ object PluginBuild extends Build {
 				"imports" -> """
 				import org.eclipse.jetty.server.{Server, Handler}
 				import org.eclipse.jetty.server.handler.ContextHandlerCollection
-				import org.eclipse.jetty.webapp.WebAppContext
+				import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
 				import org.eclipse.jetty.util.{Scanner => JScanner}
 				import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
 				import org.eclipse.jetty.util.resource.ResourceCollection
 				import org.eclipse.jetty.xml.XmlConfiguration
-				import org.eclipse.jetty.plus.webapp.EnvConfiguration
+				import org.eclipse.jetty.plus.webapp.{EnvConfiguration, PlusConfiguration}
 				""",
 				"filesChanged.type" -> "String",
 				"envConfig.init" -> """
@@ -89,24 +90,17 @@ object PluginBuild extends Build {
 					<version>7</version>
 				</parent>
 			)
-		def massagePomChild(child: Node) = child match {
-			case Elem(_, "properties", _, _, _*) =>
-				None
-			case e @ Elem(_, "artifactId", _, _, _*) =>
-				Some(<artifactId>{e.text+"_"+scalaVersion}</artifactId>)
-			case e @ Elem(_, "version", _, _, _*) =>
-				Some(<version>{sbtVersion+"-"+e.text}</version>)
-			case _ =>	Some(child)
-		}
-		xml.copy(child = xml.child.flatMap(massagePomChild) ++ children)
+		xml.copy(child = xml.child ++ children)
 	}
-	
-	
-	def rootSettings = Seq(
+
+	def rootSettings: Seq[Setting[_]] = Seq(
 		sbtPlugin := true,
+		projectID <<= (organization,moduleName,version,artifacts,crossPaths){ (org,module,version,as,crossEnabled) =>
+			ModuleID(org, module, version).cross(crossEnabled).artifacts(as : _*)
+		},
 		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
-		version := "0.2.0",		
+		version <<= sbtVersion(_ + "-0.2.1"),
 		publishMavenStyle := true,
 		publishTo <<= (version) {
 			version: String =>
@@ -129,8 +123,9 @@ object PluginBuild extends Build {
 			(templateDir, target) =>
 			generateJettyRunnersTask((templateDir ** "*.scala").get, target)
 		},
-		sourceGenerators in Compile <+= generateJettyRunners.task
+		sourceGenerators in Compile <+= generateJettyRunners.task,
+		scriptedBufferLog := false
 	)
 	
-	lazy val root = Project("root", file(".")) settings(rootSettings :_*)
+	lazy val root = Project("root", file(".")) settings(scriptedSettings ++ rootSettings :_*)
 }

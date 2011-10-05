@@ -1,0 +1,15 @@
+> ++ 2.8.0
+
+> container:start
+> check-page Hello, Scala!
+
+> project sub
+> check-page Hello, Scala!
+
+> project root
+> check-page Hello, Scala!
+> container:stop
+-> check-page Hello, Scala!
+
+> project sub
+-> check-page Hello, Scala!

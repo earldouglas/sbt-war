@@ -1,0 +1,32 @@
+> ++ 2.8.0
+
+$ copy-file changes/MyServlet1.scala src/main/scala/test/MyServlet.scala
+> update
+> container:start
+> check-page Hello, Scala!
+
+$ copy-file changes/MyServlet2.scala src/main/scala/test/MyServlet.scala
+
+> compile
+> container:reload /
+> check-page Hello, Scala 2!
+
+> container:stop
+-> check-page Hello World 2!
+
+$ touch jetty7
+> reload
+
+$ copy-file changes/MyServlet1.scala src/main/scala/test/MyServlet.scala
+> update
+> container:start
+> check-page Hello, Scala!
+
+$ copy-file changes/MyServlet2.scala src/main/scala/test/MyServlet.scala
+
+> compile
+> container:reload /
+> check-page Hello, Scala 2!
+
+> container:stop
+-> check-page Hello World 2!

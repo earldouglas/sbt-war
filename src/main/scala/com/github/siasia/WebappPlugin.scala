@@ -16,5 +16,5 @@ object WebappPlugin extends Plugin {
 			Deployment(rs, cp.map(_.data), sd, si, env)
 		}
 	)
-	def webappSettings = warSettings ++ inConfig(Defaults.conf)(webappSettings0)
+	def webappSettings = warSettings ++ inConfig(DefaultConf)(webappSettings0)
 }

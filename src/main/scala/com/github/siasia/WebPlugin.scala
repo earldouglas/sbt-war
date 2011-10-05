@@ -10,7 +10,7 @@ object WebPlugin extends Plugin {
 		container.settings ++
 		WebappPlugin.webappSettings ++
 		Seq(
-			apps in container.Configuration <<= (deployment in Runtime) map {
+			apps in container.Configuration <<= (deployment in DefaultConf) map {
 				d =>
 				Seq("/" -> d)}
 		)

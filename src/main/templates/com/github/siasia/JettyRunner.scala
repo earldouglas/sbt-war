@@ -13,7 +13,18 @@ class Jetty${version}Runner extends Runner {
 	private def setContextLoader(context: WebAppContext, classpath: Seq[File]) {
 		val appLoader = toLoader(classpath, loader)
 		context.setClassLoader(appLoader)
-	}	
+	}
+	private def setEnvConfiguration(context: WebAppContext, file: File) {
+		val config = new EnvConfiguration { setJettyEnvXml(file.toURI.toURL) }
+		val array : Array[Configuration] = Array(
+			new WebInfConfiguration, 
+			new WebXmlConfiguration,  
+			config, 
+			new PlusConfiguration, 
+			new JettyWebXmlConfiguration, 
+			new TagLibConfiguration)
+		context.setConfigurations(array)
+	}
 	private def deploy(contextPath: String, deployment: Deployment) = {
 		import deployment._
 		val context = new WebAppContext()
@@ -23,13 +34,7 @@ class Jetty${version}Runner extends Runner {
 				webappResources.map(_.getPath).toArray
 			))
 		setContextLoader(context, classpath)
-		env.foreach {
-			env:File => 
-			val config = new EnvConfiguration { 
-				setJettyEnvXml(env.toURI.toURL)
-				${envConfig.init}
-			}			
-		}
+		env.foreach(setEnvConfiguration(context, _))
 		if(!scanDirectories.isEmpty)
 			new Scanner(scanDirectories, scanInterval, () => reload(contextPath))
 		contexts += contextPath -> (context, deployment)

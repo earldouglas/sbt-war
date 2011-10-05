@@ -1,0 +1,3 @@
+> container:start
+$ touch jetty-conf
+-> reload

@@ -58,15 +58,15 @@ object WarPlugin extends Plugin {
 		}
 	def warSettings0 = packageTasks(packageBin, packageWarTask) ++ Seq(
 			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
-			configuration in packageBin := Defaults.conf,
+			configuration in packageBin := DefaultConf,
 			artifact in packageBin <<= name(n => Artifact(n, "war", "war")),
 			publishArtifact in (Compile, packageBin) := false,
 			exportedProducts <<= exportProductsTask		
 		)
 		
-	def warSettings = inConfig(Defaults.conf)(warSettings0) ++
+	def warSettings = inConfig(DefaultConf)(warSettings0) ++
 		inConfig(Compile)(packageTasks(packageJar, packageBinTask)) ++
-		addArtifact(artifact in (Defaults.conf, packageBin), packageBin in Defaults.conf) ++ Seq(
+		addArtifact(artifact in (DefaultConf, packageBin), packageBin in DefaultConf) ++ Seq(
 			
-			`package` <<= packageBin in Defaults.conf)
+			`package` <<= packageBin in DefaultConf)
 }

@@ -18,7 +18,7 @@ Add plugin to project in `project/plugins.sbt`(**since sonatype doesn't allow no
 
     resolvers += "OSS Sonatype Repo" at "https://oss.sonatype.org/content/groups/public"    
 
-    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.0"))
+    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.1"))
 		
 Artifacts are available for 0.11.0 SBT versions.
 
@@ -121,6 +121,10 @@ Let's play with it a little
     [info] NO JSP Support for /sub1, did not find org.apache.jasper.servlet.JspServlet
     [success] Total time: 0 s, completed 02.10.2011 7:54:53
     >
+		
+## Other examples
+
+1. [Tests](https://github.com/siasia/xsbt-web-plugin/tree/master/src/sbt-test/web)
 
 # License
 This software is distributed under modified 3-clause BSD license. See [LICENSE](https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE) for more information.
