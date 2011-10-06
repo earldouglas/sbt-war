@@ -6,11 +6,11 @@ import PluginKeys._
 
 object WebPlugin extends Plugin {
 	lazy val container = Container("container")
-	def webSettings =
+	def webSettings(conf: Configuration = DefaultConf) =
 		container.settings ++
-		WebappPlugin.webappSettings ++
+		inConfig(conf)(WebappPlugin.webappSettings0) ++
 		Seq(
-			apps in container.Configuration <<= (deployment in DefaultConf) map {
+			apps in container.Configuration <<= (deployment in conf) map {
 				d =>
 				Seq("/" -> d)}
 		)

@@ -100,7 +100,7 @@ object PluginBuild extends Build {
 		},
 		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
-		version <<= sbtVersion(_ + "-0.2.2"),
+		version <<= sbtVersion(_ + "-0.2.3"),
 		publishMavenStyle := true,
 		publishTo <<= (version) {
 			version: String =>

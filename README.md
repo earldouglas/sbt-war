@@ -20,7 +20,7 @@ Setup [SBT](http://github.com/harrah/xsbt/).
 
 Add plugin to project in `project/plugins.sbt`(**since sonatype doesn't allow non standard maven layout we can't use `addSbtPlugin` here**):
 
-    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.2"))
+    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.3"))
 		
 Artifacts are available for 0.11.0 SBT versions.
 
