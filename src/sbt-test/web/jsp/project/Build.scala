@@ -15,7 +15,7 @@ object MyBuild extends Build {
 
 	lazy val rootSettings = Seq(
 		port in Conf := jettyPort,
-		scanInterval in Runtime := 60,
+		scanInterval in Compile := 60,
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "container",
 			"org.mortbay.jetty" % "jsp-2.0" % "6.1.22" % "container"

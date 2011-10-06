@@ -54,7 +54,7 @@ object Runner {
 		cls.getConstructor().newInstance()
 	}
 	def guessRunner(base: ClassLoader, dual: ClassLoader, rs: Seq[String]): Runner = rs match {
-		case Seq() => sys.error("Unable to load runner")
+		case Seq() => sys.error("Jetty dependencies should be on container classpath")
 		case Seq(runner, rest@_*) =>
 			try { loadRunner(runner, base, dual)	}
 			catch {

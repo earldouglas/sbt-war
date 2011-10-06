@@ -31,7 +31,7 @@ object MyBuild extends Build {
 	))
 
 	lazy val sharedSettings = Seq(
-		scanInterval in Runtime := 60,
+		scanInterval in Compile := 60,
 		libraryDependencies ++= libDeps,
 		indexFile <<= baseDirectory / "index.html",		
 		getPage <<= getPageTask,

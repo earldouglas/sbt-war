@@ -10,13 +10,17 @@ Old version moved to [0.1](https://github.com/siasia/xsbt-web-plugin/tree/0.1)
 5. And also multiple web servers in one project
 4. Web server runner interface is now little more abstract. This would allow to implement Tomcat support someday
 
+# Version changes
+
+0.2.2 - Default conf changed to compile
+
 # Usage
 
 Setup [SBT](http://github.com/harrah/xsbt/).
 
 Add plugin to project in `project/plugins.sbt`(**since sonatype doesn't allow non standard maven layout we can't use `addSbtPlugin` here**):
 
-    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.1"))
+    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.2"))
 		
 Artifacts are available for 0.11.0 SBT versions.
 
@@ -27,6 +31,10 @@ Inject plugin settings into project in `build.sbt`:
 or in case if you're using full configuration `webSettings` are `com.github.siasia.WebPlugin.webSettings`.
 
 Plugin keys like `scanInterval` or `port` are located in `com.github.siasia.PluginKeys`.
+
+**You must include Jetty dependencies into your project. Otherwise it would fail to boot with error message `Jetty dependencies should be on container classpath`.** Example:
+
+    libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
 
 Add other required stuff like `web.xml`, properties and source code.
 

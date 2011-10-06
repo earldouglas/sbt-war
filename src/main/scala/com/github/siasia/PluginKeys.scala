@@ -12,7 +12,7 @@ case class Deployment(
 )
 
 object PluginKeys extends Plugin {
-	lazy val DefaultConf = Runtime
+	lazy val DefaultConf = Compile
 	lazy val port = SettingKey[Int]("port")
 	lazy val apps = TaskKey[Seq[(String, Deployment)]]("apps")
 	lazy val start = TaskKey[Unit]("start")

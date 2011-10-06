@@ -56,17 +56,15 @@ object WarPlugin extends Plugin {
 		(products.task, packageJar.task, exportJars, compile) flatMap { (psTask, pkgTask, useJars, analysis) =>
 			(if(useJars) Seq(pkgTask).join else psTask) map { _ map { f => analyzed(f, analysis) } }
 		}
-	def warSettings0 = packageTasks(packageBin, packageWarTask) ++ Seq(
+	def warSettings0 =
+		packageTasks(packageJar, packageBinTask) ++
+		packageTasks(packageBin, packageWarTask) ++
+		addArtifact(artifact in packageBin, packageBin) ++ Seq(
 			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
 			configuration in packageBin := DefaultConf,
 			artifact in packageBin <<= name(n => Artifact(n, "war", "war")),
-			publishArtifact in (Compile, packageBin) := false,
-			exportedProducts <<= exportProductsTask		
-		)
+			exportedProducts <<= exportProductsTask,
+			`package` <<= packageBin)
 		
-	def warSettings = inConfig(DefaultConf)(warSettings0) ++
-		inConfig(Compile)(packageTasks(packageJar, packageBinTask)) ++
-		addArtifact(artifact in (DefaultConf, packageBin), packageBin in DefaultConf) ++ Seq(
-			
-			`package` <<= packageBin in DefaultConf)
+	def warSettings = inConfig(DefaultConf)(warSettings0)
 }

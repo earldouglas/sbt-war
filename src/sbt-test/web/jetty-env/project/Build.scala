@@ -15,7 +15,7 @@ object MyBuild extends Build {
 
 	lazy val rootSettings =	Seq(
 		port in Conf := jettyPort,
-		env in Runtime := Some(file(".") / "conf" / "jetty" / "jetty-env.xml" asFile),
+		env in Compile := Some(file(".") / "conf" / "jetty" / "jetty-env.xml" asFile),
 		libraryDependencies ++= Seq(
 			"org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container",
 			"org.eclipse.jetty" % "jetty-plus" % "7.3.0.v20110203" % "container",
