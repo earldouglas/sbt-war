@@ -39,27 +39,34 @@ class Jetty${version}Runner extends Runner {
 			new Scanner(scanDirectories, scanInterval, () => reload(contextPath))
 		contexts += contextPath -> (context, deployment)
 		context
-	}
+	}	
 	private def configureContexts(apps: Seq[(String, Deployment)]) {
 		val contexts = apps.map { case (contextPath, deployment) => deploy(contextPath, deployment) }
 		val coll = new ContextHandlerCollection()
 		coll.setHandlers(contexts.toArray)
 		server.setHandler(coll)
-	}
+	}	
 	private def configureCustom(confFiles: Seq[File], confXml: NodeSeq) {
 		confXml.foreach(x => new XmlConfiguration(x.toString) configure(server))
 		confFiles.foreach(f => new XmlConfiguration(f.toURI.toURL) configure(server))
+	}
+	private def configureConnector(port: Int) {
+		val conn = new SelectChannelConnector
+		conn.setPort(port)
+		server.addConnector(conn)
 	}
 	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
 		if(server != null)
 			return
 		try { 
 			Log.setLog(new DelegatingLogger(logger))
-			server = new Server(port)
+			server = new Server
 			if(customConf)
 				configureCustom(confFiles, confXml)
-			else
+			else {
+				configureConnector(port)
 				configureContexts(apps)
+			}
 			server.start()
 		} catch {
 			case e =>

@@ -29,10 +29,10 @@ case class Container(name: String) {
 
 		private implicit def keyToResult[T](key: ScopedTask[T])(implicit state: State): T = eval(key)
 
-		def newRunner(state: State) = {
+		def newRunner(ref: ProjectRef, state: State) = {
 			implicit val s = state
-			val classpath = Build.data(fullClasspath in Configuration)
-			state.put(attribute, Runner(scalaInstance, classpath))
+			val classpath = Build.data(fullClasspath in (ref, Configuration))
+			state.put(attribute, Runner(scalaInstance in ref, classpath))
 		}
 	}
 
@@ -43,10 +43,10 @@ case class Container(name: String) {
 	def containerSettings = Seq(
 		managedClasspath <<= (classpathTypes, update) map {(ct, up) => managedJars(Configuration, ct, up)},
 		fullClasspath <<= managedClasspath,
-		onLoad in Global <<= (onLoad in Global) {
-			(onLoad) =>
+		onLoad in Global <<= (onLoad in Global, thisProjectRef) {
+			(onLoad, containerProject) =>
 				(state) =>
-					Impl.newRunner(onLoad(state))},
+					Impl.newRunner(containerProject, onLoad(state))},
 		onUnload in Global <<= (onUnload in Global) {
 			(onUnload) =>
 				(state) =>

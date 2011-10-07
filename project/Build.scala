@@ -15,6 +15,7 @@ object PluginBuild extends Build {
 				"imports" -> """
 				import org.mortbay.jetty.{Server, Handler}
 				import org.mortbay.jetty.handler.ContextHandlerCollection
+				import org.mortbay.jetty.nio.SelectChannelConnector
 				import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
 				import org.mortbay.util.{Scanner => JScanner}
 				import org.mortbay.log.{Log, Logger => JLogger}
@@ -33,6 +34,7 @@ object PluginBuild extends Build {
 				"imports" -> """
 				import org.eclipse.jetty.server.{Server, Handler}
 				import org.eclipse.jetty.server.handler.ContextHandlerCollection
+				import org.eclipse.jetty.server.nio.SelectChannelConnector
 				import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
 				import org.eclipse.jetty.util.{Scanner => JScanner}
 				import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
@@ -100,7 +102,7 @@ object PluginBuild extends Build {
 		},
 		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
-		version <<= sbtVersion(_ + "-0.2.3"),
+		version <<= sbtVersion(_ + "-0.2.4"),
 		publishMavenStyle := true,
 		publishTo <<= (version) {
 			version: String =>
