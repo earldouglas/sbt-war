@@ -15,7 +15,7 @@ Inject plugin settings into project in `build.sbt`:
 
     seq(webSettings :_*)
 		
-# See [Wiki](http://github.com/siasia/xsbt-web-plugin/wiki/) for more information
+# See [Wiki](http://github.com/siasia/xsbt-web-plugin/wiki/) for details
 
 # License
 This software is distributed under modified 3-clause BSD license. See [LICENSE](https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE) for more information.
