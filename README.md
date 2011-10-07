@@ -6,7 +6,7 @@ Old version moved to [0.1](https://github.com/siasia/xsbt-web-plugin/tree/0.1)
 
 Setup [SBT](http://github.com/harrah/xsbt/).
 
-Add plugin to project in `project/plugins.sbt`(**since sonatype doesn't allow non standard maven layout we can't use `addSbtPlugin` here**):
+Add plugin to project in `project/plugins.sbt`:
 
     libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.4"))
 		
