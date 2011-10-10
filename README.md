@@ -1,5 +1,3 @@
-This is an attempt to rethink plugin architecture, clean out some mess and introduce flexibility along with separation of concerns.
-
 Old version moved to [0.1](https://github.com/siasia/xsbt-web-plugin/tree/0.1)
 
 # Usage

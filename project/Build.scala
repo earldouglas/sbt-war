@@ -3,6 +3,9 @@ import sbt.{Node => _, _}
 import Keys._
 import scala.xml._
 import ScriptedPlugin._
+import std.TaskExtra._
+import com.github.siasia._
+import SonatypePlugin._
 
 object PluginBuild extends Build {
 	val templatesDirectory = SettingKey[File]("templates-directory")
@@ -63,38 +66,6 @@ object PluginBuild extends Build {
 		} toSeq
 	}
 
-	def pomPostProcessTask(scalaVersion: String, sbtVersion: String)(node: Node) = node match {
-		case xml: Elem =>
-			val children = Seq(
-				<url>http://github.com/siasia/xsbt-web-plugin</url>,
-				<licenses>
-					<license>
-						<name>BSD 3-Clause</name>
-						<url>https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE</url>
-						<distribution>repo</distribution>
-					</license>
-				</licenses>,
-				<scm>
-					<connection>scm:git:git@github.com:siasia/xsbt-web-plugin.git</connection>
-					<developerConnection>scm:git:git@github.com:siasia/xsbt-web-plugin.git</developerConnection>
-					<url>git@github.com:siasia/xsbt-web-plugin.git</url>
-				</scm>,
-				<developers>
-					<developer>
-						<id>siasia</id>
-						<name>Artyom Olshevskiy</name>
-						<email>siasiamail@gmail.com</email>
-					</developer>
-				</developers>,
-				<parent>
-					<groupId>org.sonatype.oss</groupId>
-					<artifactId>oss-parent</artifactId>
-					<version>7</version>
-				</parent>
-			)
-		xml.copy(child = xml.child ++ children)
-	}
-
 	def rootSettings: Seq[Setting[_]] = Seq(
 		sbtPlugin := true,
 		projectID <<= (organization,moduleName,version,artifacts,crossPaths){ (org,module,version,as,crossEnabled) =>
@@ -103,17 +74,21 @@ object PluginBuild extends Build {
 		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
 		version <<= sbtVersion(_ + "-0.2.4"),
-		publishMavenStyle := true,
-		publishTo <<= (version) {
-			version: String =>
-			val ossSonatype = "https://oss.sonatype.org/"
-			if (version.trim.endsWith("SNAPSHOT"))
-				Some("snapshots" at ossSonatype + "content/repositories/snapshots") 
-			else None
-		},
 		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-		pomIncludeRepository := ((_) => false),
-		pomPostProcess <<= (scalaVersion, sbtVersion) (pomPostProcessTask(_, _) _),
+		pomUrl := "http://github.com/siasia/xsbt-web-plugin",
+		licenses := Seq(
+			"BSD 3-Clause" -> new URL("https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE")
+		),
+		scm := (
+			"scm:git:git@github.com:siasia/xsbt-web-plugin.git",
+			"scm:git:git@github.com:siasia/xsbt-web-plugin.git",
+			"git@github.com:siasia/xsbt-web-plugin.git"
+		),
+		developers := Seq((
+			"siasia",
+			"Artyom Olshevskiy",
+			"siasiamail@gmail.com"
+		)),
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
 			"org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",
@@ -129,5 +104,5 @@ object PluginBuild extends Build {
 		scriptedBufferLog := false
 	)
 	
-	lazy val root = Project("root", file(".")) settings(scriptedSettings ++ rootSettings :_*)
+	lazy val root = Project("root", file(".")) settings(scriptedSettings ++ rootSettings ++ sonatypeSettings :_*)
 }
