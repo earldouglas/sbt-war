@@ -6,7 +6,7 @@ Setup [SBT](http://github.com/harrah/xsbt/).
 
 Add plugin to project in `project/plugins.sbt`:
 
-    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.4"))
+    libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.5"))
 		
 
 Inject plugin settings into project in `build.sbt`:

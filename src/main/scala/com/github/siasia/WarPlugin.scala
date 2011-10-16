@@ -8,7 +8,7 @@ import _root_.sbt.Defaults.{packageTasks, packageBinTask}
 import _root_.sbt.Classpaths.analyzed
 
 object WarPlugin extends Plugin {
-	 private def copyFlat(sources: Iterable[File], destinationDirectory: File): Set[File] = {
+	private def copyFlat(sources: Iterable[File], destinationDirectory: File): Set[File] = {
     val map = sources.map(source => (source.asFile, destinationDirectory / source.getName))
     IO.copy(map)
   }
@@ -52,19 +52,13 @@ object WarPlugin extends Plugin {
 			IO.deleteIfEmpty(dirs.toSet)
 			(warPath).descendentsExcept("*", filter) x (relativeTo(warPath)|flat)
 		}
-	def exportProductsTask: Initialize[Task[Classpath]] =
-		(products.task, packageJar.task, exportJars, compile) flatMap { (psTask, pkgTask, useJars, analysis) =>
-			(if(useJars) Seq(pkgTask).join else psTask) map { _ map { f => analyzed(f, analysis) } }
-		}
 	def warSettings0 =
-		packageTasks(packageJar, packageBinTask) ++
-		packageTasks(packageBin, packageWarTask) ++
-		addArtifact(artifact in packageBin, packageBin) ++ Seq(
+		packageTasks(packageWar, packageWarTask) ++ Seq(
 			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
-			configuration in packageBin := DefaultConf,
-			artifact in packageBin <<= name(n => Artifact(n, "war", "war")),
-			exportedProducts <<= exportProductsTask,
-			`package` <<= packageBin)
+			artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
+			publishArtifact in packageBin := false,
+			`package` <<= packageWar)
 		
-	def warSettings = inConfig(DefaultConf)(warSettings0)
+	def warSettings = inConfig(DefaultConf)(warSettings0) ++
+		addArtifact(artifact in (DefaultConf, packageWar), packageWar in DefaultConf)
 }
