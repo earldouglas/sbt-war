@@ -23,6 +23,7 @@ object PluginKeys extends Plugin {
 	lazy val configurationFiles = SettingKey[Seq[File]]("configuration-files")
 	lazy val configurationXml = SettingKey[NodeSeq]("configuration-xml")
 	lazy val webappResources = SettingKey[Seq[File]]("webapp-resources")
+	lazy val warPostProcess = TaskKey[() => Unit]("war-post-process")
 	lazy val packageWar = TaskKey[File]("package-war")
 	lazy val scanDirectories = SettingKey[Seq[File]]("scan-directories")
 	lazy val scanInterval = SettingKey[Int]("scan-interval")

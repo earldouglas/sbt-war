@@ -14,8 +14,8 @@ object WarPlugin extends Plugin {
   }
 	
 	def packageWarTask: Initialize[Task[Seq[(File, String)]]] =
-		(webappResources, target, fullClasspath, excludeFilter, streams) map {
-			(webappResources, target, fullClasspath, filter, s) =>
+		(webappResources, target, fullClasspath, excludeFilter, warPostProcess, streams) map {
+			(webappResources, target, fullClasspath, filter, postProcess, s) =>
 			val classpath = fullClasspath.map(_.data)
 			val warPath = target / "webapp"
 			val log = s.log.asInstanceOf[AbstractLogger]    
@@ -50,6 +50,7 @@ object WarPlugin extends Plugin {
 				files.foreach(r => log.debug("Pruning file " + r))
 			IO.delete(files)
 			IO.deleteIfEmpty(dirs.toSet)
+			postProcess()
 			(warPath).descendentsExcept("*", filter) x (relativeTo(warPath)|flat)
 		}
 	def warSettings0 =
@@ -57,6 +58,7 @@ object WarPlugin extends Plugin {
 			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
 			artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
 			publishArtifact in packageBin := false,
+			warPostProcess := { () => () },
 			`package` <<= packageWar)
 		
 	def warSettings = inConfig(DefaultConf)(warSettings0) ++
