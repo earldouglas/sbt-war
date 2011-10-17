@@ -4,7 +4,7 @@ import sbt.{`package` => _, _}
 import Project.Initialize
 import Keys._
 import PluginKeys._
-import _root_.sbt.Defaults.{packageTasks, packageBinTask}
+import _root_.sbt.Defaults.{packageTasks, packageBinTask, inDependencies}
 import _root_.sbt.Classpaths.analyzed
 
 object WarPlugin extends Plugin {
@@ -56,6 +56,7 @@ object WarPlugin extends Plugin {
 	def warSettings0 =
 		packageTasks(packageWar, packageWarTask) ++ Seq(
 			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
+			webappResources <++= inDependencies(webappResources, ref => Nil, false) apply { _.flatten },
 			artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
 			publishArtifact in packageBin := false,
 			warPostProcess := { () => () },

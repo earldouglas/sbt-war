@@ -73,7 +73,7 @@ object PluginBuild extends Build {
 		},
 		organization := "com.github.siasia",
 		name := "xsbt-web-plugin",
-		version <<= sbtVersion(_ + "-0.2.6"),
+		version <<= sbtVersion(_ + "-0.2.7"),
 		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
 		pomUrl := "http://github.com/siasia/xsbt-web-plugin",
 		licenses := Seq(
