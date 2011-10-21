@@ -12,6 +12,8 @@ Add plugin to project in `project/plugins.sbt`:
 Inject plugin settings into project in `build.sbt`:
 
     seq(webSettings :_*)
+    
+    libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
 		
 # See [Wiki](http://github.com/siasia/xsbt-web-plugin/wiki/) for details
 
