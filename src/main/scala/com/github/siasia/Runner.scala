@@ -7,64 +7,35 @@ import java.net.{URI, URL, URLClassLoader}
 import java.lang.reflect.InvocationTargetException
 import scala.xml.NodeSeq
 
-object Loaders
-{
-	val SbtPackage = "sbt."
-	def isNestedOrSelf(className: String, checkAgainst: String) =
-		className == checkAgainst || className.startsWith(checkAgainst + "$")
-	def isSbtClass(className: String) = className.startsWith(Loaders.SbtPackage)
-}
-
-class LazyFrameworkLoader(runnerClassName: String, urls: Array[URL], parent: ClassLoader, grandparent: ClassLoader)
-	extends LoaderBase(urls, parent)
-{
-	def doLoadClass(className: String): Class[_] =
-	{
-		if(Loaders.isNestedOrSelf(className, runnerClassName))
-			findClass(className)
-		else if(Loaders.isSbtClass(className)) // we circumvent the parent loader because we know that we want the
-			grandparent.loadClass(className)              // version of sbt that is currently the builder (not the project being built)
-		else
-			parent.loadClass(className)
-	}
-}
-
 object Runner {
 	def runners = Seq(
-		"Jetty6Runner",
-		"Jetty7Runner"
+		classOf[Jetty6Runner].getName,
+		classOf[Jetty7Runner].getName
 	)
+	def packages = Seq("org.mortbay", "org.eclipse.jetty")
 	def apply(instance: ScalaInstance, classpath: Seq[File]): Runner = {
-		val base = getClass.getClassLoader
 		val parentLoader = instance.loader
 		val loader: ClassLoader = toLoader(classpath, parentLoader)
 
-		val filter = (name: String) => name.startsWith("org.mortbay.") || name.startsWith("org.eclipse.jetty.")
-		val notFilter = (name: String) => !filter(name)
-
-		val dual = new DualLoader(base, notFilter, x => true, loader, filter, x => false)		
-		val runner = guessRunner(base, dual, runners)
+		val runner = guessRunner(loader, runners)
 		runner.setLoader(loader)
 		runner
 	}
-	def loadRunner(className: String, base: ClassLoader, dual: ClassLoader):Runner = {
-		val runner = "com.github.siasia."+className
-		val lazyLoader = new LazyFrameworkLoader(runner, Array(IO.classLocation[Runner].toURI.toURL), dual, base)
-		val cls = Class.forName(runner, true, lazyLoader).asSubclass(classOf[Runner])
-		cls.getConstructor().newInstance()
-	}
-	def guessRunner(base: ClassLoader, dual: ClassLoader, rs: Seq[String]): Runner = rs match {
+	def loadRunner(className: String, loader: ClassLoader):Runner =
+		LazyLoader.makeInstance[Runner](loader, packages, className)
+		
+	def guessRunner(loader: ClassLoader, rs: Seq[String]): Runner = rs match {
 		case Seq() => sys.error("Jetty dependencies should be on container classpath")
 		case Seq(runner, rest@_*) =>
-			try { loadRunner(runner, base, dual)	}
+			try { loadRunner(runner, loader)	}
 			catch {
 				case e: InvocationTargetException =>
 					e.getCause match {
 						case _: NoClassDefFoundError =>
-							guessRunner(base, dual, rest)
+							guessRunner(loader, rest)
 					}
 				case e: NoClassDefFoundError =>
-					guessRunner(base, dual, rest)
+					guessRunner(loader, rest)
 			}			
 	}
 }

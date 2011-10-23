@@ -66,14 +66,11 @@ object PluginBuild extends Build {
 		} toSeq
 	}
 
-	def rootSettings: Seq[Setting[_]] = Seq(
-		sbtPlugin := true,
+	def sharedSettings = sonatypeSettings ++ Seq(
 		projectID <<= (organization,moduleName,version,artifacts,crossPaths){ (org,module,version,as,crossEnabled) =>
 			ModuleID(org, module, version).cross(crossEnabled).artifacts(as : _*)
 		},
 		organization := "com.github.siasia",
-		name := "xsbt-web-plugin",
-		version <<= sbtVersion(_ + "-0.2.7"),
 		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
 		pomUrl := "http://github.com/siasia/xsbt-web-plugin",
 		licenses := Seq(
@@ -88,7 +85,17 @@ object PluginBuild extends Build {
 			"siasia",
 			"Artyom Olshevskiy",
 			"siasiamail@gmail.com"
-		)),
+		))		
+	)
+
+	def appendedSettings = Seq(
+		version <<= (sbtVersion, version)(_ + "-" + _)
+	)
+
+	def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
+		sbtPlugin := true,
+		name := "xsbt-web-plugin",
+		version := "0.2.8",
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
 			"org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",
@@ -101,8 +108,19 @@ object PluginBuild extends Build {
 			generateJettyRunnersTask((templateDir ** "*.scala").get, target)
 		},
 		sourceGenerators in Compile <+= generateJettyRunners.task,
-		scriptedBufferLog := false
-	)
+		scriptedBufferLog := false,
+		publishLocal <<= (publishLocal in commons, publishLocal) map ((_, p) => p)
+	) ++ appendedSettings
+
+	def commonsSettings = sharedSettings ++ Seq(
+		name := "plugin-commons",
+		version := "0.1",
+		libraryDependencies <++= (sbtVersion) {
+			(v) => Seq(
+				"org.scala-tools.sbt" %% "classpath" % v % "provided"
+			)}
+	) ++ appendedSettings
 	
-	lazy val root = Project("root", file(".")) settings(scriptedSettings ++ rootSettings ++ sonatypeSettings :_*)
+	lazy val root = Project("root", file(".")) settings(rootSettings :_*) dependsOn(commons)
+	lazy val commons = Project("commons", file("commons")) settings(commonsSettings :_*)
 }
