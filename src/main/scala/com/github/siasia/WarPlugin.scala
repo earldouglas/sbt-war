@@ -57,7 +57,7 @@ object WarPlugin extends Plugin {
 		packageTasks(packageWar, packageWarTask(classpathConfig)) ++ Seq(
 			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
 			webappResources <++= inDependencies(webappResources, ref => Nil, false) apply { _.flatten },
-			artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
+			artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war")),
 			publishArtifact in packageBin := false,
 			warPostProcess := { () => () },
 			`package` <<= packageWar)
