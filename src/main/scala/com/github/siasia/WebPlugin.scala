@@ -14,5 +14,5 @@ object WebPlugin extends Plugin {
 			apps in container.Configuration <<= (deployment in conf) map {
 				d =>
 					Seq("/" -> d)}
-		)
+		) ++ WarPlugin.globalWarSettings
 }

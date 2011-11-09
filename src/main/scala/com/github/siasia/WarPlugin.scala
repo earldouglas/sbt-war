@@ -13,8 +13,8 @@ object WarPlugin extends Plugin {
     IO.copy(map)
   }
 	
-	def packageWarTask: Initialize[Task[Seq[(File, String)]]] =
-		(webappResources, target, fullClasspath, excludeFilter, warPostProcess, streams) map {
+	def packageWarTask(classpathConfig: Configuration): Initialize[Task[Seq[(File, String)]]] =
+		(webappResources, target, fullClasspath in classpathConfig, excludeFilter, warPostProcess, streams) map {
 			(webappResources, target, fullClasspath, filter, postProcess, s) =>
 			val classpath = fullClasspath.map(_.data)
 			val warPath = target / "webapp"
@@ -53,15 +53,19 @@ object WarPlugin extends Plugin {
 			postProcess()
 			(warPath).descendentsExcept("*", filter) x (relativeTo(warPath)|flat)
 		}
-	def warSettings0 =
-		packageTasks(packageWar, packageWarTask) ++ Seq(
+	def warSettings0(classpathConfig: Configuration):Seq[Setting[_]] =
+		packageTasks(packageWar, packageWarTask(classpathConfig)) ++ Seq(
 			webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
 			webappResources <++= inDependencies(webappResources, ref => Nil, false) apply { _.flatten },
 			artifact in packageWar <<= name(n => Artifact(n, "war", "war")),
 			publishArtifact in packageBin := false,
 			warPostProcess := { () => () },
 			`package` <<= packageWar)
+	def warSettings0:Seq[Setting[_]] = warSettings0(DefaultClasspathConf)
+
+	def globalWarSettings:Seq[Setting[_]] = Seq(addArtifact(artifact in (DefaultConf, packageWar), packageWar in DefaultConf) :_*)
 		
-	def warSettings = inConfig(DefaultConf)(warSettings0) ++
-		addArtifact(artifact in (DefaultConf, packageWar), packageWar in DefaultConf)
+	def warSettings(classpathConfig: Configuration):Seq[Setting[_]] = inConfig(DefaultConf)(warSettings0(classpathConfig)) ++ globalWarSettings
+	def warSettings:Seq[Setting[_]] = warSettings(DefaultClasspathConf)
+		
 }
