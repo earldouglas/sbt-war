@@ -7,7 +7,7 @@ Setup [SBT](http://github.com/harrah/xsbt/).
 Add plugin to project in `project/plugins.sbt`:
 
 ```scala
-libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.8"))
+libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.9"))
 ```
 
 Inject plugin settings into project in `build.sbt`:
