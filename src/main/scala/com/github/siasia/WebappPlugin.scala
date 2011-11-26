@@ -7,8 +7,23 @@ import classpath.ClasspathUtilities._
 import WarPlugin.warSettings0
 	
 object WebappPlugin extends Plugin {
+	def auxCompileTask = (compile, crossTarget, classDirectory, excludeFilter) map {
+		(_, ct, cd, filter) =>
+		val auxCd = ct / "aux-classes"
+		val classes = for {
+			file <- cd.descendentsExcept("*", filter).get
+			val target = Path.rebase(cd, auxCd)(file).get
+		} yield (file, target)
+		val copied = IO.copy(classes)
+		val toRemove = scala.collection.mutable.HashSet((auxCd ** "*").get.toSeq : _*) -- copied
+		val (dirs, files) = toRemove.toList.partition(_.isDirectory)
+		IO.delete(files)
+		IO.deleteIfEmpty(dirs.toSet)
+	}
+	
 	def webappSettings0(classpathConfig: Configuration):Seq[Setting[_]] = warSettings0(classpathConfig) ++ Seq(
-		scanDirectories <<= classDirectory(Seq(_)),
+		scanDirectories <<= crossTarget(ct => Seq(ct / "aux-classes")),
+		auxCompile <<= auxCompileTask,
 		scanInterval := 3,
 		env := None,
 		deployment <<= (webappResources, fullClasspath in classpathConfig, scanDirectories, scanInterval, env) map {
