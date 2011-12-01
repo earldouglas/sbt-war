@@ -2,6 +2,7 @@ import sbt.{Node => _, _}
 
 import Keys._
 import scala.xml._
+import ScriptedPlugin._
 import std.TaskExtra._
 import com.github.siasia._
 import SonatypePlugin._
@@ -91,7 +92,7 @@ object PluginBuild extends Build {
 		version <<= (sbtVersion, version)(_ + "-" + _)
 	)
 
-	def rootSettings: Seq[Setting[_]] = sharedSettings ++ Seq(
+	def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
 		sbtPlugin := true,
 		name := "xsbt-web-plugin",
 		version := "0.2.10",
@@ -108,7 +109,8 @@ object PluginBuild extends Build {
 		},
 		sourceGenerators in Compile <+= generateJettyRunners.task,
 		publishLocal <<= (publishLocal in commons, publishLocal) map ((_, p) => p),
-		scalacOptions += "-deprecation"
+		scalacOptions += "-deprecation",
+		scriptedBufferLog := false
 	) ++ appendedSettings
 
 	def commonsSettings = sharedSettings ++ Seq(
