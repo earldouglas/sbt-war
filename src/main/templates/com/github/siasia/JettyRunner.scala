@@ -55,6 +55,16 @@ class Jetty${version}Runner extends Runner {
 		conn.setPort(port)
 		server.addConnector(conn)
 	}
+        
+        private def configureSecureConnector() {
+                val conn = new ${sslConnectorClass}()
+		conn.setPort(9091)
+                conn.setKeystore("target/jetty-ssl.keystore")
+                conn.setPassword("jetty6")
+                conn.setKeyPassword("jetty6")                            
+		server.addConnector(conn)    
+	}
+  
 	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
 		if(server != null)
 			return
@@ -65,6 +75,7 @@ class Jetty${version}Runner extends Runner {
 				configureCustom(confFiles, confXml)
 			else {
 				configureConnector(port)
+                                configureSecureConnector()
 				configureContexts(apps)
 			}
 			server.start()
