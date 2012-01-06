@@ -15,12 +15,12 @@ object PluginBuild extends Build {
 		val data = Seq(
 			Map(
 				"version" -> "6",
-                                "sslConnectorClass" -> "SslSocketConnector",
+				"sslConnectorClass" -> "SslSocketConnector",
 				"imports" -> """                                
 				import org.mortbay.jetty.{Server, Handler}
 				import org.mortbay.jetty.handler.ContextHandlerCollection
 				import org.mortbay.jetty.nio.SelectChannelConnector
-                                import org.mortbay.jetty.security.SslSocketConnector
+				import org.mortbay.jetty.security.SslSocketConnector
 				import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
 				import org.mortbay.util.{Scanner => JScanner}
 				import org.mortbay.log.{Log, Logger => JLogger}
@@ -36,12 +36,12 @@ object PluginBuild extends Build {
 			),
 			Map(
 				"version" -> "7",
-                                "sslConnectorClass" -> "SslSelectChannelConnector",
+				"sslConnectorClass" -> "SslSelectChannelConnector",
 				"imports" -> """
 				import org.eclipse.jetty.server.{Server, Handler}
 				import org.eclipse.jetty.server.handler.ContextHandlerCollection
 				import org.eclipse.jetty.server.nio.SelectChannelConnector
-                                import org.eclipse.jetty.server.ssl.SslSelectChannelConnector
+                import org.eclipse.jetty.server.ssl.SslSelectChannelConnector
 				import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
 				import org.eclipse.jetty.util.{Scanner => JScanner}
 				import org.eclipse.jetty.util.log.{Log, Logger => JLogger}

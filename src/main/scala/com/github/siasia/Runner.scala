@@ -43,7 +43,7 @@ object Runner {
 trait Runner {
 	protected var loader: ClassLoader = null
 	def setLoader(loader: ClassLoader) { this.loader = loader }
-	def start(port: Int, logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq): Unit
+	def start(port: Int, ssl: SslSettings, logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq): Unit
 	def reload(context: String): Unit
 	def stop(): Unit
 }

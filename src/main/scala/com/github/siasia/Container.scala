@@ -54,9 +54,18 @@ case class Container(name: String) {
 					onUnload(state)
 		},
 		port := 8080,
-		start <<= (state, port, apps, customConfiguration, configurationFiles, configurationXml) map {
-			(state, port, apps, cc, cf, cx) =>
-			state.start(port, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps, cc, cf, cx)
+		sslPort := 0,
+		sslKeystore := "",
+		sslPassword := "",
+		start <<= (state, port, sslPort, sslKeystore, sslPassword, apps, customConfiguration, configurationFiles, configurationXml) map {
+			(state, port, sslPort, sslKeystore, sslPassword, apps, cc, cf, cx) => {
+			  val ssl = new SslSettings
+			  ssl.port = sslPort
+			  ssl.keystore = if (sslKeystore == "") null else sslKeystore
+			  ssl.password = if (sslPassword == "") null else sslPassword
+			  ssl.keyPassword = ssl.password
+			  state.start(port, ssl, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps, cc, cf, cx)
+			}
 		},
 		discoveredContexts <<= TaskData.write(apps map discoverContexts) triggeredBy start,
 		reload <<= reloadTask(state),
