@@ -59,9 +59,18 @@ class Jetty${version}Runner extends Runner {
 	private def configureSecureConnector(ssl: SslSettings) {
 		val conn = new ${sslConnectorClass}()
 		conn.setPort(ssl.port)
-		if (ssl.keystore != null) conn.setKeystore(ssl.keystore)
-		if (ssl.password != null) conn.setPassword(ssl.password)
-		if (ssl.keyPassword != null) conn.setKeyPassword(ssl.keyPassword)
+		ssl.keystore match {
+		  case Some(k) => conn.setKeystore(k)
+		  case _ =>
+		}
+		ssl.password match {
+		  case Some(k) => conn.setPassword(k)
+		  case _ =>
+		}
+		ssl.keyPassword match {
+		  case Some(k) => conn.setKeyPassword(k)
+		  case _ =>
+		}
 		server.addConnector(conn)    
 	}
   

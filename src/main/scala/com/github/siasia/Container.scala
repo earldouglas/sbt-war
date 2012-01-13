@@ -55,15 +55,15 @@ case class Container(name: String) {
 		},
 		port := 8080,
 		sslPort := 0,
-		sslKeystore := "",
-		sslPassword := "",
+		sslKeystore := None,
+		sslPassword := None,
 		start <<= (state, port, sslPort, sslKeystore, sslPassword, apps, customConfiguration, configurationFiles, configurationXml) map {
 			(state, port, sslPort, sslKeystore, sslPassword, apps, cc, cf, cx) => {
-			  val ssl = new SslSettings
-			  ssl.port = sslPort
-			  ssl.keystore = if (sslKeystore == "") null else sslKeystore
-			  ssl.password = if (sslPassword == "") null else sslPassword
-			  ssl.keyPassword = ssl.password
+			  val ssl = new SslSettings(sslPort, 
+						    sslKeystore, 
+						    sslPassword,
+						    sslPassword
+			  )
 			  state.start(port, ssl, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps, cc, cf, cx)
 			}
 		},

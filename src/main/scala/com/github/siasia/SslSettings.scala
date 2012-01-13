@@ -1,8 +1,7 @@
 package com.github.siasia
 
-class SslSettings() {
-	var port	: Int = 0
-	var keystore	: String = null
-	var password	: String = null
-	var keyPassword	: String = null
-}
+case class SslSettings(
+			val port : Int, 
+			val keystore : Option[String], 
+			val password: Option[String],
+			val keyPassword : Option[String]) 
