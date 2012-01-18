@@ -54,14 +54,13 @@ case class Container(name: String) {
 					onUnload(state)
 		},
 		port := 8080,
-		ssl := null,
+		ssl := None,
 		start <<= (state, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
 			(state, port, ssl, apps, cc, cf, cx) => {			  
-			val sslSettings = ssl match {
-			    case null => None
-			    case (sslPort, keystore, password, keyPassword) => {
+			val sslSettings = ssl match {			    
+			    case Some((sslPort, keystore, password, keyPassword)) =>
 				new Some(SslSettings(sslPort, keystore, password, keyPassword))
-			    }
+			    case _ => None				    
 			  }	
 			  state.start(port, sslSettings, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps, cc, cf, cx)
 			}
