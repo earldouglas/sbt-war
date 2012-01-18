@@ -54,17 +54,16 @@ case class Container(name: String) {
 					onUnload(state)
 		},
 		port := 8080,
-		sslPort := 0,
-		sslKeystore := None,
-		sslPassword := None,
-		start <<= (state, port, sslPort, sslKeystore, sslPassword, apps, customConfiguration, configurationFiles, configurationXml) map {
-			(state, port, sslPort, sslKeystore, sslPassword, apps, cc, cf, cx) => {
-			  val ssl = new SslSettings(sslPort, 
-						    sslKeystore, 
-						    sslPassword,
-						    sslPassword
-			  )
-			  state.start(port, ssl, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps, cc, cf, cx)
+		ssl := null,
+		start <<= (state, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
+			(state, port, ssl, apps, cc, cf, cx) => {			  
+			val sslSettings = ssl match {
+			    case null => None
+			    case (sslPort, keystore, password, keyPassword) => {
+				new Some(SslSettings(sslPort, keystore, password, keyPassword))
+			    }
+			  }	
+			  state.start(port, sslSettings, CommandSupport.logger(state).asInstanceOf[AbstractLogger], apps, cc, cf, cx)
 			}
 		},
 		discoveredContexts <<= TaskData.write(apps map discoverContexts) triggeredBy start,

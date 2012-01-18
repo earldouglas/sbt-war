@@ -15,9 +15,7 @@ object PluginKeys extends Plugin {
 	lazy val DefaultConf = Compile
 	lazy val DefaultClasspathConf = Runtime
 	lazy val port = SettingKey[Int]("port")
-	lazy val sslPort = SettingKey[Int]("ssl-port")
-	lazy val sslKeystore = SettingKey[Option[String]]("ssl-keystore")
-	lazy val sslPassword = SettingKey[Option[String]]("ssl-password")
+	lazy val ssl = SettingKey[(Int,String,String,String)]("ssl")
 	lazy val apps = TaskKey[Seq[(String, Deployment)]]("apps")
 	lazy val start = TaskKey[Unit]("start")
 	lazy val discoveredContexts = TaskKey[Seq[String]]("discovered-contexts")

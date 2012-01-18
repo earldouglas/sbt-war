@@ -59,22 +59,13 @@ class Jetty${version}Runner extends Runner {
 	private def configureSecureConnector(ssl: SslSettings) {
 		val conn = new ${sslConnectorClass}()
 		conn.setPort(ssl.port)
-		ssl.keystore match {
-		  case Some(k) => conn.setKeystore(k)
-		  case _ =>
-		}
-		ssl.password match {
-		  case Some(k) => conn.setPassword(k)
-		  case _ =>
-		}
-		ssl.keyPassword match {
-		  case Some(k) => conn.setKeyPassword(k)
-		  case _ =>
-		}
+		conn.setKeystore(ssl.keystore)
+		conn.setPassword(ssl.password)
+		conn.setKeyPassword(ssl.keyPassword)
 		server.addConnector(conn)    
 	}
   
-	def start(port: Int, ssl: SslSettings, logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
+	def start(port: Int, ssl: Option[SslSettings], logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
 		if(server != null)
 			return
 		try { 
@@ -84,8 +75,11 @@ class Jetty${version}Runner extends Runner {
 				configureCustom(confFiles, confXml)
 			else {
 				configureConnector(port)
-                                if (ssl.port > 0) configureSecureConnector(ssl) 
-				configureContexts(apps)
+				ssl match {
+				  case Some(s) => configureSecureConnector(s) 
+				  case _ =>
+				}
+                                configureContexts(apps)
 			}
 			server.start()
 		} catch {
