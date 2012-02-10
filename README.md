@@ -2,9 +2,9 @@ Old version moved to [0.1](https://github.com/siasia/xsbt-web-plugin/tree/0.1)
 
 # Notice
 
-This is a forked version of [xsbt-web-plugin](https://github.com/siasia/xsbt-web-plugin) which **adds support for the Jetty SSL connector in xsbt-web-plugin** (so that the app can be deployed on both **http** and **https** ports).
+This is a forked version of [xsbt-web-plugin](https://github.com/siasia/xsbt-web-plugin) which adds support for the SSL connector in Jetty (so that the app can be deployed on both **http** and **https** ports).
 
-This work has been sponsored and donated to the public by the **great Parkio company** - http://www.parkio.com
+This work has been sponsored and donated to the public by the great Parkio company - http://www.parkio.com
 
 # Usage
 
