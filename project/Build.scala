@@ -99,7 +99,7 @@ object PluginBuild extends Build {
 	def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
 		sbtPlugin := true,
 		name := "xsbt-web-plugin",
-		version := "0.2.11",
+		version := "0.2.11.1",
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
 			"org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",
@@ -119,7 +119,7 @@ object PluginBuild extends Build {
 
 	def commonsSettings = sharedSettings ++ Seq(
 		name := "plugin-commons",
-		version := "0.1",
+		version := "0.1.1",
 		libraryDependencies <++= (sbtVersion) {
 			(v) => Seq(
 				"org.scala-tools.sbt" %% "classpath" % v % "provided"
