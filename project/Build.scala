@@ -122,7 +122,7 @@ object PluginBuild extends Build {
 		version := "0.1.1",
 		libraryDependencies <++= (sbtVersion) {
 			(v) => Seq(
-				"org.scala-tools.sbt" %% "classpath" % v % "provided"
+				"org.scala-sbt" %% "classpath" % v % "provided"
 			)}
 	) ++ appendedSettings
 	
