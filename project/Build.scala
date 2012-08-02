@@ -71,6 +71,7 @@ object PluginBuild extends Build {
   }
 
   def sharedSettings = Aether.aetherSettings ++ Seq(
+    version := "0.3-SNAPSHOT",
     projectID <<= (organization,moduleName,version,artifacts,crossPaths){ (org,module,version,as,crossEnabled) =>
       ModuleID(org, module, version).cross(crossEnabled).artifacts(as : _*)
     },
@@ -84,7 +85,7 @@ object PluginBuild extends Build {
     licenses := Seq(
       "BSD 3-Clause" -> new URL("https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE")
     ),
-    pomExtra <<= (pomExtra, name, description) {(pom, name, desc) => pom ++ xml.Group(
+    pomExtra <<= (pomExtra) {(pom) => pom ++ xml.Group(
       <scm>
         <url>http://github.com/arktekk/sbt-aether-deploy</url>
         <connection>scm:git:git://github.com/arktekk/sbt-aether-deploy.git</connection>
@@ -107,7 +108,7 @@ object PluginBuild extends Build {
   def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
     sbtPlugin := true,
     name := "xsbt-web-plugin",
-    version := "0.2.11.1",
+    
     libraryDependencies ++= Seq(
       "org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
       "org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",
@@ -127,12 +128,14 @@ object PluginBuild extends Build {
   ) ++ appendedSettings
 
   def commonsSettings = sharedSettings ++ Seq(
-    name := "plugin-commons",
-    version := "0.1.1",
-    libraryDependencies <++= (sbtVersion) {
-      (v) => Seq(
-        "org.scala-sbt" % "classpath" % v % "provided"
-      )}
+    name := "plugin-commons",    
+    libraryDependencies <+= (sbtVersion) {
+      (v) => v match {
+        case v if (v.startsWith("0.12")) => "org.scala-sbt" % "classpath" % v % "provided"
+        case "0.11.3" => "org.scala-sbt" %% "classpath" % v % "provided"
+        case "0.11.2" => "org.scala-tools.sbt" %% "classpath" % v % "provided"
+      }
+    }
   ) ++ appendedSettings
   
   lazy val root = Project("root", file(".")) settings(rootSettings :_*) dependsOn(commons)
