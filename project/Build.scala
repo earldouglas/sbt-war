@@ -70,8 +70,7 @@ object PluginBuild extends Build {
     } toSeq
   }
 
-  def sharedSettings = Aether.aetherSettings ++ Seq(
-    version := "0.3-SNAPSHOT",
+  def sharedSettings = Aether.aetherSettings ++ Seq(    
     projectID <<= (organization,moduleName,version,artifacts,crossPaths){ (org,module,version,as,crossEnabled) =>
       ModuleID(org, module, version).cross(crossEnabled).artifacts(as : _*)
     },
