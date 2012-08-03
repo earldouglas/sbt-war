@@ -89,9 +89,9 @@ object PluginBuild extends Build {
     ),
     pomExtra <<= (pomExtra) {(pom) => pom ++ xml.Group(
       <scm>
-        <url>http://github.com/arktekk/sbt-aether-deploy</url>
-        <connection>scm:git:git://github.com/arktekk/sbt-aether-deploy.git</connection>
-        <developerConnection>scm:git:git@github.com:arktekk/sbt-aether-deploy.git</developerConnection>
+        <url>http://github.com/siasia/xsbt-web-plugin</url>
+        <connection>scm:git:https://github.com/siasia/xsbt-web-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com/siasia/xsbt-web-plugin.git</developerConnection>
       </scm>
       <developers>
         <developer>
