@@ -124,7 +124,7 @@ object PluginBuild extends Build {
     },
     sourceGenerators in Compile <+= generateJettyRunners.task,
     publishLocal <<= (publishLocal in commons, publishLocal) map ((_, p) => p),
-    publish <<= Aether.deployTask.init,
+    publish <<= (AetherKeys.deploy in commons, AetherKeys.deploy) map ((_, p) => p),
     scalacOptions += "-deprecation",
     scriptedBufferLog := false
   ) ++ appendedSettings
