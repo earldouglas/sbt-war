@@ -79,7 +79,10 @@ object PluginBuild extends Build {
       (v: String) => if (v.trim().endsWith("SNAPSHOT")) Resolvers.sonatypeNexusSnapshots else Resolvers.sonatypeNexusStaging
     },
     organization := "com.github.siasia",
-    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),   
+    aetherCredentials := {
+      val cred = Path.userHome / ".ivy2" / ".credentials"
+      if (cred.exists()) Some(Credentials(cred)) else None
+    },
     homepage := Some(new URL("http://github.com/siasia/xsbt-web-plugin")),
     startYear := Some(2011),    
     licenses := Seq(
