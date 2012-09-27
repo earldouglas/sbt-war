@@ -17,16 +17,16 @@ object PluginBuild extends Build {
 				"version" -> "6",
 				"sslConnectorClass" -> "SslSocketConnector",
 				"imports" -> """                                
-				import org.mortbay.jetty.{Server, Handler}
-				import org.mortbay.jetty.handler.ContextHandlerCollection
-				import org.mortbay.jetty.nio.SelectChannelConnector
-				import org.mortbay.jetty.security.SslSocketConnector
-				import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
-				import org.mortbay.util.{Scanner => JScanner}
-				import org.mortbay.log.{Log, Logger => JLogger}
-				import org.mortbay.resource.ResourceCollection
-				import org.mortbay.xml.XmlConfiguration
-				import org.mortbay.jetty.plus.webapp.{EnvConfiguration, Configuration=>PlusConfiguration}
+import org.mortbay.jetty.{Server, Handler}
+import org.mortbay.jetty.handler.ContextHandlerCollection
+import org.mortbay.jetty.nio.SelectChannelConnector
+import org.mortbay.jetty.security.SslSocketConnector
+import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
+import org.mortbay.util.{Scanner => JScanner}
+import org.mortbay.log.{Log, Logger => JLogger}
+import org.mortbay.resource.ResourceCollection
+import org.mortbay.xml.XmlConfiguration
+import org.mortbay.jetty.plus.webapp.{EnvConfiguration, Configuration=>PlusConfiguration}
 				""",
 				"filesChanged.type" -> "_",
 				"envConfig.init" -> """
@@ -38,16 +38,16 @@ object PluginBuild extends Build {
 				"version" -> "7",
 				"sslConnectorClass" -> "SslSelectChannelConnector",
 				"imports" -> """
-				import org.eclipse.jetty.server.{Server, Handler}
-				import org.eclipse.jetty.server.handler.ContextHandlerCollection
-				import org.eclipse.jetty.server.nio.SelectChannelConnector
-				import org.eclipse.jetty.server.ssl.SslSelectChannelConnector                
-				import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
-				import org.eclipse.jetty.util.{Scanner => JScanner}
-				import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
-				import org.eclipse.jetty.util.resource.ResourceCollection
-				import org.eclipse.jetty.xml.XmlConfiguration
-				import org.eclipse.jetty.plus.webapp.{EnvConfiguration, PlusConfiguration}
+import org.eclipse.jetty.server.{Server, Handler}
+import org.eclipse.jetty.server.handler.ContextHandlerCollection
+import org.eclipse.jetty.server.nio.SelectChannelConnector
+import org.eclipse.jetty.server.ssl.SslSelectChannelConnector                
+import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
+import org.eclipse.jetty.util.{Scanner => JScanner}
+import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
+import org.eclipse.jetty.util.resource.ResourceCollection
+import org.eclipse.jetty.xml.XmlConfiguration
+import org.eclipse.jetty.plus.webapp.{EnvConfiguration, PlusConfiguration}
 				""",
 				"filesChanged.type" -> "String",
 				"envConfig.init" -> """
@@ -99,7 +99,7 @@ object PluginBuild extends Build {
 	def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
 		sbtPlugin := true,
 		name := "xsbt-web-plugin",
-		version := "0.2.11.1",
+		version := "0.2.11.2",
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
 			"org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",
@@ -112,20 +112,9 @@ object PluginBuild extends Build {
 			generateJettyRunnersTask((templateDir ** "*.scala").get, target)
 		},
 		sourceGenerators in Compile <+= generateJettyRunners.task,
-		publishLocal <<= (publishLocal in commons, publishLocal) map ((_, p) => p),
 		scalacOptions += "-deprecation",
 		scriptedBufferLog := false
 	) ++ appendedSettings
 
-	def commonsSettings = sharedSettings ++ Seq(
-		name := "plugin-commons",
-		version := "0.1.1",
-		libraryDependencies <++= (sbtVersion) {
-			(v) => Seq(
-				"org.scala-sbt" % "classpath" % v % "provided"
-			)}
-	) ++ appendedSettings
-	
-	lazy val root = Project("root", file(".")) settings(rootSettings :_*) dependsOn(commons)
-	lazy val commons = Project("commons", file("commons")) settings(commonsSettings :_*)
+	lazy val root = Project("root", file(".")) settings(rootSettings :_*) // dependsOn(commons)
 }
