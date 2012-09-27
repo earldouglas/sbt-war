@@ -6,17 +6,13 @@ Setup [SBT](http://github.com/harrah/xsbt/).
 
 Add plugin to project in `project/plugins.sbt`:
 
-```scala
-libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.11"))
-```
+	libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.11.2"))
 
 Inject plugin settings into project in `build.sbt`:
 
-```scala
-seq(webSettings :_*)
+	seq(webSettings :_*)
 
-libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
-```
+	libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
 		
 # See [Wiki](http://github.com/siasia/xsbt-web-plugin/wiki/) for details
 
