@@ -7,6 +7,6 @@ fi
 PLUGIN_VERSION=$1
 for group in $(ls src/sbt-test); do
 		for test_dir in $(ls src/sbt-test/$group); do
-				echo "libraryDependencies <+= sbtVersion(v => \"com.github.siasia\" %% \"xsbt-web-plugin\" % (v+\"-$PLUGIN_VERSION\"))" > src/sbt-test/$group/$test_dir/project/plugins.sbt
+				echo "addSbtPlugin(\"com.github.siasia\" % \"xsbt-web-plugin\" % \"$PLUGIN_VERSION\")" > src/sbt-test/$group/$test_dir/project/plugins.sbt
 		done
 done
