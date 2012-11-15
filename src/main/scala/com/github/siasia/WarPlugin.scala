@@ -26,20 +26,20 @@ object WarPlugin extends Plugin {
 
 			val (libs, directories) = classpath.toList.partition(ClasspathUtilities.isArchive)
 			val wcToCopy = for {
-				dir <- webappResources
+				dir <- webappResources.reverse
 				file <- dir.descendentsExcept("*", filter).get
 				val target = Path.rebase(dir, warPath)(file).get
 			} yield (file, target)
 			val classesAndResources = for {
-				dir <- directories
+				dir <- directories.reverse
 				file <- dir.descendentsExcept("*", filter).get
 				val target = Path.rebase(dir, classesTargetDirectory)(file).get
 			} yield (file, target)
 			if(log.atLevel(Level.Debug))
 				directories.foreach(d => log.debug(" Copying the contents of directory " + d + " to " + classesTargetDirectory))
 
-			val copiedWebapp = IO.copy(wcToCopy)
-			val copiedClasses = IO.copy(classesAndResources)
+			val copiedWebapp = IO.copy(wcToCopy, overwrite = true, preserveLastModified = true)
+			val copiedClasses = IO.copy(classesAndResources, overwrite = true, preserveLastModified = true)
 			val copiedLibs = copyFlat(libs, webLibDirectory)
 			val toRemove = scala.collection.mutable.HashSet((warPath ** "*").get.toSeq : _*)
 			toRemove --= copiedWebapp
