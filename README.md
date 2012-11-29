@@ -1,4 +1,6 @@
-Old version moved to [0.1](https://github.com/siasia/xsbt-web-plugin/tree/0.1)
+#Announcement
+
+This plugin is not actively maintained. Please reach me via siasiamail@gmail.com if you'd like to pick it up.
 
 # Usage
 
