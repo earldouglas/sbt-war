@@ -1,8 +1,8 @@
-#Announcement
+##Announcement
 
 This plugin is not actively maintained. Please reach me via siasiamail@gmail.com if you'd like to pick it up.
 
-# Usage
+## Usage
 
 Setup [SBT](http://github.com/harrah/xsbt/).
 
@@ -20,7 +20,7 @@ seq(webSettings :_*)
 libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
 ```
 		
-# See [Wiki](http://github.com/siasia/xsbt-web-plugin/wiki/) for details
+## See [Wiki](http://github.com/siasia/xsbt-web-plugin/wiki/) for details
 
-# License
+## License
 This software is distributed under modified 3-clause BSD license. See [LICENSE](https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE) for more information.
