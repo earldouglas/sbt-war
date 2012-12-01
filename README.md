@@ -1,7 +1,3 @@
-##Announcement
-
-This plugin is not actively maintained. Please reach me via siasiamail@gmail.com if you'd like to pick it up.
-
 ## Usage
 
 Setup [SBT](http://github.com/harrah/xsbt/).
