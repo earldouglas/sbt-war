@@ -1,3 +1,5 @@
+[![Build Status](http://jenkins.jamestastic.com/job/xsbt-web-plugin/badge/icon)](http://jenkins.jamestastic.com/job/xsbt-web-plugin/)
+
 ## Usage
 
 Setup [SBT](http://github.com/harrah/xsbt/).
