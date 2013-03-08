@@ -13,6 +13,8 @@ import java.util.logging.Handler
 import java.util.logging.LogRecord
 import java.util.logging.SimpleFormatter
 import java.util.logging.Level
+import java.net.URL
+import java.net.MalformedURLException
 
 class Tomcat7Runner extends Runner {
 	private var tomcat: Option[Tomcat] = None
@@ -39,7 +41,7 @@ class Tomcat7Runner extends Runner {
 					val context = newTomcat.addWebapp(contextPath, deployment.webappResources(0).getAbsolutePath)
 					context.setReloadable(true)
 					
-					val webLoader = new WebappLoader(loader)
+					val webLoader = new ReloadableWebappLoader(loader)
 					deployment.classpath.foreach(file => webLoader.addRepository(file.toURI.toURL.toString))
 					context.setLoader(webLoader)
 	
@@ -55,12 +57,9 @@ class Tomcat7Runner extends Runner {
 		}
 	}
 
-	//TODO fix reloading
 	def reload(contextPath: String) {
 		val context = contexts.get(contextPath)
-		context.foreach { ctx =>
-			ctx.reload
-		}
+		context.foreach( _.reload )
 	}
 
 	def stop() {
@@ -83,5 +82,66 @@ class Tomcat7Runner extends Runner {
 		connector.setAttribute("keyPass", ssl.keyPassword)
 		
 		connector
+	}
+	
+	/**
+	 * Based on code from the Maven Tomcat plugin
+	 */
+	private class ReloadableWebappLoader(loader: ClassLoader) extends WebappLoader(loader) {
+		/**
+		 * Last modification times of all jar and class files.
+		 */
+		private var modificationMap = Map[String, Long]()
+		
+		override def addRepository(repository: String) {
+			super.addRepository(repository)
+			try {
+				val file = new File( new URL(repository).getPath.replaceAll("%20", " "))
+				modificationMap = modificationMap ++ addFile(file)
+			} catch {
+				case muex: MalformedURLException => throw new RuntimeException(muex)
+			}
+		}
+		
+		/**
+		 * Check if {@link WebappLoader} says modified() and check files from added repositories.
+		 */
+		override def modified: Boolean = {
+			val superModified = super.modified
+			
+			val modifiedFiles = modificationMap.filter {case (path, lastModified) =>
+				val file = new File(path)
+				file.exists && file.lastModified > lastModified
+			}
+			
+			val updatedFileMap = modifiedFiles.map {case (path, lastModified) =>
+				val file = new File(path)
+				addFile(file)
+			}.flatten
+			
+			modificationMap = modificationMap ++ updatedFileMap
+			
+			superModified || !modifiedFiles.isEmpty
+		}
+		
+		/**
+		 * Converts a file or a directory to a map containing the path to the file and its last modified timestamp
+		 */
+		private def addFile(file: File): Map[String, Long] = {
+			if(file.isDirectory()) {
+				//remember also directory last modification time
+				val fileModifiedMap = toModificationMap(file)
+				val childFilesModified = file.listFiles.map(addFile _).flatten.toMap
+				
+				fileModifiedMap ++ childFilesModified
+			} else if(file.isFile) {
+				toModificationMap(file)
+			} else { Map() }
+		}
+		
+		/**
+		 * Converts a file to a map containing the path to the file and its last modified timestamp
+		 */
+		private def toModificationMap(file: File) = Map(file.getAbsolutePath -> file.lastModified)
 	}
 }
