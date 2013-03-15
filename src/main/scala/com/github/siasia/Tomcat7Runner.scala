@@ -15,6 +15,8 @@ import java.util.logging.SimpleFormatter
 import java.util.logging.Level
 import java.net.URL
 import java.net.MalformedURLException
+import java.util.logging.LogManager
+import java.util.logging.ConsoleHandler
 
 class Tomcat7Runner extends Runner {
 	private var tomcat: Option[Tomcat] = None
@@ -24,8 +26,22 @@ class Tomcat7Runner extends Runner {
 		tomcat = tomcat.orElse {
 			val newTomcat = new Tomcat
 			
-			// TODO logging
+			// Configure logging
+			val rootLogger = LogManager.getLogManager.getLogger("")
+			for(handler <- rootLogger.getHandlers) {
+				val handlerClass = handler.getClass
+				
+				// Remove ConsoleHandler so we control the console and remove duplicate instances of our handler
+				if(
+						handlerClass == classOf[ConsoleHandler] || 
+						handlerClass == classOf[DelegatingHandler]) {
+					rootLogger.removeHandler(handler)
+				}
+			}
 			
+			rootLogger.addHandler(new DelegatingHandler(logger))
+
+			// Configure tomcat
 			if(customConf) {
 				//TODO config files
 			} else {
@@ -82,6 +98,25 @@ class Tomcat7Runner extends Runner {
 		connector.setAttribute("keyPass", ssl.keyPassword)
 		
 		connector
+	}
+	
+	private class DelegatingHandler(delegate: AbstractLogger) extends Handler {
+		val formatter = new SimpleFormatter
+	
+		// dummy methods
+		def close {}
+		def flush {}
+		
+		def publish(record: LogRecord) {
+			val message = formatter.format(record)
+			
+			record.getLevel match {
+				case Level.SEVERE => delegate.error(message)
+				case Level.WARNING => delegate.warn(message)
+				case Level.INFO => delegate.info(message)
+				case _ => delegate.debug(message)
+			}
+		}
 	}
 	
 	/**
