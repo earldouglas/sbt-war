@@ -51,20 +51,7 @@ class Tomcat7Runner extends Runner {
 					newTomcat.getService.addConnector(connector)
 				}
 			
-				
-				//TODO configure contexts
-				val newContexts = apps.map { case (contextPath, deployment) =>
-					val context = newTomcat.addWebapp(contextPath, deployment.webappResources(0).getAbsolutePath)
-					context.setReloadable(true)
-					
-					val webLoader = new ReloadableWebappLoader(loader)
-					deployment.classpath.foreach(file => webLoader.addRepository(file.toURI.toURL.toString))
-					context.setLoader(webLoader)
-	
-					(contextPath, context)
-				}.toMap
-			
-				contexts = newContexts
+				contexts = createContexts(newTomcat, apps)
 			}
 			
 			newTomcat.start();
@@ -98,6 +85,20 @@ class Tomcat7Runner extends Runner {
 		connector.setAttribute("keyPass", ssl.keyPassword)
 		
 		connector
+	}
+	
+	private def createContexts(newTomcat: Tomcat, apps: Seq[(String, Deployment)]): Map[String, Context] = {
+		apps.map { case (contextPath, deployment) =>
+			//TODO all webappResources
+			val context = newTomcat.addWebapp(contextPath, deployment.webappResources(0).getAbsolutePath)
+			context.setReloadable(true)
+			
+			val webLoader = new ReloadableWebappLoader(loader)
+			deployment.classpath.foreach(file => webLoader.addRepository(file.toURI.toURL.toString))
+			context.setLoader(webLoader)
+
+			(contextPath, context)
+		}.toMap
 	}
 	
 	private class DelegatingHandler(delegate: AbstractLogger) extends Handler {
