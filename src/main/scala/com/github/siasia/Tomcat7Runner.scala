@@ -44,6 +44,7 @@ class Tomcat7Runner extends Runner {
 			// Configure tomcat
 			if(customConf) {
 				//TODO config files
+				throw new RuntimeException("Tomcat does not currently support a custom conf")
 			} else {
 				newTomcat.setPort(port)
 				ssl.foreach { sslSettings =>
