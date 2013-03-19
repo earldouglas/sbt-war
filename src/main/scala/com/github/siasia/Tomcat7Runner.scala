@@ -89,8 +89,17 @@ class Tomcat7Runner extends Runner {
 	
 	private def createContexts(newTomcat: Tomcat, apps: Seq[(String, Deployment)]): Map[String, Context] = {
 		apps.map { case (contextPath, deployment) =>
-			//TODO all webappResources
-			val context = newTomcat.addWebapp(contextPath, deployment.webappResources(0).getAbsolutePath)
+			// Tomcat requires that we specify a single 'doc base' for each context.  We treat the first webappResource
+			// as the doc base and add the others as 'watched resources'.  However, if no webappResources are specified
+			// we need to blow up.
+			if(deployment.webappResources.size < 1)
+				throw new RuntimeException("There must be at least 1 webapp resource configured")
+			
+			val context = newTomcat.addWebapp(contextPath, deployment.webappResources.head.getAbsolutePath)
+			deployment.webappResources.tail.foreach { file =>
+				context.addWatchedResource(file.getAbsolutePath)
+			}
+			
 			context.setReloadable(true)
 			
 			val webLoader = new ReloadableWebappLoader(loader)
