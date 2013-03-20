@@ -19,12 +19,11 @@ import java.util.logging.LogManager
 import java.util.logging.ConsoleHandler
 
 class Tomcat7Runner extends Runner {
-	private var tomcat: Option[Tomcat] = None
-	private var contexts = Map[String, Context]()
+	private var server: Option[Server] = None
 	
 	def start(port: Int, ssl: Option[SslSettings], logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
-		tomcat = tomcat.orElse {
-			val newTomcat = new Tomcat
+		server = server.orElse {
+			val tomcat = new Tomcat
 			
 			// Configure logging
 			val rootLogger = LogManager.getLogManager.getLogger("")
@@ -42,37 +41,39 @@ class Tomcat7Runner extends Runner {
 			rootLogger.addHandler(new DelegatingHandler(logger))
 
 			// Configure tomcat
-			if(customConf) {
+			val contexts = if(customConf) {
 				//TODO config files
 				throw new RuntimeException("Tomcat does not currently support a custom conf")
 			} else {
-				newTomcat.setPort(port)
+				tomcat.setPort(port)
 				ssl.foreach { sslSettings =>
 					val connector = configureSecureConnector(sslSettings)
-					newTomcat.getService.addConnector(connector)
+					tomcat.getService.addConnector(connector)
 				}
 			
-				contexts = createContexts(newTomcat, apps)
+				createContexts(tomcat, apps)
 			}
 			
-			newTomcat.start();
+			tomcat.start();
 			
-			Option(newTomcat)
+			Option(Server(tomcat, contexts))
 		}
 	}
 
 	def reload(contextPath: String) {
-		val context = contexts.get(contextPath)
-		context.foreach( _.reload )
+		server.foreach { case Server(tomcat, contexts) =>
+			val context = contexts.get(contextPath)
+			context.foreach( _.reload )
+		}
 	}
 
 	def stop() {
-		tomcat.foreach { oldTomcat =>
-			oldTomcat.stop
-			oldTomcat.destroy
+		server.foreach { case Server(tomcat, contexts) =>
+			tomcat.stop
+			tomcat.destroy
 		}
-		contexts = Map()
-		tomcat = None
+
+		server = None
 	}
 	
 	private def configureSecureConnector(ssl: SslSettings): Connector = {
@@ -110,6 +111,8 @@ class Tomcat7Runner extends Runner {
 			(contextPath, context)
 		}.toMap
 	}
+	
+	private case class Server(tomcat: Tomcat, contexts: Map[String, Context])
 	
 	private class DelegatingHandler(delegate: AbstractLogger) extends Handler {
 		val formatter = new SimpleFormatter
