@@ -71,6 +71,7 @@ case class Container(name: String) {
 			(state) =>
 			state.stop()
 		},
+    restart <<= (stop, start) map{ (_, _) => },
 		customConfiguration := false,
 		configurationFiles := Seq(),
 		configurationXml := NodeSeq.Empty
