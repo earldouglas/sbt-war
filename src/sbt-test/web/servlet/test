@@ -50,5 +50,11 @@ $ copy-file changes/MyServlet2.scala src/main/scala/test/MyServlet.scala
 > container:reload /
 > check-page Hello, Scala 2!
 
+$ copy-file changes/MyServlet3.scala src/main/scala/test/MyServlet.scala
+
+> compile
+> container:restart
+> check-page Hello, Scala 3!
+
 > container:stop
--> check-page Hello Scala 2!
+-> check-page Hello Scala 3!
