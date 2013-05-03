@@ -4,8 +4,8 @@ import Keys._
 import scala.xml._
 import ScriptedPlugin._
 import std.TaskExtra._
-import com.github.siasia._
-import SonatypePlugin._
+//import com.github.siasia._
+//import SonatypePlugin._
 
 object PluginBuild extends Build {
 	val templatesDirectory = SettingKey[File]("templates-directory")
@@ -70,16 +70,16 @@ object PluginBuild extends Build {
 		} toSeq
 	}
 
-	def sharedSettings = sonatypeSettings ++ Seq(
+	def sharedSettings = /*sonatypeSettings ++*/ Seq[Setting[_]](
 		projectID <<= (organization,moduleName,version,artifacts,crossPaths){ (org,module,version,as,crossEnabled) =>
 			ModuleID(org, module, version).cross(crossEnabled).artifacts(as : _*)
 		},
 		organization := "com.github.siasia",
 		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-		pomUrl := "http://github.com/siasia/xsbt-web-plugin",
+		//pomUrl := "http://github.com/siasia/xsbt-web-plugin",
 		licenses := Seq(
 			"BSD 3-Clause" -> new URL("https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE")
-		),
+		)/*,
 		scm := (
 			"scm:git:git@github.com:siasia/xsbt-web-plugin.git",
 			"scm:git:git@github.com:siasia/xsbt-web-plugin.git",
@@ -89,7 +89,7 @@ object PluginBuild extends Build {
 			"siasia",
 			"Artyom Olshevskiy",
 			"siasiamail@gmail.com"
-		))		
+		))*/
 	)
 
 	def appendedSettings = Seq(
