@@ -52,7 +52,6 @@ $ copy-file changes/MyServlet2.scala src/main/scala/test/MyServlet.scala
 
 $ copy-file changes/MyServlet3.scala src/main/scala/test/MyServlet.scala
 
-> compile
 > container:restart
 > check-page Hello, Scala 3!
 
