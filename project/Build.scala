@@ -112,20 +112,9 @@ object PluginBuild extends Build {
 			generateJettyRunnersTask((templateDir ** "*.scala").get, target)
 		},
 		sourceGenerators in Compile <+= generateJettyRunners.task,
-		publishLocal <<= (publishLocal in commons, publishLocal) map ((_, p) => p),
 		scalacOptions += "-deprecation",
 		scriptedBufferLog := false
 	) ++ appendedSettings
 
-	def commonsSettings = sharedSettings ++ Seq(
-		name := "plugin-commons",
-		version := "0.1.1",
-		libraryDependencies <++= (sbtVersion) {
-			(v) => Seq(
-				"org.scala-sbt" % "classpath" % v % "provided"
-			)}
-	) ++ appendedSettings
-	
-	lazy val root = Project("root", file(".")) settings(rootSettings :_*) dependsOn(commons)
-	lazy val commons = Project("commons", file("commons")) settings(commonsSettings :_*)
+	lazy val root = Project("root", file(".")) settings(rootSettings :_*)
 }
