@@ -1,1 +1,1 @@
-libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % (v+"-0.2.12-SNAPSHOT"))
+addSbtPlugin("com.github.siasia" % "xsbt-web-plugin" % "0.2.12-SNAPSHOT")

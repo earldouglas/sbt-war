@@ -71,9 +71,6 @@ object PluginBuild extends Build {
 	}
 
 	def sharedSettings = /*sonatypeSettings ++*/ Seq[Setting[_]](
-		projectID <<= (organization,moduleName,version,artifacts,crossPaths){ (org,module,version,as,crossEnabled) =>
-			ModuleID(org, module, version).cross(crossEnabled).artifacts(as : _*)
-		},
 		organization := "com.github.siasia",
 		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
 		//pomUrl := "http://github.com/siasia/xsbt-web-plugin",
@@ -90,10 +87,6 @@ object PluginBuild extends Build {
 			"Artyom Olshevskiy",
 			"siasiamail@gmail.com"
 		))*/
-	)
-
-	def appendedSettings = Seq(
-		version <<= (sbtVersion, version)(_ + "-" + _)
 	)
 
 	def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
@@ -114,7 +107,7 @@ object PluginBuild extends Build {
 		sourceGenerators in Compile <+= generateJettyRunners.task,
 		scalacOptions += "-deprecation",
 		scriptedBufferLog := false
-	) ++ appendedSettings
+	)
 
 	lazy val root = Project("root", file(".")) settings(rootSettings :_*)
 }
