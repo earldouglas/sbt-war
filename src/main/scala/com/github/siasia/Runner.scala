@@ -10,9 +10,10 @@ import scala.xml.NodeSeq
 object Runner {
 	def runners = Seq(
 		classOf[Jetty6Runner].getName,
-		classOf[Jetty7Runner].getName
+		classOf[Jetty7Runner].getName,
+		classOf[Tomcat7Runner].getName
 	)
-	def packages = Seq("org.mortbay", "org.eclipse.jetty")
+	def packages = Seq("org.mortbay", "org.eclipse.jetty", "org.apache.catalina")
 	def apply(instance: ScalaInstance, classpath: Seq[File]): Runner = {
 		val parentLoader = instance.loader
 		val loader: ClassLoader = toLoader(classpath, parentLoader)
