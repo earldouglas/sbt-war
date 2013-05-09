@@ -1,0 +1,6 @@
+> update
+> container:start
+> check-page Hello Tomcat!
+
+> container:stop
+-> check-page Hello Tomcat!

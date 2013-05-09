@@ -19,6 +19,9 @@ import java.util.logging.LogManager
 import java.util.logging.ConsoleHandler
 
 class Tomcat7Runner extends Runner {
+
+	private[this] val forceTomcatLoad = classOf[Tomcat]
+
 	private var server: Option[Server] = None
 	
 	def start(port: Int, ssl: Option[SslSettings], logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
