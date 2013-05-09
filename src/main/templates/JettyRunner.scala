@@ -1,4 +1,4 @@
-package com.github.siasia
+package com.earldouglas.xsbtwebplugin
 
 ${imports}
 

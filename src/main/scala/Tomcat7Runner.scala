@@ -1,4 +1,4 @@
-package com.github.siasia
+package com.earldouglas.xsbtwebplugin
 
 import org.apache.catalina.startup.Tomcat
 import scala.xml.NodeSeq

@@ -4,8 +4,6 @@ import Keys._
 import scala.xml._
 import ScriptedPlugin._
 import std.TaskExtra._
-//import com.github.siasia._
-//import SonatypePlugin._
 
 object PluginBuild extends Build {
 	val templatesDirectory = SettingKey[File]("templates-directory")
@@ -70,29 +68,16 @@ object PluginBuild extends Build {
 		} toSeq
 	}
 
-	def sharedSettings = /*sonatypeSettings ++*/ Seq[Setting[_]](
-		organization := "com.github.siasia",
-		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-		//pomUrl := "http://github.com/siasia/xsbt-web-plugin",
-		licenses := Seq(
-			"BSD 3-Clause" -> new URL("https://github.com/siasia/xsbt-web-plugin/blob/master/LICENSE")
-		)/*,
-		scm := (
-			"scm:git:git@github.com:siasia/xsbt-web-plugin.git",
-			"scm:git:git@github.com:siasia/xsbt-web-plugin.git",
-			"git@github.com:siasia/xsbt-web-plugin.git"
-		),
-		developers := Seq((
-			"siasia",
-			"Artyom Olshevskiy",
-			"siasiamail@gmail.com"
-		))*/
+	def sharedSettings = Seq[Setting[_]](
+		organization := "com.earldouglas",
+		credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 	)
 
 	def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
 		sbtPlugin := true,
 		name := "xsbt-web-plugin",
 		version := "0.2.12-SNAPSHOT",
+    crossScalaVersions := Seq("2.9.2", "2.10.0", "2.10.1"),
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
 			"org.mortbay.jetty" % "jetty-plus" % "6.1.22" % "optional",

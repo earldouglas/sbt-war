@@ -1,4 +1,4 @@
-package com.github.siasia
+package com.earldouglas.xsbtwebplugin
 
 import sbt._
 import Keys._
@@ -11,7 +11,7 @@ object WebappPlugin extends Plugin {
 		(_, ct, cd, filter) =>
 		val auxCd = ct / "aux-classes"
 		val classes = for {
-			file <- cd.descendentsExcept("*", filter).get
+			file <- cd.descendantsExcept("*", filter).get
 			val target = Path.rebase(cd, auxCd)(file).get
 		} yield (file, target)
 		val copied = IO.copy(classes)

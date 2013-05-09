@@ -1,5 +1,5 @@
 import sbt._
-import com.github.siasia._
+import com.earldouglas.xsbtwebplugin._
 import WebappPlugin._
 import PluginKeys._
 import Keys._
