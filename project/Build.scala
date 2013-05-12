@@ -76,7 +76,7 @@ object PluginBuild extends Build {
 	def rootSettings: Seq[Setting[_]] = sharedSettings ++ scriptedSettings ++ Seq(
 		sbtPlugin := true,
 		name := "xsbt-web-plugin",
-		version := "0.2.12-SNAPSHOT",
+		version := "0.2.12",
     crossScalaVersions := Seq("2.9.2", "2.10.0", "2.10.1"),
 		libraryDependencies ++= Seq(
 			"org.mortbay.jetty" % "jetty" % "6.1.22" % "optional",
