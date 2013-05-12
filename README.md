@@ -5,7 +5,7 @@
 Add plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.2.12")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.2.13-SNAPSHOT")
 ```
 
 For *.sbt* build definitions, inject the plugin settings in *build.sbt*:
@@ -104,6 +104,8 @@ There are several examples in the *[sbt-test](https://github.com/JamesEarlDougla
 See the [wiki](http://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki/)
 
 ## Changelog
+
+### 0.2.13
 
 ### 0.2.12
 
