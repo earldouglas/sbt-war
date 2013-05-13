@@ -17,6 +17,7 @@ import java.net.URL
 import java.net.MalformedURLException
 import java.util.logging.LogManager
 import java.util.logging.ConsoleHandler
+import sbt.IO
 
 class Tomcat7Runner extends Runner {
 
@@ -44,6 +45,9 @@ class Tomcat7Runner extends Runner {
 			rootLogger.addHandler(new DelegatingHandler(logger))
 
 			// Configure tomcat
+			val baseDir = IO.createTemporaryDirectory
+			tomcat.setBaseDir(baseDir.getAbsolutePath)
+
 			val contexts = if(customConf) {
 				//TODO config files
 				throw new RuntimeException("Tomcat does not currently support a custom conf")
