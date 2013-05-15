@@ -14,7 +14,7 @@ object WarPlugin extends Plugin {
   }
 	
 	def packageWarTask(classpathConfig: Configuration): Initialize[Task[Seq[(File, String)]]] =
-		(webappResources, target, fullClasspath in classpathConfig, excludeFilter, warPostProcess, streams) map {
+		(webappResources, target, fullClasspath in classpathConfig in packageWar, excludeFilter, warPostProcess, streams) map {
 			(webappResources, target, fullClasspath, filter, postProcess, s) =>
 			val classpath = fullClasspath.map(_.data)
 			val warPath = target / "webapp"
