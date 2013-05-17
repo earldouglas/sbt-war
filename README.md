@@ -5,7 +5,7 @@
 Add plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.2.13-SNAPSHOT")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.2.13")
 ```
 
 For *.sbt* build definitions, inject the plugin settings in *build.sbt*:
@@ -54,6 +54,8 @@ scanDirectories in Compile += file("lib")
 scanInterval in Compile := 0
 
 env in Compile := Some(file(".") / "conf" / "jetty" / "jetty-env.xml" asFile)
+
+fullClasspath in Runtime in packageWar <+= baseDirectory.map(bd => bd / "extras")
 ```
 
 ## Content
@@ -106,6 +108,10 @@ See the [wiki](http://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki/)
 ## Changelog
 
 ### 0.2.13
+
+* Cusomizable classpath in the webapp package
+* Tomcat `baseDir` uses a temporary directory
+* Code cleanup/simplification
 
 ### 0.2.12
 

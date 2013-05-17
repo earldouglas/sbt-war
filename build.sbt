@@ -2,11 +2,11 @@ organization := "com.earldouglas"
 
 name := "xsbt-web-plugin"
 
-version := "0.2.13-SNAPSHOT"
+version := "0.2.13"
+
+crossScalaVersions := Seq("2.9.0", "2.9.1", "2.9.2", "2.9.3", "2.10.0", "2.10.1")
 
 sbtPlugin := true
-
-crossScalaVersions := Seq("2.9.2", "2.10.0", "2.10.1")
 
 libraryDependencies ++= Seq(
   "org.mortbay.jetty"       % "jetty"                     % "6.1.22"          % "optional",
