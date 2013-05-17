@@ -16,7 +16,7 @@ pomExtra := (
   <url>https://github.com/JamesEarlDouglas/xsbt-web-plugin</url>
   <licenses>
     <license>
-			<name>BSD 3-Clause</name>
+      <name>BSD 3-Clause</name>
       <url>https://github.com/JamesEarlDouglas/xsbt-web-plugin/blob/master/LICENSE</url>
       <distribution>repo</distribution>
     </license>
@@ -27,8 +27,8 @@ pomExtra := (
   </scm>
   <developers>
     <developer>
-			<id>siasia</id>
-			<name>Artyom Olshevskiy</name>
+      <id>siasia</id>
+      <name>Artyom Olshevskiy</name>
       <url>http://github.com/siasia</url>
     </developer>
     <developer>
