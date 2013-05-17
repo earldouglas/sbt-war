@@ -1,12 +1,23 @@
 package com.earldouglas.xsbtwebplugin
 
-${imports}
+                                
+				import org.mortbay.jetty.{Server, Handler}
+				import org.mortbay.jetty.handler.ContextHandlerCollection
+				import org.mortbay.jetty.nio.SelectChannelConnector
+				import org.mortbay.jetty.security.SslSocketConnector
+				import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
+				import org.mortbay.util.{Scanner => JScanner}
+				import org.mortbay.log.{Log, Logger => JLogger}
+				import org.mortbay.resource.ResourceCollection
+				import org.mortbay.xml.XmlConfiguration
+				import org.mortbay.jetty.plus.webapp.{EnvConfiguration, Configuration=>PlusConfiguration}
+				
 
 import sbt._
 import classpath.ClasspathUtilities.toLoader
 import scala.xml.NodeSeq
 
-class Jetty${version}Runner extends Runner {
+class Jetty6Runner extends Runner {
 	private[this] val forceJettyLoad = classOf[Server]
 	private var server: Server = null
 	private var contexts: Map[String, (WebAppContext, Deployment)] = Map()
@@ -57,7 +68,7 @@ class Jetty${version}Runner extends Runner {
 	}
         
 	private def configureSecureConnector(ssl: SslSettings) {
-		val conn = new ${sslConnectorClass}()
+		val conn = new SslSocketConnector()
 		conn.setPort(ssl.port)
 		conn.setKeystore(ssl.keystore)
 		conn.setPassword(ssl.password)
@@ -109,7 +120,7 @@ class Jetty${version}Runner extends Runner {
 		setScanInterval(scanInterval)
 		setReportExistingFilesOnStartup(false)
 		val listener = new JScanner.BulkListener {
-			def filesChanged(files: java.util.List[${filesChanged.type}]) { thunk() }
+			def filesChanged(files: java.util.List[_]) { thunk() }
 		}
 		addListener(listener)
 		start()
