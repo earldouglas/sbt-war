@@ -29,6 +29,7 @@ object PluginKeys extends Plugin {
   lazy val auxCompile = TaskKey[Unit]("aux-compile")
   lazy val warPostProcess = TaskKey[() => Unit]("war-post-process")
   lazy val packageWar = TaskKey[File]("package-war")
+  lazy val classesAsJar = SettingKey[Boolean]("classes-as-jar")
   lazy val scanDirectories = SettingKey[Seq[File]]("scan-directories")
   lazy val scanInterval = SettingKey[Int]("scan-interval")
   lazy val env = SettingKey[Option[File]]("env")

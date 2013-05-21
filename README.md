@@ -58,6 +58,8 @@ scanInterval in Compile := 0
 env in Compile := Some(file(".") / "conf" / "jetty" / "jetty-env.xml" asFile)
 
 fullClasspath in Runtime in packageWar <+= baseDirectory.map(bd => bd / "extras")
+
+classesAsJar in Compile := true
 ```
 
 ## Content

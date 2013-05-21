@@ -14,8 +14,8 @@ object WarPlugin extends Plugin {
   }
   
   def packageWarTask(classpathConfig: Configuration): Initialize[Task[Seq[(File, String)]]] =
-    (webappResources, target, fullClasspath in classpathConfig in packageWar, excludeFilter, warPostProcess, streams) map {
-      (webappResources, target, fullClasspath, filter, postProcess, s) =>
+    (classesAsJar, name, version, webappResources, target, fullClasspath in classpathConfig in packageWar, excludeFilter, warPostProcess, streams) map {
+      (classesAsJar, name, version, webappResources, target, fullClasspath, filter, postProcess, s) =>
       val classpath = fullClasspath.map(_.data)
       val warPath = target / "webapp"
       val log = s.log.asInstanceOf[AbstractLogger]    
@@ -30,21 +30,36 @@ object WarPlugin extends Plugin {
         file <- dir.descendantsExcept("*", filter).get
         val target = Path.rebase(dir, warPath)(file).get
       } yield (file, target)
-      val classesAndResources = for {
-        dir <- directories.reverse
-        file <- dir.descendantsExcept("*", filter).get
-        val target = Path.rebase(dir, classesTargetDirectory)(file).get
-      } yield (file, target)
+
       if(log.atLevel(Level.Debug))
         directories.foreach(d => log.debug(" Copying the contents of directory " + d + " to " + classesTargetDirectory))
 
       val copiedWebapp = IO.copy(wcToCopy, overwrite = true, preserveLastModified = true)
-      val copiedClasses = IO.copy(classesAndResources, overwrite = true, preserveLastModified = true)
       val copiedLibs = copyFlat(libs, webLibDirectory)
+
       val toRemove = scala.collection.mutable.HashSet((warPath ** "*").get.toSeq : _*)
+      if (classesAsJar) {
+        val classesAndResources = for {
+          dir <- directories.reverse
+          file <- dir.descendantsExcept("*", filter).get
+          val target = Path.rebase(dir, "")(file).get
+        } yield (file, target)
+        val classesAndResourcesJar = webLibDirectory / (name + "-" + version + ".jar")
+        IO.jar(classesAndResources, classesAndResourcesJar, new java.util.jar.Manifest)
+        toRemove  -= classesAndResourcesJar
+      } else {
+        val classesAndResources = for {
+          dir <- directories.reverse
+          file <- dir.descendantsExcept("*", filter).get
+          val target = Path.rebase(dir, classesTargetDirectory)(file).get
+        } yield (file, target)
+        val copiedClasses = IO.copy(classesAndResources, overwrite = true, preserveLastModified = true)
+        toRemove --= copiedClasses
+      }
+
       toRemove --= copiedWebapp
-      toRemove --= copiedClasses
       toRemove --= copiedLibs
+
       val (dirs, files) = toRemove.toList.partition(_.isDirectory)
       if(log.atLevel(Level.Debug))
         files.foreach(r => log.debug("Pruning file " + r))
@@ -60,6 +75,7 @@ object WarPlugin extends Plugin {
       artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war")),
       publishArtifact in packageBin := false,
       warPostProcess := { () => () },
+      classesAsJar := false,
       `package` <<= packageWar)
   def warSettings0:Seq[Setting[_]] = warSettings0(DefaultClasspathConf)
 
