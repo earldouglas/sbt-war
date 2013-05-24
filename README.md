@@ -5,9 +5,7 @@
 Add plugin to *project/plugins.sbt*:
 
 ```scala
-resolvers += "snapshots @ sonatype" at "https://oss.sonatype.org/content/repositories/snapshots"
-
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.3-SNAPSHOT")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.3.0")
 ```
 
 For *.sbt* build definitions, inject the plugin settings in *build.sbt*:
@@ -110,6 +108,10 @@ There are several examples in the *[sbt-test](https://github.com/JamesEarlDougla
 See the [wiki](http://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki/)
 
 ## Changelog
+
+### 0.3.0
+
+* Classes and resources can be packaged as a JAR file under *WEB_INF/lib*
 
 ### 0.2.13
 
