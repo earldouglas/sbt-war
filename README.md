@@ -26,6 +26,12 @@ Include Jetty in the *container* classpath:
 libraryDependencies += "org.mortbay.jetty" % "jetty" % "6.1.22" % "container"
 ```
 
+## Examples
+
+For a basic project template and walkthrough, see the [xwp-template](https://github.com/JamesEarlDouglas/xwp-template) project.
+
+There are also several examples in the *[sbt-test](https://github.com/JamesEarlDouglas/xsbt-web-plugin/tree/master/src/sbt-test/web)* directory.
+
 ## Configuration
 
 Plugin keys are located in `com.earldouglas.xsbtwebplugin.PluginKeys`
@@ -98,10 +104,6 @@ To automatically reload a web application when source code is changed, use `~;co
 ```
 
 To build a WAR package, use `package`
-
-## Examples
-
-There are several examples in the *[sbt-test](https://github.com/JamesEarlDouglas/xsbt-web-plugin/tree/master/src/sbt-test/web)* directory.
 
 ## More information
 
