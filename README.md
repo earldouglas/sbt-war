@@ -103,7 +103,13 @@ To automatically reload a web application when source code is changed, use `~;co
 > ~;container:start; container:reload /
 ```
 
-To build a WAR package, use `package`
+To build a WAR package, use `package`.  To change the output directory of the WAR file, modify its `artifactPath`:
+
+```scala
+artifactPath in (Compile, packageWar) ~= { defaultPath =>
+  file("dist") / defaultPath.getName
+}
+```
 
 ## More information
 
