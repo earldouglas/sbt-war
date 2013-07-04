@@ -1,5 +1,3 @@
-> ++ 2.8.0
-
 > container:start
 > check-page Hello, Scala!
 

@@ -1,5 +1,3 @@
-> ++ 2.8.0
-
 $ copy-file changes/MyServlet1.scala src/main/scala/test/MyServlet.scala
 > update
 > container:start
