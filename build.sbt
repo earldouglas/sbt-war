@@ -25,3 +25,34 @@ scriptedBufferLog := false
 ScriptedPlugin.scriptedSettings
 
 scriptedLaunchOpts <+= version { "-Dplugin.version=" + _ }
+
+scripted <<= InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =>
+  (scriptedDependencies, scriptedTests, scriptedRun, sbtTestDirectory, scriptedBufferLog, scriptedSbt, scriptedScalas, sbtLauncher, scriptedLaunchOpts, result) map {
+    (deps, m, r, testdir, bufferlog, version, scriptedScalas, launcher, launchOpts, args) => {
+      val tests: Seq[String] = if(args.isEmpty) {
+        for(group <-testdir.listFiles; 
+            if group.isDirectory;
+            test <- group.listFiles;
+            if test.isDirectory) yield { group.name + "/" + test.name }
+      } else {
+        args
+      }
+      val (containerTests, regularTests) = tests.partition(_.startsWith("webapp-common"))
+      try {
+        if(!regularTests.isEmpty) {
+          r.invoke(m, testdir, bufferlog: java.lang.Boolean, version.toString, scriptedScalas.build, scriptedScalas.versions, regularTests.toArray, launcher, launchOpts.toArray)
+        }
+        if(!containerTests.isEmpty) {
+          val supportedContainers = Seq("jetty6", "jetty7", "tomcat")
+          supportedContainers.foreach { container =>
+            println("===== Shared container tests for " + container + " =====")
+            val containerOpt = "-Dplugin.container=" + container
+            val commonTestDirOpt = "-Dplugin.webapp.common.dir=" + testdir.getPath + "/webapp-common/"
+            val opts = launchOpts.toArray :+ containerOpt :+ commonTestDirOpt
+            r.invoke(m, testdir, bufferlog: java.lang.Boolean, version.toString, scriptedScalas.build, scriptedScalas.versions, containerTests.toArray, launcher, opts)
+          }
+        }
+      } catch { case e: java.lang.reflect.InvocationTargetException => throw e.getCause }
+    }
+  }
+}

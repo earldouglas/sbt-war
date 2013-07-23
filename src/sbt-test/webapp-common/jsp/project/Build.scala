@@ -3,6 +3,7 @@ import com.earldouglas.xsbtwebplugin._
 import WebPlugin._
 import PluginKeys._
 import Keys._
+import ContainerDep.containerDepSettings
 
 object MyBuild extends Build {
   override def projects = Seq(root)
@@ -13,13 +14,9 @@ object MyBuild extends Build {
 
   def jettyPort = 7126
 
-  lazy val rootSettings = Seq(
+  lazy val rootSettings = containerDepSettings ++ Seq(
     port in Conf := jettyPort,
     scanInterval in Compile := 60,
-    libraryDependencies ++= Seq(
-      "org.mortbay.jetty" % "jetty" % "6.1.22" % "container",
-      "org.mortbay.jetty" % "jsp-2.0" % "6.1.22" % "container"
-    ),
     getPage := getPageTask,
     checkPage <<= checkPageTask
   )
