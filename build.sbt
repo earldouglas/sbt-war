@@ -47,7 +47,7 @@ scripted <<= InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =
           supportedContainers.foreach { container =>
             println("===== Shared container tests for " + container + " =====")
             val containerOpt = "-Dplugin.container=" + container
-            val commonTestDirOpt = "-Dplugin.webapp.common.dir=" + testdir.getPath + "/webapp-common/"
+            val commonTestDirOpt = "-Dplugin.webapp.common.dir=" + testdir.getPath + "/"
             val opts = launchOpts.toArray :+ containerOpt :+ commonTestDirOpt
             r.invoke(m, testdir, bufferlog: java.lang.Boolean, version.toString, scriptedScalas.build, scriptedScalas.versions, containerTests.toArray, launcher, opts)
           }

@@ -9,6 +9,6 @@
 }
 
 unmanagedSources in Compile += {
-  val webappCommonDir = Option(System.getProperty("plugin.webapp.common.dir")).getOrElse("../")
+  val webappCommonDir = Option(System.getProperty("plugin.webapp.common.dir")).getOrElse("../../")
   file(webappCommonDir + "ContainerDep.scala")
 }
