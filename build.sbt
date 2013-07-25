@@ -43,7 +43,7 @@ scripted <<= InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =
           r.invoke(m, testdir, bufferlog: java.lang.Boolean, version.toString, scriptedScalas.build, scriptedScalas.versions, regularTests.toArray, launcher, launchOpts.toArray)
         }
         if(!containerTests.isEmpty) {
-          val supportedContainers = Seq("jetty6", "jetty7", "tomcat")
+          val supportedContainers = Seq("jetty6", "jetty7"/*, "tomcat"*/)
           supportedContainers.foreach { container =>
             println("===== Shared container tests for " + container + " =====")
             val containerOpt = "-Dplugin.container=" + container
