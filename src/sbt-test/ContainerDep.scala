@@ -1,6 +1,12 @@
 import sbt._
 import sbt.Keys._
 
+/**
+ * Used by the scripted tests in the group 'webapp-common'.  It is used to
+ * specify container dependendencies based on a system property.  This allows
+ * our custom scripted configuration to run the same tests for all of the
+ * supported servlet containers.
+ */
 object ContainerDep {
   def containerDepSettings: Seq[Project.Setting[_]] = {
     val container = System.getProperty("plugin.container")
