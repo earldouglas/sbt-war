@@ -90,13 +90,13 @@ class Jetty6Runner extends Runner {
           case Some(s) => configureSecureConnector(s) 
           case _ =>
         }
-                                configureContexts(apps)
+        configureContexts(apps)
       }
       server.start()
     } catch {
-      case e =>
+      case t: Throwable =>
         server = null
-        throw e
+        throw t
     }
   }
   def reload(contextPath: String) {

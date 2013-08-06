@@ -12,7 +12,7 @@ object WebappPlugin extends Plugin {
     val auxCd = ct / "aux-classes"
     val classes = for {
       file <- cd.descendantsExcept("*", filter).get
-      val target = Path.rebase(cd, auxCd)(file).get
+      target = Path.rebase(cd, auxCd)(file).get
     } yield (file, target)
     val copied = IO.copy(classes)
     val toRemove = scala.collection.mutable.HashSet((auxCd ** "*").get.toSeq : _*) -- copied

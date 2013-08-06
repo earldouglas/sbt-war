@@ -4,7 +4,7 @@ import sbt.{`package` => _, _}
 import Project.Initialize
 import Keys._
 import PluginKeys._
-import _root_.sbt.Defaults.{packageTasks, packageBinTask, inDependencies}
+import _root_.sbt.Defaults.{packageTaskSettings, packageBinTask, inDependencies}
 import _root_.sbt.Classpaths.analyzed
 
 object WarPlugin extends Plugin {
@@ -28,7 +28,7 @@ object WarPlugin extends Plugin {
       val wcToCopy = for {
         dir <- webappResources.reverse
         file <- dir.descendantsExcept("*", filter).get
-        val target = Path.rebase(dir, warPath)(file).get
+        target = Path.rebase(dir, warPath)(file).get
       } yield (file, target)
 
       if(log.atLevel(Level.Debug))
@@ -42,7 +42,7 @@ object WarPlugin extends Plugin {
         val classesAndResources = for {
           dir <- directories.reverse
           file <- dir.descendantsExcept("*", filter).get
-          val target = Path.rebase(dir, "")(file).get
+          target = Path.rebase(dir, "")(file).get
         } yield (file, target)
         val classesAndResourcesJar = webLibDirectory / (name + "-" + version + ".jar")
         IO.jar(classesAndResources, classesAndResourcesJar, new java.util.jar.Manifest)
@@ -51,7 +51,7 @@ object WarPlugin extends Plugin {
         val classesAndResources = for {
           dir <- directories.reverse
           file <- dir.descendantsExcept("*", filter).get
-          val target = Path.rebase(dir, classesTargetDirectory)(file).get
+          target = Path.rebase(dir, classesTargetDirectory)(file).get
         } yield (file, target)
         val copiedClasses = IO.copy(classesAndResources, overwrite = true, preserveLastModified = true)
         toRemove --= copiedClasses
@@ -69,7 +69,7 @@ object WarPlugin extends Plugin {
       (warPath).descendantsExcept("*", filter) x (relativeTo(warPath)|flat)
     }
   def warSettings0(classpathConfig: Configuration):Seq[Setting[_]] =
-    packageTasks(packageWar, packageWarTask(classpathConfig)) ++ Seq(
+    packageTaskSettings(packageWar, packageWarTask(classpathConfig)) ++ Seq(
       webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
       webappResources <++= inDependencies(webappResources, ref => Nil, false) apply { _.flatten },
       artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war")),

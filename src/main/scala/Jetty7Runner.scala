@@ -68,11 +68,12 @@ class Jetty7Runner extends Runner {
   }
         
   private def configureSecureConnector(ssl: SslSettings) {
-    val conn = new SslSelectChannelConnector()
+    import org.eclipse.jetty.http.ssl.SslContextFactory
+    val context = new SslContextFactory()
+    context.setKeyStore(ssl.keystore)
+    context.setKeyStorePassword(ssl.password)
+    val conn = new SslSelectChannelConnector(context)
     conn.setPort(ssl.port)
-    conn.setKeystore(ssl.keystore)
-    conn.setPassword(ssl.password)
-    conn.setKeyPassword(ssl.keyPassword)
     server.addConnector(conn)    
   }
   
@@ -94,9 +95,9 @@ class Jetty7Runner extends Runner {
       }
       server.start()
     } catch {
-      case e =>
+      case t: Throwable =>
         server = null
-        throw e
+        throw t
     }
   }
   def reload(contextPath: String) {
