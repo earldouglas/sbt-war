@@ -8,19 +8,22 @@ import java.lang.reflect.InvocationTargetException
 import scala.xml.NodeSeq
 
 object Runner {
+
   def runners = Seq(
-    classOf[Jetty6Runner].getName,
-    classOf[Jetty7Runner].getName,
-    classOf[Tomcat7Runner].getName
+      "com.earldouglas.xsbtwebplugin.Jetty6Runner"
+    , "com.earldouglas.xsbtwebplugin.Jetty7Runner"
+    , "com.earldouglas.xsbtwebplugin.Jetty9Runner"
+    , "com.earldouglas.xsbtwebplugin.Tomcat7Runner"
   )
+
   def packages = Seq("org.mortbay", "org.eclipse.jetty", "org.apache.catalina")
   def apply(classpath: Seq[File]): Runner = {
     val loader: ClassLoader = toLoader(classpath)
-
     val runner = guessRunner(loader, runners)
     runner.setLoader(loader)
     runner
   }
+
   def loadRunner(className: String, loader: ClassLoader):Runner =
     LazyLoader.makeInstance[Runner](loader, packages, className)
     
@@ -31,11 +34,13 @@ object Runner {
       catch {
         case e: InvocationTargetException =>
           e.getCause match {
-            case _: NoClassDefFoundError =>
-              guessRunner(loader, rest)
+            case _: NoClassDefFoundError   => guessRunner(loader, rest)
+            case _: ClassNotFoundException => guessRunner(loader, rest)
+            case t: Throwable => sys.error("Something went wrong finding a runner")
           }
-        case e: NoClassDefFoundError =>
-          guessRunner(loader, rest)
+        case _: NoClassDefFoundError => guessRunner(loader, rest)
+        case _: ClassNotFoundException => guessRunner(loader, rest)
+        case t: Throwable => sys.error("Something went wrong finding a runner")
       }      
   }
 }

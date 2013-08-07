@@ -14,14 +14,12 @@ object LazyLoader {
     def isSbtClass(className: String) = className.startsWith(Loaders.SbtPackage)
   }
 
-  class LazyFrameworkLoader(runnerClassName: String, urls: Array[URL], parent: ClassLoader, grandparent: ClassLoader)
-  extends LoaderBase(urls, parent)
-  {
-    def doLoadClass(className: String): Class[_] =
-    {
-      if(Loaders.isNestedOrSelf(className, runnerClassName))
+  class LazyFrameworkLoader(runnerClassName: String, urls: Array[URL],
+                            parent: ClassLoader, grandparent: ClassLoader) extends LoaderBase(urls, parent) {
+    def doLoadClass(className: String): Class[_] = {
+      if (Loaders.isNestedOrSelf(className, runnerClassName))
         findClass(className)
-      else if(Loaders.isSbtClass(className)) // we circumvent the parent loader because we know that we want the
+      else if (Loaders.isSbtClass(className)) // we circumvent the parent loader because we know that we want the
         grandparent.loadClass(className)     // version of sbt that is currently the builder (not the project being built)
       else
         parent.loadClass(className)
@@ -33,8 +31,7 @@ object LazyLoader {
       packages.foldLeft(false) {
         (acc, p) => acc || name.startsWith(p + ".")
       }
-    def notFilter(name: String) =
-        !filter(name)
+    def notFilter(name: String) = !filter(name)
     (filter, notFilter)
   }
 
@@ -48,5 +45,6 @@ object LazyLoader {
     cls.getConstructor().newInstance().asInstanceOf[If]
   }
     
-  def makeInstance[If,Im <: If](loader: ClassLoader, packages: Seq[String])(implicit ImM: Manifest[Im]): If = makeInstance(loader, packages, ImM.toString)    
+  def makeInstance[If,Im <: If](loader: ClassLoader, packages: Seq[String])(implicit ImM: Manifest[Im]): If =
+    makeInstance(loader, packages, ImM.toString)    
 }
