@@ -3,37 +3,23 @@ import com.earldouglas.xsbtwebplugin._
 import WebPlugin._
 import PluginKeys._
 import Keys._
+import ContainerDep.containerDepSettings
 
 object MyBuild extends Build {
   override def projects = Seq(root)
 
   lazy val root = Project("root", file("."), settings = Defaults.defaultSettings ++ webSettings ++ rootSettings)
 
-  def jettyPort = 7125
-
   def Conf = config("container")
 
-  lazy val rootSettings = Seq(
+  def jettyPort = 7126
+
+  lazy val rootSettings = containerDepSettings ++ Seq(
     port in Conf := jettyPort,
     scanInterval in Compile := 60,
-    libraryDependencies ++= libDeps,
     getPage := getPageTask,
     checkPage <<= checkPageTask
   )
-
-  def libDeps =
-    if(new File("jetty7") exists)
-      jetty7Dependencies  
-    else
-      jetty6Dependencies
-
-  def jetty6Dependencies =
-    Seq("javax.servlet" % "servlet-api" % "2.5" % "provided",
-        "org.mortbay.jetty" % "jetty" % "6.1.22" % "container")
-  def jetty7Dependencies = Seq(
-    "javax.servlet" % "servlet-api" % "2.5" % "provided",
-    "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container",
-    "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container")
 
   def indexURL = new java.net.URL("http://localhost:" + jettyPort)
   def indexFile = new java.io.File("index.html")
@@ -49,7 +35,7 @@ object MyBuild extends Build {
   def checkPageTask = InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =>
     (getPage, result) map {
       (gp, args) =>
-      checkHelloWorld(args.mkString(" ")) foreach error
+      checkHelloWorld(args.mkString(" ")) foreach sys.error
     }        
   }
 
