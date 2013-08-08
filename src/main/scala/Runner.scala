@@ -14,9 +14,8 @@ object Runner {
     classOf[Tomcat7Runner].getName
   )
   def packages = Seq("org.mortbay", "org.eclipse.jetty", "org.apache.catalina")
-  def apply(instance: ScalaInstance, classpath: Seq[File]): Runner = {
-    val parentLoader = instance.loader
-    val loader: ClassLoader = toLoader(classpath, parentLoader)
+  def apply(classpath: Seq[File]): Runner = {
+    val loader: ClassLoader = toLoader(classpath)
 
     val runner = guessRunner(loader, runners)
     runner.setLoader(loader)

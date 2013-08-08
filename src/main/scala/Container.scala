@@ -32,7 +32,7 @@ case class Container(name: String) {
     def newRunner(ref: ProjectRef, state: State) = {
       implicit val s = state
       val classpath = Build.data(fullClasspath in (ref, Configuration))
-      state.put(attribute, Runner(scalaInstance in ref, classpath))
+      state.put(attribute, Runner(classpath))
     }
   }
 
