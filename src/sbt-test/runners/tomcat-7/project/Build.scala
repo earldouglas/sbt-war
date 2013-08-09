@@ -20,8 +20,10 @@ object MyBuild extends Build {
     getPage := getPageTask,
     checkPage <<= checkPageTask,                  
     libraryDependencies ++= Seq(                  
-      "org.mortbay.jetty" % "jetty" % "6.1.22" % "container",
-      "org.mortbay.jetty" % "jsp-2.0" % "6.1.22" % "container"
+        "org.apache.tomcat.embed" % "tomcat-embed-core" % "7.0.22" % "container"
+      , "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container"
+      , "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "7.0.22" % "container"
+      //, "org.eclipse.jdt.core.compiler" % "ecj" % "4.2.1" % "container"
     )
   )
 

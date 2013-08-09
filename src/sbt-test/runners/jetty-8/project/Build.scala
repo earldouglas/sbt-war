@@ -20,8 +20,8 @@ object MyBuild extends Build {
     getPage := getPageTask,
     checkPage <<= checkPageTask,                  
     libraryDependencies ++= Seq(                  
-      "org.mortbay.jetty" % "jetty" % "6.1.22" % "container",
-      "org.mortbay.jetty" % "jsp-2.0" % "6.1.22" % "container"
+        "org.eclipse.jetty" % "jetty-webapp" % "8.1.11.v20130520" % "container"
+      , "org.eclipse.jetty" % "jetty-plus"   % "8.1.11.v20130520" % "container"
     )
   )
 

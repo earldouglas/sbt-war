@@ -4,7 +4,6 @@ import WebappPlugin._
 import PluginKeys._
 import Keys._
 import Project.Initialize
-import ContainerDep.containerDepSettings
 
 object MyBuild extends Build {
   override def projects = Seq(root, sub)
@@ -23,8 +22,12 @@ object MyBuild extends Build {
   
   lazy val root = Project("root", file("."), settings = Defaults.defaultSettings ++ webappSettings ++ sharedSettings ++ Seq(
     indexUrl := new java.net.URL("http://localhost:"+jettyPort+"/root/")
-  ) ++ containerSettings ++ containerDepSettings ++ Seq(
-    port in container.Configuration := jettyPort
+  ) ++ containerSettings ++ Seq(
+    port in container.Configuration := jettyPort ,                  
+    libraryDependencies ++= Seq(                  
+      "org.mortbay.jetty" % "jetty" % "6.1.22" % "container",
+      "org.mortbay.jetty" % "jsp-2.0" % "6.1.22" % "container"
+    )
   ))
   lazy val sub = Project("sub", file("sub"), settings = Defaults.defaultSettings ++ webappSettings ++ sharedSettings ++ Seq(
     indexUrl := new java.net.URL("http://localhost:"+jettyPort+"/sub/")
