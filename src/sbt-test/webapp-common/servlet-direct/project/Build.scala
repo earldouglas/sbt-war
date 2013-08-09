@@ -3,23 +3,21 @@ import com.earldouglas.xsbtwebplugin._
 import WebPlugin._
 import PluginKeys._
 import Keys._
+import ContainerDep.containerDepSettings
 
 object MyBuild extends Build {
   override def projects = Seq(root)
 
   lazy val root = Project("root", file("."), settings = Defaults.defaultSettings ++ webSettings ++ rootSettings)
 
+  def jettyPort = 7125
+
   def Conf = config("container")
 
-  def jettyPort = 7126
-
-  lazy val rootSettings = Seq(
+  lazy val rootSettings = containerDepSettings ++ Seq(
     port in Conf := jettyPort,
     scanInterval in Compile := 60,
-    libraryDependencies ++= Seq(
-      "org.mortbay.jetty" % "jetty" % "6.1.22" % "container",
-      "org.mortbay.jetty" % "jsp-2.0" % "6.1.22" % "container"
-    ),
+    libraryDependencies += "javax.servlet" % "servlet-api" % "2.5" % "provided",
     getPage := getPageTask,
     checkPage <<= checkPageTask
   )
@@ -38,7 +36,7 @@ object MyBuild extends Build {
   def checkPageTask = InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =>
     (getPage, result) map {
       (gp, args) =>
-      checkHelloWorld(args.mkString(" ")) foreach sys.error
+      checkHelloWorld(args.mkString(" ")) foreach error
     }        
   }
 

@@ -7,3 +7,8 @@
     addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % pluginVersion)
   }
 }
+
+unmanagedSources in Compile += {
+  val webappCommonDir = Option(System.getProperty("plugin.webapp.common.dir")).getOrElse("../../")
+  file(webappCommonDir + "ContainerDep.scala")
+}

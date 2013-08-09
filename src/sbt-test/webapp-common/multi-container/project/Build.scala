@@ -4,6 +4,7 @@ import WebappPlugin._
 import PluginKeys._
 import Keys._
 import Project.Initialize
+import ContainerDep.containerDepSettings
 
 object MyBuild extends Build {
   override def projects = Seq(root, sub)
@@ -21,9 +22,8 @@ object MyBuild extends Build {
   )
   
   lazy val root = Project("root", file("."), settings = Defaults.defaultSettings ++ webappSettings ++ sharedSettings ++ Seq(
-    libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container",
     indexUrl := new java.net.URL("http://localhost:"+jettyPort+"/root/")
-  ) ++ containerSettings ++ Seq(
+  ) ++ containerSettings ++ containerDepSettings ++ Seq(
     port in container.Configuration := jettyPort
   ))
   lazy val sub = Project("sub", file("sub"), settings = Defaults.defaultSettings ++ webappSettings ++ sharedSettings ++ Seq(
@@ -32,17 +32,11 @@ object MyBuild extends Build {
 
   lazy val sharedSettings = Seq(
     scanInterval in Compile := 60,
-    libraryDependencies ++= libDeps,
+    libraryDependencies += "javax.servlet" % "servlet-api" % "2.5" % "provided",
     indexFile <<= baseDirectory / "index.html",    
     getPage <<= getPageTask,
     checkPage <<= checkPageTask
   )
-
-  def libDeps =
-      jettyDependencies  
-
-  def jettyDependencies =
-    Seq("javax.servlet" % "servlet-api" % "2.5" % "provided")
 
   lazy val getPage = TaskKey[File]("get-page")
   

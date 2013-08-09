@@ -3,6 +3,7 @@ import com.earldouglas.xsbtwebplugin._
 import WebPlugin._
 import PluginKeys._
 import Keys._
+import ContainerDep.containerDepSettings
 
 object MyBuild extends Build {
   override def projects = Seq(root)
@@ -13,31 +14,13 @@ object MyBuild extends Build {
 
   def Conf = config("container")
 
-  lazy val rootSettings = Seq(
+  lazy val rootSettings = containerDepSettings ++ Seq(
     port in Conf := jettyPort,
     scanInterval in Compile := 60,
-    libraryDependencies ++= libDeps,
+    libraryDependencies += "javax.servlet" % "servlet-api" % "2.5" % "provided",
     getPage := getPageTask,
     checkPage <<= checkPageTask
   )
-
-  def libDeps =
-    if(new File("jetty7.2") exists)
-      jetty72Dependencies
-    else if(new File("jetty7.3") exists)
-      jetty73Dependencies  
-    else
-      jetty6Dependencies
-
-  def jetty6Dependencies =
-    Seq("javax.servlet" % "servlet-api" % "2.5" % "provided",
-        "org.mortbay.jetty" % "jetty" % "6.1.22" % "container")
-  def jetty72Dependencies =
-    Seq("javax.servlet" % "servlet-api" % "2.5" % "provided",
-    "org.eclipse.jetty" % "jetty-webapp" % "7.2.2.v20101205" % "container")
-  def jetty73Dependencies =
-    Seq("javax.servlet" % "servlet-api" % "2.5" % "provided",
-    "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container")
 
   def indexURL = new java.net.URL("http://localhost:" + jettyPort)
   def indexFile = new java.io.File("index.html")
