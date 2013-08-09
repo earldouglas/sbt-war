@@ -115,25 +115,6 @@ artifactPath in (Compile, packageWar) ~= { defaultPath =>
 
 See the [wiki](http://github.com/JamesEarlDouglas/xsbt-web-plugin/wiki/)
 
-## Changelog
-
-### 0.3.0
-
-* Classes and resources can be packaged as a JAR file under *WEB_INF/lib*
-
-### 0.2.13
-
-* Cusomizable classpath in the webapp package
-* Tomcat `baseDir` uses a temporary directory
-* Code cleanup/simplification
-
-### 0.2.12
-
-* Resources are copied in the same order that the JVM resolves resources
-* Tomcat 7 is supported as a container
-* Versioning follows the common SBT plugin pattern
-* `ssl` is a more configurable `TaskKey`
-
 ## License
 
 This software is distributed under modified 3-clause BSD license. See [LICENSE](https://github.com/JamesEarlDouglas/xsbt-web-plugin/blob/master/LICENSE) for more information.

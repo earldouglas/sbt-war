@@ -1,0 +1,3 @@
+### New features
+
+* Classes and resources can be packaged as a JAR file under *WEB_INF/lib*
