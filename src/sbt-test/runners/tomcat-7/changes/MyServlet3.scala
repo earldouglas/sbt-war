@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 
 class MyServlet extends HttpServlet {
 
-  val html = """<HTML>
+  val html = <HTML>
     <HEAD><TITLE>Hello, Scala 3!</TITLE></HEAD>
     <BODY>Hello, Scala 3! This is a servlet.</BODY>
-  </HTML>"""
+  </HTML>
 
   override def doGet(req:HttpServletRequest, resp:HttpServletResponse) {
     resp.setContentType("text/html")

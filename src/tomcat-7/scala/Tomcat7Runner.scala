@@ -4,6 +4,7 @@ import org.apache.catalina.startup.Tomcat
 import scala.xml.NodeSeq
 import sbt.AbstractLogger
 import sbt.classpath.ClasspathUtilities.toLoader
+import sbt.classpath.ClasspathUtilities.rootLoader
 import java.io.File
 import org.apache.catalina.Context
 import org.apache.catalina.connector.Connector
@@ -199,5 +200,22 @@ class Tomcat7Runner extends Runner {
      * Converts a file to a map containing the path to the file and its last modified timestamp
      */
     private def toModificationMap(file: File) = Map(file.getAbsolutePath -> file.lastModified)
+    
+    /**
+     * We replace the system class loader with the root loader.  This is
+     * because the SBT libraries are on the system class loader.  This creates
+     * conflicts for the Scala libraries.  Tomcat doesn't provide a way to do
+     * this, so we have to hack it in by bypassing the private modifier.
+     */
+    override protected def startInternal(): Unit = {
+      super.startInternal()
+      
+      val classLoader = getClassLoader()
+      
+      val systemLoaderField = classLoader.getClass.getDeclaredField("system")
+      systemLoaderField.setAccessible(true)
+      systemLoaderField.set(classLoader, rootLoader)
+      systemLoaderField.setAccessible(false)
+    }
   }
 }
