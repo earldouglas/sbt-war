@@ -109,9 +109,7 @@ class Tomcat7Runner extends Runner {
       deployment.webappResources.tail.foreach { file =>
         context.addWatchedResource(file.getAbsolutePath)
       }
-      
-      context.setReloadable(true)
-      
+
       val webLoader = new ReloadableWebappLoader(loader)
       deployment.classpath.foreach(file => webLoader.addRepository(file.toURI.toURL.toString))
       context.setLoader(webLoader)
