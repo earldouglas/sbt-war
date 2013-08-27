@@ -1,6 +1,6 @@
 organization := "com.earldouglas"
 
-version := "0.5.0-SNAPSHOT"
+version := "0.4.1"
 
 scalaVersion := "2.10.2"
 

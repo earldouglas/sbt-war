@@ -1,0 +1,3 @@
+### New features
+
+* sbt 0.13.0 support
