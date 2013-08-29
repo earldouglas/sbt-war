@@ -5,7 +5,7 @@
 Add plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.1")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.2")
 ```
 
 For *.sbt* build definitions, inject the plugin settings in *build.sbt*:
