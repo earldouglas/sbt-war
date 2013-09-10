@@ -24,7 +24,7 @@ object WarPlugin extends Plugin {
       val webLibDirectory = webInfPath / "lib"
       val classesTargetDirectory = webInfPath / "classes"
 
-      val (libs, directories) = classpath.toList.partition(ClasspathUtilities.isArchive)
+      val (libs, directories) = classpath.toList.filter(_.exists).partition(!_.isDirectory)
       val wcToCopy = for {
         dir <- webappResources.reverse
         file <- dir.descendantsExcept("*", filter).get
