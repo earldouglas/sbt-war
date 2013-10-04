@@ -69,11 +69,8 @@ case class Container(name: String) {
         state.start(port, sslSettings, state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
       }
     },
-    reload <<= inputTask { (argTask: TaskKey[Seq[String]]) =>
-      (state, argTask) map { (state: State, args: Seq[String]) =>
-        args map { _.trim } foreach state.reload
-      }
-    },
+    discoveredContexts <<= apps map discoverContexts storeAs discoveredContexts triggeredBy start,
+    reload <<= reloadTask(state),
     stop <<= (state) map { (state) => state.stop() },
     restart <<= (stop, start) map{ (_, _) => },
     customConfiguration := false,
@@ -97,4 +94,16 @@ case class Container(name: String) {
     ))
 
   def discoverContexts(apps: Seq[(String, Deployment)]) = apps.map(_._1)
+  
+  def reloadParser: (State, Option[Seq[String]]) => Parser[String] =
+  {
+    import DefaultParsers._
+    (state, contexts) => Space ~> token(NotSpace examples contexts.getOrElse(Seq.empty).toSet)
+  }
+  
+  def reloadTask(state: TaskKey[State]): Initialize[InputTask[Unit]] = {
+    InputTask(loadForParser(discoveredContexts)(reloadParser)) { result =>
+        (state, result) map { (state, context) => state.reload(context) }
+    }
+  }
 }
