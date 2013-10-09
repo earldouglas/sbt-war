@@ -36,7 +36,7 @@ object LazyLoader {
   }
 
   def makeInstance[If: Manifest](loader: ClassLoader, packages: Seq[String], implName: String): If = {
-    val base = manifest[If].erasure.getClassLoader
+    val base = manifest[If].runtimeClass.getClassLoader
     val (filter, notFilter) = filters(packages)
 
     val dual = new DualLoader(base, notFilter, x => true, loader, filter, x => false)    
