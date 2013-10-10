@@ -13,7 +13,7 @@ object WarPlugin extends Plugin {
     IO.copy(map)
   }
   
-  def packageWarTask(classpathConfig: Configuration): Initialize[Task[Seq[(File, String)]]] =
+  def packageWarTask(classpathConfig: Configuration): Def.Initialize[Task[Seq[(File, String)]]] =
     (classesAsJar, name, version, webappResources, target, fullClasspath in classpathConfig in packageWar, excludeFilter, warPostProcess, streams) map {
       (classesAsJar, name, version, webappResources, target, fullClasspath, filter, postProcess, s) =>
       val classpath = fullClasspath.map(_.data)
@@ -66,12 +66,12 @@ object WarPlugin extends Plugin {
       IO.delete(files)
       IO.deleteIfEmpty(dirs.toSet)
       postProcess()
-      (warPath).descendantsExcept("*", filter) x (relativeTo(warPath)|flat)
+      warPath.descendantsExcept("*", filter) x (relativeTo(warPath)|flat)
     }
   def warSettings0(classpathConfig: Configuration):Seq[Setting[_]] =
     packageTaskSettings(packageWar, packageWarTask(classpathConfig)) ++ Seq(
       webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
-      webappResources <++= inDependencies(webappResources, ref => Nil, false) apply { _.flatten },
+      webappResources <++= webappResources.all(ScopeFilter()) apply {_.flatten },
       artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war")),
       publishArtifact in packageBin := false,
       warPostProcess := { () => () },
