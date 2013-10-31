@@ -42,6 +42,7 @@ class Jetty9Runner extends Runner {
     import deployment._
     val context = new WebAppContext()
     context.setContextPath(contextPath)
+    context.getInitParams().put("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
     context.setBaseResource(
       new ResourceCollection(
         webappResources.map(_.getPath).toArray
