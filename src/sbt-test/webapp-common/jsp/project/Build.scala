@@ -10,14 +10,13 @@ object MyBuild extends Build {
 
   lazy val root = Project("root", file("."), settings = Defaults.defaultSettings ++ webSettings ++ rootSettings)
 
-  def jettyPort = 7123
-
   def Conf = config("container")
+
+  def jettyPort = 7126
 
   lazy val rootSettings = containerDepSettings ++ Seq(
     port in Conf := jettyPort,
     scanInterval in Compile := 60,
-    libraryDependencies += "javax.servlet" % "servlet-api" % "2.5" % "provided",
     getPage := getPageTask,
     checkPage <<= checkPageTask
   )
@@ -36,7 +35,7 @@ object MyBuild extends Build {
   def checkPageTask = InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =>
     (getPage, result) map {
       (gp, args) =>
-      checkHelloWorld(args.mkString(" ")) foreach error
+      checkHelloWorld(args.mkString(" ")) foreach sys.error
     }        
   }
 
