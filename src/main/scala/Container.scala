@@ -60,19 +60,19 @@ case class Container(name: String) {
     port := 8080,
     ssl := None,
     start <<= (state, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
-      (state, port, ssl, apps, cc, cf, cx) => {        
-      val sslSettings = ssl match {          
-          case Some((sslPort, keystore, password, keyPassword)) =>
-        new Some(SslSettings(sslPort, keystore, password, keyPassword))
-          case _ => None            
-        }  
-        state.start(port, sslSettings, state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
+      (state, port, ssl, apps, cc, cf, cx) => {
+        state.start(port, toSslSettings(ssl), state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
       }
     },
     discoveredContexts <<= apps map discoverContexts storeAs discoveredContexts triggeredBy start,
     reload <<= reloadTask(state),
     stop <<= (state) map { (state) => state.stop() },
-    restart <<= (stop, start) map{ (_, _) => },
+    restart <<= (state, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
+      (state, port, ssl, apps, cc, cf, cx) => {
+        state.stop()
+        state.start(port, toSslSettings(ssl), state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
+      }
+    },
     customConfiguration := false,
     configurationFiles := Seq(),
     configurationXml := NodeSeq.Empty
@@ -93,6 +93,11 @@ case class Container(name: String) {
       apps <<= map.map(pairToTask(conf)).join
     ))
 
+  def toSslSettings(sslConfig: Option[(Int,String,String,String)]): Option[SslSettings] = {
+    sslConfig.map { case (sslPort, keystore, password, keyPassword) =>
+      SslSettings(sslPort, keystore, password, keyPassword)
+    }
+  }
   def discoverContexts(apps: Seq[(String, Deployment)]) = apps.map(_._1)
   
   def reloadParser: (State, Option[Seq[String]]) => Parser[String] =
