@@ -41,7 +41,7 @@ scripted <<= InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =
         }
         // run the shared container tests once for each supported container
         if(!containerTests.isEmpty) {
-          val supportedContainers = Seq("jetty6", "jetty7", "jetty8", "jetty9", "tomcat")
+          val supportedContainers = Seq("jetty6", "jetty7", "jetty8", "jetty9", "jetty91", "tomcat")
           supportedContainers.foreach { container =>
             println("===== Shared container tests for " + container + " =====")
             val containerOpt = "-Dplugin.container=" + container

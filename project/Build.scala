@@ -49,8 +49,8 @@ object XsbtWebPlugin extends Build {
     inConfig(Jetty9)(Defaults.configSettings) ++
     Seq(
         libraryDependencies ++= Seq(
-            "org.eclipse.jetty" % "jetty-webapp" % "9.0.4.v20130625" % Jetty9
-          , "org.eclipse.jetty" % "jetty-plus"   % "9.0.4.v20130625" % Jetty9
+            "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % Jetty9
+          , "org.eclipse.jetty" % "jetty-plus"   % "9.1.0.v20131115" % Jetty9
         )
       , ivyConfigurations += Jetty9
     )

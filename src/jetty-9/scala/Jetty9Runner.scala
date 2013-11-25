@@ -3,6 +3,7 @@ package com.earldouglas.xsbtwebplugin
 import org.eclipse.jetty.server.{Server, Handler}
 import org.eclipse.jetty.server.handler.ContextHandlerCollection
 import org.eclipse.jetty.server.nio.NetworkTrafficSelectChannelConnector
+import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
 import org.eclipse.jetty.util.{Scanner => JScanner}
 import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
@@ -68,7 +69,7 @@ class Jetty9Runner extends Runner {
   }
 
   private def configureConnector(port: Int) {
-    val conn = new NetworkTrafficSelectChannelConnector(server)
+    val conn = new ServerConnector(server)
     conn.setPort(port)
     server.addConnector(conn)
   }
@@ -78,7 +79,7 @@ class Jetty9Runner extends Runner {
     val context = new SslContextFactory()
     context.setKeyStorePath(ssl.keystore)
     context.setKeyStorePassword(ssl.password)
-    val conn = new NetworkTrafficSelectChannelConnector(server, context)
+    val conn = new ServerConnector(server, context)
     conn.setPort(ssl.port)
     server.addConnector(conn)    
   }
@@ -122,6 +123,7 @@ class Jetty9Runner extends Runner {
 
   class DelegatingLogger(delegate: AbstractLogger) extends LoggerBase(delegate) with JLogger {
     def getLogger(name: String) = this
+    def debug(x: String, y: Long): Unit = ()
   }
 
   class Scanner(scanDirs: Seq[File], scanInterval: Int, thunk: () => Unit) extends JScanner {
