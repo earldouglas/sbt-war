@@ -25,7 +25,7 @@ object Runner {
   }
 
   def loadRunner(className: String, loader: ClassLoader):Runner =
-    LazyLoader.makeInstance[Runner](loader, packages, className)
+    Runners.makeInstance[Runner](loader, packages, className)
     
   def guessRunner(loader: ClassLoader, rs: Seq[String]): Runner = rs match {
     case Seq() => sys.error("Jetty dependencies should be on container classpath")
