@@ -17,15 +17,17 @@ seq(webSettings :_*)
 For *.scala* build definitions, inject the plugin settings in *Build.scala*:
 
 ```scala
-Project(..., settings = Project.defaultSettings ++ com.earldouglas.xsbtwebplugin.WebPlugin.webSettings)
+Project(..., settings = Project.defaultSettings ++
+                          com.earldouglas.xsbtwebplugin.WebPlugin.webSettings)
 ```
 
 Include Jetty in the *container* classpath:
 
 ```scala
-libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container"
-
-libraryDependencies += "org.eclipse.jetty" % "jetty-plus" % "9.1.0.v20131115" % "container"
+libraryDependencies ++= Seq(
+  "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container",
+  "org.eclipse.jetty" % "jetty-plus"   % "9.1.0.v20131115" % "container"
+)
 ```
 
 ## Examples
