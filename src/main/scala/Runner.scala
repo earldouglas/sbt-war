@@ -36,12 +36,12 @@ object Runner {
           e.getCause match {
             case _: NoClassDefFoundError   => guessRunner(loader, rest)
             case _: ClassNotFoundException => guessRunner(loader, rest)
-            case t: Throwable => sys.error("Something went wrong finding a runner")
+            case t: Throwable => throw new RuntimeException("Something went wrong finding a runner", t)
           }
         case _: NoClassDefFoundError => guessRunner(loader, rest)
         case _: ClassNotFoundException => guessRunner(loader, rest)
-        case t: Throwable => sys.error("Something went wrong finding a runner")
-      }      
+        case t: Throwable => throw new RuntimeException("Something went wrong finding a runner", t)
+      }
   }
 }
 
