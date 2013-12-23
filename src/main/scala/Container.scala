@@ -13,7 +13,7 @@ import scala.xml.NodeSeq
 
 case class Container(name: String) {
 
-  def Configuration = config(name) hide
+  def Configuration = config(name).hide
   def attribute = AttributeKey[Runner](name)
   def runner = attribute
 
@@ -34,7 +34,7 @@ case class Container(name: String) {
 
     def newRunner(ref: ProjectRef, state: State) = {
       implicit val s = state
-      val classpath = Build.data(fullClasspath in (ref, Configuration))
+      val classpath = Attributed.data(fullClasspath in (ref, Configuration))
       state.put(attribute, Runner(classpath))
     }
   }
@@ -80,7 +80,7 @@ case class Container(name: String) {
 
   def settings = globalSettings ++ inConfig(Configuration)(containerSettings)
 
-  def pairToTask(conf: Configuration)(p: (String, ProjectReference)): Initialize[Task[(String, Deployment)]] =
+  def pairToTask(conf: Configuration)(p: (String, ProjectReference)): Def.Initialize[Task[(String, Deployment)]] =
     (deployment in (p._2, conf)) map { (d) => (p._1, d) }
 
   type SettingSeq = Seq[Setting[_]]
@@ -106,7 +106,7 @@ case class Container(name: String) {
     (state, contexts) => Space ~> token(NotSpace examples contexts.getOrElse(Seq.empty).toSet)
   }
   
-  def reloadTask(state: TaskKey[State]): Initialize[InputTask[Unit]] = {
+  def reloadTask(state: TaskKey[State]): Def.Initialize[InputTask[Unit]] = {
     InputTask(loadForParser(discoveredContexts)(reloadParser)) { result =>
         (state, result) map { (state, context) => state.reload(context) }
     }
