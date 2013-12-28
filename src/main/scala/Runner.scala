@@ -3,7 +3,7 @@ package com.earldouglas.xsbtwebplugin
 import sbt._
 import classpath._
 import ClasspathUtilities._
-import java.net.{URI, URL, URLClassLoader}
+import java.net.{URI, URL, URLClassLoader, InetSocketAddress}
 import java.lang.reflect.InvocationTargetException
 import scala.xml.NodeSeq
 
@@ -48,7 +48,8 @@ object Runner {
 trait Runner {
   protected var loader: ClassLoader = null
   def setLoader(loader: ClassLoader) { this.loader = loader }
-  def start(port: Int, ssl: Option[SslSettings], logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq): Unit
+  def start(addr: InetSocketAddress, ssl: Option[SslSettings], logger: AbstractLogger,
+            apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq): Unit
   def reload(context: String): Unit
   def stop(): Unit
 }

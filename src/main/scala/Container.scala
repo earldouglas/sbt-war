@@ -10,6 +10,7 @@ import sbinary.DefaultProtocol.StringFormat
 import Cache.seqFormat
 import complete._
 import scala.xml.NodeSeq
+import java.net.InetSocketAddress
 
 case class Container(name: String) {
 
@@ -57,20 +58,23 @@ case class Container(name: String) {
           state.stop()
           onUnload(state)
     },
+    host := "0.0.0.0",
     port := 8080,
     ssl := None,
-    start <<= (state, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
-      (state, port, ssl, apps, cc, cf, cx) => {
-        state.start(port, toSslSettings(ssl), state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
+    start <<= (state, host, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
+      (state, host, port, ssl, apps, cc, cf, cx) => {
+        val addr = new InetSocketAddress(host, port)
+        state.start(addr, toSslSettings(ssl), state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
       }
     },
     discoveredContexts <<= apps map discoverContexts storeAs discoveredContexts triggeredBy start,
     reload <<= reloadTask(state),
     stop <<= (state) map { (state) => state.stop() },
-    restart <<= (state, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
-      (state, port, ssl, apps, cc, cf, cx) => {
+    restart <<= (state, host, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
+      (state, host, port, ssl, apps, cc, cf, cx) => {
         state.stop()
-        state.start(port, toSslSettings(ssl), state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
+        val addr = new InetSocketAddress(host, port)
+        state.start(addr, toSslSettings(ssl), state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
       }
     },
     customConfiguration := false,
@@ -93,9 +97,9 @@ case class Container(name: String) {
       apps <<= map.map(pairToTask(conf)).join
     ))
 
-  def toSslSettings(sslConfig: Option[(Int,String,String,String)]): Option[SslSettings] = {
-    sslConfig.map { case (sslPort, keystore, password, keyPassword) =>
-      SslSettings(sslPort, keystore, password, keyPassword)
+  def toSslSettings(sslConfig: Option[(String,Int,String,String,String)]): Option[SslSettings] = {
+    sslConfig.map { case (sslHost, sslPort, keystore, password, keyPassword) =>
+      SslSettings(new InetSocketAddress(sslHost, sslPort), keystore, password, keyPassword)
     }
   }
   def discoverContexts(apps: Seq[(String, Deployment)]) = apps.map(_._1)

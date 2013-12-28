@@ -1,24 +1,19 @@
 package com.earldouglas.xsbtwebplugin
 
-import org.apache.catalina.startup.Tomcat
-import scala.xml.NodeSeq
-import sbt.AbstractLogger
-import sbt.classpath.ClasspathUtilities.toLoader
-import sbt.classpath.ClasspathUtilities.rootLoader
 import java.io.File
+import java.net.InetSocketAddress
+import java.net.MalformedURLException
+import java.net.URL
+import java.net.URLClassLoader
+import java.util.logging.{ConsoleHandler,Handler,Level,LogManager,LogRecord,SimpleFormatter}
 import org.apache.catalina.Context
 import org.apache.catalina.connector.Connector
-import java.net.URLClassLoader
 import org.apache.catalina.loader.WebappLoader
-import java.util.logging.Handler
-import java.util.logging.LogRecord
-import java.util.logging.SimpleFormatter
-import java.util.logging.Level
-import java.net.URL
-import java.net.MalformedURLException
-import java.util.logging.LogManager
-import java.util.logging.ConsoleHandler
+import org.apache.catalina.startup.{Embedded,Tomcat}
+import sbt.AbstractLogger
 import sbt.IO
+import sbt.classpath.ClasspathUtilities.{rootLoader,toLoader}
+import scala.xml.NodeSeq
 
 class Tomcat7Runner extends Runner {
 
@@ -26,13 +21,14 @@ class Tomcat7Runner extends Runner {
 
   private var server: Option[Server] = None
   
-  def start(port: Int, ssl: Option[SslSettings], logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
+  def start(addr: InetSocketAddress, ssl: Option[SslSettings], logger: AbstractLogger,
+            apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
     server = server.orElse {
       val tomcat = new Tomcat
       
       // Configure logging
       val rootLogger = LogManager.getLogManager.getLogger("")
-      for(handler <- rootLogger.getHandlers) {
+      for (handler <- rootLogger.getHandlers) {
         val handlerClass = handler.getClass
         
         // Remove ConsoleHandler so we control the console and remove duplicate instances of our handler
@@ -49,18 +45,33 @@ class Tomcat7Runner extends Runner {
       val baseDir = IO.createTemporaryDirectory
       tomcat.setBaseDir(baseDir.getAbsolutePath)
 
-      val contexts = if(customConf) {
-        //TODO config files
-        throw new RuntimeException("Tomcat does not currently support a custom conf")
-      } else {
-        tomcat.setPort(port)
-        ssl.foreach { sslSettings =>
-          val connector = configureSecureConnector(sslSettings)
-          tomcat.getService.addConnector(connector)
-        }
+      val contexts =
+        if (customConf) {
+          //TODO config files
+          throw new RuntimeException("Tomcat does not currently support a custom conf")
+        } else {
+          ssl match {
+            case None =>
+              val connector = (new Embedded).createConnector(addr.getAddress.getHostAddress, addr.getPort, false)
+              //val connector = new Connector()
+              connector.setPort(addr.getPort)
+              connector.setScheme("http")
+              tomcat.getService.addConnector(connector)
+            case Some(ssl) =>
+              val connector = (new Embedded).createConnector(ssl.addr.getAddress.getHostAddress, ssl.addr.getPort, true)
+              //val connector = new Connector()
+              connector.setPort(ssl.addr.getPort)
+              connector.setSecure(true)
+              connector.setScheme("https")
+              connector.setAttribute("SSLEnabled", true)
+              connector.setAttribute("keystorePass", ssl.password)
+              connector.setAttribute("keystoreFile", ssl.keystore)
+              connector.setAttribute("keyPass", ssl.keyPassword)
+              tomcat.getService.addConnector(connector)
+          }
       
-        createContexts(tomcat, apps)
-      }
+          createContexts(tomcat, apps)
+        }
       
       tomcat.start();
       
@@ -82,19 +93,6 @@ class Tomcat7Runner extends Runner {
     }
 
     server = None
-  }
-  
-  private def configureSecureConnector(ssl: SslSettings): Connector = {
-    val connector = new Connector()
-    connector.setPort(ssl.port)
-    connector.setSecure(true)
-    connector.setScheme("https")
-    connector.setAttribute("SSLEnabled", true)
-    connector.setAttribute("keystorePass", ssl.password)
-    connector.setAttribute("keystoreFile", ssl.keystore)
-    connector.setAttribute("keyPass", ssl.keyPassword)
-    
-    connector
   }
   
   private def createContexts(newTomcat: Tomcat, apps: Seq[(String, Deployment)]): Map[String, Context] = {

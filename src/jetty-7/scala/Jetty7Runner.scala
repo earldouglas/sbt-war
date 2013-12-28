@@ -13,6 +13,7 @@ import org.eclipse.jetty.plus.webapp.{EnvConfiguration, PlusConfiguration}
 import sbt._
 import classpath.ClasspathUtilities.toLoader
 import scala.xml.NodeSeq
+import java.net.InetSocketAddress
 
 class Jetty7Runner extends Runner {
 
@@ -69,9 +70,10 @@ class Jetty7Runner extends Runner {
     confFiles.foreach(f => new XmlConfiguration(f.toURI.toURL) configure(server))
   }
 
-  private def configureConnector(port: Int) {
+  private def configureConnector(addr: InetSocketAddress) {
     val conn = new SelectChannelConnector
-    conn.setPort(port)
+    conn.setHost(addr.getAddress.getHostAddress)
+    conn.setPort(addr.getPort)
     server.addConnector(conn)
   }
         
@@ -81,11 +83,13 @@ class Jetty7Runner extends Runner {
     context.setKeyStore(ssl.keystore)
     context.setKeyStorePassword(ssl.password)
     val conn = new SslSelectChannelConnector(context)
-    conn.setPort(ssl.port)
+    conn.setHost(ssl.addr.getAddress.getHostAddress)
+    conn.setPort(ssl.addr.getPort)
     server.addConnector(conn)    
   }
   
-  def start(port: Int, ssl: Option[SslSettings], logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
+  def start(addr: InetSocketAddress, ssl: Option[SslSettings], logger: AbstractLogger,
+            apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
     if(server != null)
       return
     try { 
@@ -94,7 +98,7 @@ class Jetty7Runner extends Runner {
       if(customConf)
         configureCustom(confFiles, confXml)
       else {
-        configureConnector(port)
+        configureConnector(addr)
         ssl match {
           case Some(s) => configureSecureConnector(s) 
           case _ =>

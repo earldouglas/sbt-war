@@ -1,21 +1,20 @@
 package com.earldouglas.xsbtwebplugin
 
-                                
-        import org.mortbay.jetty.{Server, Handler}
-        import org.mortbay.jetty.handler.ContextHandlerCollection
-        import org.mortbay.jetty.nio.SelectChannelConnector
-        import org.mortbay.jetty.security.SslSocketConnector
-        import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
-        import org.mortbay.util.{Scanner => JScanner}
-        import org.mortbay.log.{Log, Logger => JLogger}
-        import org.mortbay.resource.ResourceCollection
-        import org.mortbay.xml.XmlConfiguration
-        import org.mortbay.jetty.plus.webapp.{EnvConfiguration, Configuration=>PlusConfiguration}
-        
-
+import org.mortbay.jetty.{Server, Handler}
+import org.mortbay.jetty.handler.ContextHandlerCollection
+import org.mortbay.jetty.nio.SelectChannelConnector
+import org.mortbay.jetty.security.SslSocketConnector
+import org.mortbay.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration}
+import org.mortbay.jetty.webapp.{JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
+import org.mortbay.util.{Scanner => JScanner}
+import org.mortbay.log.{Log, Logger => JLogger}
+import org.mortbay.resource.ResourceCollection
+import org.mortbay.xml.XmlConfiguration
+import org.mortbay.jetty.plus.webapp.{EnvConfiguration, Configuration=>PlusConfiguration}
 import sbt._
 import classpath.ClasspathUtilities.toLoader
 import scala.xml.NodeSeq
+import java.net.InetSocketAddress
 
 class Jetty6Runner extends Runner {
 
@@ -40,6 +39,7 @@ class Jetty6Runner extends Runner {
       new TagLibConfiguration)
     context.setConfigurations(array)
   }
+
   private def deploy(contextPath: String, deployment: Deployment) = {
     import deployment._
     val context = new WebAppContext()
@@ -55,41 +55,46 @@ class Jetty6Runner extends Runner {
     contexts += contextPath -> (context, deployment)
     context
   }  
+
   private def configureContexts(apps: Seq[(String, Deployment)]) {
     val contexts = apps.map { case (contextPath, deployment) => deploy(contextPath, deployment) }
     val coll = new ContextHandlerCollection()
     coll.setHandlers(contexts.toArray)
     server.setHandler(coll)
   }  
+
   private def configureCustom(confFiles: Seq[File], confXml: NodeSeq) {
     confXml.foreach(x => new XmlConfiguration(x.toString) configure(server))
     confFiles.foreach(f => new XmlConfiguration(f.toURI.toURL) configure(server))
   }
-  private def configureConnector(port: Int) {
-    val conn = new SelectChannelConnector
-    conn.setPort(port)
+
+  private def configureConnector(addr: InetSocketAddress) {
+    val conn = new SelectChannelConnector()
+    conn.setHost(addr.getAddress.getHostAddress)
+    conn.setPort(addr.getPort)
     server.addConnector(conn)
   }
         
   private def configureSecureConnector(ssl: SslSettings) {
     val conn = new SslSocketConnector()
-    conn.setPort(ssl.port)
+    conn.setHost(ssl.addr.getAddress.getHostAddress)
+    conn.setPort(ssl.addr.getPort)
     conn.setKeystore(ssl.keystore)
     conn.setPassword(ssl.password)
     conn.setKeyPassword(ssl.keyPassword)
     server.addConnector(conn)    
   }
   
-  def start(port: Int, ssl: Option[SslSettings], logger: AbstractLogger, apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
+  def start(addr: InetSocketAddress, ssl: Option[SslSettings], logger: AbstractLogger,
+            apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
     if(server != null)
       return
     try { 
       Log.setLog(new DelegatingLogger(logger))
       server = new Server
-      if(customConf)
-        configureCustom(confFiles, confXml)
+      if(customConf) configureCustom(confFiles, confXml)
       else {
-        configureConnector(port)
+        configureConnector(addr)
         ssl match {
           case Some(s) => configureSecureConnector(s) 
           case _ =>

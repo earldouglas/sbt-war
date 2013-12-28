@@ -14,8 +14,9 @@ case class Deployment(
 object PluginKeys extends Plugin {
   lazy val DefaultConf = Compile
   lazy val DefaultClasspathConf = Runtime
+  lazy val host = SettingKey[String]("host")
   lazy val port = SettingKey[Int]("port")
-  lazy val ssl = TaskKey[Option[(Int,String,String,String)]]("ssl")
+  lazy val ssl = TaskKey[Option[(String,Int,String,String,String)]]("ssl")
   lazy val apps = TaskKey[Seq[(String, Deployment)]]("apps")
   lazy val start = TaskKey[Unit]("start")
   lazy val discoveredContexts = TaskKey[Seq[String]]("discovered-contexts")
