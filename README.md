@@ -43,9 +43,11 @@ Plugin keys are located in `com.earldouglas.xsbtwebplugin.PluginKeys`
 ### Container settings
 
 ```scala
-port in container.Configuration := 8081
+host in container.Configuration := "192.168.1.4"
 
-ssl in container.Configuration := Some(ssl_port, "keystore_path", "keystore_password", "key_password")
+port in container.Configuration := 8080
+
+ssl in container.Configuration := Some("192.168.1.4", 8443, "keystore_path", "keystore_password", "key_password")
 
 customConfiguration in container.Configuration := true
 
