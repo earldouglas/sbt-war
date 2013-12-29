@@ -1,0 +1,7 @@
+### Enhancements
+
+* Add `host` setting for binding to a specific network interface ([ec26e5](https://github.com/JamesEarlDouglas/xsbt-web-plugin/commit/ec26e584a34c1159493d0bee2f68f595b6f02466))
+
+### Other
+
+* Move to sbt 0.13.1 and Scala 2.10.3
