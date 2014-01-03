@@ -8,18 +8,11 @@ scriptedLaunchOpts <+= version { "-Dplugin.version=" + _ }
  * supported servlet container.
  */
 scripted <<= InputTask(_ => complete.Parsers.spaceDelimited("<arg>")) { result =>
-  (scriptedDependencies, scriptedTests, scriptedRun, sbtTestDirectory, scriptedBufferLog, scriptedSbt, scalaVersion, sbtLauncher, scriptedLaunchOpts, result) map {
-    (deps, m, r, testdir, bufferlog, version, scalaVersion, launcher, launchOpts, args) => {
+  (scriptedDependencies, scriptedTests, scriptedRun, sbtTestDirectory, scriptedBufferLog, scriptedSbt, sbtLauncher, scriptedLaunchOpts, result) map {
+    (deps, m, r, testdir, bufferlog, version, launcher, launchOpts, args) => {
       // Due to an API change in SBT 0.13 we have to try 2 argument lists when trying to run scripted tests
       def runTests(tests: Array[String], options: Array[String]): Unit = {
-        try {
-          // SBT 0.13
-          r.invoke(m, testdir, bufferlog: java.lang.Boolean, tests, launcher, options)
-        } catch {
-          case iae: IllegalArgumentException =>
-              // SBT 0.12
-              r.invoke(m, testdir, bufferlog: java.lang.Boolean, version.toString, scalaVersion, scalaVersion, tests, launcher, options)
-        }
+        r.invoke(m, testdir, bufferlog: java.lang.Boolean, tests, launcher, options)
       }
       // If we don't get any test arguments we need to find all of the tests
       // so we can separate out the shared container tests.  Otherwise scripted
