@@ -1,4 +1,4 @@
-[![Build Status](http://jenkins.jamestastic.com/job/xsbt-web-plugin/badge/icon)](http://jenkins.jamestastic.com/job/xsbt-web-plugin/)
+[![Build Status](https://travis-ci.org/JamesEarlDouglas/xsbt-web-plugin.png?branch=master)](https://travis-ci.org/JamesEarlDouglas/xsbt-web-plugin)
 
 ## Quick start
 
