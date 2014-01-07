@@ -9,7 +9,7 @@ import java.util.logging.{ConsoleHandler,Handler,Level,LogManager,LogRecord,Simp
 import org.apache.catalina.Context
 import org.apache.catalina.connector.Connector
 import org.apache.catalina.loader.WebappLoader
-import org.apache.catalina.startup.{Embedded,Tomcat}
+import org.apache.catalina.startup.Tomcat
 import sbt.AbstractLogger
 import sbt.IO
 import sbt.classpath.ClasspathUtilities.{rootLoader,toLoader}
@@ -45,33 +45,20 @@ class Tomcat7Runner extends Runner {
       val baseDir = IO.createTemporaryDirectory
       tomcat.setBaseDir(baseDir.getAbsolutePath)
 
-      val contexts =
-        if (customConf) {
-          //TODO config files
-          throw new RuntimeException("Tomcat does not currently support a custom conf")
-        } else {
-          ssl match {
-            case None =>
-              val connector = (new Embedded).createConnector(addr.getAddress.getHostAddress, addr.getPort, false)
-              //val connector = new Connector()
-              connector.setPort(addr.getPort)
-              connector.setScheme("http")
-              tomcat.getService.addConnector(connector)
-            case Some(ssl) =>
-              val connector = (new Embedded).createConnector(ssl.addr.getAddress.getHostAddress, ssl.addr.getPort, true)
-              //val connector = new Connector()
-              connector.setPort(ssl.addr.getPort)
-              connector.setSecure(true)
-              connector.setScheme("https")
-              connector.setAttribute("SSLEnabled", true)
-              connector.setAttribute("keystorePass", ssl.password)
-              connector.setAttribute("keystoreFile", ssl.keystore)
-              connector.setAttribute("keyPass", ssl.keyPassword)
-              tomcat.getService.addConnector(connector)
-          }
-      
-          createContexts(tomcat, apps)
+      val contexts = if(customConf) {
+        //TODO config files
+        throw new RuntimeException("Tomcat does not currently support a custom conf")
+      } else {
+        tomcat.setPort(addr.getPort)
+        tomcat.getConnector.setProperty("address", addr.getAddress.getHostAddress)
+        
+        ssl.foreach { sslSettings =>
+          val connector = configureSecureConnector(sslSettings)
+          tomcat.getService.addConnector(connector)
         }
+      
+        createContexts(tomcat, apps)
+      }
       
       tomcat.start();
       
@@ -93,6 +80,20 @@ class Tomcat7Runner extends Runner {
     }
 
     server = None
+  }
+  
+  private def configureSecureConnector(ssl: SslSettings): Connector = {
+    val connector = new Connector()
+    connector.setPort(ssl.addr.getPort)
+    connector.setProperty("address", ssl.addr.getAddress.getHostAddress)
+    connector.setSecure(true)
+    connector.setScheme("https")
+    connector.setAttribute("SSLEnabled", true)
+    connector.setAttribute("keystorePass", ssl.password)
+    connector.setAttribute("keystoreFile", ssl.keystore)
+    connector.setAttribute("keyPass", ssl.keyPassword)
+    
+    connector
   }
   
   private def createContexts(newTomcat: Tomcat, apps: Seq[(String, Deployment)]): Map[String, Context] = {
