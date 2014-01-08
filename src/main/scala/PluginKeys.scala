@@ -36,5 +36,5 @@ object PluginKeys extends Plugin {
   lazy val scanInterval = SettingKey[Int]("scan-interval")
   lazy val env = SettingKey[Option[File]]("env")
   lazy val deployment = TaskKey[Deployment]("deployment")
-  lazy val webInfIncludeJarPattern = SettingKey[Option[String]]("containerIncludeJarPattern")
+  lazy val webInfIncludeJarPattern = SettingKey[Option[String]]("webInfIncludeJarPattern")
 }
