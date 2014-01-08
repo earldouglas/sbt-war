@@ -5,6 +5,7 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection
 import org.eclipse.jetty.server.nio.NetworkTrafficSelectChannelConnector
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
+import org.eclipse.jetty.annotations.AnnotationConfiguration
 import org.eclipse.jetty.util.{Scanner => JScanner}
 import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
 import org.eclipse.jetty.util.resource.ResourceCollection
@@ -34,8 +35,9 @@ class Jetty9Runner extends Runner {
       new WebInfConfiguration, 
       new WebXmlConfiguration,  
       config, 
-      new PlusConfiguration, 
-      new JettyWebXmlConfiguration, 
+      new PlusConfiguration,
+      new AnnotationConfiguration,
+      new JettyWebXmlConfiguration,
       new TagLibConfiguration)
     context.setConfigurations(array)
   }
@@ -50,7 +52,23 @@ class Jetty9Runner extends Runner {
         webappResources.map(_.getPath).toArray
       ))
     setContextLoader(context, classpath)
-    env.foreach(setEnvConfiguration(context, _))
+
+    context.setExtraClasspath(classpath.map(_.getAbsolutePath).mkString(";"))
+    env match {
+      case Some(e) => setEnvConfiguration(context, e)
+      case None =>
+        val configrationArray: Array[Configuration] = Array(
+          new WebInfConfiguration,
+          new WebXmlConfiguration,
+          new PlusConfiguration,
+          new AnnotationConfiguration,
+          new JettyWebXmlConfiguration,
+          new TagLibConfiguration)
+
+        context.setConfigurations(configrationArray)
+    }
+    webInfIncludeJarPattern.foreach(context.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern", _))
+
     if(!scanDirectories.isEmpty)
       new Scanner(scanDirectories, scanInterval, () => reload(contextPath))
     contexts += contextPath -> (context, deployment)

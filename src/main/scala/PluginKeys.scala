@@ -8,7 +8,8 @@ case class Deployment(
   classpath: Seq[File],
   scanDirectories: Seq[File],
   scanInterval: Int,
-  env: Option[File]
+  env: Option[File],
+  webInfIncludeJarPattern: Option[String]
 )
 
 object PluginKeys extends Plugin {
@@ -35,4 +36,5 @@ object PluginKeys extends Plugin {
   lazy val scanInterval = SettingKey[Int]("scan-interval")
   lazy val env = SettingKey[Option[File]]("env")
   lazy val deployment = TaskKey[Deployment]("deployment")
+  lazy val webInfIncludeJarPattern = SettingKey[Option[String]]("containerIncludeJarPattern")
 }
