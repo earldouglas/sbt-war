@@ -204,17 +204,24 @@ class Tomcat7Runner extends Runner {
      * We replace the system class loader with the root loader.  This is
      * because the SBT libraries are on the system class loader.  This creates
      * conflicts for the Scala libraries.  Tomcat doesn't provide a way to do
-     * this, so we have to hack it in by bypassing the private modifier.
+     * this, so we have to hack it in by bypassing the private modifier. A fix
+     * for this has been included upstream.  This hack is only necessary for
+     * Tomcat versions <7.0.51
      */
     override protected def startInternal(): Unit = {
       super.startInternal()
-      
-      val classLoader = getClassLoader()
-      
-      val systemLoaderField = classLoader.getClass.getDeclaredField("system")
-      systemLoaderField.setAccessible(true)
-      systemLoaderField.set(classLoader, rootLoader)
-      systemLoaderField.setAccessible(false)
+      try {
+        val classLoader = getClassLoader()
+
+        val systemLoaderField = classLoader.getClass.getDeclaredField("system")
+        systemLoaderField.setAccessible(true)
+        systemLoaderField.set(classLoader, rootLoader)
+        systemLoaderField.setAccessible(false)
+      } catch {
+        // In case the 'system' field changes in some Tomcat version >=7.0.51
+        // We don't care about this because the hack is no longer necessary
+        case _: NoSuchFieldException =>
+      }
     }
   }
 }
