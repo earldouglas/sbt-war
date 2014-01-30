@@ -9,7 +9,7 @@ import java.util.logging.{ConsoleHandler,Handler,Level,LogManager,LogRecord,Simp
 import org.apache.catalina.Context
 import org.apache.catalina.connector.Connector
 import org.apache.catalina.loader.WebappLoader
-import org.apache.catalina.startup.Tomcat
+import org.apache.catalina.startup.{Tomcat,Catalina}
 import sbt.AbstractLogger
 import sbt.IO
 import sbt.classpath.ClasspathUtilities.{rootLoader,toLoader}
@@ -24,8 +24,6 @@ class Tomcat7Runner extends Runner {
   def start(addr: InetSocketAddress, ssl: Option[SslSettings], logger: AbstractLogger,
             apps: Seq[(String, Deployment)], customConf: Boolean, confFiles: Seq[File], confXml: NodeSeq) {
     server = server.orElse {
-      val tomcat = new Tomcat
-      
       // Configure logging
       val rootLogger = LogManager.getLogManager.getLogger("")
       for (handler <- rootLogger.getHandlers) {
@@ -38,47 +36,72 @@ class Tomcat7Runner extends Runner {
           rootLogger.removeHandler(handler)
         }
       }
-      
+
       rootLogger.addHandler(new DelegatingHandler(logger))
 
-      // Configure tomcat
-      val baseDir = IO.createTemporaryDirectory
-      tomcat.setBaseDir(baseDir.getAbsolutePath)
+      if(customConf) {
+        val catalina = new Catalina
+        
+        // Unlike Jetty, Tomcat can only use one config file
+        val configFile = if(confFiles.isEmpty) {
+          val config = IO.createTemporaryDirectory
+          IO.write(config, confXml.toString)
+          config.getAbsolutePath
+        } else {
+          confFiles.head.getAbsolutePath
+        }
 
-      val contexts = if(customConf) {
-        //TODO config files
-        throw new RuntimeException("Tomcat does not currently support a custom conf")
+        catalina.setConfigFile(configFile)
+        catalina.start
+
+        Option(CatalinaServer(catalina))
       } else {
+        val tomcat = new Tomcat
+
+        // Configure tomcat
+        val baseDir = IO.createTemporaryDirectory
+        tomcat.setBaseDir(baseDir.getAbsolutePath)
+
         tomcat.setPort(addr.getPort)
         tomcat.getConnector.setProperty("address", addr.getAddress.getHostAddress)
-        
+
         ssl.foreach { sslSettings =>
           val connector = configureSecureConnector(sslSettings)
           tomcat.getService.addConnector(connector)
         }
-      
-        createContexts(tomcat, apps)
+
+        val contexts = createContexts(tomcat, apps)
+
+        tomcat.start()
+
+        Option(TomcatServer(tomcat, contexts))
       }
-      
-      tomcat.start()
-      
-      Option(Server(tomcat, contexts))
     }
   }
 
   def reload(contextPath: String) {
-    server.foreach { case Server(tomcat, contexts) =>
-      val context = contexts.get(contextPath)
-      context.foreach( _.reload )
+    server.foreach {
+      case TomcatServer(tomcat, contexts) =>
+        val context = contexts.get(contextPath)
+        context.foreach( _.reload )
+      case CatalinaServer(catalina) => // do nothing
     }
   }
 
-  def join(): Unit = server foreach { _.tomcat.getServer().await() }
+  def join(): Unit = server foreach {
+    case TomcatServer(tomcat, contexts) =>
+      tomcat.getServer().await()
+    case CatalinaServer(catalina) =>
+      catalina.getServer().await()
+  }
 
   def stop() {
-    server.foreach { case Server(tomcat, contexts) =>
-      tomcat.stop
-      tomcat.destroy
+    server.foreach {
+      case TomcatServer(tomcat, contexts) =>
+        tomcat.stop
+        tomcat.destroy
+      case CatalinaServer(catalina) =>
+        catalina.stop
     }
 
     server = None
@@ -118,12 +141,14 @@ class Tomcat7Runner extends Runner {
       (contextPath, context)
     }.toMap
   }
-  
-  private case class Server(tomcat: Tomcat, contexts: Map[String, Context])
-  
+
+  private sealed abstract class Server
+  private case class CatalinaServer(catalina: Catalina) extends Server
+  private case class TomcatServer(tomcat: Tomcat, contexts: Map[String, Context]) extends Server
+
   private class DelegatingHandler(delegate: AbstractLogger) extends Handler {
     val formatter = new SimpleFormatter
-  
+
     // dummy methods
     def close {}
     def flush {}
