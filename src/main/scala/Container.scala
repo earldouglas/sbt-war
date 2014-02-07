@@ -77,6 +77,7 @@ case class Container(name: String) {
         state.start(addr, toSslSettings(ssl), state.log.asInstanceOf[AbstractLogger], apps, cc, cf, cx)
       }
     },
+    PluginKeys.test <<= (stop in Configuration) dependsOn (Keys.test in Test) dependsOn (start in Configuration),
     customConfiguration := false,
     configurationFiles := Seq(),
     configurationXml := NodeSeq.Empty
