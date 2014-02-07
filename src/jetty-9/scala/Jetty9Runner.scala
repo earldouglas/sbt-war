@@ -29,16 +29,21 @@ class Jetty9Runner extends Runner {
     context.setClassLoader(appLoader)
   }
 
+  private def configs: List[Configuration] =
+    List(new WebInfConfiguration, 
+         new WebXmlConfiguration,  
+         new PlusConfiguration,
+         new JettyWebXmlConfiguration,
+         new TagLibConfiguration) ++
+    (try {
+      List(new AnnotationConfiguration)
+    } catch {
+      case e: NoClassDefFoundError => Nil
+    })
+ 
   private def setEnvConfiguration(context: WebAppContext, file: File) {
     val config = new EnvConfiguration { setJettyEnvXml(file.toURI.toURL) }
-    val array : Array[Configuration] = Array(
-      new WebInfConfiguration, 
-      new WebXmlConfiguration,  
-      config, 
-      new PlusConfiguration,
-      new AnnotationConfiguration,
-      new JettyWebXmlConfiguration,
-      new TagLibConfiguration)
+    val array: Array[Configuration] = (configs ++ List(config)).toArray
     context.setConfigurations(array)
   }
 
@@ -56,16 +61,8 @@ class Jetty9Runner extends Runner {
     context.setExtraClasspath(classpath.map(_.getAbsolutePath).mkString(";"))
     env match {
       case Some(e) => setEnvConfiguration(context, e)
-      case None =>
-        val configrationArray: Array[Configuration] = Array(
-          new WebInfConfiguration,
-          new WebXmlConfiguration,
-          new PlusConfiguration,
-          new AnnotationConfiguration,
-          new JettyWebXmlConfiguration,
-          new TagLibConfiguration)
-
-        context.setConfigurations(configrationArray)
+      case None    => val configrationArray: Array[Configuration] = configs.toArray
+                      context.setConfigurations(configrationArray)
     }
     webInfIncludeJarPattern.foreach(context.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern", _))
 
