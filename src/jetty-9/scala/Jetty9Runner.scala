@@ -107,7 +107,7 @@ class Jetty9Runner extends Runner {
     if(server != null)
       return
     try { 
-      Log.setLog(new DelegatingLogger(logger))
+      //Log.setLog(new DelegatingLogger(logger))
       server = new Server
       if(customConf)
         configureCustom(confFiles, confXml)
@@ -117,7 +117,7 @@ class Jetty9Runner extends Runner {
           case Some(s) => configureSecureConnector(s) 
           case _ =>
         }
-                                configureContexts(apps)
+        configureContexts(apps)
       }
       server.start()
     } catch {
@@ -135,7 +135,7 @@ class Jetty9Runner extends Runner {
   }
 
   def stop() {
-    if(server != null)
+    if (server != null)
       server.stop()
     server = null
   }

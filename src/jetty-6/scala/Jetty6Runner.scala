@@ -90,7 +90,7 @@ class Jetty6Runner extends Runner {
     if(server != null)
       return
     try { 
-      Log.setLog(new DelegatingLogger(logger))
+      //Log.setLog(new DelegatingLogger(logger))
       server = new Server
       if(customConf) configureCustom(confFiles, confXml)
       else {

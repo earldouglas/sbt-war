@@ -93,7 +93,7 @@ class Jetty7Runner extends Runner {
     if(server != null)
       return
     try { 
-      Log.setLog(new DelegatingLogger(logger))
+      //Log.setLog(new DelegatingLogger(logger))
       server = new Server
       if(customConf)
         configureCustom(confFiles, confXml)
@@ -103,7 +103,7 @@ class Jetty7Runner extends Runner {
           case Some(s) => configureSecureConnector(s) 
           case _ =>
         }
-                                configureContexts(apps)
+        configureContexts(apps)
       }
       server.start()
     } catch {
