@@ -23,12 +23,22 @@ Project(..., settings = Project.defaultSettings ++
                           com.earldouglas.xsbtwebplugin.WebPlugin.webSettings)
 ```
 
-Include Jetty in the *container* classpath:
+Include Jetty (or Tomcat) on the *container* classpath:
 
+*Jetty:*
 ```scala
 libraryDependencies ++= Seq(
   "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container",
   "org.eclipse.jetty" % "jetty-plus"   % "9.1.0.v20131115" % "container"
+)
+```
+
+*Tomcat:*
+```scala
+libraryDependencies ++= Seq(
+  "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
+  "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container",
+  "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
 )
 ```
 
