@@ -31,14 +31,12 @@ object ContainerDep {
         libraryDependencies ++= Seq(
           "org.eclipse.jetty" % "jetty-webapp" % "9.0.4.v20130625" % "container",
           "org.eclipse.jetty" % "jetty-jsp" % "9.0.4.v20130625" % "container",
-          "org.eclipse.jetty" % "jetty-annotations" % "9.0.4.v20130625" % "container",
           "org.eclipse.jetty" % "jetty-plus" % "9.0.4.v20130625" % "container"
         )
       } else if(container == "jetty91") {
         libraryDependencies ++= Seq(
           "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container",
           "org.eclipse.jetty" % "jetty-jsp" % "9.1.0.v20131115" % "container",
-          "org.eclipse.jetty" % "jetty-annotations"   % "9.1.0.v20131115" % "container",
           "org.eclipse.jetty" % "jetty-plus"   % "9.1.0.v20131115" % "container"
         )
       } else if(container == "tomcat") {
