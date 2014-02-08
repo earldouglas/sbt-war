@@ -7,7 +7,7 @@ Add plugin to *project/plugins.sbt*:
 *To use xsbt-web-plugin with sbt 0.12 or Scala 2.9.x, substitute version 0.5.0 below.*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.6.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.7.0")
 ```
 
 For *.sbt* build definitions, inject the plugin settings in *build.sbt*:
