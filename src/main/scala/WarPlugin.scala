@@ -69,7 +69,7 @@ object WarPlugin extends Plugin {
            files.foreach(r => log.debug("Pruning file " + r))
          IO.delete(files)
          IO.deleteIfEmpty(dirs.toSet)
-         postProcess()
+         postProcess(warPath)
          warPath.descendantsExcept("*", filter) x (relativeTo(warPath)|flat)
     }
 
@@ -79,7 +79,7 @@ object WarPlugin extends Plugin {
       webappResources <++= inDependencies(webappResources, ref => Nil, false) apply { _.flatten },
       artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war")),
       publishArtifact in packageBin := false,
-      warPostProcess := { () => () },
+      warPostProcess := { _ => () },
       classesAsJar := false,
       `package` <<= packageWar)
 
