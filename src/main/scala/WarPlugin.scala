@@ -74,14 +74,17 @@ object WarPlugin extends Plugin {
     }
 
   def warSettings0(classpathConfig: Configuration):Seq[Setting[_]] =
-    packageTaskSettings(packageWar, packageWarTask(classpathConfig)) ++ Seq(
+    packageTaskSettings(packageWar, packageWarTask(classpathConfig)) ++
+    Seq(
       webappResources <<= sourceDirectory(sd => Seq(sd / "webapp")),
       webappResources <++= inDependencies(webappResources, ref => Nil, false) apply { _.flatten },
       artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war")),
       publishArtifact in packageBin := false,
       warPostProcess := { _ => () },
       classesAsJar := false,
-      `package` <<= packageWar)
+      `package` <<= packageWar dependsOn packageWebapp,
+      packageWebapp <<= packageWarTask(classpathConfig)
+    )
 
   private def warSettings0:Seq[Setting[_]] = warSettings0(DefaultClasspathConf)
 
