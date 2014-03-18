@@ -1,29 +1,40 @@
 [![Build Status](https://travis-ci.org/JamesEarlDouglas/xsbt-web-plugin.png?branch=master)](https://travis-ci.org/JamesEarlDouglas/xsbt-web-plugin)
 
+xsbt-web-plugin is an extension to [sbt](http://www.scala-sbt.org/) for building enterprise Web applications based on the [Java J2EE Servlet specification](http://en.wikipedia.org/wiki/Java_Servlet).
+
+xsbt-web-plugin supports both Scala and Java, and is best suited for projects that:
+
+* deploy to production J2EE environments (e.g. Tomcat, Jetty, GlassFish, WebSphere)
+* incorporate J2EE libraries (e.g. [JSP](http://en.wikipedia.org/wiki/JavaServer_Pages), [JSF](http://en.wikipedia.org/wiki/JavaServer_Faces), [EJB](http://en.wikipedia.org/wiki/Ejb))
+* utilize J2EE technologies (e.g. [`Servlet`](http://docs.oracle.com/javaee/6/api/javax/servlet/Servlet.html)s, [`Filter`](http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html)s, [JNDI](http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface))
+* have a specific need to be packaged as a *.war* file
+
 ## Quick start
 
-Add plugin to *project/plugins.sbt*:
+The quickest way to get started is to clone the [xwp-template](https://github.com/JamesEarlDouglas/xwp-template) project, which sets up the necessary directories, files, and configuration for a basic xsbt-web-plugin project.
 
-*To use xsbt-web-plugin with sbt 0.12 or Scala 2.9.x, substitute version 0.5.0 below.*
+## Basics
+
+First, add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
 addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.7.0")
 ```
 
-For *.sbt* build definitions, inject the plugin settings in *build.sbt*:
+For [*.sbt* build definitions](http://www.scala-sbt.org/release/docs/Getting-Started/Basic-Def.html), inject the plugin settings in *build.sbt*:
 
 ```scala
 seq(webSettings :_*)
 ```
 
-For *.scala* build definitions, inject the plugin settings in *Build.scala*:
+For [*.scala* build definitions](http://www.scala-sbt.org/release/docs/Getting-Started/Full-Def.html), inject the plugin settings in *Build.scala*:
 
 ```scala
 Project(..., settings = Project.defaultSettings ++
                           com.earldouglas.xsbtwebplugin.WebPlugin.webSettings)
 ```
 
-Include Jetty (or Tomcat) on the *container* classpath:
+Include Jetty on the *container* classpath:
 
 *Jetty:*
 ```scala
@@ -32,6 +43,8 @@ libraryDependencies ++= Seq(
   "org.eclipse.jetty" % "jetty-plus"   % "9.1.0.v20131115" % "container"
 )
 ```
+
+If you prefer Tomcat to Jetty, include it on the *container* classpath instead:
 
 *Tomcat:*
 ```scala
@@ -42,15 +55,9 @@ libraryDependencies ++= Seq(
 )
 ```
 
-## Examples
-
-For a basic project template and walkthrough, see the [xwp-template](https://github.com/JamesEarlDouglas/xwp-template) project.
-
-There are also several examples in the *[sbt-test](https://github.com/JamesEarlDouglas/xsbt-web-plugin/tree/master/src/sbt-test/web)* directory.
-
 ## Configuration
 
-Plugin keys are located in `com.earldouglas.xsbtwebplugin.PluginKeys`
+Plugin keys are located in []`com.earldouglas.xsbtwebplugin.PluginKeys`](https://github.com/earldouglas/xsbt-web-plugin/blob/master/src/main/scala/PluginKeys.scala).
 
 ### Container settings
 
