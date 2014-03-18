@@ -57,7 +57,7 @@ libraryDependencies ++= Seq(
 
 ## Configuration
 
-Plugin keys are located in []`com.earldouglas.xsbtwebplugin.PluginKeys`](https://github.com/earldouglas/xsbt-web-plugin/blob/master/src/main/scala/PluginKeys.scala).
+Plugin keys are located in [`com.earldouglas.xsbtwebplugin.PluginKeys`](https://github.com/earldouglas/xsbt-web-plugin/blob/master/src/main/scala/PluginKeys.scala).
 
 ### Container settings
 
