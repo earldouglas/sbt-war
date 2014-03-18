@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/JamesEarlDouglas/xsbt-web-plugin.png?branch=master)](https://travis-ci.org/JamesEarlDouglas/xsbt-web-plugin)
+[![Build Status](https://travis-ci.org/earldouglas/xsbt-web-plugin.png?branch=master)](https://travis-ci.org/earldouglas/xsbt-web-plugin)
 
 xsbt-web-plugin is an extension to [sbt](http://www.scala-sbt.org/) for building enterprise Web applications based on the [Java J2EE Servlet specification](http://en.wikipedia.org/wiki/Java_Servlet).
 
