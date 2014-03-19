@@ -8,7 +8,7 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 * deploy to production J2EE environments (e.g. Tomcat, Jetty, GlassFish, WebSphere)
 * incorporate J2EE libraries (e.g. [JSP](http://en.wikipedia.org/wiki/JavaServer_Pages), [JSF](http://en.wikipedia.org/wiki/JavaServer_Faces), [EJB](http://en.wikipedia.org/wiki/Ejb))
 * utilize J2EE technologies (e.g. [`Servlet`](http://docs.oracle.com/javaee/6/api/javax/servlet/Servlet.html)s, [`Filter`](http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html)s, [JNDI](http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface))
-* have a specific need to be packaged as a *.war* file
+* have a specific need to be packaged as a [*.war* file](https://en.wikipedia.org/wiki/WAR_%28Sun_file_format%29)
 
 ## Quick start
 
