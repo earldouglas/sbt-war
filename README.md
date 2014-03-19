@@ -14,6 +14,8 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 
 The quickest way to get started is to clone the [xwp-template](https://github.com/JamesEarlDouglas/xwp-template) project, which sets up the necessary directories, files, and configuration for a basic xsbt-web-plugin project.
 
+For more information, please see the [wiki](http://github.com/earldouglas/xsbt-web-plugin/wiki/)
+
 ## Quick reference
 
 First, add xsbt-web-plugin to *project/plugins.sbt*:
@@ -55,7 +57,3 @@ libraryDependencies ++= Seq(
   "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
 )
 ```
-
-## More information
-
-See the [wiki](http://github.com/earldouglas/xsbt-web-plugin/wiki/)
