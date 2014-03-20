@@ -20,6 +20,7 @@ object PluginKeys extends Plugin {
   lazy val ssl = TaskKey[Option[(String,Int,String,String,String)]]("ssl")
   lazy val apps = TaskKey[Seq[(String, Deployment)]]("apps")
   lazy val start = TaskKey[Unit]("start")
+  lazy val launch = TaskKey[Unit]("launch")
   lazy val test = TaskKey[Unit]("test")
   lazy val discoveredContexts = TaskKey[Seq[String]]("discovered-contexts")
   lazy val reload = InputKey[Unit]("reload")

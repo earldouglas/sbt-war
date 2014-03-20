@@ -134,6 +134,8 @@ class Jetty9Runner extends Runner {
     context.start()
   }
 
+  def join(): Unit = if (server != null) server.join()
+
   def stop() {
     if (server != null)
       server.stop()

@@ -61,6 +61,7 @@ case class Container(name: String) {
     host := "0.0.0.0",
     port := 8080,
     ssl := None,
+    launch <<= (state) map { (state) => state.join() } dependsOn (start in Configuration),
     start <<= (state, host, port, ssl, apps, customConfiguration, configurationFiles, configurationXml) map {
       (state, host, port, ssl, apps, cc, cf, cx) => {
         val addr = new InetSocketAddress(host, port)
