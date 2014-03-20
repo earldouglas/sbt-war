@@ -60,7 +60,7 @@ class Tomcat7Runner extends Runner {
         createContexts(tomcat, apps)
       }
       
-      tomcat.start();
+      tomcat.start()
       
       Option(Server(tomcat, contexts))
     }
@@ -72,6 +72,8 @@ class Tomcat7Runner extends Runner {
       context.foreach( _.reload )
     }
   }
+
+  def join(): Unit = server foreach { _.tomcat.getServer().await() }
 
   def stop() {
     server.foreach { case Server(tomcat, contexts) =>
