@@ -114,6 +114,9 @@ class Jetty6Runner extends Runner {
     setContextLoader(context, deployment.classpath)
     context.start()
   }
+
+  def join(): Unit = if (server != null) server.join()
+
   def stop() {
     if(server != null)
       server.stop()
