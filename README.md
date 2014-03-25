@@ -33,8 +33,9 @@ seq(webSettings :_*)
 For [*.scala* build definitions](http://www.scala-sbt.org/release/docs/Getting-Started/Full-Def.html), inject the plugin settings in *Build.scala*:
 
 ```scala
-Project(..., settings = Project.defaultSettings ++
-                          com.earldouglas.xsbtwebplugin.WebPlugin.webSettings)
+import com.earldouglas.xsbtwebplugin.WebPlugin
+
+Project(..., settings = Project.defaultSettings ++ WebPlugin.webSettings)
 ```
 
 Include Jetty on the *container* classpath:
