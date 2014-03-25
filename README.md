@@ -38,9 +38,16 @@ import com.earldouglas.xsbtwebplugin.WebPlugin
 Project(..., settings = Project.defaultSettings ++ WebPlugin.webSettings)
 ```
 
-Include Jetty on the *container* classpath:
+Add a Servlet API to the *provided* configuration:
+
+```scala
+libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
+```
+
+Include either Jetty or Tomcat in the *container* configuration:
 
 *Jetty:*
+
 ```scala
 libraryDependencies ++= Seq(
   "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container",
@@ -48,9 +55,8 @@ libraryDependencies ++= Seq(
 )
 ```
 
-If you prefer Tomcat to Jetty, include it on the *container* classpath instead:
-
 *Tomcat:*
+
 ```scala
 libraryDependencies ++= Seq(
   "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
