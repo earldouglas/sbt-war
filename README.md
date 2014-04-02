@@ -21,7 +21,7 @@ For more information, please see the [wiki](http://github.com/earldouglas/xsbt-w
 First, add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.7.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.8.0")
 ```
 
 For [*.sbt* build definitions](http://www.scala-sbt.org/release/docs/Getting-Started/Basic-Def.html), inject the plugin settings in *build.sbt*:

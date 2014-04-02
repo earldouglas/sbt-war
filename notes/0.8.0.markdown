@@ -1,0 +1,5 @@
+### Changelog
+
+* Add package-webapp task to create the contents of target/webapp ([129](https://github.com/earldouglas/xsbt-web-plugin/issues/129), [earldouglas](https://github.com/earldouglas))
+* Alter warPostProcess to include the war target directory path ([139](https://github.com/earldouglas/xsbt-web-plugin/issues/139), [earldouglas](https://github.com/earldouglas))
+* Various documentation improvements ([wiki](https://github.com/earldouglas/xsbt-web-plugin/wiki), [earldouglas](https://github.com/earldouglas)) 
