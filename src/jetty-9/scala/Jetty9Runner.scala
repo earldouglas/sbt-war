@@ -4,7 +4,7 @@ import org.eclipse.jetty.server.{Server, Handler}
 import org.eclipse.jetty.server.handler.ContextHandlerCollection
 import org.eclipse.jetty.server.nio.NetworkTrafficSelectChannelConnector
 import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
+import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, WebXmlConfiguration}
 import org.eclipse.jetty.annotations.AnnotationConfiguration
 import org.eclipse.jetty.util.{Scanner => JScanner}
 import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
@@ -33,8 +33,7 @@ class Jetty9Runner extends Runner {
     List(new WebInfConfiguration, 
          new WebXmlConfiguration,  
          new PlusConfiguration,
-         new JettyWebXmlConfiguration,
-         new TagLibConfiguration) ++
+         new JettyWebXmlConfiguration) ++
     (try {
       List(new AnnotationConfiguration)
     } catch {

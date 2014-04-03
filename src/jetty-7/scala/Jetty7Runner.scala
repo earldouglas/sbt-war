@@ -4,7 +4,7 @@ import org.eclipse.jetty.server.{Server, Handler}
 import org.eclipse.jetty.server.handler.ContextHandlerCollection
 import org.eclipse.jetty.server.nio.SelectChannelConnector
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector                
-import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, TagLibConfiguration, WebXmlConfiguration}
+import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, WebXmlConfiguration}
 import org.eclipse.jetty.util.{Scanner => JScanner}
 import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
 import org.eclipse.jetty.util.resource.ResourceCollection
@@ -36,8 +36,7 @@ class Jetty7Runner extends Runner {
       new WebXmlConfiguration,  
       config, 
       new PlusConfiguration, 
-      new JettyWebXmlConfiguration, 
-      new TagLibConfiguration)
+      new JettyWebXmlConfiguration)
     context.setConfigurations(array)
   }
 
