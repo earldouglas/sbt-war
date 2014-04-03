@@ -4,7 +4,8 @@ import org.eclipse.jetty.server.{Server, Handler}
 import org.eclipse.jetty.server.handler.ContextHandlerCollection
 import org.eclipse.jetty.server.nio.NetworkTrafficSelectChannelConnector
 import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.webapp.{WebAppClassLoader, WebAppContext, WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, WebXmlConfiguration}
+import org.eclipse.jetty.webapp.{ WebAppClassLoader, WebAppContext }
+import org.eclipse.jetty.webapp.{ WebInfConfiguration, Configuration, FragmentConfiguration, JettyWebXmlConfiguration, WebXmlConfiguration, MetaInfConfiguration }
 import org.eclipse.jetty.annotations.AnnotationConfiguration
 import org.eclipse.jetty.util.{Scanner => JScanner}
 import org.eclipse.jetty.util.log.{Log, Logger => JLogger}
@@ -29,16 +30,24 @@ class Jetty9Runner extends Runner {
     context.setClassLoader(appLoader)
   }
 
-  private def configs: List[Configuration] =
-    List(new WebInfConfiguration, 
-         new WebXmlConfiguration,  
-         new PlusConfiguration,
-         new JettyWebXmlConfiguration) ++
-    (try {
-      List(new AnnotationConfiguration)
+  private lazy val annotationConfigs: List[Configuration] =
+    try {
+      List(
+          new EnvConfiguration
+        , new PlusConfiguration
+        , new AnnotationConfiguration
+      )
     } catch {
       case e: NoClassDefFoundError => Nil
-    })
+    }
+
+  private lazy val configs: List[Configuration] =
+    List(
+        new WebInfConfiguration
+      , new WebXmlConfiguration
+      , new MetaInfConfiguration
+      , new FragmentConfiguration
+    ) ++ annotationConfigs ++ List(new JettyWebXmlConfiguration)
  
   private def setEnvConfiguration(context: WebAppContext, file: File) {
     val config = new EnvConfiguration { setJettyEnvXml(file.toURI.toURL) }
