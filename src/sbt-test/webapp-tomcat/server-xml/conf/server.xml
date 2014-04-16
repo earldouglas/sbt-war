@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!--
+Tomcat server config file
+-->
+
+<Server port="8005" shutdown="SHUTDOWN">
+
+  <!--APR library loader. Documentation at /docs/apr.html -->
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <!-- Prevent memory leaks due to use of particular java/javax APIs-->
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <Service name="Catalina">
+
+    <Connector port="7128" protocol="HTTP/1.1"
+               connectionTimeout="20000"/>
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Host name="localhost" unpackWARs="true" autoDeploy="true">
+      </Host>
+    </Engine>
+
+  </Service>
+</Server>

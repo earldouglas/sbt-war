@@ -1,0 +1,13 @@
+<!DOCTYPE web-app 
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<!--
+This web.xml is specific to this webapp
+-->
+
+<web-app>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

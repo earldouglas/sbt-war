@@ -1,0 +1,50 @@
+<!DOCTYPE web-app 
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<!--
+ This is the default web.xml used by Tomcat.  Tomcat always looks for it in 'conf' directory of its
+ base directory.  You can move the base directory by setting the system property 'catalina.base'.
+ -->
+
+<web-app>
+
+  <servlet>
+    <servlet-name>default</servlet-name>
+    <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>0</param-value>
+    </init-param>
+    <init-param>
+      <param-name>listings</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>jsp</servlet-name>
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <init-param>
+      <param-name>fork</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>xpoweredBy</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>jsp</servlet-name>
+    <url-pattern>*.jsp</url-pattern>
+  </servlet-mapping>
+
+</web-app>

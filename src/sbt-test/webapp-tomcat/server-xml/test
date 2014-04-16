@@ -1,0 +1,10 @@
+> update
+# verify that it fails without Tomcat running
+-> check-page It works
+
+> container:start
+# verify it now works with Tomcat running
+> check-page It works
+
+# verify that it fails when Tomcat is stopped
+> container:stop
