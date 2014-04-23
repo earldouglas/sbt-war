@@ -108,15 +108,19 @@ class Tomcat7Runner extends Runner {
   }
   
   private def configureSecureConnector(ssl: SslSettings): Connector = {
-    val connector = new Connector()
+    val connector = new Connector("HTTP/1.1")
+    
     connector.setPort(ssl.addr.getPort)
     connector.setProperty("address", ssl.addr.getAddress.getHostAddress)
-    connector.setSecure(true)
-    connector.setScheme("https")
-    connector.setAttribute("SSLEnabled", true)
-    connector.setAttribute("keystorePass", ssl.password)
     connector.setAttribute("keystoreFile", ssl.keystore)
-    connector.setAttribute("keyPass", ssl.keyPassword)
+    connector.setAttribute("keystorePass", ssl.password)
+
+    connector.setMaxPostSize(2097152)
+    connector.setSecure(true)
+    connector.setProperty("SSLEnabled", "true")
+    connector.setProperty("sslProtocol", "TLS")
+    connector.setAttribute("clientAuth", false)
+    connector.setUseBodyEncodingForURI(false)
     
     connector
   }
