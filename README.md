@@ -26,7 +26,9 @@ For more information, please see the [wiki](http://github.com/earldouglas/xsbt-w
 First, add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.10.0")
+resolvers += Resolver.sonatypeRepo("snapshots")
+
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-SNAPSHOT")
 ```
 
 Inject the plugin settings in *build.sbt*:
