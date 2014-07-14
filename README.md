@@ -196,6 +196,8 @@ file artifact, which is copied to *WEB-INF/lib*.  This file can optionally be
 ignored, and the project classes and resources copied directly to 
 *WEB-INF/classes*.
 
+*build.sbt:*
+
 ```scala
 webInfClasses in webapp := true
 ```
