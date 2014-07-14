@@ -18,6 +18,11 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 * Utilize J2EE technologies (e.g. [`Servlet`](http://docs.oracle.com/javaee/6/api/javax/servlet/Servlet.html)s, [`Filter`](http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html)s, [JNDI](http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface))
 * Have a specific need to be packaged as a [*.war* file](https://en.wikipedia.org/wiki/WAR_%28Sun_file_format%29)
 
+## Requirements
+
+* sbt 0.13.x
+* Scala 2.10.x
+
 ## Getting started 
 
 The quickest way to get started is to clone the [xwp-template](https://github.com/JamesEarlDouglas/xwp-template) project, which sets up the necessary directories, files, and configuration for a basic xsbt-web-plugin project.
@@ -29,46 +34,182 @@ For more information, please see the [wiki](http://github.com/earldouglas/xsbt-w
 First, add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.9.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.10.0")
 ```
 
-For [*.sbt* build definitions](http://www.scala-sbt.org/release/docs/Getting-Started/Basic-Def.html), inject the plugin settings in *build.sbt*:
+Inject the plugin settings in *build.sbt*:
 
 ```scala
-seq(webSettings :_*)
+xwpSettings
 ```
 
-For [*.scala* build definitions](http://www.scala-sbt.org/release/docs/Getting-Started/Full-Def.html), inject the plugin settings in *Build.scala*:
-
-```scala
-import com.earldouglas.xsbtwebplugin.WebPlugin
-
-Project(..., settings = Project.defaultSettings ++ WebPlugin.webSettings)
-```
-
-Add a Servlet API to the *provided* configuration:
-
-```scala
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
-```
-
-Include either Jetty or Tomcat in the *container* configuration:
+Specify either Jetty or Tomcat in the *container* configuration:
 
 *Jetty:*
 
 ```scala
-libraryDependencies ++= Seq(
-  "org.eclipse.jetty" % "jetty-webapp" % "9.1.0.v20131115" % "container",
-  "org.eclipse.jetty" % "jetty-plus"   % "9.1.0.v20131115" % "container"
-)
+libraryDependencies += "org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % "container" intransitive()
+
+launcher in container <<= jetty in container
 ```
 
 *Tomcat:*
 
 ```scala
-libraryDependencies ++= Seq(
-  "org.apache.tomcat.embed" % "tomcat-embed-core"         % "7.0.22" % "container",
-  "org.apache.tomcat.embed" % "tomcat-embed-logging-juli" % "7.0.22" % "container",
-  "org.apache.tomcat.embed" % "tomcat-embed-jasper"       % "7.0.22" % "container"
-)
+libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.34.1" % "container" intransitive()
+
+launcher in container <<= tomcat in container
+```
+
+Start (or restart) the container with `container:start`:
+
+*sbt console:*
+
+```
+> container:start
+```
+
+Stop the container with `container:stop`:
+
+*sbt console:*
+
+```
+> container:stop
+```
+
+Build a *.war* file with `package`:
+
+*sbt console:*
+
+```
+> package
+```
+
+## Configuration and usage
+
+**Launch with Jetty**
+
+*build.sbt:*
+
+```scala
+libraryDependencies += "org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % "container" intransitive()
+
+launcher in container <<= jetty in container
+```
+
+*sbt console:*
+
+```
+> container:start
+```
+
+**Launch with Tomcat**
+
+*build.sbt:*
+
+```scala
+libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.34.1" % "container" intransitive()
+
+launcher in container <<= tomcat in container
+```
+
+*sbt console:*
+
+```
+> container:start
+```
+
+**Triggered (re)launch**
+
+*sbt console:*
+
+```
+> ~container:start
+```
+
+**Add an additional source directory**
+
+Scala files in a source directory are compiled, and bundled in the project 
+artifact *.jar* file.
+
+*build.sbt:*
+
+```scala
+// add <project>/src/main/extra as an additional source directory
+unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
+```
+
+**Add an additional resource directory**
+
+Files in a resource directory are not compiled, and are bundled directly in the 
+project artifact *.jar* file.
+
+*build.sbt:*
+
+```scala
+// add <project>/src/main/extra as an additional resource directory
+unmanagedResourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
+```
+
+**Change the default Web application resources directory**
+
+The Web application resources directory is where static Web content (including 
+*.html*, *.css*, and *.js* files, the *web.xml* container configuration file, 
+etc.  By default, this is kept in *<project>/src/main/webapp*.
+
+*build.sbt:*
+
+```scala
+// set <project>/src/main/WebContent as the webapp resources directory
+webappSrc in webapp <<= (sourceDirectory in Compile) map  { _ / "WebContent" }
+```
+
+**Change the default Web application destination directory**
+
+The Web application destination directory is where the static Web content, 
+compiled Scala classes, library *.jar* files, etc. are placed.  By default, 
+they go to *<project>/target/webapp*.
+
+*build.sbt:*
+
+```scala
+// set <project>/target/WebContent as the webapp destination directory
+webappDest in webapp <<= target map  { _ / "WebContent" }
+```
+
+**Modify the contents of the prepared Web application**
+
+*build.sbt:*
+
+```scala
+// add an html file to the root of the prepared Web application
+postProcess in webapp := {
+  webappDir =>
+    val fooHtml = new java.io.File(webappDir, "foo.html")
+    val writer = new java.io.FileWriter(fooHtml)
+    writer.write("""<html><body>foo</body></html>""")
+    writer.close
+}
+```
+
+**Use *WEB-INF/classes* instead of *WEB-INF/lib***
+
+```scala
+webInfClasses in webapp := true
+```
+
+**Prepare the Web application for execution and deployment**
+
+*sbt console:*
+
+```
+webapp:prepare
+```
+
+**Package the Web application as a *.war* file**
+
+*sbt console:*
+
+```
+package
 ```

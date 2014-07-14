@@ -1,0 +1,21 @@
+> webapp:prepare
+$ exists target/webapp/index.html
+$ exists target/webapp/styles/style.css
+$ exists target/webapp/WEB-INF/web.xml
+$ absent target/webapp/WEB-INF/classes
+$ absent target/webapp/WEB-INF/lib/javax.servlet-api-3.0.1.jar
+$ exists target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
+$ exists target/webapp/WEB-INF/lib/scala-library.jar
+
+> clean
+$ absent target/webapp
+
+> package
+$ exists target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war
+> find-in-zip target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war META-INF/MANIFEST.MF
+> find-in-zip target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war index.html
+> find-in-zip target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war styles/style.css
+> find-in-zip target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war WEB-INF/web.xml
+-> find-in-zip target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/javax.servlet-api-3.0.1.jar
+> find-in-zip target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
+> find-in-zip target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/scala-library.jar

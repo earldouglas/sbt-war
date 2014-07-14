@@ -1,0 +1,4 @@
+> webapp:prepare
+$ absent target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
+$ exists target/webapp/WEB-INF/classes/foo/bar.properties
+$ exists target/webapp/WEB-INF/classes/foo/bar/Bar.class

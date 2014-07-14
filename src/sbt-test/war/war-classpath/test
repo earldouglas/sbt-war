@@ -1,4 +1,0 @@
-> clean
-$ absent target/webapp/WEB-INF/classes/resource.txt
-> package
-$ exists target/webapp/WEB-INF/classes/resource.txt
