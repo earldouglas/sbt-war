@@ -173,6 +173,9 @@ webappDest in webapp <<= target map  { _ / "WebContent" }
 
 **Modify the contents of the prepared Web application**
 
+After the *<project>/target/webapp* directory is prepared, it can be modified 
+with an arbitrary `File => Unit` function.
+
 *build.sbt:*
 
 ```scala
@@ -188,11 +191,19 @@ postProcess in webapp := {
 
 **Use *WEB-INF/classes* instead of *WEB-INF/lib***
 
+By default, project classes and resources are packaged in the default *.jar* 
+file artifact, which is copied to *WEB-INF/lib*.  This file can optionally be 
+ignored, and the project classes and resources copied directly to 
+*WEB-INF/classes*.
+
 ```scala
 webInfClasses in webapp := true
 ```
 
 **Prepare the Web application for execution and deployment**
+
+For situations when the prepared *<project>/target/webapp* directory is needed, 
+but the packaged *.war* file isn't.
 
 *sbt console:*
 
