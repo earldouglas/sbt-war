@@ -1,9 +1,9 @@
 organization := "com.earldouglas"
 
-scalaVersion := "2.10.3"
+name := "xsbt-web-plugin"
+
+scalaVersion := "2.10.4"
 
 sbtPlugin := true
 
-scalacOptions += "-deprecation"
-
-incOptions := sbt.inc.IncOptions.Default
+scalacOptions ++= Seq("-feature", "-deprecation")

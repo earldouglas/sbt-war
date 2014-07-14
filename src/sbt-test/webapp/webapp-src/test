@@ -1,0 +1,6 @@
+> webapp:prepare
+$ exists target/webapp/index.html
+$ exists target/webapp/styles/style.css
+$ exists target/webapp/WEB-INF/web.xml
+$ absent target/webapp/WEB-INF/classes
+$ exists target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar

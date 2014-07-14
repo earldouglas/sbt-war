@@ -1,0 +1,3 @@
+package text
+
+class Resource { }

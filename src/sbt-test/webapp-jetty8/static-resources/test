@@ -1,9 +1,0 @@
-> container:start
-
-# a webapp context static resource is found before a WEB-INF/lib static resource
-> check-context
-
-# a WEB-INF/lib static resource is found
-> check-jar
-
-> container:stop
