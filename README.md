@@ -31,7 +31,9 @@ For more information, please see the [wiki](http://github.com/earldouglas/xsbt-w
 
 ## Quick reference
 
-First, add xsbt-web-plugin to *project/plugins.sbt*:
+First, add xsbt-web-plugin:
+
+*project/plugins.sbt*:
 
 ```scala
 resolvers += Resolver.sonatypeRepo("snapshots")
@@ -39,28 +41,18 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-SNAPSHOT")
 ```
 
-Inject the plugin settings in *build.sbt*:
+Then choose either Jetty or Tomcat with default setings:
+
+*build.sbt*:
 
 ```scala
-xwpSettings
+jetty()
 ```
 
-Specify either Jetty or Tomcat in the *container* configuration:
-
-*Jetty:*
+*build.sbt*:
 
 ```scala
-libraryDependencies += "org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % "container" intransitive()
-
-launcher in container <<= jetty in container
-```
-
-*Tomcat:*
-
-```scala
-libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.34.1" % "container" intransitive()
-
-launcher in container <<= tomcat in container
+tomcat()
 ```
 
 Start (or restart) the container with `container:start`:
@@ -89,44 +81,28 @@ Build a *.war* file with `package`:
 
 ## Configuration and usage
 
-**Launch with Jetty**
-
-*build.sbt:*
-
-```scala
-libraryDependencies += "org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % "container" intransitive()
-
-launcher in container <<= jetty in container
-```
-
-*sbt console:*
-
-```
-> container:start
-```
-
-**Launch with Tomcat**
-
-*build.sbt:*
-
-```scala
-libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.34.1" % "container" intransitive()
-
-launcher in container <<= tomcat in container
-```
-
-*sbt console:*
-
-```
-> container:start
-```
-
 **Triggered (re)launch**
 
 *sbt console:*
 
 ```
 > ~container:start
+```
+
+**Configure Jetty to run on port 9090**
+
+*build.sbt:*
+
+```scala
+jetty(port = 9090)
+```
+
+**Configure Tomcat to run on port 9090**
+
+*build.sbt:*
+
+```scala
+tomcat(port = 9090)
 ```
 
 **Add an additional source directory**
@@ -184,16 +160,23 @@ webappDest in webapp <<= target map  { _ / "WebContent" }
 After the *<project>/target/webapp* directory is prepared, it can be modified 
 with an arbitrary `File => Unit` function.
 
+*project/plugins.sbt*:
+
+```scala
+libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intransitive()
+```
+
 *build.sbt:*
 
 ```scala
-// add an html file to the root of the prepared Web application
+// minify the JavaScript file script.js to script-min.js
 postProcess in webapp := {
   webappDir =>
-    val fooHtml = new java.io.File(webappDir, "foo.html")
-    val writer = new java.io.FileWriter(fooHtml)
-    writer.write("""<html><body>foo</body></html>""")
-    writer.close
+    import java.io.File
+    import com.yahoo.platform.yui.compressor.YUICompressor
+    val src  = new File(webappDir, "script.js")
+    val dest = new File(webappDir, "script-min.js")
+    YUICompressor.main(Array(src.getPath, "-o", dest.getPath))
 }
 ```
 
