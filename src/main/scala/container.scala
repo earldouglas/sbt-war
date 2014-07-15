@@ -10,8 +10,6 @@ trait ContainerPlugin { self: WebappPlugin =>
   lazy val start      = TaskKey[Process]("start")
   lazy val stop       = TaskKey[Unit]("stop")
   lazy val launcher   = TaskKey[Seq[String]]("launcher")
-  lazy val tomcat     = TaskKey[Seq[String]]("tomcat")
-  lazy val jetty      = TaskKey[Seq[String]]("jetty")
 
   private var process: Option[Process] = None
 
@@ -57,15 +55,24 @@ trait ContainerPlugin { self: WebappPlugin =>
       }
     }
 
-  lazy val containerSettings =
+  def containerSettings(
+      launcherTask: Def.Initialize[Task[Seq[String]]]
+  ): Seq[Setting[_]] =
     inConfig(container) {
-      Seq(
-          start    <<= startTask dependsOn (prepareWebapp in webapp)
+      Seq(start    <<= startTask dependsOn (prepareWebapp in webapp)
         , stop     <<= stopTask
-        , launcher  := Nil
-        , tomcat   <<= (webappDest in webapp) map { d => Seq("webapp.runner.launch.Main", d.getPath) }
-        , jetty    <<= (webappDest in webapp) map { d => Seq("org.eclipse.jetty.runner.Runner", d.getPath) }
+        , launcher <<= launcherTask
       )
-    } ++ Seq(ivyConfigurations += container) ++ webappSettings
-    
+    } ++ Seq(ivyConfigurations += container)
+
+  def runnerContainer(
+    port: Int, runner: Option[ModuleID], main: String
+  ): Seq[Setting[_]] =
+    (runner map { x => libraryDependencies += x }).toSeq ++
+    containerSettings(
+      (webappDest in webapp) map { d =>
+        Seq(main, "--port", port.toString , d.getPath)
+      }
+    )
+
 }

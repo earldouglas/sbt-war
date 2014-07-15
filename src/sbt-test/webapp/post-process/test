@@ -1,2 +1,0 @@
-> webapp:prepare
-$ exists target/webapp/foo.html
