@@ -7,22 +7,37 @@ object XwpPlugin extends Plugin
                     with WarPlugin
                     with ContainerPlugin {
 
+  private def portArg(port: Int): Seq[String] =
+    if (port > 0) Seq("--port", port.toString) else Nil
+
+  private def arg(key: String, value: String): Seq[String] =
+    if (value.length > 0) Seq(key, value) else Nil
+
+  private val jettyRunner: ModuleID =
+    "org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % "container"
+
+  private val tomcatRunner: ModuleID =
+    ("com.github.jsimone" % "webapp-runner" % "7.0.34.1" % "container").intransitive
+
   def jetty(
-      port: Int = 8080
-    , runner: Option[ModuleID] = 
-        Some("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % 
-             "container" intransitive())
-    , main: String = "org.eclipse.jetty.runner.Runner"
-  ): Seq[Setting[_]] =
-    runnerContainer(port, runner, main) ++ warSettings ++ webappSettings
+      libs: Seq[ModuleID] = Seq(jettyRunner)
+    , main: String      = "org.eclipse.jetty.runner.Runner"
+    , port: Int         = -1
+    , config: String    = ""
+    , args: Seq[String] = Nil
+  ): Seq[Setting[_]] = {
+    val runnerArgs = Seq(main) ++ portArg(port) ++ arg("--config", config) ++ args
+    runnerContainer(libs, runnerArgs) ++ warSettings ++ webappSettings
+  }
 
   def tomcat(
-      port: Int = 8080
-    , runner: Option[ModuleID] = 
-        Some("com.github.jsimone" % "webapp-runner" % "7.0.34.1" % "container"
-             intransitive())
-    , main: String = "webapp.runner.launch.Main"
-  ): Seq[Setting[_]] =
-    runnerContainer(port, runner, main) ++ warSettings ++ webappSettings
+      libs: Seq[ModuleID] = Seq(tomcatRunner)
+    , main: String        = "webapp.runner.launch.Main"
+    , port: Int           = -1
+    , args: Seq[String]   = Nil
+  ): Seq[Setting[_]] = {
+    val runnerArgs = Seq(main) ++ portArg(port) ++ args
+    runnerContainer(libs, runnerArgs) ++ warSettings ++ webappSettings
+  }
 
 }

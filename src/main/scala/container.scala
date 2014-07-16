@@ -66,13 +66,9 @@ trait ContainerPlugin { self: WebappPlugin =>
     } ++ Seq(ivyConfigurations += container)
 
   def runnerContainer(
-    port: Int, runner: Option[ModuleID], main: String
+    libs: Seq[ModuleID], args: Seq[String]
   ): Seq[Setting[_]] =
-    (runner map { x => libraryDependencies += x }).toSeq ++
-    containerSettings(
-      (webappDest in webapp) map { d =>
-        Seq(main, "--port", port.toString , d.getPath)
-      }
-    )
+    Seq(libraryDependencies ++= libs) ++
+    containerSettings((webappDest in webapp) map { d => args :+ d.getPath })
 
 }
