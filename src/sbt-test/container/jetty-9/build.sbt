@@ -7,8 +7,7 @@ libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provid
 webappSettings
 
 runnerContainer(
-    port   = 8080
-  , runner = Some("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % 
-                  "container" intransitive())
-  , main   = "org.eclipse.jetty.runner.Runner"
+    libs = Seq("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % 
+               "container" intransitive())
+  , args = Seq("org.eclipse.jetty.runner.Runner")
 )
