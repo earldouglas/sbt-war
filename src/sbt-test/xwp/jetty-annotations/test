@@ -1,0 +1,4 @@
+> container:start
+> get http://localhost:8080/index.html 200
+> get http://localhost:8080/test 200
+> container:stop
