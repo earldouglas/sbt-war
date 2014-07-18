@@ -17,7 +17,7 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 
 ## Getting started 
 
-The quickest way to get started is to clone the [xwp-template](https://github.com/JamesEarlDouglas/xwp-template) project, which sets up the necessary directories, files, and configuration for a basic xsbt-web-plugin project.
+The quickest way to get started is to clone the [xwp-template](https://github.com/earldouglas/xwp-template) project, which sets up the necessary directories, files, and configuration for a basic xsbt-web-plugin project.
 
 For more information, please see the [wiki](http://github.com/earldouglas/xsbt-web-plugin/wiki/).
 
@@ -96,6 +96,31 @@ jetty(port = 9090)
 ```scala
 tomcat(port = 9090)
 ```
+
+**Configure Jetty with jetty.xml**
+
+*build.sbt:*
+
+```scala
+jetty(config = "etc/jetty.xml")
+```
+
+**Depend on projects in a multi-project build**
+
+*build.sbt:*
+
+```scala
+lazy val root = (project in file(".")) aggregate(mylib1, mylib2, mywebapp)
+
+lazy val mylib1 = project
+
+lazy val mylib2 = project
+
+lazy val mywebapp = project webappDependsOn (mylib1, mylib2)
+```
+
+Here we use `webappDependsOn` in place of the usual `dependsOn` function (which 
+will be called automatically).
 
 **Add an additional source directory**
 
@@ -196,10 +221,28 @@ but the packaged *.war* file isn't.
 webapp:prepare
 ```
 
-**Package the Web application as a *.war* file**
+**Use a cusom webapp runner**
 
-*sbt console:*
+By default, either Jetty's [jetty-runner](http://wiki.eclipse.org/Jetty/Howto/Using_Jetty_Runner) 
+or Tomcat's [webapp-runner](https://github.com/jsimone/webapp-runner) will be 
+used to launch the container under `container:start`.
 
+To use a custom runner, use `runnerContainer` with `warSettings` and 
+`webappSettings`:
+
+*build.sbt:*
+
+```scala
+runnerContainer(
+  libs = Seq(
+      "org.eclipse.jetty" %  "jetty-webapp" % "9.1.0.v20131115" % "container"
+    , "org.eclipse.jetty" %  "jetty-plus"   % "9.1.0.v20131115" % "container"
+    , "test"              %% "runner"       % "0.1.0-SNAPSHOT"  % "container"
+  ),
+  args = Seq("runner.Run", "8080")
+) ++ warSettings ++ webappSettings
 ```
-package
-```
+
+Here, `libs` includes the `ModuleID`s of libraries needed to make our runner, 
+which is invoked by calling the main method of `runner.Run` with a single 
+argument to specify the server port.
