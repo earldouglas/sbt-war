@@ -1,0 +1,12 @@
+> container:start
+> get http://localhost:8080/index.html 200
+> get http://localhost:8080/test 200
+> container:stop
+$ exists mathsweb/target/webapp/WEB-INF/lib/maths_2.10-0.1.0-SNAPSHOT.jar
+$ exists mathsweb/target/webapp/WEB-INF/lib/typeclasses_2.10-0.1.0-SNAPSHOT.jar
+$ absent mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
+
+> package
+$ exists mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
+> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths_2.10-0.1.0-SNAPSHOT.jar
+> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/typeclasses_2.10-0.1.0-SNAPSHOT.jar

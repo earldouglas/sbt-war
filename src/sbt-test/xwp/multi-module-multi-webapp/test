@@ -1,0 +1,31 @@
+> container:start
+
+> get http://localhost:8081/index.html 200
+> get http://localhost:8081/test 500
+> get http://localhost:8081/test?x=ten 500
+> get http://localhost:8081/test?x=10 200
+
+> get http://localhost:8080/index.html 200
+> get http://localhost:8080/test 500
+> get http://localhost:8080/test?x=ten 500
+> get http://localhost:8080/test?x=10 200
+
+> container:stop
+
+$ exists mathsweb/target/webapp/WEB-INF/lib/maths_2.10-0.1.0-SNAPSHOT.jar
+$ absent mathsweb/target/webapp/WEB-INF/lib/remote_2.10-0.1.0-SNAPSHOT.jar
+$ absent mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
+
+$ exists remoteweb/target/webapp/WEB-INF/lib/remote_2.10-0.1.0-SNAPSHOT.jar
+$ absent remoteweb/target/webapp/WEB-INF/lib/math_2.10-0.1.0-SNAPSHOT.jar
+$ absent remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war
+
+> package
+
+$ exists mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
+> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths_2.10-0.1.0-SNAPSHOT.jar
+-> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/remote_2.10-0.1.0-SNAPSHOT.jar
+
+$ exists remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war
+> find-in-zip remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/remote_2.10-0.1.0-SNAPSHOT.jar
+-> find-in-zip remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths_2.10-0.1.0-SNAPSHOT.jar
