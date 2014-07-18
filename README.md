@@ -36,9 +36,7 @@ First, add xsbt-web-plugin:
 *project/plugins.sbt*:
 
 ```scala
-resolvers += Resolver.sonatypeRepo("snapshots")
-
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-SNAPSHOT")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-M1")
 ```
 
 Then choose either Jetty or Tomcat with default setings:
