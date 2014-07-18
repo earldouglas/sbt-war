@@ -4,6 +4,9 @@ import sbt._
 import Keys._
 import java.io.File
 
+import scala.collection.mutable.{ Map => MMap}
+import scala.collection.mutable.{ HashMap => MHMap}
+
 trait ContainerPlugin { self: WebappPlugin =>
 
   lazy val container  = config("container").hide
@@ -11,48 +14,59 @@ trait ContainerPlugin { self: WebappPlugin =>
   lazy val stop       = TaskKey[Unit]("stop")
   lazy val launcher   = TaskKey[Seq[String]]("launcher")
 
-  private var process: Option[Process] = None
+  private val processes: MMap[String,Process] = MHMap.empty
 
-  private def shutdown(l: Logger)(p: Process): Unit = {
-    l.info("waiting for server to shut down...")
+  private def shutdown(id: String, l: Logger)(p: Process): Unit = {
+    l.info("waiting for server " + id + " to shut down...")
     p.destroy
     p.exitValue
   }
 
-  private def startup(l: Logger, libs: Seq[File], args: Seq[String]): Process = {
-    l.info("starting server...")
+  private def startup(
+    id: String, l: Logger, libs: Seq[File], args: Seq[String]
+  ): Process = {
+    l.info("starting server " + id + "...")
     val cp = libs mkString File.pathSeparator
     Fork.java.fork(new ForkOptions, Seq("-cp", cp) ++ args)
  }
 
   lazy val startTask: Def.Initialize[Task[Process]] =
-    (   webappSrc in webapp
-      , launcher in container
-      , classpathTypes in container
-      , update in container
-      , streams
-    ) map { (webappSrc, launcher, classpathTypes, updateReport, streams) =>
-      process synchronized {
-        process foreach { shutdown(streams.log) }
-        val libs: Seq[File] =
-          Classpaths.managedJars(container, classpathTypes, updateReport).map(_.data)
-        launcher match {
-          case Nil =>
-            sys.error("no launcher specified")
-          case args =>
-            val p = startup(streams.log, libs, args)
-            process = Some(p)
-            p
+    (  thisProject
+     , launcher in container
+     , classpathTypes in container
+     , update in container
+     , streams
+    ) map {
+      (  thisProject
+       , launcher
+       , classpathTypes
+       , updateReport
+       , streams
+      ) =>
+        val id = thisProject.id
+        synchronized {
+          processes.get(id) foreach { shutdown(id, streams.log) }
+          val libs: Seq[File] =
+            Classpaths.managedJars(container, classpathTypes, updateReport).map(_.data)
+          launcher match {
+            case Nil =>
+              sys.error("no launcher specified")
+            case args =>
+              val p = startup(id, streams.log, libs, args)
+              processes(id) = p
+              p
+          }
         }
       }
-    }
 
   lazy val stopTask: Def.Initialize[Task[Unit]] =
-    (streams) map { (streams) =>
-      process synchronized {
-        process foreach { shutdown(streams.log) }
-        process = None
-      }
+    (thisProject, streams) map {
+      (thisProject, streams) =>
+        val id = thisProject.id
+        synchronized {
+          processes.get(id) foreach { shutdown(id, streams.log) }
+          processes.remove(id)
+        }
     }
 
   def containerSettings(
