@@ -77,18 +77,14 @@ trait WebappPlugin { self: Plugin =>
       }
 
   lazy val webappSettings: Seq[Setting[_]] =
-    inConfig(webapp) {
-      Seq(
-          webappSrc      <<= (sourceDirectory in Compile) map { _ / "webapp" }
-        , webappDest     <<= (target in Compile) map { _ / "webapp" }
-        , prepareWebapp  <<= prepareWebappTask
-        , postProcess     := { _ => () }
-        , webInfClasses   := false
-      )
-    } ++
-      Seq(
-          watchSources <++= (webappSrc in webapp) map { d => (d ** "*").get }
-        , webappDeps     := Nil
-      )
+    Seq(
+        webappSrc      <<= (sourceDirectory in Compile) map { _ / "webapp" }
+      , webappDest     <<= (target in Compile) map { _ / "webapp" }
+      , prepareWebapp  <<= prepareWebappTask
+      , postProcess     := { _ => () }
+      , webInfClasses   := false
+      , watchSources <++= (webappSrc in webapp) map { d => (d ** "*").get }
+      , webappDeps     := Nil
+    )
 
 }
