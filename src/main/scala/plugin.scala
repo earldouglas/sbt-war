@@ -14,7 +14,7 @@ object XwpPlugin extends Plugin
     if (value.length > 0) Seq(key, value) else Nil
 
   private val jettyRunner: ModuleID =
-    "org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % "container"
+    ("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % "container").intransitive
 
   private val tomcatRunner: ModuleID =
     ("com.github.jsimone" % "webapp-runner" % "7.0.34.1" % "container").intransitive
