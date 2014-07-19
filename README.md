@@ -1,10 +1,7 @@
 [![Build Status](https://travis-ci.org/earldouglas/xsbt-web-plugin.png?branch=master)](https://travis-ci.org/earldouglas/xsbt-web-plugin)
 
-## News
-
-**July 13, 2014**
-
-Preview the upcoming changes in version 1.0.0 - see the [1.0 branch](https://github.com/earldouglas/xsbt-web-plugin/tree/1.0#quick-reference).
+*Note: this is the readme for the upcoming 1.0 release.  For the (stable) 0.9 
+release, see the [0.9 branch](https://github.com/earldouglas/xsbt-web-plugin/tree/0.9).*
 
 ## About
 
@@ -62,7 +59,7 @@ First, add xsbt-web-plugin:
 *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-M1")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-M2")
 ```
 
 Then choose either Jetty or Tomcat with default setings:
@@ -312,7 +309,7 @@ sbt.version=0.13.5
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-M1")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0-M2")
 ```
 
 *build.sbt:*
