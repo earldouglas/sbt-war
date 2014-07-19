@@ -21,6 +21,27 @@ The quickest way to get started is to clone the [xwp-template](https://github.co
 
 For more information, please see the [wiki](http://github.com/earldouglas/xsbt-web-plugin/wiki/).
 
+## How it works
+
+xsbt-web-plugin consists of three modules: a *webapp* plugin, a *war* plugin, 
+and a *container* plugin.
+
+The *webapp* plugin is responsible for preparing a Servlet-based Web application 
+as a directory, containing compiled project code, project resources, and a 
+special *webapp* directory (which includes the *web.xml* configuration file, 
+static HTML files, etc.).
+
+The *war* plugin builds on the *webapp* plugin, adding a way to package the Web 
+application directory as a *.war* file that can be published as an artifact, and 
+deployed to a Servlet container.
+
+The *container* plugin also builds on the *webapp* plugin, adding a way to 
+launch a servlet container in a forked JVM to host the project as a Web 
+application.
+
+Put together, these compose xsb-web-plugin, and provide complete support for 
+developing Servlet-based Web applications in Scala (and Java).
+
 ## Quick reference
 
 First, add xsbt-web-plugin:
@@ -79,6 +100,9 @@ Build a *.war* file with `package`:
 > ~container:start
 ```
 
+This starts the container, then monitors the sources, resources, and webapp 
+directories for changes, which triggers a container restart.
+
 **Configure Jetty to run on port 9090**
 
 *build.sbt:*
@@ -103,7 +127,9 @@ tomcat(port = 9090)
 jetty(config = "etc/jetty.xml")
 ```
 
-**Depend on projects in a multi-project build**
+The `config` path can be either absolute or relative to the project directory.
+
+**Depend on libraries in a multi-project build**
 
 *build.sbt:*
 
@@ -122,9 +148,6 @@ will be called automatically).
 
 **Add an additional source directory**
 
-Scala files in a source directory are compiled, and bundled in the project 
-artifact *.jar* file.
-
 *build.sbt:*
 
 ```scala
@@ -132,10 +155,10 @@ artifact *.jar* file.
 unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
 ```
 
-**Add an additional resource directory**
-
-Files in a resource directory are not compiled, and are bundled directly in the 
+Scala files in the extra source directory are compiled, and bundled in the 
 project artifact *.jar* file.
+
+**Add an additional resource directory**
 
 *build.sbt:*
 
@@ -144,11 +167,10 @@ project artifact *.jar* file.
 unmanagedResourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
 ```
 
-**Change the default Web application resources directory**
+Files in the extra resource directory are not compiled, and are bundled directly 
+in the project artifact *.jar* file.
 
-The Web application resources directory is where static Web content (including 
-*.html*, *.css*, and *.js* files, the *web.xml* container configuration file, 
-etc.  By default, this is kept in *<project>/src/main/webapp*.
+**Change the default Web application resources directory**
 
 *build.sbt:*
 
@@ -157,11 +179,11 @@ etc.  By default, this is kept in *<project>/src/main/webapp*.
 webappSrc in webapp <<= (sourceDirectory in Compile) map  { _ / "WebContent" }
 ```
 
-**Change the default Web application destination directory**
+The Web application resources directory is where static Web content (including 
+*.html*, *.css*, and *.js* files, the *web.xml* container configuration file, 
+etc.  By default, this is kept in *<project>/src/main/webapp*.
 
-The Web application destination directory is where the static Web content, 
-compiled Scala classes, library *.jar* files, etc. are placed.  By default, 
-they go to *<project>/target/webapp*.
+**Change the default Web application destination directory**
 
 *build.sbt:*
 
@@ -170,16 +192,20 @@ they go to *<project>/target/webapp*.
 webappDest in webapp <<= target map  { _ / "WebContent" }
 ```
 
-**Modify the contents of the prepared Web application**
+The Web application destination directory is where the static Web content, 
+compiled Scala classes, library *.jar* files, etc. are placed.  By default, 
+they go to *<project>/target/webapp*.
 
-After the *<project>/target/webapp* directory is prepared, it can be modified 
-with an arbitrary `File => Unit` function.
+**Modify the contents of the prepared Web application**
 
 *project/plugins.sbt*:
 
 ```scala
 libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intransitive()
 ```
+
+After the *<project>/target/webapp* directory is prepared, it can be modified 
+with an arbitrary `File => Unit` function.
 
 *build.sbt:*
 
