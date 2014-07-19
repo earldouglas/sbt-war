@@ -17,9 +17,14 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 
 ## Getting started 
 
-The quickest way to get started is to clone the [xwp-template](https://github.com/earldouglas/xwp-template) project, which sets up the necessary directories, files, and configuration for a basic xsbt-web-plugin project.
+The quickest way to get started is to clone the [xwp-template](https://github.com/earldouglas/xwp-template) 
+project, which sets up the necessary directories, files, and configuration for a 
+basic xsbt-web-plugin project.
 
-For more information, please see the [wiki](http://github.com/earldouglas/xsbt-web-plugin/wiki/).
+There are many examples in the form of tests in [src/sbt-test](https://github.com/earldouglas/xsbt-web-plugin/tree/master/src/sbt-test).
+
+For more information, please see the [quick reference](#quick-reference) or the 
+[wiki](http://github.com/earldouglas/xsbt-web-plugin/wiki/).
 
 ## How it works
 
