@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/earldouglas/xsbt-web-plugin.png?branch=master)](https://travis-ci.org/earldouglas/xsbt-web-plugin)
 
-*Note: this is the readme for the upcoming 1.0 release.  For the (stable) 0.9 
-release, see the [0.9 branch](https://github.com/earldouglas/xsbt-web-plugin/tree/0.9).*
+**Note: this is the readme for the upcoming 1.0 release.  For the (stable) 0.9 
+release, see the [0.9 branch](https://github.com/earldouglas/xsbt-web-plugin/tree/0.9).**
 
 ## About
 
@@ -386,53 +386,3 @@ class MyServlet extends HttpServlet {
 
 </web-app>
 ```
-
-## Launching from sbt
-
-From sbt, run the command `container:start`:
-
-```
-> container:start
-[info] starting server myproject...
-[success] Total time: 0 s, completed Jul 19, 2014 1:43:48 PM
-> 2014-07-19 13:43:48.551:INFO::main: Logging initialized @103ms
-2014-07-19 13:43:48.561:INFO:oejr.Runner:main: Runner
-2014-07-19 13:43:48.697:INFO:oejs.Server:main: jetty-9.2.1.v20140609
-2014-07-19 13:43:51.488:WARN:oeja.AnnotationConfiguration:main: ...
-2014-07-19 13:43:52.178:INFO:oejsh.ContextHandler:main: ...
-2014-07-19 13:43:52.179:WARN:oejsh.RequestLogHandler:main: ...
-2014-07-19 13:43:52.237:INFO:oejs.ServerConnector:main: ...
-2014-07-19 13:43:52.237:INFO:oejs.Server:main: Started @3839ms
-```
-
-The Web application is now running at http://localhost:8080/.  Take a look 
-with a Web browser, or via curl:
-
-```
-$ curl -i localhost:8080
-HTTP/1.1 200 OK
-Date: Sat, 19 Jul 2014 20:48:07 GMT
-Content-Type: text/html; charset=UTF-8
-Content-Length: 60
-Server: Jetty(9.2.1.v20140609)
-
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-  </body>
-</html>
-```
-
-## Deploying to a servlet container
-
-To build a WAR file suitable for deployment, run the command `package` from sbt:
-
-```
-> package
-[info] Packaging target/scala-2.10/myproject_2.10-0.1.0-SNAPSHOT.war ...
-[info] Done packaging.
-[success] Total time: 1 s, completed Jul 19, 2014 1:50:30 PM
-> 
-```
-
-The WAR file can be found in *target/scala-2.10/myproject_2.10-0.1.0-SNAPSHOT.war*.
