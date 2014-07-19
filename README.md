@@ -386,3 +386,78 @@ class MyServlet extends HttpServlet {
 
 </web-app>
 ```
+
+## Tips and tricks
+
+To disable publishing of the *.war* file, add the setting:
+
+```scala
+packagedArtifacts <<= packagedArtifacts map { as => as.filter(_._1.`type` != "war") }
+```
+
+Note that `package` can still be used to create the *.war* file under the project *target/* directory.
+
+To disable publishing of the project's *.jar* file, add the setting:
+
+```scala
+publishArtifact in (Compile, packageBin) := false
+```
+
+## Deployment
+
+### Tomcat
+
+On Ubuntu, install both *tomcat7* and *tomcat7-admin*:
+
+```bash
+sudo apt-get install tomcat7 tomcat7-admin
+```
+
+Create a Tomcat user with the role **manager-script** in */etc/tomcat7/tomcat-users.xml*:
+
+```xml
+<user username="manager" password="secret" roles="manager-script" />
+```
+
+Restart tomcat:
+
+```bash
+sudo service tomcat7 restart
+```
+
+Now a WAR file can be deployed using the Manager *deploy* command:
+
+```
+curl --upload-file myapp.war "http://manager:secret@myhost:8080/manager/text/deploy?path=/myapp&update=true"
+```
+
+The application will be available at *myhost:8080/myapp*.
+
+Learn more about Manager commands [here](http://tomcat.apache.org/tomcat-7.0-doc/manager-howto.html).
+
+### Heroku
+
+1. Install the [Heroku Toolbelt](https://toolbelt.heroku.com/)
+
+2. Install the `heroku-deploy` command line plugin:
+
+```bash
+heroku plugins:install https://github.com/heroku/heroku-deploy
+```
+3. Create a WAR file:
+
+```bash
+sbt package
+```
+
+4 Deploy the WAR file:
+
+```bash
+heroku deploy:war --war <path_to_war_file> --app <app_name>
+```
+
+See [devcenter.heroku.com](https://devcenter.heroku.com/articles/war-deployment) for more information.
+
+### Google App Engine
+
+See [developers.google.com](https://developers.google.com/appengine/docs/java/tools/uploadinganapp) for more information.
