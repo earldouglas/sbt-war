@@ -1,0 +1,1 @@
+Web application content belongs in the `src/main/webapp` directory.  For example, `web.xml` should be placed in `src/main/webapp/WEB-INF/web.xml`.
