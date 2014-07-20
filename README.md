@@ -280,6 +280,14 @@ Here, `libs` includes the `ModuleID`s of libraries needed to make our runner,
 which is invoked by calling the main method of `runner.Run` with a single 
 argument to specify the server port.
 
+### Attaching a Java agent
+
+*build.sbt:*
+
+```scala
+javaOptions += "-agentpath:/path/to/libyjpagent.jnilib"
+```
+
 ## Starting from scratch
 
 Create a new empty project:
