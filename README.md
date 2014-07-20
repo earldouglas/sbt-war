@@ -205,14 +205,16 @@ they go to *<project>/target/webapp*.
 
 ### Modify the contents of the prepared Web application
 
+After the *<project>/target/webapp* directory is prepared, it can be modified 
+with an arbitrary `File => Unit` function.
+
+For example, here's how to minify JavaScript files using [YUI Compressor](https://yui.github.io/yuicompressor/):
+
 *project/plugins.sbt*:
 
 ```scala
 libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intransitive()
 ```
-
-After the *<project>/target/webapp* directory is prepared, it can be modified 
-with an arbitrary `File => Unit` function.
 
 *build.sbt:*
 
