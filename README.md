@@ -99,7 +99,7 @@ Build a *.war* file with `package`:
 
 ## Configuration and usage
 
-**Triggered (re)launch**
+### Triggered (re)launch
 
 *sbt console:*
 
@@ -110,7 +110,7 @@ Build a *.war* file with `package`:
 This starts the container, then monitors the sources, resources, and webapp 
 directories for changes, which triggers a container restart.
 
-**Configure Jetty to run on port 9090**
+### Configure Jetty to run on port 9090
 
 *build.sbt:*
 
@@ -118,7 +118,7 @@ directories for changes, which triggers a container restart.
 jetty(port = 9090)
 ```
 
-**Configure Tomcat to run on port 9090**
+### Configure Tomcat to run on port 9090
 
 *build.sbt:*
 
@@ -126,7 +126,7 @@ jetty(port = 9090)
 tomcat(port = 9090)
 ```
 
-**Configure Jetty with jetty.xml**
+### Configure Jetty with jetty.xml
 
 *build.sbt:*
 
@@ -136,7 +136,7 @@ jetty(config = "etc/jetty.xml")
 
 The `config` path can be either absolute or relative to the project directory.
 
-**Depend on libraries in a multi-project build**
+### Depend on libraries in a multi-project build
 
 *build.sbt:*
 
@@ -153,7 +153,7 @@ lazy val mywebapp = project webappDependsOn (mylib1, mylib2)
 Here we use `webappDependsOn` in place of the usual `dependsOn` function (which 
 will be called automatically).
 
-**Add an additional source directory**
+### Add an additional source directory
 
 *build.sbt:*
 
@@ -165,7 +165,7 @@ unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extr
 Scala files in the extra source directory are compiled, and bundled in the 
 project artifact *.jar* file.
 
-**Add an additional resource directory**
+### Add an additional resource directory
 
 *build.sbt:*
 
@@ -177,7 +177,7 @@ unmanagedResourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "ex
 Files in the extra resource directory are not compiled, and are bundled directly 
 in the project artifact *.jar* file.
 
-**Change the default Web application resources directory**
+### Change the default Web application resources directory
 
 *build.sbt:*
 
@@ -190,7 +190,7 @@ The Web application resources directory is where static Web content (including
 *.html*, *.css*, and *.js* files, the *web.xml* container configuration file, 
 etc.  By default, this is kept in *<project>/src/main/webapp*.
 
-**Change the default Web application destination directory**
+### Change the default Web application destination directory
 
 *build.sbt:*
 
@@ -203,7 +203,7 @@ The Web application destination directory is where the static Web content,
 compiled Scala classes, library *.jar* files, etc. are placed.  By default, 
 they go to *<project>/target/webapp*.
 
-**Modify the contents of the prepared Web application**
+### Modify the contents of the prepared Web application
 
 *project/plugins.sbt*:
 
@@ -228,7 +228,7 @@ postProcess in webapp := {
 }
 ```
 
-**Use *WEB-INF/classes* instead of *WEB-INF/lib***
+### Use *WEB-INF/classes* instead of *WEB-INF/lib*
 
 By default, project classes and resources are packaged in the default *.jar* 
 file artifact, which is copied to *WEB-INF/lib*.  This file can optionally be 
@@ -241,7 +241,7 @@ ignored, and the project classes and resources copied directly to
 webInfClasses in webapp := true
 ```
 
-**Prepare the Web application for execution and deployment**
+### Prepare the Web application for execution and deployment
 
 For situations when the prepared *<project>/target/webapp* directory is needed, 
 but the packaged *.war* file isn't.
@@ -252,7 +252,7 @@ but the packaged *.war* file isn't.
 webapp:prepare
 ```
 
-**Use a cusom webapp runner**
+### Use a cusom webapp runner
 
 By default, either Jetty's [jetty-runner](http://wiki.eclipse.org/Jetty/Howto/Using_Jetty_Runner) 
 or Tomcat's [webapp-runner](https://github.com/jsimone/webapp-runner) will be 
