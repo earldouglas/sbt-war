@@ -3,9 +3,7 @@ package com.earldouglas.xwp
 import sbt._
 import Keys._
 import java.io.File
-
-import scala.collection.mutable.{ Map => MMap}
-import scala.collection.mutable.{ HashMap => MHMap}
+import java.util.concurrent.atomic.AtomicReference
 
 trait ContainerPlugin { self: WebappPlugin =>
 
@@ -14,70 +12,74 @@ trait ContainerPlugin { self: WebappPlugin =>
   lazy val stop       = TaskKey[Unit]("stop")
   lazy val launcher   = TaskKey[Seq[String]]("launcher")
 
-  private val processes: MMap[String,Process] = MHMap.empty
+  private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
+    val oldProcess = atomicRef.getAndSet(None)
+    oldProcess.foreach(stopProcess(l))
+  }
 
-  private def shutdown(id: String, l: Logger)(p: Process): Unit = {
-    l.info("waiting for server " + id + " to shut down...")
+  private def stopProcess(l: Logger)(p: Process): Unit = {
+    l.info("waiting for server to shut down...")
     p.destroy
     p.exitValue
   }
 
   private def startup(
-    id: String, l: Logger, libs: Seq[File], args: Seq[String]
+    l: Logger, libs: Seq[File], args: Seq[String]
   ): Process = {
-    l.info("starting server " + id + "...")
+    l.info("starting server ...")
     val cp = libs mkString File.pathSeparator
     Fork.java.fork(new ForkOptions, Seq("-cp", cp) ++ args)
- }
+  }
 
-  lazy val startTask: Def.Initialize[Task[Process]] =
-    (  thisProject
-     , launcher in container
+  def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
+    (  launcher in container
      , classpathTypes in container
      , update in container
      , streams
     ) map {
-      (  thisProject
-       , launcher
+      (  launcher
        , classpathTypes
        , updateReport
        , streams
       ) =>
-        val id = thisProject.id
-        synchronized {
-          processes.get(id) foreach { shutdown(id, streams.log) }
-          val libs: Seq[File] =
-            Classpaths.managedJars(container, classpathTypes, updateReport).map(_.data)
-          launcher match {
-            case Nil =>
-              sys.error("no launcher specified")
-            case args =>
-              val p = startup(id, streams.log, libs, args)
-              processes(id) = p
-              p
-          }
+        shutdown(streams.log, atomicRef)
+
+        val libs: Seq[File] =
+          Classpaths.managedJars(container, classpathTypes, updateReport).map(_.data)
+
+        launcher match {
+          case Nil =>
+            sys.error("no launcher specified")
+          case args =>
+            val p = startup(streams.log, libs, args)
+            atomicRef.set(Option(p))
+            p
         }
       }
 
-  lazy val stopTask: Def.Initialize[Task[Unit]] =
-    (thisProject, streams) map {
-      (thisProject, streams) =>
-        val id = thisProject.id
-        synchronized {
-          processes.get(id) foreach { shutdown(id, streams.log) }
-          processes.remove(id)
-        }
+  def stopTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Unit]] = Def.task {
+    shutdown(streams.value.log, atomicRef)
+  }
+  
+  def onLoadSetting(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[State => State] = Def.setting {
+    (onLoad in Global).value compose { state: State =>
+      state.addExitHook(shutdown(state.log, atomicRef))
     }
+  }
 
   def containerSettings(
       launcherTask: Def.Initialize[Task[Seq[String]]]
-  ): Seq[Setting[_]] =
+  ): Seq[Setting[_]] = {
+    val atomicRef: AtomicReference[Option[Process]] = new AtomicReference(None)
+
     inConfig(container) {
-      Seq(start    <<= startTask dependsOn (prepareWebapp in webapp)
-        , stop     <<= stopTask
+      Seq(start    <<= startTask(atomicRef) dependsOn (prepareWebapp in webapp)
+        , stop     <<= stopTask(atomicRef)
         , launcher <<= launcherTask
+        , onLoad in Global <<= onLoadSetting(atomicRef)
       )
     } ++ Seq(ivyConfigurations += container)
+  }
 
   def runnerContainer(
     libs: Seq[ModuleID], args: Seq[String]
