@@ -288,6 +288,37 @@ argument to specify the server port.
 javaOptions += "-agentpath:/path/to/libyjpagent.jnilib"
 ```
 
+### Adding manifest attributes
+
+By default, the *.war* file includes the same manifest attributes as the
+project's artifact:
+
+* Implementation-Vendor
+* Implementation-Title
+* Implementation-Version
+* Implementation-Vendor-Id
+* Specification-Vendor
+* Specification-Title
+* Specification-Version
+
+These can be changed in both artifacts:
+
+*build.sbt:*
+
+```scala
+packageOptions in (Compile, packageBin) +=
+    Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )
+```
+
+Or in just the *.war* file:
+
+*build.sbt:*
+
+```scala
+packageOptions in packageWar +=
+  Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )
+```
+
 ## Starting from scratch
 
 Create a new empty project:
