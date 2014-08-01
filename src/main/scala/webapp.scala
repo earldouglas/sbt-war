@@ -66,7 +66,7 @@ trait WebappPlugin { self: Plugin =>
                          else
                            None
                        }
-          jarFile    = cpArt.name + "." + cpArt.`type`
+          jarFile    = cpArt.name + ".jar"
           _          = IO.jar(files, webappLibDir / jarFile, new Manifest)
         } yield ()
 
