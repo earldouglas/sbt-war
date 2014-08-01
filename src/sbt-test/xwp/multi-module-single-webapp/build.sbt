@@ -1,9 +1,11 @@
 organization := "test"
 
-lazy val root = (project in file(".")) aggregate(maths, mathsweb, typeclasses)
+lazy val root = (project in file(".")) aggregate(numbers, maths, mathsweb, typeclasses)
 
-lazy val maths = project
+lazy val numbers = project
+
+lazy val maths = project dependsOn numbers
 
 lazy val typeclasses = project
 
-lazy val mathsweb = project webappDependsOn (maths, typeclasses)
+lazy val mathsweb = project dependsOn (maths, typeclasses)

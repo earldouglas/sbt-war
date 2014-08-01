@@ -147,11 +147,8 @@ lazy val mylib1 = project
 
 lazy val mylib2 = project
 
-lazy val mywebapp = project webappDependsOn (mylib1, mylib2)
+lazy val mywebapp = project dependsOn (mylib1, mylib2)
 ```
-
-Here we use `webappDependsOn` in place of the usual `dependsOn` function (which 
-will be called automatically).
 
 ### Add an additional source directory
 

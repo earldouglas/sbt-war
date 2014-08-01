@@ -6,6 +6,6 @@ lazy val maths = project
 
 lazy val remote = project
 
-lazy val remoteweb = project webappDependsOn (remote)
+lazy val remoteweb = project dependsOn (remote)
 
-lazy val mathsweb = project webappDependsOn (maths)
+lazy val mathsweb = project dependsOn (maths)
