@@ -11,6 +11,7 @@ trait ContainerPlugin { self: WebappPlugin =>
   lazy val start      = TaskKey[Process]("start")
   lazy val stop       = TaskKey[Unit]("stop")
   lazy val launcher   = TaskKey[Seq[String]]("launcher")
+  lazy val options    = TaskKey[ForkOptions]("options")
 
   private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
     val oldProcess = atomicRef.getAndSet(None)
@@ -24,22 +25,24 @@ trait ContainerPlugin { self: WebappPlugin =>
   }
 
   private def startup(
-    l: Logger, libs: Seq[File], args: Seq[String]
+    l: Logger, libs: Seq[File], args: Seq[String], forkOptions: ForkOptions
   ): Process = {
     l.info("starting server ...")
     val cp = libs mkString File.pathSeparator
-    Fork.java.fork(new ForkOptions, Seq("-cp", cp) ++ args)
+    Fork.java.fork(forkOptions, Seq("-cp", cp) ++ args)
   }
 
   def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
     (  launcher in container
      , classpathTypes in container
      , update in container
+     , options in container
      , streams
     ) map {
       (  launcher
        , classpathTypes
        , updateReport
+       , forkOptions
        , streams
       ) =>
         shutdown(streams.log, atomicRef)
@@ -51,7 +54,7 @@ trait ContainerPlugin { self: WebappPlugin =>
           case Nil =>
             sys.error("no launcher specified")
           case args =>
-            val p = startup(streams.log, libs, args)
+            val p = startup(streams.log, libs, args, forkOptions)
             atomicRef.set(Option(p))
             p
         }
@@ -68,7 +71,8 @@ trait ContainerPlugin { self: WebappPlugin =>
   }
 
   def containerSettings(
-      launcherTask: Def.Initialize[Task[Seq[String]]]
+      launcherTask: Def.Initialize[Task[Seq[String]]],
+      forkOptions: ForkOptions
   ): Seq[Setting[_]] = {
     val atomicRef: AtomicReference[Option[Process]] = new AtomicReference(None)
 
@@ -76,15 +80,17 @@ trait ContainerPlugin { self: WebappPlugin =>
       Seq(start    <<= startTask(atomicRef) dependsOn (prepareWebapp in webapp)
         , stop     <<= stopTask(atomicRef)
         , launcher <<= launcherTask
+        , options  := forkOptions
         , onLoad in Global <<= onLoadSetting(atomicRef)
       )
     } ++ Seq(ivyConfigurations += container)
   }
 
   def runnerContainer(
-    libs: Seq[ModuleID], args: Seq[String]
+    libs: Seq[ModuleID], args: Seq[String],
+    forkOptions: ForkOptions
   ): Seq[Setting[_]] =
     Seq(libraryDependencies ++= libs) ++
-    containerSettings((webappDest in webapp) map { d => args :+ d.getPath })
+    containerSettings((webappDest in webapp) map { d => args :+ d.getPath }, forkOptions)
 
 }
