@@ -33,11 +33,13 @@ trait ContainerPlugin { self: WebappPlugin =>
 
   def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
     (  launcher in container
+     , javaOptions
      , classpathTypes in container
      , update in container
      , streams
     ) map {
       (  launcher
+       , javaOptions
        , classpathTypes
        , updateReport
        , streams
@@ -51,7 +53,7 @@ trait ContainerPlugin { self: WebappPlugin =>
           case Nil =>
             sys.error("no launcher specified")
           case args =>
-            val p = startup(streams.log, libs, args)
+            val p = startup(streams.log, libs, javaOptions ++ args)
             atomicRef.set(Option(p))
             p
         }
