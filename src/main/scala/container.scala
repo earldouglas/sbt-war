@@ -33,7 +33,7 @@ trait ContainerPlugin { self: WebappPlugin =>
 
   def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
     (  launcher in container
-     , javaOptions
+     , javaOptions in container
      , classpathTypes in container
      , update in container
      , streams
@@ -79,6 +79,7 @@ trait ContainerPlugin { self: WebappPlugin =>
         , stop     <<= stopTask(atomicRef)
         , launcher <<= launcherTask
         , onLoad in Global <<= onLoadSetting(atomicRef)
+        , javaOptions <<= javaOptions in Compile
       )
     } ++ Seq(ivyConfigurations += container)
   }
