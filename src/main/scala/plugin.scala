@@ -25,9 +25,10 @@ object XwpPlugin extends Plugin
     , port: Int         = -1
     , config: String    = ""
     , args: Seq[String] = Nil
+    , options: ForkOptions = new ForkOptions
   ): Seq[Setting[_]] = {
     val runnerArgs = Seq(main) ++ portArg(port) ++ arg("--config", config) ++ args
-    runnerContainer(libs, runnerArgs) ++ warSettings ++ webappSettings
+    runnerContainer(libs, runnerArgs, options) ++ warSettings ++ webappSettings
   }
 
   def tomcat(
@@ -35,9 +36,10 @@ object XwpPlugin extends Plugin
     , main: String        = "webapp.runner.launch.Main"
     , port: Int           = -1
     , args: Seq[String]   = Nil
+    , options: ForkOptions = new ForkOptions
   ): Seq[Setting[_]] = {
     val runnerArgs = Seq(main) ++ portArg(port) ++ args
-    runnerContainer(libs, runnerArgs) ++ warSettings ++ webappSettings
+    runnerContainer(libs, runnerArgs, options) ++ warSettings ++ webappSettings
   }
 
 }
