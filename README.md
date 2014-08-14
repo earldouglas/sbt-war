@@ -277,7 +277,7 @@ Here, `libs` includes the `ModuleID`s of libraries needed to make our runner,
 which is invoked by calling the main method of `runner.Run` with a single 
 argument to specify the server port.
 
-### Attaching a Java agent
+### Attach a Java agent
 
 *build.sbt:*
 
@@ -285,7 +285,7 @@ argument to specify the server port.
 javaOptions += "-agentpath:/path/to/libyjpagent.jnilib"
 ```
 
-### Adding manifest attributes
+### Add manifest attributes
 
 By default, the *.war* file includes the same manifest attributes as the
 project's artifact:
@@ -314,6 +314,36 @@ Or in just the *.war* file:
 ```scala
 packageOptions in packageWar +=
   Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )
+```
+
+### Set forked JVM options
+
+To specify options to be provided to the forked JVM, set `javaOptions` in the `container` task:
+
+```scala
+javaOptions in container += "-Xmx8g"
+```
+
+### Configure forking
+
+Forking in sbt can be configured through a [`ForkOptions`](http://www.scala-sbt.org/0.13.5/api/index.html#sbt.ForkOptions) instance, by passing it as the `options` argument to the `jetty()` or `tomcat()` function:
+
+```scala
+jetty(options = new ForkOptions(runJVMOptions = Seq("-Xmx8g")))
+```
+
+The `ForkOptions` constructor takes the following arguments:
+
+```scala
+new ForkOptions(
+    javaHome: Option[File] = scala.None
+  , outputStrategy: Option[OutputStrategy] = scala.None
+  , bootJars: Seq[File] = immutable.this.Nil
+  , workingDirectory: Option[File] = scala.None
+  , runJVMOptions: Seq[String] = immutable.this.Nil
+  , connectInput: Boolean = false
+  , envVars: Map[String, String] = ...
+) 
 ```
 
 ## Starting from scratch
