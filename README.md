@@ -28,6 +28,9 @@ basic xsbt-web-plugin project.
 
 There are many examples in the form of tests in [src/sbt-test](https://github.com/earldouglas/xsbt-web-plugin/tree/master/src/sbt-test).
 
+Below is a [step-by-step guide](https://github.com/earldouglas/xsbt-web-plugin#starting-from-scratch) 
+on starting a new xsbt-web-plugin project from scratch.
+
 ## How it works
 
 xsbt-web-plugin consists of three modules: a *webapp* plugin, a *war* plugin, 
