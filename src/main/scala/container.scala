@@ -10,7 +10,7 @@ trait ContainerPlugin { self: WebappPlugin =>
   lazy val container  = config("container").hide
   lazy val start      = TaskKey[Process]("start")
   lazy val stop       = TaskKey[Unit]("stop")
-  lazy val launcher   = TaskKey[Seq[String]]("launcher")
+  lazy val launchCmd  = TaskKey[Seq[String]]("launch-cmd")
   lazy val options    = TaskKey[ForkOptions]("options")
 
   private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
@@ -33,14 +33,14 @@ trait ContainerPlugin { self: WebappPlugin =>
   }
 
   def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
-    (  launcher in container
+    (  launchCmd in container
      , javaOptions in container
      , classpathTypes in container
      , update in container
      , options in container
      , streams
     ) map {
-      (  launcher
+      (  launchCmd
        , javaOptions
        , classpathTypes
        , updateReport
@@ -52,9 +52,9 @@ trait ContainerPlugin { self: WebappPlugin =>
         val libs: Seq[File] =
           Classpaths.managedJars(container, classpathTypes, updateReport).map(_.data)
 
-        launcher match {
+        launchCmd match {
           case Nil =>
-            sys.error("no launcher specified")
+            sys.error("no launch command specified")
           case args =>
             val p = startup(streams.log, libs, javaOptions ++ args, forkOptions)
             atomicRef.set(Option(p))
@@ -73,18 +73,18 @@ trait ContainerPlugin { self: WebappPlugin =>
   }
 
   def containerSettings(
-      launcherTask: Def.Initialize[Task[Seq[String]]],
+      launchCmdTask: Def.Initialize[Task[Seq[String]]],
       forkOptions: ForkOptions
   ): Seq[Setting[_]] = {
     val atomicRef: AtomicReference[Option[Process]] = new AtomicReference(None)
 
     inConfig(container) {
-      Seq(start    <<= startTask(atomicRef) dependsOn (prepareWebapp in webapp)
-        , stop     <<= stopTask(atomicRef)
-        , launcher <<= launcherTask
-        , options  := forkOptions
+      Seq(start            <<= startTask(atomicRef) dependsOn (prepareWebapp in webapp)
+        , stop             <<= stopTask(atomicRef)
+        , launchCmd        <<= launchCmdTask
+        , options           := forkOptions
         , onLoad in Global <<= onLoadSetting(atomicRef)
-        , javaOptions <<= javaOptions in Compile
+        , javaOptions      <<= javaOptions in Compile
       )
     } ++ Seq(ivyConfigurations += container)
   }
