@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/earldouglas/xsbt-web-plugin.png?branch=master)](https://travis-ci.org/earldouglas/xsbt-web-plugin)
+[![Codacy Badge](https://www.codacy.com/project/badge/29fa98e63b3842d9adc221d3edd67089)](https://www.codacy.com)
 
 **Note: this is the readme for the upcoming 1.0 release.  For the (stable) 0.9 
 release, see the [0.9 branch](https://github.com/earldouglas/xsbt-web-plugin/tree/0.9).**
