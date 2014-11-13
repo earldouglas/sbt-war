@@ -104,7 +104,7 @@ Build a *.war* file with `package`:
 ### Full-configuration sbt projects
 
 If your project uses a full *.scala*-based configuration, you'll need to use 
-`com.earldouglas.xwp.WarPlugin.jetty()` in your project settings.
+`com.earldouglas.xwp.XwpPlugin.jetty()` in your project settings.
 
 Alternatively, you can use a minimal *build.sbt* that contains only `jetty()`, 
 and leave the rest of your project configuration as is.
