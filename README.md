@@ -263,7 +263,7 @@ but the packaged *.war* file isn't.
 webapp:prepare
 ```
 
-### Use a cusom webapp runner
+### Use a custom webapp runner
 
 By default, either Jetty's [jetty-runner](http://wiki.eclipse.org/Jetty/Howto/Using_Jetty_Runner) 
 or Tomcat's [webapp-runner](https://github.com/jsimone/webapp-runner) will be 
