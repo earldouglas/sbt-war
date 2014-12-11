@@ -29,7 +29,7 @@ object WarPlugin extends Plugin {
          val (libs, directories) = classpath.toList.filter(_.exists).partition(!_.isDirectory)
          val wcToCopy = for {
            dir <- webappResources.reverse
-           file <- dir.descendantsExcept("*", filter).get
+           file <- (dir ** (-filter)).get
            target = Path.rebase(dir, warPath)(file).get
          } yield (file, target)
 
@@ -45,7 +45,7 @@ object WarPlugin extends Plugin {
          if (classesAsJar) {
            val classesAndResources = for {
              dir <- directories.reverse
-             file <- dir.descendantsExcept("*", filter).get
+             file <- (dir ** (-filter)).get
              target = Path.rebase(dir, "")(file).get
            } yield (file, target)
            val classesAndResourcesJar = webLibDirectory / (name + "-" + version + ".jar")
@@ -54,7 +54,7 @@ object WarPlugin extends Plugin {
          } else {
            val classesAndResources = for {
              dir <- directories.reverse
-             file <- dir.descendantsExcept("*", filter).get
+             file <- (dir ** (-filter)).get
              target = Path.rebase(dir, classesTargetDirectory)(file).get
            } yield (file, target)
            val copiedClasses = IO.copy(classesAndResources, overwrite = true, preserveLastModified = true)
@@ -70,7 +70,7 @@ object WarPlugin extends Plugin {
          IO.delete(files)
          IO.deleteIfEmpty(dirs.toSet)
          postProcess(warPath)
-         warPath.descendantsExcept("*", filter) x (relativeTo(warPath)|flat)
+         warPath ** (-filter) x (relativeTo(warPath)|flat)
     }
 
   def warSettings0(classpathConfig: Configuration):Seq[Setting[_]] =
