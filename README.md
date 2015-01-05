@@ -373,6 +373,8 @@ seq(jrebelSettings: _*)
 
 jrebel.webLinks += (sourceDirectory in Compile).value / "webapp"
 
+jrebel.enabled := true
+
 javaOptions in container ++= Seq(
     "-javaagent:/path/to/jrebel/jrebel.jar",
     "-noverify",
