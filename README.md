@@ -358,6 +358,36 @@ new ForkOptions(
 ) 
 ```
 
+### Using JRebel
+
+1 Add the following plugin that generates *jrebel.xml* to *project/plugins.sbt*
+
+```scala
+addSbtPlugin("fi.gekkio.sbtplugins" % "sbt-jrebel-plugin" % "0.10.0")
+```
+
+2 Add the following lines to *build.sbt*, making sure to specify the correct path to JRebel
+
+```scala
+seq(jrebelSettings: _*)
+
+jrebel.webLinks += (sourceDirectory in Compile).value / "webapp"
+
+javaOptions in container ++= Seq(
+    "-javaagent:/path/to/jrebel/jrebel.jar",
+    "-noverify",
+    "-XX:+UseConcMarkSweepGC",
+    "-XX:+CMSClassUnloadingEnabled"
+)
+```
+
+3 You can now issue 
+```scala
+> container:start
+> ~compile
+```
+and your changes should be picked up automatically.
+
 ## Starting from scratch
 
 Create a new empty project:
@@ -538,3 +568,4 @@ See [devcenter.heroku.com](https://devcenter.heroku.com/articles/war-deployment)
 ### Google App Engine
 
 See [developers.google.com](https://developers.google.com/appengine/docs/java/tools/uploadinganapp) for more information.
+
