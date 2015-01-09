@@ -64,8 +64,11 @@ trait ContainerPlugin { self: WebappPlugin =>
               case Nil =>
                 sys.error("no launch command specified")
               case dependencies =>
-                val cp = (dependencies mkString File.pathSeparator) + File.pathSeparator + libs.mkString(File.pathSeparator)
-                val p = startup(streams.log, cp, javaOptions  ++ args , forkOptions)
+                val cp = (dependencies.filter { d =>
+                  d.endsWith(".jar") } mkString File.pathSeparator) + File.pathSeparator + libs.mkString(File.pathSeparator)
+                val external = dependencies.filter { d => !d.endsWith(".jar")  } mkString ","
+
+                val p = startup(streams.log, cp, javaOptions ++ args ++ Seq("--enable-reload", "--external-resources", external) , forkOptions)
                 atomicRef.set(Option(p))
                 p
             }
