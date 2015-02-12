@@ -50,7 +50,7 @@ The *container* plugin also builds on the *webapp* plugin, adding a way to
 launch a servlet container in a forked JVM to host the project as a Web 
 application.
 
-Put together, these compose xsb-web-plugin, and provide complete support for 
+Put together, these compose xsbt-web-plugin, and provide complete support for 
 developing Servlet-based Web applications in Scala (and Java).
 
 ## Quick reference
