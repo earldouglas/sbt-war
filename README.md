@@ -157,6 +157,18 @@ tomcat(port = 9090)
 jetty(config = "etc/jetty.xml")
 ```
 
+### Enable SSL and HTTPS
+
+Grab [a few files from Jetty](https://github.com/eclipse/jetty.project/tree/release-9.1/jetty-server/src/main/config/etc) and add them as `--config` arguments:
+
+```scala
+jetty(args = Seq
+    "--config", "jetty.xml"
+  , "--config", "jetty-https.xml"
+  , "--config", "jetty-ssl.xml"
+))
+```
+
 The `config` path can be either absolute or relative to the project directory.
 
 ### Depend on libraries in a multi-project build
