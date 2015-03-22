@@ -320,6 +320,19 @@ argument to specify the server port.
 javaOptions += "-agentpath:/path/to/libyjpagent.jnilib"
 ```
 
+### Attach an Eclipse debugger
+
+*build.sbt:*
+
+```scala
+javaOptions in container ++= Seq(
+  "-Xdebug",
+  "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
+)
+```
+
+In Eclipse, create and run a new *Remote Java Application* launch configuration with a *Connection Type* of *Scala debugger (Socket Attach)*, set to connect to *localhost* on port *8000*.
+
 ### Add manifest attributes
 
 By default, the *.war* file includes the same manifest attributes as the
