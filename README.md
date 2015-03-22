@@ -23,35 +23,23 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 
 ## Getting started 
 
-The quickest way to get started is to clone the [xwp-template](https://github.com/earldouglas/xwp-template) 
-project, which sets up the necessary directories, files, and configuration for a 
-basic xsbt-web-plugin project.
+The quickest way to get started is to clone the [xwp-template](https://github.com/earldouglas/xwp-template) project, which sets up the necessary directories, files, and configuration for a basic xsbt-web-plugin project.
 
 There are many examples in the form of tests in [src/sbt-test](https://github.com/earldouglas/xsbt-web-plugin/tree/master/src/sbt-test).
 
-Below is a [step-by-step guide](https://github.com/earldouglas/xsbt-web-plugin#starting-from-scratch) 
-on starting a new xsbt-web-plugin project from scratch.
+Below is a [step-by-step guide](https://github.com/earldouglas/xsbt-web-plugin#starting-from-scratch) on starting a new xsbt-web-plugin project from scratch.
 
 ## How it works
 
-xsbt-web-plugin consists of three modules: a *webapp* plugin, a *war* plugin, 
-and a *container* plugin.
+xsbt-web-plugin consists of three modules: a *webapp* plugin, a *war* plugin, and a *container* plugin.
 
-The *webapp* plugin is responsible for preparing a Servlet-based Web application 
-as a directory, containing compiled project code, project resources, and a 
-special *webapp* directory (which includes the *web.xml* configuration file, 
-static HTML files, etc.).
+The *webapp* plugin is responsible for preparing a Servlet-based Web application as a directory, containing compiled project code, project resources, and a special *webapp* directory (which includes the *web.xml* configuration file, static HTML files, etc.).
 
-The *war* plugin builds on the *webapp* plugin, adding a way to package the Web 
-application directory as a *.war* file that can be published as an artifact, and 
-deployed to a Servlet container.
+The *war* plugin builds on the *webapp* plugin, adding a way to package the Web application directory as a *.war* file that can be published as an artifact, and deployed to a Servlet container.
 
-The *container* plugin also builds on the *webapp* plugin, adding a way to 
-launch a servlet container in a forked JVM to host the project as a Web 
-application.
+The *container* plugin also builds on the *webapp* plugin, adding a way to launch a servlet container in a forked JVM to host the project as a Web application.
 
-Put together, these compose xsbt-web-plugin, and provide complete support for 
-developing Servlet-based Web applications in Scala (and Java).
+Put together, these compose xsbt-web-plugin, and provide complete support for developing Servlet-based Web applications in Scala (and Java).
 
 ### Production approximation
 
@@ -109,8 +97,7 @@ Build a *.war* file with `package`:
 
 ### Full-configuration sbt projects
 
-If your project uses a full *.scala*-based configuration, you'll need to use 
-`com.earldouglas.xwp.XwpPlugin.jetty()` in your project settings:
+If your project uses a full *.scala*-based configuration, you'll need to use `com.earldouglas.xwp.XwpPlugin.jetty()` in your project settings:
 
 ```scala
 lazy val myProject =
@@ -123,8 +110,7 @@ lazy val myProject =
   )
 ```
 
-Alternatively, you can use a minimal *build.sbt* that contains only `jetty()`, 
-and leave the rest of your project configuration as is.
+Alternatively, you can use a minimal *build.sbt* that contains only `jetty()`, and leave the rest of your project configuration as is.
 
 ## Configuration and usage
 
@@ -136,8 +122,7 @@ and leave the rest of your project configuration as is.
 > ~container:start
 ```
 
-This starts the container, then monitors the sources, resources, and webapp 
-directories for changes, which triggers a container restart.
+This starts the container, then monitors the sources, resources, and webapp directories for changes, which triggers a container restart.
 
 ### Configure Jetty to run on port 9090
 
@@ -200,8 +185,7 @@ lazy val mywebapp = project dependsOn (mylib1, mylib2)
 unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
 ```
 
-Scala files in the extra source directory are compiled, and bundled in the 
-project artifact *.jar* file.
+Scala files in the extra source directory are compiled, and bundled in the project artifact *.jar* file.
 
 ### Add an additional resource directory
 
@@ -212,8 +196,7 @@ project artifact *.jar* file.
 unmanagedResourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
 ```
 
-Files in the extra resource directory are not compiled, and are bundled directly 
-in the project artifact *.jar* file.
+Files in the extra resource directory are not compiled, and are bundled directly in the project artifact *.jar* file.
 
 ### Change the default Web application resources directory
 
@@ -224,9 +207,7 @@ in the project artifact *.jar* file.
 webappSrc in webapp <<= (sourceDirectory in Compile) map  { _ / "WebContent" }
 ```
 
-The Web application resources directory is where static Web content (including 
-*.html*, *.css*, and *.js* files, the *web.xml* container configuration file, 
-etc.  By default, this is kept in *<project>/src/main/webapp*.
+The Web application resources directory is where static Web content (including *.html*, *.css*, and *.js* files, the *web.xml* container configuration file, etc.  By default, this is kept in *<project>/src/main/webapp*.
 
 ### Change the default Web application destination directory
 
@@ -237,14 +218,11 @@ etc.  By default, this is kept in *<project>/src/main/webapp*.
 webappDest in webapp <<= target map  { _ / "WebContent" }
 ```
 
-The Web application destination directory is where the static Web content, 
-compiled Scala classes, library *.jar* files, etc. are placed.  By default, 
-they go to *<project>/target/webapp*.
+The Web application destination directory is where the static Web content, compiled Scala classes, library *.jar* files, etc. are placed.  By default, they go to *<project>/target/webapp*.
 
 ### Modify the contents of the prepared Web application
 
-After the *<project>/target/webapp* directory is prepared, it can be modified 
-with an arbitrary `File => Unit` function.
+After the *<project>/target/webapp* directory is prepared, it can be modified with an arbitrary `File => Unit` function.
 
 For example, here's how to minify JavaScript files using [YUI Compressor](https://yui.github.io/yuicompressor/):
 
@@ -270,10 +248,7 @@ postProcess in webapp := {
 
 ### Use *WEB-INF/classes* instead of *WEB-INF/lib*
 
-By default, project classes and resources are packaged in the default *.jar* 
-file artifact, which is copied to *WEB-INF/lib*.  This file can optionally be 
-ignored, and the project classes and resources copied directly to 
-*WEB-INF/classes*.
+By default, project classes and resources are packaged in the default *.jar* file artifact, which is copied to *WEB-INF/lib*.  This file can optionally be ignored, and the project classes and resources copied directly to *WEB-INF/classes*.
 
 *build.sbt:*
 
@@ -283,8 +258,7 @@ webInfClasses in webapp := true
 
 ### Prepare the Web application for execution and deployment
 
-For situations when the prepared *<project>/target/webapp* directory is needed, 
-but the packaged *.war* file isn't.
+For situations when the prepared *<project>/target/webapp* directory is needed, but the packaged *.war* file isn't.
 
 *sbt console:*
 
@@ -294,12 +268,9 @@ webapp:prepare
 
 ### Use a custom webapp runner
 
-By default, either Jetty's [jetty-runner](http://wiki.eclipse.org/Jetty/Howto/Using_Jetty_Runner) 
-or Tomcat's [webapp-runner](https://github.com/jsimone/webapp-runner) will be 
-used to launch the container under `container:start`.
+By default, either Jetty's [jetty-runner](http://wiki.eclipse.org/Jetty/Howto/Using_Jetty_Runner) or Tomcat's [webapp-runner](https://github.com/jsimone/webapp-runner) will be used to launch the container under `container:start`.
 
-To use a custom runner, use `runnerContainer` with `warSettings` and 
-`webappSettings`:
+To use a custom runner, use `runnerContainer` with `warSettings` and `webappSettings`:
 
 *build.sbt:*
 
@@ -314,9 +285,7 @@ runnerContainer(
 ) ++ warSettings ++ webappSettings
 ```
 
-Here, `libs` includes the `ModuleID`s of libraries needed to make our runner, 
-which is invoked by calling the main method of `runner.Run` with a single 
-argument to specify the server port.
+Here, `libs` includes the `ModuleID`s of libraries needed to make our runner, which is invoked by calling the main method of `runner.Run` with a single argument to specify the server port.
 
 ### Attach a Java agent
 
@@ -341,8 +310,7 @@ In Eclipse, create and run a new *Remote Java Application* launch configuration 
 
 ### Add manifest attributes
 
-By default, the *.war* file includes the same manifest attributes as the
-project's artifact:
+By default, the *.war* file includes the same manifest attributes as the project's artifact:
 
 * Implementation-Vendor
 * Implementation-Title
