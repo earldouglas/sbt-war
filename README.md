@@ -53,6 +53,12 @@ application.
 Put together, these compose xsbt-web-plugin, and provide complete support for 
 developing Servlet-based Web applications in Scala (and Java).
 
+### Production approximation
+
+The `container:start` task launches a Jetty or Tomcat container using the complete, packaged, .war file artifact.  This allows for high confidence that, when the webapp works under `container:start`, it will work in production.
+
+Though this isn't ideal for all development situations (e.g. hot reloading of source resources under *src/main/webapp*), it saves an enormous amount of overhead and complexity in keeping things consistent and predictable.
+
 ## Quick reference
 
 First, add xsbt-web-plugin:
