@@ -18,8 +18,8 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 
 ## Requirements
 
-* sbt 0.13.x
-* Scala 2.10.x
+* sbt 0.13
+* Scala 2.10 or 2.11
 
 ## Getting started 
 
@@ -466,7 +466,7 @@ organization := "myorganization"
 
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.6"
 
 jetty()
 
