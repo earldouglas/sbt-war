@@ -8,11 +8,11 @@ import java.util.jar.Manifest
 trait WebappPlugin {
 
   lazy val webapp        = config("webapp").hide
-  lazy val webappSrc     = TaskKey[File]("src")
-  lazy val webappDest    = TaskKey[File]("dest")
+  lazy val webappSrc     = SettingKey[File]("src")
+  lazy val webappDest    = SettingKey[File]("dest")
   lazy val prepareWebapp = TaskKey[Seq[(sbt.File, String)]]("prepare")
   lazy val postProcess   = TaskKey[java.io.File => Unit]("post-process")
-  lazy val webInfClasses = TaskKey[Boolean]("web-inf-classes")
+  lazy val webInfClasses = SettingKey[Boolean]("web-inf-classes")
 
   lazy val prepareWebappTask: Def.Initialize[Task[Seq[(File, String)]]] =
     (  postProcess in webapp
@@ -86,12 +86,12 @@ trait WebappPlugin {
 
   lazy val webappSettings: Seq[Setting[_]] =
     Seq(
-        webappSrc      <<= (sourceDirectory in Compile) map { _ / "webapp" }
-      , webappDest     <<= (target in Compile) map { _ / "webapp" }
-      , prepareWebapp  <<= prepareWebappTask
+        webappSrc       := (sourceDirectory in Compile).value / "webapp"
+      , webappDest      := (target in Compile).value / "webapp"
+      , prepareWebapp   := prepareWebappTask.value
       , postProcess     := { _ => () }
       , webInfClasses   := false
-      , watchSources <++= (webappSrc in webapp) map { d => (d ** "*").get }
+      , watchSources  <++= (webappSrc in webapp) map { d => (d ** "*").get }
     )
 
 }
