@@ -206,7 +206,7 @@ Files in the extra resource directory are not compiled, and are bundled directly
 
 ```scala
 // set <project>/src/main/WebContent as the webapp resources directory
-webappSrc in webapp <<= (sourceDirectory in Compile) map  { _ / "WebContent" }
+webappSrc in webapp := (sourceDirectory in Compile).value / "WebContent"
 ```
 
 The Web application resources directory is where static Web content (including *.html*, *.css*, and *.js* files, the *web.xml* container configuration file, etc.  By default, this is kept in *<project>/src/main/webapp*.
@@ -217,7 +217,7 @@ The Web application resources directory is where static Web content (including *
 
 ```scala
 // set <project>/target/WebContent as the webapp destination directory
-webappDest in webapp <<= target map  { _ / "WebContent" }
+webappDest in webapp := target.value / "WebContent"
 ```
 
 The Web application destination directory is where the static Web content, compiled Scala classes, library *.jar* files, etc. are placed.  By default, they go to *<project>/target/webapp*.
@@ -513,7 +513,7 @@ class MyServlet extends HttpServlet {
 To disable publishing of the *.war* file, add the setting:
 
 ```scala
-packagedArtifacts <<= packagedArtifacts map { as => as.filter(_._1.`type` != "war") }
+packagedArtifacts := packagedArtifacts.value filter(_._1.`type` != "war")
 ```
 
 Note that `package` can still be used to create the *.war* file under the project *target/* directory.
