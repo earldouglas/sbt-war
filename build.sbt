@@ -2,7 +2,7 @@ organization := "com.earldouglas"
 
 name := "xsbt-web-plugin"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.10.5"
 
 sbtPlugin := true
 
