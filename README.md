@@ -606,3 +606,41 @@ See [devcenter.heroku.com](https://devcenter.heroku.com/articles/war-deployment)
 
 See [developers.google.com](https://developers.google.com/appengine/docs/java/tools/uploadinganapp) for more information.
 
+## Logging
+
+### Jetty
+
+By default, Jetty logs all output to stderr, which sbt displays in the console.  This can be changed by fiddling with Jetty's logging infrastructure through *jetty.xml*.
+
+*build.sbt:*
+
+```scala
+jetty(config = "etc/jetty.xml")
+```
+
+*etc/jetty.xml:*
+
+```xml
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+  <Call class="org.eclipse.jetty.util.log.Log" name="getRootLogger">
+    <Call name="setLevel">
+      <Arg type="int">10</Arg>
+    </Call>
+  </Call>
+</Configure>
+```
+
+This configuration gets a hold of Jetty's [root logger](http://download.eclipse.org/jetty/stable-9/apidocs/org/eclipse/jetty/util/log/StdErrLog.html), and sets its level to [`LEVEL_OFF`](https://github.com/eclipse/jetty.project/blob/jetty-9.2.x/jetty-util/src/main/java/org/eclipse/jetty/util/log/StdErrLog.java#L134).
+
+Alternatively, a different [logger instance](http://download.eclipse.org/jetty/stable-9/apidocs/org/eclipse/jetty/util/log/Logger.html) could be provided by calling [`setLog`](http://download.eclipse.org/jetty/stable-9/apidocs/org/eclipse/jetty/util/log/Log.html#setLog%28org.eclipse.jetty.util.log.Logger%29):
+
+
+*etc/jetty.xml:*
+
+```xml
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+  <Call class="org.eclipse.jetty.util.log.Log" name="setLog">
+    <New class="org.eclipse.jetty.util.log.JavaUtilLog"/>
+  </Call>
+</Configure>
+```
