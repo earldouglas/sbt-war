@@ -5,7 +5,7 @@ import Keys._
 import java.io.File
 import java.util.jar.Manifest
 
-trait WebappPlugin { self: Plugin =>
+trait WebappPlugin {
 
   lazy val webapp        = config("webapp").hide
   lazy val webappSrc     = TaskKey[File]("src")
