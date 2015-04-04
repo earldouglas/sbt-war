@@ -54,7 +54,7 @@ First, add xsbt-web-plugin:
 *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.0")
 ```
 
 Then choose either Jetty or Tomcat with default setings:
@@ -454,7 +454,7 @@ sbt.version=0.13.7
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.0.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.0")
 ```
 
 *build.sbt:*
