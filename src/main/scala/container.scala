@@ -20,8 +20,17 @@ trait ContainerPlugin { self: WebappPlugin =>
 
   private def stopProcess(l: Logger)(p: Process): Unit = {
     l.info("waiting for server to shut down...")
-    p.destroy
-    p.exitValue
+    p.destroy()
+    val err = System.err
+    val devNull: java.io.PrintStream =
+      new java.io.PrintStream(
+        new java.io.OutputStream {
+          def write(b: Int): Unit = {}
+        }
+      )
+    System.setErr(devNull)
+    p.exitValue()
+    System.setErr(err)
   }
 
   private def startup(
@@ -29,7 +38,7 @@ trait ContainerPlugin { self: WebappPlugin =>
   ): Process = {
     l.info("starting server ...")
     val cp = libs mkString File.pathSeparator
-    Fork.java.fork(forkOptions, Seq("-cp", cp) ++ args)
+    new Fork("java", None).fork(forkOptions, Seq("-cp", cp) ++ args)
   }
 
   def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
