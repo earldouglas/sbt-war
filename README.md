@@ -396,13 +396,13 @@ new ForkOptions(
 
 ### Using JRebel
 
-1 Add the following plugin that generates *jrebel.xml* to *project/plugins.sbt*
+Add the JRebel sbt plugin (which generates *jrebel.xml*) to *project/plugins.sbt*:
 
 ```scala
 addSbtPlugin("fi.gekkio.sbtplugins" % "sbt-jrebel-plugin" % "0.10.0")
 ```
 
-2 Add the following lines to *build.sbt*, making sure to specify the correct path to JRebel
+Add the following lines to *build.sbt*, making sure to specify the correct path to JRebel:
 
 ```scala
 seq(jrebelSettings: _*)
@@ -419,12 +419,12 @@ javaOptions in container ++= Seq(
 )
 ```
 
-3 You can now issue 
+Start the container, and trigger `~compile`, and your changes should be picked up automatically:
+
 ```scala
 > container:start
 > ~compile
 ```
-and your changes should be picked up automatically.
 
 ## Starting from scratch
 
