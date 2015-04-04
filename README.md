@@ -348,7 +348,7 @@ javaOptions in container += "-Xmx8g"
 
 ### Configure forking
 
-Forking in sbt can be configured through a [`ForkOptions`](http://www.scala-sbt.org/0.13.5/api/index.html#sbt.ForkOptions) instance, by passing it as the `options` argument to the `jetty()` or `tomcat()` function:
+Forking in sbt can be configured through a [`ForkOptions`](http://www.scala-sbt.org/0.13.7/api/index.html#sbt.ForkOptions) instance, by passing it as the `options` argument to the `jetty()` or `tomcat()` function:
 
 ```scala
 jetty(options = new ForkOptions(runJVMOptions = Seq("-Xmx8g")))
@@ -422,7 +422,7 @@ Configure sbt:
 *project/build.properties:*
 
 ```
-sbt.version=0.13.5
+sbt.version=0.13.7
 ```
 
 *project/plugins.sbt:*
