@@ -522,6 +522,22 @@ To disable publishing of the project's *.jar* file, add the setting:
 publishArtifact in (Compile, packageBin) := false
 ```
 
+## Develop Mode
+
+only support tomcat.
+
+*build.sbt*:
+
+```scala
+tomcat(develop = true)
+```
+and run
+*sbt console:*
+
+```
+> container:develop
+```
+
 ## Deployment
 
 ### Tomcat
