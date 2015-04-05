@@ -5,7 +5,7 @@
 
 ## About
 
-xsbt-web-plugin is an extension to [sbt](http://www.scala-sbt.org/) for building enterprise Web applications based on the [Java J2EE Servlet specification](http://en.wikipedia.org/wiki/Java_Servlet).
+xsbt-web-plugin is an [sbt](http://www.scala-sbt.org/) extension for building enterprise Web applications based on the [Java J2EE Servlet specification](http://en.wikipedia.org/wiki/Java_Servlet).
 
 xsbt-web-plugin supports both Scala and Java, and is best suited for projects that:
 
@@ -15,10 +15,31 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 * Utilize J2EE technologies (e.g. [`Servlet`](http://docs.oracle.com/javaee/6/api/javax/servlet/Servlet.html)s, [`Filter`](http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html)s, [JNDI](http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface))
 * Have a specific need to be packaged as a [*.war* file](https://en.wikipedia.org/wiki/WAR_%28Sun_file_format%29)
 
-## Requirements
+## Quick reference
 
-* sbt 0.13
-* Scala 2.10 or 2.11
+Add xsbt-web-plugin to *project/plugins.sbt*:
+
+```scala
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.0")
+```
+
+Choose either Jetty or Tomcat with default setings:
+
+*build.sbt*:
+
+```scala
+jetty()
+```
+
+```scala
+tomcat()
+```
+
+From the sbt console:
+
+* Start (or restart) the container with `container:start`
+* Stop the container with `container:stop`
+* Build a *.war* file with `package`
 
 ## Getting started 
 
@@ -46,53 +67,24 @@ The `container:start` task launches a Jetty or Tomcat container using the comple
 
 Though this isn't ideal for all development situations (e.g. hot reloading of source resources under *src/main/webapp*), it saves an enormous amount of overhead and complexity in keeping things consistent and predictable.
 
-## Quick reference
+## Configuration and usage
 
-First, add xsbt-web-plugin:
+### Full-configuration sbt projects
 
-*project/plugins.sbt*:
-
-```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.0")
-```
-
-Then choose either Jetty or Tomcat with default setings:
-
-*build.sbt*:
+If your project uses a full *.scala*-based configuration, you'll need to use `com.earldouglas.xwp.XwpPlugin.jetty()` in your project settings:
 
 ```scala
-jetty()
+lazy val myProject =
+  Project(
+      id = "myProject"
+    , base = file(".")
+    , settings = Seq(
+        // ...
+      ) ++ com.earldouglas.xwp.XwpPlugin.jetty()
+  )
 ```
 
-*build.sbt*:
-
-```scala
-tomcat()
-```
-
-Start (or restart) the container with `container:start`:
-
-*sbt console:*
-
-```
-> container:start
-```
-
-Stop the container with `container:stop`:
-
-*sbt console:*
-
-```
-> container:stop
-```
-
-Build a *.war* file with `package`:
-
-*sbt console:*
-
-```
-> package
-```
+Alternatively, you can use a minimal *build.sbt* that contains only `jetty()`, and leave the rest of your project configuration as is.
 
 ### Experimental AutoPlugin feature
 
@@ -119,25 +111,6 @@ jettyConfig := ... // String, e.g. "etc/jetty.xml"
 
 jettyArgs := ... // Seq[String], e.g. Seq("--port", "8080", "--config", "jetty.xml")
 ```
-
-### Full-configuration sbt projects
-
-If your project uses a full *.scala*-based configuration, you'll need to use `com.earldouglas.xwp.XwpPlugin.jetty()` in your project settings:
-
-```scala
-lazy val myProject =
-  Project(
-      id = "myProject"
-    , base = file(".")
-    , settings = Seq(
-        // ...
-      ) ++ com.earldouglas.xwp.XwpPlugin.jetty()
-  )
-```
-
-Alternatively, you can use a minimal *build.sbt* that contains only `jetty()`, and leave the rest of your project configuration as is.
-
-## Configuration and usage
 
 ### Triggered (re)launch
 
