@@ -15,6 +15,10 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 * Utilize J2EE technologies (e.g. [`Servlet`](http://docs.oracle.com/javaee/6/api/javax/servlet/Servlet.html)s, [`Filter`](http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html)s, [JNDI](http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface))
 * Have a specific need to be packaged as a [*.war* file](https://en.wikipedia.org/wiki/WAR_%28Sun_file_format%29)
 
+## Requirements
+
+* sbt 0.13.5+
+
 ## Quick reference
 
 Add xsbt-web-plugin to *project/plugins.sbt*:
