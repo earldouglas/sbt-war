@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 trait ContainerPlugin { self: WebappPlugin =>
 
-  lazy val container  = config("container").hide
+  lazy val Container  = config("container").hide
   lazy val start      = taskKey[Process]("start container")
   lazy val stop       = taskKey[Unit]("stop container")
   lazy val launchCmd  = taskKey[Seq[String]]("xwp-launcher")
@@ -42,11 +42,11 @@ trait ContainerPlugin { self: WebappPlugin =>
   }
 
   def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
-    (  launchCmd in container
-     , javaOptions in container
-     , classpathTypes in container
-     , update in container
-     , options in container
+    (  launchCmd in Container
+     , javaOptions in Container
+     , classpathTypes in Container
+     , update in Container
+     , options in Container
      , streams
     ) map {
       (  launchCmd
@@ -59,7 +59,7 @@ trait ContainerPlugin { self: WebappPlugin =>
         shutdown(streams.log, atomicRef)
 
         val libs: Seq[File] =
-          Classpaths.managedJars(container, classpathTypes, updateReport).map(_.data)
+          Classpaths.managedJars(Container, classpathTypes, updateReport).map(_.data)
 
         launchCmd match {
           case Nil =>
@@ -87,7 +87,7 @@ trait ContainerPlugin { self: WebappPlugin =>
   ): Seq[Setting[_]] = {
     val atomicRef: AtomicReference[Option[Process]] = new AtomicReference(None)
 
-    inConfig(container) {
+    inConfig(Container) {
       Seq(start            <<= startTask(atomicRef) dependsOn webappPrepare
         , stop             <<= stopTask(atomicRef)
         , launchCmd        <<= launchCmdTask
@@ -95,7 +95,7 @@ trait ContainerPlugin { self: WebappPlugin =>
         , onLoad in Global <<= onLoadSetting(atomicRef)
         , javaOptions      <<= javaOptions in Compile
       )
-    } ++ Seq(ivyConfigurations += container)
+    } ++ Seq(ivyConfigurations += Container)
   }
 
   def runnerContainer(

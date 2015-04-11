@@ -6,4 +6,4 @@ libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provid
 
 jetty()
 
-javaOptions in container += "-Dh2g2=42"
+javaOptions in Container += "-Dh2g2=42"
