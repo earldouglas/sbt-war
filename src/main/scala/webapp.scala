@@ -7,7 +7,6 @@ import java.util.jar.Manifest
 
 trait WebappPlugin {
 
-  lazy val webapp        = config("webapp").hide
   lazy val webappSrc     = SettingKey[File]("src")
   lazy val webappDest    = SettingKey[File]("dest")
   lazy val prepareWebapp = TaskKey[Seq[(sbt.File, String)]]("prepare")
@@ -15,12 +14,12 @@ trait WebappPlugin {
   lazy val webInfClasses = SettingKey[Boolean]("web-inf-classes")
 
   lazy val prepareWebappTask: Def.Initialize[Task[Seq[(File, String)]]] =
-    (  postProcess in webapp
+    (  postProcess
      , packagedArtifact in (Compile, packageBin)
      , mappings in (Compile, packageBin)
-     , webInfClasses in webapp
-     , webappSrc in webapp
-     , webappDest in webapp
+     , webInfClasses
+     , webappSrc
+     , webappDest
      , fullClasspath in Runtime
     ) map {
       case (  postProcess
@@ -91,7 +90,7 @@ trait WebappPlugin {
       , prepareWebapp   := prepareWebappTask.value
       , postProcess     := { _ => () }
       , webInfClasses   := false
-      , watchSources  <++= (webappSrc in webapp) map { d => (d ** "*").get }
+      , watchSources  <++= webappSrc map { d => (d ** "*").get }
     )
 
 }

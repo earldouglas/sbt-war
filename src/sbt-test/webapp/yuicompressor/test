@@ -1,2 +1,2 @@
-> webapp:prepare
+> prepare
 $ exists target/webapp/script-min.js

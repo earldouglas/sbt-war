@@ -88,7 +88,7 @@ trait ContainerPlugin { self: WebappPlugin =>
     val atomicRef: AtomicReference[Option[Process]] = new AtomicReference(None)
 
     inConfig(container) {
-      Seq(start            <<= startTask(atomicRef) dependsOn (prepareWebapp in webapp)
+      Seq(start            <<= startTask(atomicRef) dependsOn prepareWebapp
         , stop             <<= stopTask(atomicRef)
         , launchCmd        <<= launchCmdTask
         , options           := forkOptions
@@ -102,6 +102,6 @@ trait ContainerPlugin { self: WebappPlugin =>
     libs: Seq[ModuleID], args: Seq[String], forkOptions: ForkOptions = new ForkOptions
   ): Seq[Setting[_]] =
     Seq(libraryDependencies ++= libs) ++
-    containerSettings((webappDest in webapp) map { d => args :+ d.getPath }, forkOptions)
+    containerSettings(webappDest map { d => args :+ d.getPath }, forkOptions)
 
 }
