@@ -5,7 +5,7 @@ import Keys._
 
 trait WarPlugin { self: WebappPlugin =>
 
-  lazy val webappPackageWar = TaskKey[File]("webapp-package-war")
+  lazy val webappPackageWar = taskKey[File]("Package webapp into .war file.")
 
   lazy val warSettings: Seq[Setting[_]] =
     Defaults.packageTaskSettings(webappPackageWar, webappPrepareTask) ++

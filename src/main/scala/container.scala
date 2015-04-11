@@ -8,10 +8,10 @@ import java.util.concurrent.atomic.AtomicReference
 trait ContainerPlugin { self: WebappPlugin =>
 
   lazy val container  = config("container").hide
-  lazy val start      = TaskKey[Process]("start")
-  lazy val stop       = TaskKey[Unit]("stop")
-  lazy val launchCmd  = TaskKey[Seq[String]]("launch-cmd")
-  lazy val options    = TaskKey[ForkOptions]("options")
+  lazy val start      = taskKey[Process]("start container")
+  lazy val stop       = taskKey[Unit]("stop container")
+  lazy val launchCmd  = taskKey[Seq[String]]("command to launch container")
+  lazy val options    = taskKey[ForkOptions]("fork options")
 
   private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
     val oldProcess = atomicRef.getAndSet(None)

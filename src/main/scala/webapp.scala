@@ -7,9 +7,9 @@ import java.util.jar.Manifest
 
 trait WebappPlugin {
 
-  lazy val webappPrepare = TaskKey[Seq[(sbt.File, String)]]("webapp-prepare")
-  lazy val webappPostProcess   = TaskKey[java.io.File => Unit]("webapp-post-process")
-  lazy val webappWebInfClasses = TaskKey[Boolean]("webapp-web-inf-classes")
+  lazy val webappPrepare       = taskKey[Seq[(sbt.File, String)]]("prepare webapp contents for packaging")
+  lazy val webappPostProcess   = taskKey[java.io.File => Unit]("additional task after preparing the webapp")
+  lazy val webappWebInfClasses = taskKey[Boolean]("use WEB-INF/classes instead of WEB-INF/lib")
 
   lazy val webappPrepareTask: Def.Initialize[Task[Seq[(File, String)]]] =
     (  webappPostProcess
