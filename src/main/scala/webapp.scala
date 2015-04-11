@@ -9,11 +9,11 @@ trait WebappPlugin {
 
   lazy val webappSrc     = SettingKey[File]("src")
   lazy val webappDest    = SettingKey[File]("dest")
-  lazy val prepareWebapp = TaskKey[Seq[(sbt.File, String)]]("prepare")
+  lazy val webappPrepare = TaskKey[Seq[(sbt.File, String)]]("webapp-prepare")
   lazy val postProcess   = TaskKey[java.io.File => Unit]("post-process")
-  lazy val webInfClasses = SettingKey[Boolean]("web-inf-classes")
+  lazy val webInfClasses = TaskKey[Boolean]("web-inf-classes")
 
-  lazy val prepareWebappTask: Def.Initialize[Task[Seq[(File, String)]]] =
+  lazy val webappPrepareTask: Def.Initialize[Task[Seq[(File, String)]]] =
     (  postProcess
      , packagedArtifact in (Compile, packageBin)
      , mappings in (Compile, packageBin)
@@ -87,7 +87,7 @@ trait WebappPlugin {
     Seq(
         webappSrc       := (sourceDirectory in Compile).value / "webapp"
       , webappDest      := (target in Compile).value / "webapp"
-      , prepareWebapp   := prepareWebappTask.value
+      , webappPrepare   := webappPrepareTask.value
       , postProcess     := { _ => () }
       , webInfClasses   := false
       , watchSources  <++= webappSrc map { d => (d ** "*").get }
