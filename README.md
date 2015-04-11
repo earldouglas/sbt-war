@@ -265,7 +265,7 @@ For situations when the prepared *<project>/target/webapp* directory is needed, 
 *sbt console:*
 
 ```
-prepare
+webappPrepare
 ```
 
 ### Use a custom webapp runner

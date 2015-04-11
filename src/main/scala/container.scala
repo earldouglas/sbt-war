@@ -88,7 +88,7 @@ trait ContainerPlugin { self: WebappPlugin =>
     val atomicRef: AtomicReference[Option[Process]] = new AtomicReference(None)
 
     inConfig(container) {
-      Seq(start            <<= startTask(atomicRef) dependsOn prepareWebapp
+      Seq(start            <<= startTask(atomicRef) dependsOn webappPrepare
         , stop             <<= stopTask(atomicRef)
         , launchCmd        <<= launchCmdTask
         , options           := forkOptions

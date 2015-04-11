@@ -8,7 +8,7 @@ trait WarPlugin { self: WebappPlugin =>
   lazy val packageWar = TaskKey[File]("package")
 
   lazy val warSettings: Seq[Setting[_]] =
-    Defaults.packageTaskSettings(packageWar, prepareWebappTask) ++
+    Defaults.packageTaskSettings(packageWar, webappPrepareTask) ++
     Seq(
         artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war"))
       , Keys.`package` in Compile <<= packageWar
