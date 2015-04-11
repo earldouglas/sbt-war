@@ -8,7 +8,7 @@ object Args {
     if (port > 0) Seq("--port", port.toString) else Nil
 
   def arg(key: String, value: String): Seq[String] =
-    if (value.length > 0) Seq(key, value) else Nil
+    if (value.nonEmpty) Seq(key, value) else Nil
 
 }
 

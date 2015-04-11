@@ -14,10 +14,10 @@ trait WebappPlugin {
   lazy val webappPrepareTask: Def.Initialize[Task[Seq[(File, String)]]] =
     (  webappPostProcess
      , packagedArtifact in (Compile, packageBin)
-     , mappings in (Compile, packageBin)
+     , mappings         in (Compile, packageBin)
      , webappWebInfClasses
      , sourceDirectory in webappPrepare
-     , target in webappPrepare
+     , target          in webappPrepare
      , fullClasspath in Runtime
     ) map {
       case (  webappPostProcess
@@ -56,8 +56,7 @@ trait WebappPlugin {
           artEntry  <- cpItem.metadata.entries find { e => e.key.label == "artifact" }
           cpArt      = artEntry.value.asInstanceOf[Artifact]
                        if cpArt != art//(cpItem.metadata.entries exists { _.value == art })
-          files      = (dir ** "*").getPaths flatMap { p =>
-                         val file = new File(p)
+          files      = (dir ** "*").get flatMap { file =>
                          if (!file.isDirectory)
                            IO.relativize(dir, file) map { p => (file, p) }
                          else

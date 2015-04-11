@@ -240,10 +240,9 @@ libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intr
 // minify the JavaScript file script.js to script-min.js
 webappPostProcess := {
   webappDir =>
-    import java.io.File
     import com.yahoo.platform.yui.compressor.YUICompressor
-    val src  = new File(webappDir, "script.js")
-    val dest = new File(webappDir, "script-min.js")
+    val src  = webappDir / "script.js"
+    val dest = webappDir / "script-min.js"
     YUICompressor.main(Array(src.getPath, "-o", dest.getPath))
 }
 ```
