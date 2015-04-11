@@ -19,11 +19,11 @@ object XwpJetty extends AutoPlugin {
   override def requires = plugins.IvyPlugin
 
   object autoImport {
-    val jettyLibs   = settingKey[Seq[ModuleID]]("jetty-libs")
-    val jettyMain   = settingKey[String]("jetty-main")
-    val jettyPort   = settingKey[Int]("jetty-port")
-    val jettyConfig = settingKey[String]("jetty-config")
-    val jettyArgs   = settingKey[Seq[String]]("jetty-args")
+    val jettyLibs   = settingKey[Seq[ModuleID]]("Jetty modules to launch the webapp")
+    val jettyMain   = settingKey[String]("Jetty main class")
+    val jettyPort   = settingKey[Int]("port number to be used by Jetty")
+    val jettyConfig = settingKey[String]("path of Jetty configuration file")
+    val jettyArgs   = settingKey[Seq[String]]("additional Jetty args")
    }
   import autoImport._
 
