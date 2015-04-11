@@ -206,7 +206,7 @@ Files in the extra resource directory are not compiled, and are bundled directly
 
 ```scala
 // set <project>/src/main/WebContent as the webapp resources directory
-webappSrc in webapp := (sourceDirectory in Compile).value / "WebContent"
+webappSrc := (sourceDirectory in Compile).value / "WebContent"
 ```
 
 The Web application resources directory is where static Web content (including *.html*, *.css*, and *.js* files, the *web.xml* container configuration file, etc.  By default, this is kept in *<project>/src/main/webapp*.
@@ -217,7 +217,7 @@ The Web application resources directory is where static Web content (including *
 
 ```scala
 // set <project>/target/WebContent as the webapp destination directory
-webappDest in webapp := target.value / "WebContent"
+webappDest := target.value / "WebContent"
 ```
 
 The Web application destination directory is where the static Web content, compiled Scala classes, library *.jar* files, etc. are placed.  By default, they go to *<project>/target/webapp*.
@@ -238,7 +238,7 @@ libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intr
 
 ```scala
 // minify the JavaScript file script.js to script-min.js
-postProcess in webapp := {
+postProcess := {
   webappDir =>
     import java.io.File
     import com.yahoo.platform.yui.compressor.YUICompressor
@@ -255,7 +255,7 @@ By default, project classes and resources are packaged in the default *.jar* fil
 *build.sbt:*
 
 ```scala
-webInfClasses in webapp := true
+webInfClasses := true
 ```
 
 ### Prepare the Web application for execution and deployment
@@ -265,7 +265,7 @@ For situations when the prepared *<project>/target/webapp* directory is needed, 
 *sbt console:*
 
 ```
-webapp:prepare
+prepare
 ```
 
 ### Use a custom webapp runner

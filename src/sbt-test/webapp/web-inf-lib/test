@@ -1,4 +1,4 @@
-> webapp:prepare
+> prepare
 $ exists target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
 $ absent target/webapp/WEB-INF/classes
 > find-in-zip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar foo/bar.properties
