@@ -28,11 +28,11 @@ object XwpJetty extends AutoPlugin {
   import autoImport._
 
   val jettyRunner: ModuleID =
-    ("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % container.name).intransitive
+    ("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % Container.name).intransitive
 
   override lazy val projectSettings: Seq[Setting[_]] =
     XwpPlugin.jetty() ++
-    inConfig(container) {
+    inConfig(Container) {
       Seq(
         jettyLibs   := Seq(jettyRunner),
         jettyMain   := "org.eclipse.jetty.runner.Runner",
@@ -55,7 +55,7 @@ object XwpPlugin extends Plugin
                     with ContainerPlugin {
 
   private val tomcatRunner: ModuleID =
-    ("com.github.jsimone" % "webapp-runner" % "7.0.34.1" % container.name).intransitive
+    ("com.github.jsimone" % "webapp-runner" % "7.0.34.1" % Container.name).intransitive
 
   def jetty(
       libs: Seq[ModuleID] = Seq(XwpJetty.jettyRunner)

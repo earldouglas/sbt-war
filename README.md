@@ -302,7 +302,7 @@ javaOptions += "-agentpath:/path/to/libyjpagent.jnilib"
 *build.sbt:*
 
 ```scala
-javaOptions in container ++= Seq(
+javaOptions in Container ++= Seq(
   "-Xdebug",
   "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 )
@@ -345,7 +345,7 @@ packageOptions in webappPackageWar +=
 To specify options to be provided to the forked JVM, set `javaOptions` in the `container` task:
 
 ```scala
-javaOptions in container += "-Xmx8g"
+javaOptions in Container += "-Xmx8g"
 ```
 
 ### Configure forking
@@ -387,7 +387,7 @@ jrebel.webLinks += (sourceDirectory in Compile).value / "webapp"
 
 jrebel.enabled := true
 
-javaOptions in container ++= Seq(
+javaOptions in Container ++= Seq(
     "-javaagent:/path/to/jrebel/jrebel.jar",
     "-noverify",
     "-XX:+UseConcMarkSweepGC",
