@@ -102,6 +102,6 @@ trait ContainerPlugin { self: WebappPlugin =>
     libs: Seq[ModuleID], args: Seq[String], forkOptions: ForkOptions = new ForkOptions
   ): Seq[Setting[_]] =
     Seq(libraryDependencies ++= libs) ++
-    containerSettings(webappDest map { d => args :+ d.getPath }, forkOptions)
+    containerSettings(target in webappPrepare map { d => args :+ d.getPath }, forkOptions)
 
 }
