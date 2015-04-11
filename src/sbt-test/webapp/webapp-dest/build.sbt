@@ -4,4 +4,4 @@ version := "0.1.0-SNAPSHOT"
 
 webappSettings
 
-webappDest := target.value / "WebContent"
+target in webappPrepare := target.value / "WebContent"

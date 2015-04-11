@@ -202,7 +202,7 @@ Files in the extra resource directory are not compiled, and are bundled directly
 
 ```scala
 // set <project>/src/main/WebContent as the webapp resources directory
-webappSrc := (sourceDirectory in Compile).value / "WebContent"
+sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "WebContent"
 ```
 
 The Web application resources directory is where static Web content (including *.html*, *.css*, and *.js* files, the *web.xml* container configuration file, etc.  By default, this is kept in *<project>/src/main/webapp*.
@@ -213,7 +213,7 @@ The Web application resources directory is where static Web content (including *
 
 ```scala
 // set <project>/target/WebContent as the webapp destination directory
-webappDest := target.value / "WebContent"
+target in webappPrepare := target.value / "WebContent"
 ```
 
 The Web application destination directory is where the static Web content, compiled Scala classes, library *.jar* files, etc. are placed.  By default, they go to *<project>/target/webapp*.

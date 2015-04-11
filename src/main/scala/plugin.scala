@@ -43,7 +43,7 @@ object XwpJetty extends AutoPlugin {
                        Args.port(jettyPort.value) ++
                        Args.arg("--config", jettyConfig.value) ++
                        jettyArgs.value :+
-                       webappDest.value.getPath
+                       (Keys.target in webappPrepare).value.getPath
       )
     }
 
