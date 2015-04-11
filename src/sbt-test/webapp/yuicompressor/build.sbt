@@ -4,7 +4,7 @@ version := "0.1.0-SNAPSHOT"
 
 webappSettings
 
-postProcess := {
+webappPostProcess := {
   webappDir =>
     import java.io.File
     import com.yahoo.platform.yui.compressor.YUICompressor

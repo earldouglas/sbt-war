@@ -234,7 +234,7 @@ libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intr
 
 ```scala
 // minify the JavaScript file script.js to script-min.js
-postProcess := {
+webappPostProcess := {
   webappDir =>
     import java.io.File
     import com.yahoo.platform.yui.compressor.YUICompressor
@@ -251,7 +251,7 @@ By default, project classes and resources are packaged in the default *.jar* fil
 *build.sbt:*
 
 ```scala
-webInfClasses := true
+webappWebInfClasses := true
 ```
 
 ### Prepare the Web application for execution and deployment
@@ -332,7 +332,7 @@ Or in just the *.war* file:
 *build.sbt:*
 
 ```scala
-packageOptions in packageWar +=
+packageOptions in webappPackageWar +=
   Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )
 ```
 
