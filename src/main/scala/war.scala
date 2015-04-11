@@ -4,17 +4,11 @@ import sbt._
 import Keys._
 
 trait WarPlugin { self: WebappPlugin =>
-
-  lazy val webappPackageWar = taskKey[File]("Package webapp into .war file.")
+  import Keys.{`package` => pkg}
 
   lazy val warSettings: Seq[Setting[_]] =
-    Defaults.packageTaskSettings(webappPackageWar, webappPrepareTask) ++
-    Seq(
-        artifact in webappPackageWar <<= moduleName(n => Artifact(n, "war", "war"))
-      , Keys.`package` in Compile <<= webappPackageWar
-      , packageOptions in webappPackageWar <<= packageOptions in (Compile, packageBin)
-    ) ++
-    webappSettings ++
-    addArtifact(artifact in (Compile, webappPackageWar), webappPackageWar in Compile)
+    Defaults.packageTaskSettings(pkg, webappPrepareTask) ++
+    Seq(artifact in pkg := Artifact(moduleName.value, "war", "war")) ++
+    webappSettings
 
 }
