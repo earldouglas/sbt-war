@@ -6,7 +6,7 @@ libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provid
 
 warSettings
 
-postProcess := {
+webappPostProcess := {
   webappDir =>
     def listFiles(level: Int)(f: File): Unit = {
       val indent = ((1 until level) map { _ => "  " }).mkString

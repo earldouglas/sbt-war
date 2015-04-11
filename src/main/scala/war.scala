@@ -5,16 +5,16 @@ import Keys._
 
 trait WarPlugin { self: WebappPlugin =>
 
-  lazy val packageWar = TaskKey[File]("package")
+  lazy val webappPackageWar = TaskKey[File]("webapp-package-war")
 
   lazy val warSettings: Seq[Setting[_]] =
-    Defaults.packageTaskSettings(packageWar, webappPrepareTask) ++
+    Defaults.packageTaskSettings(webappPackageWar, webappPrepareTask) ++
     Seq(
-        artifact in packageWar <<= moduleName(n => Artifact(n, "war", "war"))
-      , Keys.`package` in Compile <<= packageWar
-      , packageOptions in packageWar <<= packageOptions in (Compile, packageBin)
+        artifact in webappPackageWar <<= moduleName(n => Artifact(n, "war", "war"))
+      , Keys.`package` in Compile <<= webappPackageWar
+      , packageOptions in webappPackageWar <<= packageOptions in (Compile, packageBin)
     ) ++
     webappSettings ++
-    addArtifact(artifact in (Compile, packageWar), packageWar in Compile)
+    addArtifact(artifact in (Compile, webappPackageWar), webappPackageWar in Compile)
 
 }

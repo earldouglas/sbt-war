@@ -7,25 +7,25 @@ import java.util.jar.Manifest
 
 trait WebappPlugin {
 
-  lazy val webappSrc     = SettingKey[File]("src")
-  lazy val webappDest    = SettingKey[File]("dest")
+  lazy val webappSrc     = SettingKey[File]("webapp-src")
+  lazy val webappDest    = SettingKey[File]("webapp-dest")
   lazy val webappPrepare = TaskKey[Seq[(sbt.File, String)]]("webapp-prepare")
-  lazy val postProcess   = TaskKey[java.io.File => Unit]("post-process")
-  lazy val webInfClasses = TaskKey[Boolean]("web-inf-classes")
+  lazy val webappPostProcess   = TaskKey[java.io.File => Unit]("webapp-post-process")
+  lazy val webappWebInfClasses = TaskKey[Boolean]("webapp-web-inf-classes")
 
   lazy val webappPrepareTask: Def.Initialize[Task[Seq[(File, String)]]] =
-    (  postProcess
+    (  webappPostProcess
      , packagedArtifact in (Compile, packageBin)
      , mappings in (Compile, packageBin)
-     , webInfClasses
+     , webappWebInfClasses
      , webappSrc
      , webappDest
      , fullClasspath in Runtime
     ) map {
-      case (  postProcess
+      case (  webappPostProcess
             , (art, file)
             , mappings
-            , webInfClasses
+            , webappWebInfClasses
             , webappSrc
             , webappDest
             , fullClasspath
@@ -38,7 +38,7 @@ trait WebappPlugin {
 
         // copy this project's classes, either directly to WEB-INF/classes
         // or as a .jar file in WEB-INF/lib
-        if (webInfClasses) {
+        if (webappWebInfClasses) {
           mappings foreach {
             case (src, name) =>
               if (!src.isDirectory) {
@@ -78,7 +78,7 @@ trait WebappPlugin {
                     if name.endsWith(".jar")
         } yield IO.copyFile(file, webappLibDir / name)
 
-        postProcess(webappDest)
+        webappPostProcess(webappDest)
 
         (webappDest ** "*") pair (relativeTo(webappDest) | flat)
       }
@@ -88,8 +88,8 @@ trait WebappPlugin {
         webappSrc       := (sourceDirectory in Compile).value / "webapp"
       , webappDest      := (target in Compile).value / "webapp"
       , webappPrepare   := webappPrepareTask.value
-      , postProcess     := { _ => () }
-      , webInfClasses   := false
+      , webappPostProcess     := { _ => () }
+      , webappWebInfClasses   := false
       , watchSources  <++= webappSrc map { d => (d ** "*").get }
     )
 
