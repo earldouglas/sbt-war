@@ -4,7 +4,9 @@ version := "0.1.0-SNAPSHOT"
 
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
 
-postProcess in webapp := {
+warSettings
+
+webappPostProcess := {
   webappDir =>
     def listFiles(level: Int)(f: File): Unit = {
       val indent = ((1 until level) map { _ => "  " }).mkString
@@ -15,5 +17,3 @@ postProcess in webapp := {
     }
     listFiles(1)(webappDir)
 }
-
-warSettings

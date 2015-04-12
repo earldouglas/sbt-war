@@ -206,7 +206,7 @@ Files in the extra resource directory are not compiled, and are bundled directly
 
 ```scala
 // set <project>/src/main/WebContent as the webapp resources directory
-webappSrc in webapp := (sourceDirectory in Compile).value / "WebContent"
+sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "WebContent"
 ```
 
 The Web application resources directory is where static Web content (including *.html*, *.css*, and *.js* files, the *web.xml* container configuration file, etc.  By default, this is kept in *<project>/src/main/webapp*.
@@ -217,7 +217,7 @@ The Web application resources directory is where static Web content (including *
 
 ```scala
 // set <project>/target/WebContent as the webapp destination directory
-webappDest in webapp := target.value / "WebContent"
+target in webappPrepare := target.value / "WebContent"
 ```
 
 The Web application destination directory is where the static Web content, compiled Scala classes, library *.jar* files, etc. are placed.  By default, they go to *<project>/target/webapp*.
@@ -238,7 +238,7 @@ libraryDependencies += "com.yahoo.platform.yui" % "yuicompressor" % "2.4.7" intr
 
 ```scala
 // minify the JavaScript file script.js to script-min.js
-postProcess in webapp := {
+webappPostProcess := {
   webappDir =>
     import java.io.File
     import com.yahoo.platform.yui.compressor.YUICompressor
@@ -255,7 +255,7 @@ By default, project classes and resources are packaged in the default *.jar* fil
 *build.sbt:*
 
 ```scala
-webInfClasses in webapp := true
+webappWebInfClasses := true
 ```
 
 ### Prepare the Web application for execution and deployment
@@ -265,7 +265,7 @@ For situations when the prepared *<project>/target/webapp* directory is needed, 
 *sbt console:*
 
 ```
-webapp:prepare
+webappPrepare
 ```
 
 ### Use a custom webapp runner
@@ -302,7 +302,7 @@ javaOptions += "-agentpath:/path/to/libyjpagent.jnilib"
 *build.sbt:*
 
 ```scala
-javaOptions in container ++= Seq(
+javaOptions in Container ++= Seq(
   "-Xdebug",
   "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 )
@@ -336,7 +336,7 @@ Or in just the *.war* file:
 *build.sbt:*
 
 ```scala
-packageOptions in packageWar +=
+packageOptions in webappPackageWar +=
   Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )
 ```
 
@@ -345,7 +345,7 @@ packageOptions in packageWar +=
 To specify options to be provided to the forked JVM, set `javaOptions` in the `container` task:
 
 ```scala
-javaOptions in container += "-Xmx8g"
+javaOptions in Container += "-Xmx8g"
 ```
 
 ### Configure forking
@@ -387,7 +387,7 @@ jrebel.webLinks += (sourceDirectory in Compile).value / "webapp"
 
 jrebel.enabled := true
 
-javaOptions in container ++= Seq(
+javaOptions in Container ++= Seq(
     "-javaagent:/path/to/jrebel/jrebel.jar",
     "-noverify",
     "-XX:+UseConcMarkSweepGC",
