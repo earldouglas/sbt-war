@@ -7,39 +7,36 @@ import java.util.jar.Manifest
 
 trait WebappPlugin {
 
-  lazy val webapp        = config("webapp").hide
-  lazy val webappSrc     = SettingKey[File]("src")
-  lazy val webappDest    = SettingKey[File]("dest")
-  lazy val prepareWebapp = TaskKey[Seq[(sbt.File, String)]]("prepare")
-  lazy val postProcess   = TaskKey[java.io.File => Unit]("post-process")
-  lazy val webInfClasses = SettingKey[Boolean]("web-inf-classes")
+  lazy val webappPrepare       = taskKey[Seq[(sbt.File, String)]]("prepare webapp contents for packaging")
+  lazy val webappPostProcess   = taskKey[java.io.File => Unit]("additional task after preparing the webapp")
+  lazy val webappWebInfClasses = taskKey[Boolean]("use WEB-INF/classes instead of WEB-INF/lib")
 
-  lazy val prepareWebappTask: Def.Initialize[Task[Seq[(File, String)]]] =
-    (  postProcess in webapp
+  lazy val webappPrepareTask: Def.Initialize[Task[Seq[(File, String)]]] =
+    (  webappPostProcess
      , packagedArtifact in (Compile, packageBin)
      , mappings in (Compile, packageBin)
-     , webInfClasses in webapp
-     , webappSrc in webapp
-     , webappDest in webapp
+     , webappWebInfClasses
+     , sourceDirectory in webappPrepare
+     , target in webappPrepare
      , fullClasspath in Runtime
     ) map {
-      case (  postProcess
+      case (  webappPostProcess
             , (art, file)
             , mappings
-            , webInfClasses
-            , webappSrc
-            , webappDest
+            , webappWebInfClasses
+            , webappSrcDir
+            , webappTarget
             , fullClasspath
       ) =>
 
-        IO.copyDirectory(webappSrc, webappDest)
+        IO.copyDirectory(webappSrcDir, webappTarget)
 
-        val webInfDir = webappDest / "WEB-INF"
+        val webInfDir = webappTarget / "WEB-INF"
         val webappLibDir = webInfDir / "lib"
 
         // copy this project's classes, either directly to WEB-INF/classes
         // or as a .jar file in WEB-INF/lib
-        if (webInfClasses) {
+        if (webappWebInfClasses) {
           mappings foreach {
             case (src, name) =>
               if (!src.isDirectory) {
@@ -79,19 +76,19 @@ trait WebappPlugin {
                     if name.endsWith(".jar")
         } yield IO.copyFile(file, webappLibDir / name)
 
-        postProcess(webappDest)
+        webappPostProcess(webappTarget)
 
-        (webappDest ** "*") pair (relativeTo(webappDest) | flat)
+        (webappTarget ** "*") pair (relativeTo(webappTarget) | flat)
       }
 
   lazy val webappSettings: Seq[Setting[_]] =
     Seq(
-        webappSrc       := (sourceDirectory in Compile).value / "webapp"
-      , webappDest      := (target in Compile).value / "webapp"
-      , prepareWebapp   := prepareWebappTask.value
-      , postProcess     := { _ => () }
-      , webInfClasses   := false
-      , watchSources  <++= (webappSrc in webapp) map { d => (d ** "*").get }
+        sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "webapp"
+      , target in webappPrepare          := (target in Compile).value / "webapp"
+      , webappPrepare                    := webappPrepareTask.value
+      , webappPostProcess                := { _ => () }
+      , webappWebInfClasses              := false
+      , watchSources                    ++= ((sourceDirectory in webappPrepare).value ** "*").get
     )
 
 }

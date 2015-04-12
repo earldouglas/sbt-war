@@ -19,20 +19,20 @@ object XwpJetty extends AutoPlugin {
   override def requires = plugins.IvyPlugin
 
   object autoImport {
-    val jettyLibs   = settingKey[Seq[ModuleID]]("jetty-libs")
-    val jettyMain   = settingKey[String]("jetty-main")
-    val jettyPort   = settingKey[Int]("jetty-port")
-    val jettyConfig = settingKey[String]("jetty-config")
-    val jettyArgs   = settingKey[Seq[String]]("jetty-args")
+    val jettyLibs   = settingKey[Seq[ModuleID]]("Jetty modules to launch the webapp")
+    val jettyMain   = settingKey[String]("Jetty main class")
+    val jettyPort   = settingKey[Int]("port number to be used by Jetty")
+    val jettyConfig = settingKey[String]("path of Jetty configuration file")
+    val jettyArgs   = settingKey[Seq[String]]("additional Jetty args")
    }
   import autoImport._
 
   val jettyRunner: ModuleID =
-    ("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % container.name).intransitive
+    ("org.eclipse.jetty" % "jetty-runner" % "9.2.1.v20140609" % Container.name).intransitive
 
   override lazy val projectSettings: Seq[Setting[_]] =
     XwpPlugin.jetty() ++
-    inConfig(container) {
+    inConfig(Container) {
       Seq(
         jettyLibs   := Seq(jettyRunner),
         jettyMain   := "org.eclipse.jetty.runner.Runner",
@@ -43,7 +43,7 @@ object XwpJetty extends AutoPlugin {
                        Args.port(jettyPort.value) ++
                        Args.arg("--config", jettyConfig.value) ++
                        jettyArgs.value :+
-                       (webappDest in webapp).value.getPath
+                       (Keys.target in webappPrepare).value.getPath
       )
     }
 
@@ -55,7 +55,7 @@ object XwpPlugin extends Plugin
                     with ContainerPlugin {
 
   private val tomcatRunner: ModuleID =
-    ("com.github.jsimone" % "webapp-runner" % "7.0.34.1" % container.name).intransitive
+    ("com.github.jsimone" % "webapp-runner" % "7.0.34.1" % Container.name).intransitive
 
   def jetty(
       libs: Seq[ModuleID] = Seq(XwpJetty.jettyRunner)
