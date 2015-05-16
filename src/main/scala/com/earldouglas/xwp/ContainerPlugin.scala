@@ -22,10 +22,12 @@ object ContainerPlugin extends AutoPlugin {
     val containerForkOptions = taskKey[ForkOptions]("fork options")
   }
 
+  private lazy val containerInstance = settingKey[AtomicReference[Option[Process]]]("Current container process")
+
   import WebappPlugin.autoImport.webappPrepare
   import autoImport._
 
-  override def requires = WebappPlugin
+  override def requires = WarPlugin
 
   override def trigger = allRequirements
 
@@ -45,9 +47,9 @@ object ContainerPlugin extends AutoPlugin {
     baseContainerSettings ++
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
-        start            <<= startTask(atomicRef) dependsOn webappPrepare
-      , stop             <<= stopTask(atomicRef)
-      , onLoad in Global <<= onLoadSetting(atomicRef)
+        start            <<= startTask dependsOn webappPrepare
+      , stop             <<= stopTask
+      , onLoad in Global <<= onLoadSetting
       , javaOptions      <<= javaOptions in Compile
       ))
   }
@@ -57,12 +59,65 @@ object ContainerPlugin extends AutoPlugin {
   , containerConfigFile  := None
   , containerArgs        := Nil
   , containerForkOptions := new ForkOptions
+  , containerInstance    := new AtomicReference(Option.empty[Process])
   )
 
 
-  private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
-    val oldProcess = atomicRef.getAndSet(None)
-    oldProcess.foreach(stopProcess(l))
+  private def startTask: Def.Initialize[Task[Process]] =
+    ( containerInstance
+    , containerLaunchCmd
+    , target in webappPrepare
+    , javaOptions
+    , classpathTypes
+    , update
+    , containerForkOptions
+    , streams
+    , configuration
+    ) map {
+      ( atomicRef
+      , launchCmd
+      , webappTarget
+      , javaOptions
+      , classpathTypes
+      , updateReport
+      , forkOptions
+      , streams
+      , conf
+      ) =>
+        val log = streams.log
+
+        shutdown(log, atomicRef)
+        log.info(s"conf: $conf")
+
+        val libs: Seq[File] =
+          Classpaths.managedJars(conf, classpathTypes, updateReport).map(_.data)
+
+        log.info(s"libs: $libs")
+
+        launchCmd match {
+          case Nil =>
+            sys.error("no launch command specified")
+          case args =>
+            val p = startup(log, libs, javaOptions ++ args :+ webappTarget.getPath, forkOptions)
+            atomicRef.set(Option(p))
+            p
+        }
+    }
+
+  private def stopTask: Def.Initialize[Task[Unit]] = Def.task {
+    shutdown(streams.value.log, containerInstance.value)
+  }
+
+  private def onLoadSetting: Def.Initialize[State => State] = Def.setting {
+    (onLoad in Global).value compose { state: State =>
+      state.addExitHook(shutdown(state.log, containerInstance.value))
+    }
+  }
+
+  private def startup(l: Logger, libs: Seq[File], args: Seq[String], forkOptions: ForkOptions): Process = {
+    l.info("starting server ...")
+    val cp = libs mkString File.pathSeparator
+    new Fork("java", None).fork(forkOptions, Seq("-cp", cp) ++ args)
   }
 
   private def stopProcess(l: Logger)(p: Process): Unit = {
@@ -80,58 +135,8 @@ object ContainerPlugin extends AutoPlugin {
     System.setErr(err)
   }
 
-  private def startup(l: Logger, libs: Seq[File], args: Seq[String], forkOptions: ForkOptions): Process = {
-    l.info("starting server ...")
-    val cp = libs mkString File.pathSeparator
-    new Fork("java", None).fork(forkOptions, Seq("-cp", cp) ++ args)
-  }
-
-  private def startTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Process]] =
-      ( containerLaunchCmd
-      , target in webappPrepare
-      , javaOptions
-      , classpathTypes
-      , update
-      , containerForkOptions
-      , streams
-      , configuration
-      ) map {
-        ( launchCmd
-        , webappTarget
-        , javaOptions
-        , classpathTypes
-        , updateReport
-        , forkOptions
-        , streams
-        , conf
-        ) =>
-          val log = streams.log
-
-          shutdown(log, atomicRef)
-          log.info(s"conf: $conf")
-
-          val libs: Seq[File] =
-            Classpaths.managedJars(conf, classpathTypes, updateReport).map(_.data)
-
-          log.info(s"libs: $libs")
-
-          launchCmd match {
-            case Nil =>
-              sys.error("no launch command specified")
-            case args =>
-              val p = startup(log, libs, javaOptions ++ args :+ webappTarget.getPath, forkOptions)
-              atomicRef.set(Option(p))
-              p
-          }
-      }
-
-  private def stopTask(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[Task[Unit]] = Def.task {
-    shutdown(streams.value.log, atomicRef)
-  }
-
-  private def onLoadSetting(atomicRef: AtomicReference[Option[Process]]): Def.Initialize[State => State] = Def.setting {
-    (onLoad in Global).value compose { state: State =>
-      state.addExitHook(shutdown(state.log, atomicRef))
-    }
+  private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
+    val oldProcess = atomicRef.getAndSet(None)
+    oldProcess.foreach(stopProcess(l))
   }
 }
