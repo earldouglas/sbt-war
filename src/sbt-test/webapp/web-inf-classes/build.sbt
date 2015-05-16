@@ -2,6 +2,6 @@ name := "test"
 
 version := "0.1.0-SNAPSHOT"
 
-webappSettings
+enablePlugins(WebappPlugin)
 
 webappWebInfClasses := true

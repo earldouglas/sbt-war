@@ -4,4 +4,6 @@ version := "0.1.0-SNAPSHOT"
 
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
 
-jetty(config = "etc/jetty.xml")
+enablePlugins(JettyPlugin)
+
+containerConfigFile := file("etc/jetty.xml")

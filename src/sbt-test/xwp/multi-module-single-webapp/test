@@ -1,7 +1,7 @@
-> container:start
+> jetty:start
 > get http://localhost:8080/index.html 200
 > get http://localhost:8080/test 200
-> container:stop
+> jetty:stop
 $ exists mathsweb/target/webapp/WEB-INF/lib/numbers.jar
 $ exists mathsweb/target/webapp/WEB-INF/lib/maths.jar
 $ exists mathsweb/target/webapp/WEB-INF/lib/typeclasses.jar

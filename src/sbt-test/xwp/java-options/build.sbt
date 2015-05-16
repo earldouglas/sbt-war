@@ -4,6 +4,6 @@ version := "0.1.0-SNAPSHOT"
 
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
 
-jetty()
+enablePlugins(JettyPlugin)
 
-javaOptions in Container += "-Dh2g2=42"
+javaOptions in Jetty += "-Dh2g2=42"
