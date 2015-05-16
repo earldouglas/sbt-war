@@ -3,8 +3,7 @@ package com.earldouglas.xwp
 import java.io.File
 import java.util.concurrent.atomic.AtomicReference
 
-import sbt.Keys._
-import sbt._
+import sbt._, Keys._
 
 object ContainerPlugin extends AutoPlugin {
 

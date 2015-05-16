@@ -3,8 +3,7 @@ package com.earldouglas.xwp
 import java.io.File
 import java.util.jar.Manifest
 
-import sbt.Keys._
-import sbt._
+import sbt._, Keys._
 
 object WebappPlugin extends AutoPlugin {
 
@@ -37,7 +36,7 @@ object WebappPlugin extends AutoPlugin {
     , webappWebInfClasses
     , sourceDirectory in webappPrepare
     , target          in webappPrepare
-    , fullClasspath in Runtime
+    , fullClasspath   in Runtime
     ) map {
       case ( webappPostProcess
            , (art, file)
