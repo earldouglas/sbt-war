@@ -6,4 +6,4 @@ libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provid
 
 enablePlugins(JettyPlugin)
 
-containerConfigFile := file("etc/jetty.xml")
+containerConfigFile := Some(file("etc/jetty.xml"))
