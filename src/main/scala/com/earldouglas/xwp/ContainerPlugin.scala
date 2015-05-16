@@ -1,10 +1,10 @@
 package com.earldouglas.xwp
 
-import sbt._
-import Keys._
 import java.io.File
 import java.util.concurrent.atomic.AtomicReference
 
+import sbt.Keys._
+import sbt._
 
 object ContainerPlugin extends AutoPlugin {
 
@@ -23,8 +23,8 @@ object ContainerPlugin extends AutoPlugin {
     val containerForkOptions = taskKey[ForkOptions]("fork options")
   }
 
-  import autoImport._
   import WebappPlugin.autoImport.webappPrepare
+  import autoImport._
 
   override def requires = WebappPlugin
 

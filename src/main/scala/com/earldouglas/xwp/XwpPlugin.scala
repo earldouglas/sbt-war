@@ -1,7 +1,7 @@
 package com.earldouglas.xwp
 
+import sbt.Keys._
 import sbt._
-import Keys._
 
 
 object JettyPlugin extends AutoPlugin {
@@ -10,8 +10,8 @@ object JettyPlugin extends AutoPlugin {
     lazy val Jetty = config("jetty").hide
   }
 
-  import autoImport._
   import ContainerPlugin.autoImport._
+  import autoImport._
 
   override def requires = ContainerPlugin
 
@@ -52,8 +52,8 @@ object TomcatPlugin extends AutoPlugin {
     lazy val Tomcat = config("tomcat").hide
   }
 
-  import autoImport._
   import ContainerPlugin.autoImport._
+  import autoImport._
 
   override def requires = ContainerPlugin
 

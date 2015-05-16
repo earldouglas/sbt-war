@@ -1,7 +1,7 @@
 package com.earldouglas.xwp
 
+import sbt.Keys._
 import sbt._
-import Keys._
 
 object WarPlugin extends AutoPlugin {
   import Keys.{`package` => pkg}
