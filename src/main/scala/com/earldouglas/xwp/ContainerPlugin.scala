@@ -63,46 +63,26 @@ object ContainerPlugin extends AutoPlugin {
   )
 
 
-  private def startTask: Def.Initialize[Task[Process]] =
-    ( containerInstance
-    , containerLaunchCmd
-    , target in webappPrepare
-    , javaOptions
-    , classpathTypes
-    , update
-    , containerForkOptions
-    , streams
-    , configuration
-    ) map {
-      ( atomicRef
-      , launchCmd
-      , webappTarget
-      , javaOptions
-      , classpathTypes
-      , updateReport
-      , forkOptions
-      , streams
-      , conf
-      ) =>
-        val log = streams.log
+  private def startTask = Def.task {
+    val log = streams.value.log
+    val conf = configuration.value
+    val instance = containerInstance.value
 
-        shutdown(log, atomicRef)
-        log.info(s"conf: $conf")
+    shutdown(log, instance)
 
-        val libs: Seq[File] =
-          Classpaths.managedJars(conf, classpathTypes, updateReport).map(_.data)
+    val libs: Seq[File] =
+      Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
 
-        log.info(s"libs: $libs")
-
-        launchCmd match {
-          case Nil =>
-            sys.error("no launch command specified")
-          case args =>
-            val p = startup(log, libs, javaOptions ++ args :+ webappTarget.getPath, forkOptions)
-            atomicRef.set(Option(p))
-            p
-        }
+    containerLaunchCmd.value match {
+      case Nil =>
+        sys.error("no launch command specified")
+      case launchCmd =>
+        val args = javaOptions.value ++ launchCmd :+ (target in webappPrepare).value.getPath
+        val process = startup(log, libs, args, containerForkOptions.value)
+        instance.set(Option(process))
+        process
     }
+  }
 
   private def stopTask: Def.Initialize[Task[Unit]] = Def.task {
     shutdown(streams.value.log, containerInstance.value)
