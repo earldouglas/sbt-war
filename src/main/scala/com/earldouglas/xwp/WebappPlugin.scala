@@ -1,6 +1,5 @@
 package com.earldouglas.xwp
 
-import java.io.File
 import java.util.jar.Manifest
 
 import sbt._, Keys._

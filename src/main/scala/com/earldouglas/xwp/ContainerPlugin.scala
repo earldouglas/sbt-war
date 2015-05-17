@@ -36,19 +36,19 @@ object ContainerPlugin extends AutoPlugin {
   override lazy val projectSettings =
     containerSettings(Container) ++
       inConfig(Container)(Seq(
-        containerLibs      := Nil
-      , containerMain      := ""
-      , containerLaunchCmd := Nil
+        containerLibs := Nil
+      , containerMain := ""
       ))
 
   def containerSettings(conf: Configuration) =
     baseContainerSettings ++
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
-        start            <<= startTask dependsOn webappPrepare
-      , stop             <<= stopTask
-      , onLoad in Global <<= onLoadSetting
-      , javaOptions      <<= javaOptions in Compile
+        start              := (startTask dependsOn webappPrepare).value
+      , stop               := stopTask.value
+      , onLoad in Global   := onLoadSetting.value
+      , javaOptions        := (javaOptions in Compile).value
+      , containerLaunchCmd := defaultLaunchCmd.value
       ))
 
   lazy val baseContainerSettings = Seq(
@@ -59,6 +59,23 @@ object ContainerPlugin extends AutoPlugin {
   , containerInstance    := new AtomicReference(Option.empty[Process])
   )
 
+  private def defaultLaunchCmd = Def.setting {
+    val portArg: Seq[String] = containerPort.value match {
+      case p if p > 0 => Seq("--port", p.toString)
+      case _ => Nil
+    }
+
+    val configArg: Seq[String] = containerConfigFile.value match {
+      case Some(file) => Seq("--config", file.absolutePath)
+      case None => Nil
+    }
+
+    Seq(containerMain.value) ++
+      portArg ++
+      configArg ++
+      containerArgs.value :+
+      (target in webappPrepare).value.absolutePath
+  }
 
   private def startTask = Def.task {
     val log = streams.value.log
@@ -74,7 +91,7 @@ object ContainerPlugin extends AutoPlugin {
       case Nil =>
         sys.error("no launch command specified")
       case launchCmd =>
-        val args = javaOptions.value ++ launchCmd :+ (target in webappPrepare).value.getPath
+        val args = javaOptions.value ++ launchCmd
         val process = startup(log, libs, args, containerForkOptions.value)
         instance.set(Option(process))
         process

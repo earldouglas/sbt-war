@@ -12,7 +12,7 @@ lazy val root = (project in file("."))
     , "org.eclipse.jetty" %  "jetty-plus"   % "9.1.0.v20131115"
     , "test"              %% "runner"       % "0.1.0-SNAPSHOT"
     )
-  , containerLaunchCmd in Container := Seq("runner.Run", "8080")
+  , containerLaunchCmd in Container := Seq("runner.Run", "8080", (target in webappPrepare).value.absolutePath)
   )
 
 lazy val runner = project
