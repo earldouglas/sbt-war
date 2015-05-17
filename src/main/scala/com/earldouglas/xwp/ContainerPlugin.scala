@@ -41,9 +41,7 @@ object ContainerPlugin extends AutoPlugin {
       , containerLaunchCmd := Nil
       ))
 
-  def containerSettings(conf: Configuration) = {
-    val atomicRef = new AtomicReference(Option.empty[Process])
-
+  def containerSettings(conf: Configuration) =
     baseContainerSettings ++
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
@@ -52,7 +50,6 @@ object ContainerPlugin extends AutoPlugin {
       , onLoad in Global <<= onLoadSetting
       , javaOptions      <<= javaOptions in Compile
       ))
-  }
 
   lazy val baseContainerSettings = Seq(
     containerPort        := -1
