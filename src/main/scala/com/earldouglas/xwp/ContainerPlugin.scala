@@ -18,8 +18,8 @@ object ContainerPlugin extends AutoPlugin {
     val containerPort        = settingKey[Int]("port number to be used by container")
     val containerConfigFile  = settingKey[Option[File]]("path of container configuration file")
     val containerArgs        = settingKey[Seq[String]]("additional container args")
-    val containerLaunchCmd   = taskKey[Seq[String]]("command to launch container")
-    val containerForkOptions = taskKey[ForkOptions]("fork options")
+    val containerLaunchCmd   = settingKey[Seq[String]]("command to launch container")
+    val containerForkOptions = settingKey[ForkOptions]("fork options")
   }
 
   private lazy val containerInstance = settingKey[AtomicReference[Option[Process]]]("Current container process")
