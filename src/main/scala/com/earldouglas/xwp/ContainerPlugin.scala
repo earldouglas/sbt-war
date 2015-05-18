@@ -1,6 +1,5 @@
 package com.earldouglas.xwp
 
-import java.io.File
 import java.util.concurrent.atomic.AtomicReference
 
 import sbt._, Keys._
@@ -110,7 +109,7 @@ object ContainerPlugin extends AutoPlugin {
 
   private def startup(l: Logger, libs: Seq[File], args: Seq[String], forkOptions: ForkOptions): Process = {
     l.info("starting server ...")
-    val cp = libs mkString File.pathSeparator
+    val cp = Path.makeString(libs)
     new Fork("java", None).fork(forkOptions, Seq("-cp", cp) ++ args)
   }
 

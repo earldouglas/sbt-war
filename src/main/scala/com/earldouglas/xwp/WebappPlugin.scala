@@ -7,9 +7,9 @@ import sbt._, Keys._
 object WebappPlugin extends AutoPlugin {
 
   object autoImport {
-    lazy val webappPrepare = taskKey[Seq[(sbt.File, String)]]("prepare webapp contents for packaging")
-    lazy val webappPostProcess = taskKey[java.io.File => Unit]("additional task after preparing the webapp")
-    lazy val webappWebInfClasses = taskKey[Boolean]("use WEB-INF/classes instead of WEB-INF/lib")
+    lazy val webappPrepare       = taskKey[Seq[(File, String)]]("prepare webapp contents for packaging")
+    lazy val webappPostProcess   = taskKey[File => Unit]("additional task after preparing the webapp")
+    lazy val webappWebInfClasses = settingKey[Boolean]("use WEB-INF/classes instead of WEB-INF/lib")
   }
 
   import autoImport._
