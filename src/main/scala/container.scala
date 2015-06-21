@@ -10,8 +10,8 @@ trait ContainerPlugin { self: WebappPlugin =>
   lazy val container  = config("container").hide
   lazy val start      = TaskKey[Process]("start")
   lazy val stop       = TaskKey[Unit]("stop")
-  lazy val launchCmd  = TaskKey[Seq[String]]("launch-cmd")
-  lazy val options    = TaskKey[ForkOptions]("options")
+  lazy val launchCmd  = TaskKey[Seq[String]]("xwp-launcher")
+  lazy val options    = TaskKey[ForkOptions]("xwp-options")
 
   private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
     val oldProcess = atomicRef.getAndSet(None)
