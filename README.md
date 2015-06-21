@@ -24,7 +24,7 @@ xsbt-web-plugin supports both Scala and Java, and is best suited for projects th
 Add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.2.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.1")
 ```
 
 Choose either Jetty or Tomcat with default setings:
@@ -430,7 +430,7 @@ sbt.version=0.13.7
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.2.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "1.1.1")
 ```
 
 *build.sbt:*
