@@ -1,8 +1,6 @@
 # xsbt-web-plugin
 
-xsbt-web-plugin is an [sbt](http://www.scala-sbt.org/) extension for building [J2EE](http://en.wikipedia.org/wiki/Java_Servlet) Web applications in Scala and Java.
-
-xsbt-web-plugin is best suited for projects that:
+xsbt-web-plugin is an [sbt](http://www.scala-sbt.org/) extension for building [J2EE](http://en.wikipedia.org/wiki/Java_Servlet) Web applications in Scala and Java.  It is best suited for projects that:
 
 * Deploy to common cloud platforms (e.g. [Google App Engine](https://developers.google.com/appengine/), [Heroku](https://www.heroku.com/), [Elastic Beanstalk](https://console.aws.amazon.com/elasticbeanstalk/home), [Jelastic](http://jelastic.com/))
 * Deploy to production J2EE environments (e.g. Tomcat, Jetty, GlassFish, WebSphere)
