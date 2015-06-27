@@ -1,2 +1,0 @@
-> container:start
-> get http://localhost:8080/test 42
