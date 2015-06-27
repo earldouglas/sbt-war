@@ -1,0 +1,15 @@
+> jetty:start
+> get http://localhost:8080/index.html 200
+> get http://localhost:8080/test 200
+> jetty:stop
+$ exists mathsweb/target/webapp/WEB-INF/lib/numbers.jar
+$ exists mathsweb/target/webapp/WEB-INF/lib/maths.jar
+$ exists mathsweb/target/webapp/WEB-INF/lib/typeclasses.jar
+$ absent mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
+
+> package
+$ exists mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
+> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/mathsweb_2.10-0.1.0-SNAPSHOT.jar
+> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/numbers.jar
+> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths.jar
+> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/typeclasses.jar

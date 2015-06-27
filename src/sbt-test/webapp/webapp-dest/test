@@ -1,4 +1,4 @@
-> webapp:prepare
+> webappPrepare
 $ exists target/WebContent/index.html
 $ exists target/WebContent/styles/style.css
 $ exists target/WebContent/WEB-INF/web.xml
