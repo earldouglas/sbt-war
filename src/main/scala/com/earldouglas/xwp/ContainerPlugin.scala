@@ -12,13 +12,14 @@ object ContainerPlugin extends AutoPlugin {
   object autoImport {
     val Container = config("container").hide
 
-    val containerLibs        = settingKey[Seq[ModuleID]]("container libraries")
-    val containerMain        = settingKey[String]("container main class")
-    val containerPort        = settingKey[Int]("port number to be used by container")
-    val containerConfigFile  = settingKey[Option[File]]("path of container configuration file")
-    val containerArgs        = settingKey[Seq[String]]("additional container args")
-    val containerLaunchCmd   = settingKey[Seq[String]]("command to launch container")
-    val containerForkOptions = settingKey[ForkOptions]("fork options")
+    val containerLibs           = settingKey[Seq[ModuleID]]("container libraries")
+    val containerMain           = settingKey[String]("container main class")
+    val containerPort           = settingKey[Int]("port number to be used by container")
+    val containerConfigFile     = settingKey[Option[File]]("path of container configuration file")
+    val containerArgs           = settingKey[Seq[String]]("additional container args")
+    val containerLaunchCmd      = settingKey[Seq[String]]("command to launch container")
+    val containerForkOptions    = settingKey[ForkOptions]("fork options")
+    val containerShutdownOnExit = settingKey[Boolean]("shutdown container on sbt exit")
   }
 
   private lazy val containerInstance = settingKey[AtomicReference[Option[Process]]]("Current container process")
@@ -51,11 +52,12 @@ object ContainerPlugin extends AutoPlugin {
       ))
 
   lazy val baseContainerSettings = Seq(
-    containerPort        := -1
-  , containerConfigFile  := None
-  , containerArgs        := Nil
-  , containerForkOptions := new ForkOptions
-  , containerInstance    := new AtomicReference(Option.empty[Process])
+    containerPort           := -1
+  , containerConfigFile     := None
+  , containerArgs           := Nil
+  , containerForkOptions    := new ForkOptions
+  , containerInstance       := new AtomicReference(Option.empty[Process])
+  , containerShutdownOnExit := true
   )
 
   private def defaultLaunchCmd = Def.setting {
@@ -103,7 +105,11 @@ object ContainerPlugin extends AutoPlugin {
 
   private def onLoadSetting: Def.Initialize[State => State] = Def.setting {
     (onLoad in Global).value compose { state: State =>
-      state.addExitHook(shutdown(state.log, containerInstance.value))
+      if ((containerShutdownOnExit).value) {
+        state.addExitHook(shutdown(state.log, containerInstance.value))
+      } else {
+        state
+      }
     }
   }
 
