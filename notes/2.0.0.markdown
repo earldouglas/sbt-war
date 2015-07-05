@@ -1,0 +1,5 @@
+* Use AutoPlugin everywhere
+* Apply sbt plugin best practices
+* Allow exit hook to be disabled
+* Improve resource change detection
+* Various cleanup and optimization
