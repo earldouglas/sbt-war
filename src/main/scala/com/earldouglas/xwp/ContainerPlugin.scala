@@ -17,9 +17,10 @@ object ContainerPlugin extends AutoPlugin {
     val containerPort           = settingKey[Int]("port number to be used by container")
     val containerConfigFile     = settingKey[Option[File]]("path of container configuration file")
     val containerArgs           = settingKey[Seq[String]]("additional container args")
-    val containerLaunchCmd      = settingKey[Seq[String]]("command to launch container")
     val containerForkOptions    = settingKey[ForkOptions]("fork options")
     val containerShutdownOnExit = settingKey[Boolean]("shutdown container on sbt exit")
+
+    val containerLaunchCmd      = taskKey[Seq[String]]("command to launch container")
   }
 
   private lazy val containerInstance = settingKey[AtomicReference[Option[Process]]]("Current container process")
@@ -48,7 +49,7 @@ object ContainerPlugin extends AutoPlugin {
       , stop               := stopTask.value
       , onLoad in Global   := onLoadSetting.value
       , javaOptions        := (javaOptions in Compile).value
-      , containerLaunchCmd := defaultLaunchCmd.value
+      , containerLaunchCmd <<= defaultLaunchCmd
       ))
 
   lazy val baseContainerSettings = Seq(
@@ -60,7 +61,7 @@ object ContainerPlugin extends AutoPlugin {
   , containerShutdownOnExit := true
   )
 
-  private def defaultLaunchCmd = Def.setting {
+  private def defaultLaunchCmd = Def.task {
     val portArg: Seq[String] = containerPort.value match {
       case p if p > 0 => Seq("--port", p.toString)
       case _ => Nil
