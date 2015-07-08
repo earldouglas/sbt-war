@@ -10,7 +10,7 @@ xsbt-web-plugin is an [sbt](http://www.scala-sbt.org/) extension for building [J
 
 ## Reference manual
 
-Documentation is available for each release, back to version *0.9*.  Version numbers follow the [Specified Versioning](/articles/specver.html) guidelines.
+Documentation is available by minor release version.  Version numbers follow the [Specified Versioning](http://earldouglas.com/articles/specver.html) guidelines.
 
 * [Version 2.0](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/2.0.md) *(current)*
 * [Version 1.1](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/1.1.md)
