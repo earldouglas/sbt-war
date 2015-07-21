@@ -6,6 +6,6 @@ libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provid
 
 enablePlugins(TomcatPlugin)
 
-containerLibs := Seq("com.github.jsimone" % "webapp-runner" % "7.0.34.1" intransitive())
+containerLibs in Tomcat := Seq("com.github.jsimone" % "webapp-runner" % "7.0.34.1" intransitive())
 
-containerMain := "webapp.runner.launch.Main"
+containerMain in Tomcat := "webapp.runner.launch.Main"
