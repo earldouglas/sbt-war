@@ -30,8 +30,6 @@ object ContainerPlugin extends AutoPlugin {
 
   override def requires = WarPlugin
 
-  override def trigger = allRequirements
-
   override val projectConfigurations = Seq(Container)
 
   override lazy val projectSettings =

@@ -5,9 +5,17 @@
 $ exists mathsweb/target/webapp/WEB-INF/lib/numbers.jar
 $ exists mathsweb/target/webapp/WEB-INF/lib/maths.jar
 $ exists mathsweb/target/webapp/WEB-INF/lib/typeclasses.jar
+$ absent target/scala-2.10/root_2.10-0.1-SNAPSHOT.war
+$ absent numbers/target/scala-2.10/numbers_2.10-0.1.0-SNAPSHOT.war
+$ absent typeclasses/target/scala-2.10/typeclasses_2.10-0.1.0-SNAPSHOT.war
+$ absent maths/target/scala-2.10/maths_2.10-0.1.0-SNAPSHOT.war
 $ absent mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
 
 > package
+$ absent target/scala-2.10/root_2.10-0.1-SNAPSHOT.war
+$ absent numbers/target/scala-2.10/numbers_2.10-0.1.0-SNAPSHOT.war
+$ absent typeclasses/target/scala-2.10/typeclasses_2.10-0.1.0-SNAPSHOT.war
+$ absent maths/target/scala-2.10/maths_2.10-0.1.0-SNAPSHOT.war
 $ exists mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
 > find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/mathsweb_2.10-0.1.0-SNAPSHOT.jar
 > find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/numbers.jar

@@ -7,8 +7,6 @@ object WarPlugin extends AutoPlugin {
 
   override def requires = WebappPlugin
 
-  override def trigger = allRequirements
-
   override lazy val projectSettings =
     Defaults.packageTaskSettings(pkg, WebappPlugin.autoImport.webappPrepare) ++
       Seq(artifact in pkg := Artifact(moduleName.value, "war", "war")) ++
