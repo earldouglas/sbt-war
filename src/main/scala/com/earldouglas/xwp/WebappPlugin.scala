@@ -16,8 +16,6 @@ object WebappPlugin extends AutoPlugin {
 
   override def requires = plugins.JvmPlugin
 
-  override def trigger = allRequirements
-
   override def projectSettings: Seq[Setting[_]] =
     Seq(
         sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "webapp"
