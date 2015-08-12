@@ -8,6 +8,7 @@ object ContainerPlugin extends AutoPlugin {
 
   lazy val start = taskKey[Process]("start container")
   lazy val stop  = taskKey[Unit]("stop container")
+  lazy val develop = taskKey[Process]("start container for develop")
 
   object autoImport {
     val Container = config("container").hide
@@ -21,6 +22,8 @@ object ContainerPlugin extends AutoPlugin {
     val containerShutdownOnExit = settingKey[Boolean]("shutdown container on sbt exit")
 
     val containerLaunchCmd      = taskKey[Seq[String]]("command to launch container")
+
+    val runtimeClassPathCmd     = (fullClasspath in Runtime) map { cp => cp.map(_.data) }
   }
 
   private lazy val containerInstance = settingKey[AtomicReference[Option[Process]]]("Current container process")
@@ -44,6 +47,7 @@ object ContainerPlugin extends AutoPlugin {
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
         start              := (startTask dependsOn webappPrepare).value
+      , develop            := (developTask dependsOn webappPrepare).value
       , stop               := stopTask.value
       , onLoad in Global   := onLoadSetting.value
       , javaOptions        := (javaOptions in Compile).value
@@ -97,6 +101,33 @@ object ContainerPlugin extends AutoPlugin {
         process
     }
   }
+
+  private def developTask = Def.task {
+    val log = streams.value.log
+    val conf = configuration.value
+    val instance = containerInstance.value
+
+    shutdown(log, instance)
+
+    val libs: Seq[File] =
+      Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
+
+    containerLaunchCmd.value match {
+      case Nil =>
+        sys.error("no launch command specified")
+      case launchCmd =>
+        runtimeClassPathCmd.value match {
+          case Nil =>
+            sys.error("no runtime classpath specified")
+          case classPath =>
+            val args = javaOptions.value ++ launchCmd
+            val process = startup(log, libs ++ classPath, args, containerForkOptions.value)
+            instance.set(Option(process))
+            process
+        }
+    }
+  }
+
 
   private def stopTask: Def.Initialize[Task[Unit]] = Def.task {
     shutdown(streams.value.log, containerInstance.value)
