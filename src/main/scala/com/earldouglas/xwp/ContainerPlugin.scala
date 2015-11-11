@@ -7,6 +7,7 @@ import sbt._, Keys._
 object ContainerPlugin extends AutoPlugin {
 
   lazy val start = taskKey[Process]("start container")
+  lazy val join = taskKey[Option[Int]]("join container")
   lazy val stop  = taskKey[Unit]("stop container")
 
   object autoImport {
@@ -44,6 +45,7 @@ object ContainerPlugin extends AutoPlugin {
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
         start              := (startTask dependsOn webappPrepare).value
+      , join               := joinTask.value
       , stop               := stopTask.value
       , onLoad in Global   := onLoadSetting.value
       , javaOptions        := (javaOptions in Compile).value
@@ -96,6 +98,10 @@ object ContainerPlugin extends AutoPlugin {
         instance.set(Option(process))
         process
     }
+  }
+
+  private def joinTask: Def.Initialize[Task[Option[Int]]] = Def.task {
+    containerInstance.value.get map { _.exitValue }
   }
 
   private def stopTask: Def.Initialize[Task[Unit]] = Def.task {
