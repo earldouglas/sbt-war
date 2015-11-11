@@ -1,0 +1,2 @@
+* Add `<container>:join` to block sbt on running container
+  ([#280](https://github.com/earldouglas/xsbt-web-plugin/pull/280))
