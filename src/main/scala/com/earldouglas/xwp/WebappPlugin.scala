@@ -32,6 +32,20 @@ object WebappPlugin extends AutoPlugin {
 
   private def webappPrepareTask = Def.task {
 
+    def cacheify(name: String, dest: File => File, in: Set[File]): Set[File] =
+      cached(streams.value.cacheDirectory / "xsbt-web-plugin" / name)(lastModified, exists)({
+        (inChanges, outChanges) =>
+          // toss out removed files
+          inChanges.removed foreach { in => IO.delete(dest(in)) }
+
+          // apply and report changes
+          (inChanges.added ++ inChanges.modified) map { in =>
+            val out = dest(in)
+            IO.copyFile(in, out)
+            out
+          }
+      }).apply(in)
+
     val (art, file) = (packagedArtifact in (Compile, packageBin)).value
     val webappSrcDir = (sourceDirectory in webappPrepare).value
     val webappTarget = (target in webappPrepare).value
@@ -74,28 +88,14 @@ object WebappPlugin extends AutoPlugin {
       _          = IO.jar(files, webappLibDir / jarFile, new Manifest)
     } yield ()
 
-
     // copy this project's library dependency .jar files to WEB-INF/lib
-    cached(streams.value.cacheDirectory / "xsbt-web-plugin" / "lib-deps")(lastModified, exists) {
-      (inChanges, outChanges) =>
-        def dest(in: File): File = webappTarget / "WEB-INF" / "lib" / in.getName
-
-        // toss out removed files
-        inChanges.removed foreach { in => IO.delete(dest(in)) }
-
-        val changes: Set[(File, File)] =
-          (inChanges.added ++ inChanges.modified) map { in => (in, dest(in)) }
-
-        // apply changes
-        changes map { case (in, out) => IO.copyFile(in, out) }
-
-        // report changes
-        changes map { case (in, out) => out }
-    } apply {
+    cacheify(
+      "lib-deps",
+      { in: File => webappTarget / "WEB-INF" / "lib" / in.getName },
       classpath.map(_.data).toSet filter { in =>
         !in.isDirectory && in.getName.endsWith(".jar")
       }
-    }
+    )
 
     webappPostProcess.value(webappTarget)
 
