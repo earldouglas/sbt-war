@@ -1,0 +1,10 @@
+> webappPrepare
+$ absent target/webapp/index.html
+
+$ copy-file changes/index.html src/main/webapp/index.html
+> webappPrepare
+$ exists target/webapp/index.html
+
+$ delete src/main/webapp/index.html
+> webappPrepare
+$ absent target/webapp/index.html
