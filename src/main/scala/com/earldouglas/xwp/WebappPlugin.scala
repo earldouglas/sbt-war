@@ -42,12 +42,11 @@ object WebappPlugin extends AutoPlugin {
           } yield IO.delete(toRemove)
 
           // apply and report changes
-          (inChanges.added ++ inChanges.modified).map({ in =>
-            dest(in) map { out =>
-              IO.copyFile(in, out)
-              out
-            }
-          }).flatten
+          for {
+            in  <- inChanges.added ++ inChanges.modified -- inChanges.removed
+            out <- dest(in)
+            _    = IO.copyFile(in, out)
+          } yield out
       }).apply(in)
 
     val (art, file) = (packagedArtifact in (Compile, packageBin)).value
@@ -55,7 +54,17 @@ object WebappPlugin extends AutoPlugin {
     val webappTarget = (target in webappPrepare).value
     val classpath = (fullClasspath in Runtime).value
 
-    IO.copyDirectory(webappSrcDir, webappTarget)
+    cacheify(
+      "webapp",
+      { in =>
+        for {
+          f <- Some(in)
+          if !f.isDirectory
+          r <- IO.relativizeFile(webappSrcDir, f)
+        } yield IO.resolve(webappTarget, r)
+      },
+      (webappSrcDir ** "*").get.toSet
+    )
 
     val webInfDir = webappTarget / "WEB-INF"
     val webappLibDir = webInfDir / "lib"
