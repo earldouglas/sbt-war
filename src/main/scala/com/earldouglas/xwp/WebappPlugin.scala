@@ -2,7 +2,11 @@ package com.earldouglas.xwp
 
 import java.util.jar.Manifest
 
-import sbt._, Keys._
+import sbt._
+import sbt.Keys._
+import sbt.FilesInfo.lastModified
+import sbt.FilesInfo.exists
+import sbt.FileFunction.cached
 
 object WebappPlugin extends AutoPlugin {
 
@@ -27,6 +31,7 @@ object WebappPlugin extends AutoPlugin {
     )
 
   private def webappPrepareTask = Def.task {
+
     val (art, file) = (packagedArtifact in (Compile, packageBin)).value
     val webappSrcDir = (sourceDirectory in webappPrepare).value
     val webappTarget = (target in webappPrepare).value
@@ -58,7 +63,7 @@ object WebappPlugin extends AutoPlugin {
       if dir.isDirectory
       artEntry  <- cpItem.metadata.entries find { e => e.key.label == "artifact" }
       cpArt      = artEntry.value.asInstanceOf[Artifact]
-      if cpArt != art//(cpItem.metadata.entries exists { _.value == art })
+      if cpArt  != art
       files      = (dir ** "*").get flatMap { file =>
         if (!file.isDirectory)
           IO.relativize(dir, file) map { p => (file, p) }
@@ -69,14 +74,28 @@ object WebappPlugin extends AutoPlugin {
       _          = IO.jar(files, webappLibDir / jarFile, new Manifest)
     } yield ()
 
+
     // copy this project's library dependency .jar files to WEB-INF/lib
-    for {
-      cpItem <- classpath.toList
-      file    = cpItem.data
-      if !file.isDirectory
-      name    = file.getName
-      if name.endsWith(".jar")
-    } yield IO.copyFile(file, webappLibDir / name)
+    cached(streams.value.cacheDirectory / "xsbt-web-plugin" / "lib-deps")(lastModified, exists) {
+      (inChanges, outChanges) =>
+        def dest(in: File): File = webappTarget / "WEB-INF" / "lib" / in.getName
+
+        // toss out removed files
+        inChanges.removed foreach { in => IO.delete(dest(in)) }
+
+        val changes: Set[(File, File)] =
+          (inChanges.added ++ inChanges.modified) map { in => (in, dest(in)) }
+
+        // apply changes
+        changes map { case (in, out) => IO.copyFile(in, out) }
+
+        // report changes
+        changes map { case (in, out) => out }
+    } apply {
+      classpath.map(_.data).toSet filter { in =>
+        !in.isDirectory && in.getName.endsWith(".jar")
+      }
+    }
 
     webappPostProcess.value(webappTarget)
 
