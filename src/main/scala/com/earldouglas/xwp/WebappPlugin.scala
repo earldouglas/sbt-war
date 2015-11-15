@@ -32,18 +32,22 @@ object WebappPlugin extends AutoPlugin {
 
   private def webappPrepareTask = Def.task {
 
-    def cacheify(name: String, dest: File => File, in: Set[File]): Set[File] =
+    def cacheify(name: String, dest: File => Option[File], in: Set[File]): Set[File] =
       cached(streams.value.cacheDirectory / "xsbt-web-plugin" / name)(lastModified, exists)({
         (inChanges, outChanges) =>
           // toss out removed files
-          inChanges.removed foreach { in => IO.delete(dest(in)) }
+          for {
+            removed  <- inChanges.removed
+            toRemove <- dest(removed)
+          } yield IO.delete(toRemove)
 
           // apply and report changes
-          (inChanges.added ++ inChanges.modified) map { in =>
-            val out = dest(in)
-            IO.copyFile(in, out)
-            out
-          }
+          (inChanges.added ++ inChanges.modified).map({ in =>
+            dest(in) map { out =>
+              IO.copyFile(in, out)
+              out
+            }
+          }).flatten
       }).apply(in)
 
     val (art, file) = (packagedArtifact in (Compile, packageBin)).value
@@ -56,18 +60,30 @@ object WebappPlugin extends AutoPlugin {
     val webInfDir = webappTarget / "WEB-INF"
     val webappLibDir = webInfDir / "lib"
 
-    // copy this project's classes, either directly to WEB-INF/classes
-    // or as a .jar file in WEB-INF/lib
     if (webappWebInfClasses.value) {
-      (mappings in (Compile, packageBin)).value foreach {
-        case (src, dest) =>
-          if (!src.isDirectory) {
-            val destFile = webInfDir / "classes" / dest
-            IO.copyFile(src, destFile)
+      // copy this project's classes directly to WEB-INF/classes
+      cacheify(
+        "classes",
+        { in =>
+          (mappings in (Compile, packageBin)).value find {
+            case (src, dest) => src == in
+          } map { case (src, dest) =>
+            webInfDir / "classes" / dest
           }
-      }
+        },
+        ((mappings in (Compile, packageBin)).value filter {
+          case (src, dest) => !src.isDirectory
+        } map { case (src, dest) =>
+          src
+        }).toSet
+      )
     } else {
-      IO.copyFile(file, webappLibDir / file.getName)
+      // copy this project's classes as a .jar file in WEB-INF/lib
+      cacheify(
+        "lib-art",
+        { in => Some(webappLibDir / in.getName) },
+        Set((packagedArtifact in (Compile, packageBin)).value._2)
+      )
     }
 
     // create .jar files for depended-on projects in WEB-INF/lib
@@ -91,7 +107,7 @@ object WebappPlugin extends AutoPlugin {
     // copy this project's library dependency .jar files to WEB-INF/lib
     cacheify(
       "lib-deps",
-      { in: File => webappTarget / "WEB-INF" / "lib" / in.getName },
+      { in => Some(webappTarget / "WEB-INF" / "lib" / in.getName) },
       classpath.map(_.data).toSet filter { in =>
         !in.isDirectory && in.getName.endsWith(".jar")
       }
