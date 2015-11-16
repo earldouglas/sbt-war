@@ -49,10 +49,11 @@ object WebappPlugin extends AutoPlugin {
           } yield out
       }).apply(in)
 
-    val (art, file) = (packagedArtifact in (Compile, packageBin)).value
     val webappSrcDir = (sourceDirectory in webappPrepare).value
     val webappTarget = (target in webappPrepare).value
     val classpath = (fullClasspath in Runtime).value
+    val webInfDir = webappTarget / "WEB-INF"
+    val webappLibDir = webInfDir / "lib"
 
     cacheify(
       "webapp",
@@ -65,9 +66,6 @@ object WebappPlugin extends AutoPlugin {
       },
       (webappSrcDir ** "*").get.toSet
     )
-
-    val webInfDir = webappTarget / "WEB-INF"
-    val webappLibDir = webInfDir / "lib"
 
     if (webappWebInfClasses.value) {
       // copy this project's classes directly to WEB-INF/classes
@@ -102,7 +100,8 @@ object WebappPlugin extends AutoPlugin {
       if dir.isDirectory
       artEntry  <- cpItem.metadata.entries find { e => e.key.label == "artifact" }
       cpArt      = artEntry.value.asInstanceOf[Artifact]
-      if cpArt  != art
+      artifact   = (packagedArtifact in (Compile, packageBin)).value._1
+      if cpArt  != artifact
       files      = (dir ** "*").get flatMap { file =>
         if (!file.isDirectory)
           IO.relativize(dir, file) map { p => (file, p) }
