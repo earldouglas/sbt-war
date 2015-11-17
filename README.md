@@ -12,7 +12,8 @@ xsbt-web-plugin is an [sbt](http://www.scala-sbt.org/) extension for building [J
 
 Documentation is available by minor release version.  Version numbers follow the [Specified Versioning](http://earldouglas.com/articles/specver.html) guidelines.
 
-* [Version 2.0](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/2.0.md) *(current)*
+* [Version 2.1](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/2.1.md) *(current)*
+* [Version 2.0](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/2.0.md)
 * [Version 1.1](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/1.1.md)
 * [Version 1.0](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/1.0.md)
 * [Version 0.9](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/0.9.md)
