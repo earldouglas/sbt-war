@@ -1,5 +1,5 @@
 language: scala
 scala:
-  - 2.10.5
+  - 2.10.6
 script:
   - "sbt ++$TRAVIS_SCALA_VERSION clean scripted"
