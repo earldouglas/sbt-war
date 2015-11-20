@@ -1,7 +1,7 @@
 // general
 organization  := "com.earldouglas"
 name          := "xsbt-web-plugin"
-scalaVersion  := "2.10.5"
+scalaVersion  := "2.10.6"
 sbtPlugin     := true
 scalacOptions ++= Seq("-feature", "-deprecation")
 
