@@ -1,0 +1,2 @@
+* Cache library deps and project artifacts
+  ([#284](https://github.com/earldouglas/xsbt-web-plugin/pull/284))
