@@ -1,0 +1,7 @@
+# SBT
+target/
+
+# Eclipse
+.classpath
+.project
+.settings/
