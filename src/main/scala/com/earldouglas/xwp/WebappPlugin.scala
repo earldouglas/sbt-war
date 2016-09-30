@@ -23,7 +23,7 @@ object WebappPlugin extends AutoPlugin {
   override def projectSettings: Seq[Setting[_]] =
     Seq(
         sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "webapp"
-      , target in webappPrepare          := (target in Compile).value / "webapp"
+      , target in webappPrepare          := (sourceDirectory in Compile).value / "webapp"
       , webappPrepare                    := webappPrepareTask.value
       , webappPostProcess                := { _ => () }
       , webappWebInfClasses              := false
@@ -50,22 +50,22 @@ object WebappPlugin extends AutoPlugin {
       }).apply(in)
 
     val webappSrcDir = (sourceDirectory in webappPrepare).value
-    val webappTarget = (target in webappPrepare).value
+    val webappTarget = webappSrcDir
     val classpath = (fullClasspath in Runtime).value
     val webInfDir = webappTarget / "WEB-INF"
     val webappLibDir = webInfDir / "lib"
 
-    cacheify(
-      "webapp",
-      { in =>
-        for {
-          f <- Some(in)
-          if !f.isDirectory
-          r <- IO.relativizeFile(webappSrcDir, f)
-        } yield IO.resolve(webappTarget, r)
-      },
-      (webappSrcDir ** "*").get.toSet
-    )
+//    cacheify(
+//      "webapp",
+//      { in =>
+//        for {
+//          f <- Some(in)
+//          if !f.isDirectory
+//          r <- IO.relativizeFile(webappSrcDir, f)
+//        } yield IO.resolve(webappTarget, r)
+//      },
+//      (webappSrcDir ** "*").get.toSet
+//    )
 
     if (webappWebInfClasses.value) {
       // copy this project's classes directly to WEB-INF/classes
