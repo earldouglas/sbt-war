@@ -14,7 +14,6 @@ object WebappPlugin extends AutoPlugin {
     lazy val webappPrepare       = taskKey[Seq[(File, String)]]("prepare webapp contents for packaging")
     lazy val webappPostProcess   = taskKey[File => Unit]("additional task after preparing the webapp")
     lazy val webappWebInfClasses = settingKey[Boolean]("use WEB-INF/classes instead of WEB-INF/lib")
-    lazy val developmentMode     = settingKey[Boolean]("serve content directly from /src/main/webapp")
   }
 
   import autoImport._
@@ -28,7 +27,6 @@ object WebappPlugin extends AutoPlugin {
       , webappPrepare                    := webappPrepareTask.value
       , webappPostProcess                := { _ => () }
       , webappWebInfClasses              := false
-      , developmentMode                  := false
       , watchSources                    ++= ((sourceDirectory in webappPrepare).value ** "*").get
     )
 
@@ -52,17 +50,15 @@ object WebappPlugin extends AutoPlugin {
       }).apply(in)
 
     val webappSrcDir = (sourceDirectory in webappPrepare).value
-    val webappTarget = if (developmentMode.value){
-      webappSrcDir
-    } else {
-      (target in webappPrepare).value
-    }
+    val webappTarget = (target in webappPrepare).value
+
+    val isDevelopmentMode = webappSrcDir.getAbsolutePath.equals(webappTarget.getAbsolutePath)
 
     val classpath = (fullClasspath in Runtime).value
     val webInfDir = webappTarget / "WEB-INF"
     val webappLibDir = webInfDir / "lib"
 
-    if (!developmentMode.value) {
+    if (!isDevelopmentMode) {
       cacheify(
         "webapp",
         { in =>
@@ -130,7 +126,7 @@ object WebappPlugin extends AutoPlugin {
       }
     )
 
-    if (developmentMode.value) {
+    if (isDevelopmentMode) {
       streams.value.log.info("starting server in development mode, postProcess not available!")
     } else {
       webappPostProcess.value(webappTarget)
