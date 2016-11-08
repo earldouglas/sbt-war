@@ -14,5 +14,3 @@ ScriptedPlugin.scriptedSettings
 scriptedBufferLog  := false
 scriptedLaunchOpts <+= version { "-Dplugin.version=" + _ }
 watchSources       <++= sourceDirectory map { path => (path ** "*").get }
-
-version := "2.2.0"
