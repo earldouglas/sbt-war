@@ -108,8 +108,25 @@ object ContainerPlugin extends AutoPlugin {
     shutdown(streams.value.log, containerInstance.value)
   }
 
+  private def validateSbtVerison(version: String): Unit = {
+    val versionArray = version.split("\\.").map(_.toInt)
+    val major = versionArray(0)
+    val minor = versionArray(1)
+    val patch = versionArray(2)
+
+    if ((major == 0 && minor < 13) ||
+        (major == 0 && minor == 13 && patch < 6)) {
+      throw new RuntimeException(
+         "xsbt-web-plugin requires sbt 0.13.6+, " +
+         "but this project is configured to use sbt " +
+         version
+      )
+    }
+  }
+
   private def onLoadSetting: Def.Initialize[State => State] = Def.setting {
     (onLoad in Global).value compose { state: State =>
+      validateSbtVerison(state.configuration.provider.id.version)
       if ((containerShutdownOnExit).value) {
         state.addExitHook(shutdown(state.log, containerInstance.value))
       } else {
