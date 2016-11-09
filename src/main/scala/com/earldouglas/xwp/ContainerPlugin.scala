@@ -110,10 +110,12 @@ object ContainerPlugin extends AutoPlugin {
 
   private def validateSbtVerison(version: String): Unit = {
     val versionArray = version.split("\\.").map(_.toInt)
+    val major = versionArray(0)
     val minor = versionArray(1)
     val patch = versionArray(2)
 
-    if ((minor < 13) || (minor == 13 && patch < 6)) {
+    if ((major == 0 && minor < 13) ||
+        (major == 0 && minor == 13 && patch < 6)) {
       throw new RuntimeException(
          "xsbt-web-plugin requires sbt 0.13.6+, " +
          "but this project is configured to use sbt " +
