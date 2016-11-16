@@ -7,11 +7,14 @@ import sbt._, Keys._
 object ContainerPlugin extends AutoPlugin {
 
   lazy val start = taskKey[Process]("start container")
-  lazy val join = taskKey[Option[Int]]("join container")
+  lazy val debug = taskKey[Process]("start container in debug mode")
+  lazy val join  = taskKey[Option[Int]]("join container")
   lazy val stop  = taskKey[Unit]("stop container")
 
   object autoImport {
     val Container = config("container").hide
+
+    val debugOptions            = settingKey[Seq[String]]("debug options")
 
     val containerLibs           = settingKey[Seq[ModuleID]]("container libraries")
     val containerMain           = settingKey[String]("container main class")
@@ -45,6 +48,7 @@ object ContainerPlugin extends AutoPlugin {
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
         start              := (startTask dependsOn webappPrepare).value
+      , debug              := (debugTask dependsOn webappPrepare).value
       , join               := joinTask.value
       , stop               := stopTask.value
       , onLoad in Global   := onLoadSetting.value
@@ -59,6 +63,7 @@ object ContainerPlugin extends AutoPlugin {
   , containerForkOptions    := new ForkOptions
   , containerInstance       := new AtomicReference(Option.empty[Process])
   , containerShutdownOnExit := true
+  , debugOptions            := Seq("-Xdebug", "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n")
   )
 
   private def defaultLaunchCmd = Def.task {
@@ -79,7 +84,10 @@ object ContainerPlugin extends AutoPlugin {
       (target in webappPrepare).value.absolutePath
   }
 
-  private def startTask = Def.task {
+  private def startTask = startOrDebugTask(false)
+  private def debugTask = startOrDebugTask(true)
+
+  private def startOrDebugTask(debug: Boolean) = Def.task {
     val log = streams.value.log
     val conf = configuration.value
     val instance = containerInstance.value
@@ -93,7 +101,7 @@ object ContainerPlugin extends AutoPlugin {
       case Nil =>
         sys.error("no launch command specified")
       case launchCmd =>
-        val args = javaOptions.value ++ launchCmd
+        val args = javaOptions.value ++ (if (debug) debugOptions.value else Seq.empty) ++ launchCmd
         val process = startup(log, libs, args, containerForkOptions.value)
         instance.set(Option(process))
         process
