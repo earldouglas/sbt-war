@@ -1,0 +1,18 @@
+-> get http://localhost:8080/test 200
+-> get http://localhost:8080/index.html 200
+
+> jetty:start
+> get http://localhost:8080/test 200
+> get http://localhost:8080/index.html 200
+> get http://localhost:8080/index2.html 404
+
+$ copy-file src/main/webapp/index.html src/main/webapp/index2.html
+> get http://localhost:8080/index2.html 404
+
+> jetty:start
+> get http://localhost:8080/index2.html 200
+
+> jetty:stop
+-> get http://localhost:8080/test 200
+-> get http://localhost:8080/index.html 200
+-> get http://localhost:8080/index2.html 200
