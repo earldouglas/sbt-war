@@ -17,7 +17,7 @@ object WarPlugin extends AutoPlugin {
     if (inheritJarManifest.value) {
         (packageOptions in (Compile, packageBin)).value filter {
           case x: Package.ManifestAttributes => true
-        case x => false
+        case _ => false
       }
     } else {
       Seq.empty
