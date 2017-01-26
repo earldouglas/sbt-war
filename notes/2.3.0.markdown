@@ -1,0 +1,2 @@
+* Add `<container>:quickstart` that skips webapp prep
+  ([#319](https://github.com/earldouglas/xsbt-web-plugin/pull/319))
