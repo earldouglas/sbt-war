@@ -1,16 +1,21 @@
 # xsbt-web-plugin
 
-xsbt-web-plugin is an [sbt](http://www.scala-sbt.org/) extension for building [J2EE](http://en.wikipedia.org/wiki/Java_Servlet) Web applications in Scala and Java.  It is best suited for projects that:
+xsbt-web-plugin is an [sbt] extension for building [J2EE][j2ee] Web
+applications in Scala and Java.  It is best suited for projects that:
 
-* Deploy to common cloud platforms (e.g. [Google App Engine](https://developers.google.com/appengine/), [Heroku](https://www.heroku.com/), [Elastic Beanstalk](https://console.aws.amazon.com/elasticbeanstalk/home), [Jelastic](http://jelastic.com/))
-* Deploy to production J2EE environments (e.g. Tomcat, Jetty, GlassFish, WebSphere)
-* Incorporate J2EE libraries (e.g. [JSP](http://en.wikipedia.org/wiki/JavaServer_Pages), [JSF](http://en.wikipedia.org/wiki/JavaServer_Faces), [EJB](http://en.wikipedia.org/wiki/Ejb))
-* Utilize J2EE technologies (e.g. [`Servlet`](http://docs.oracle.com/javaee/6/api/javax/servlet/Servlet.html), [`Filter`](http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html), [JNDI](http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface))
-* Have a specific need to be packaged as a [*.war* file](https://en.wikipedia.org/wiki/WAR_%28Sun_file_format%29)
+* Deploy to common cloud platforms (e.g. [Google App Engine][gae],
+  [Heroku][heroku], [Elastic Beanstalk][ebs], [Jelastic][jelastic])
+* Deploy to production J2EE environments (e.g. Tomcat, Jetty, GlassFish,
+  WebSphere)
+* Incorporate J2EE libraries (e.g. [JSP][jsp], [JSF][jsf], [EJB][ejb])
+* Utilize J2EE technologies (e.g. [`Servlet`][servlet],
+  [`Filter`][filter], [JNDI][jndi])
+* Have a specific need to be packaged as a [*.war* file][war]
 
 ## Reference manual
 
-Documentation is available by minor release version.  Version numbers follow the [Specified Versioning](http://earldouglas.com/articles/specver.html) guidelines.
+Documentation is available by minor release version.  Version numbers
+follow the [Specified Versioning][specver] guidelines.
 
 ### Current release
 
@@ -24,3 +29,18 @@ Documentation is available by minor release version.  Version numbers follow the
 * [1.1.x](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/1.1.md)
 * [1.0.x](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/1.0.md)
 * [0.9.x](https://github.com/earldouglas/xsbt-web-plugin/blob/master/docs/0.9.md)
+
+[ebs]: https://console.aws.amazon.com/elasticbeanstalk/home
+[ejb]: http://en.wikipedia.org/wiki/Ejb
+[filter]: http://docs.oracle.com/javaee/6/api/javax/servlet/Filter.html
+[gae]: https://developers.google.com/appengine/
+[heroku]: https://www.heroku.com/
+[j2ee]: http://en.wikipedia.org/wiki/Java_Servlet
+[jelastic]: http://jelastic.com/
+[jndi]: http://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface
+[jsf]: http://en.wikipedia.org/wiki/JavaServer_Faces
+[jsp]: http://en.wikipedia.org/wiki/JavaServer_Pages
+[sbt]: http://www.scala-sbt.org/
+[servlet]: http://docs.oracle.com/javaee/6/api/javax/servlet/Servlet.html
+[specver]: https://earldouglas.com/posts/specver.html
+[war]: https://en.wikipedia.org/wiki/WAR_%28Sun_file_format%29
