@@ -6,6 +6,7 @@ import sbt._, Keys._
 
 object ContainerPlugin extends AutoPlugin {
 
+  lazy val quickstart = taskKey[Process]("quickstart container")
   lazy val start = taskKey[Process]("start container")
   lazy val debug = taskKey[Process]("start container in debug mode")
   lazy val join  = taskKey[Option[Int]]("join container")
@@ -48,6 +49,7 @@ object ContainerPlugin extends AutoPlugin {
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
         start              := (startTask dependsOn webappPrepare).value
+      , quickstart         := quickstartTask.value
       , debug              := (debugTask dependsOn webappPrepare).value
       , join               := joinTask.value
       , stop               := stopTask.value
@@ -86,6 +88,31 @@ object ContainerPlugin extends AutoPlugin {
 
   private def startTask = startOrDebugTask(false)
   private def debugTask = startOrDebugTask(true)
+
+  private val quickstartTask = Def.task {
+    val log = streams.value.log
+    val conf = configuration.value
+    val instance = containerInstance.value
+
+    shutdown(log, instance)
+
+    val cp: Seq[File] =
+      (fullClasspath in Runtime).value.map( _.data) ++
+      Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
+
+    val webappSrcDir = (sourceDirectory in webappPrepare).value
+
+    containerLaunchCmd.value match {
+      case Nil =>
+        sys.error("no launch command specified")
+      case launchCmd =>
+        val quicklaunchCmd = launchCmd.reverse.drop(1).reverse :+ webappSrcDir.absolutePath
+        val args = javaOptions.value ++ quicklaunchCmd
+        val process = startup(log, cp, args, containerForkOptions.value)
+        instance.set(Option(process))
+        process
+    }
+  }
 
   private def startOrDebugTask(debug: Boolean) = Def.task {
     val log = streams.value.log
