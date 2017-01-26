@@ -52,25 +52,21 @@ object WebappPlugin extends AutoPlugin {
     val webappSrcDir = (sourceDirectory in webappPrepare).value
     val webappTarget = (target in webappPrepare).value
 
-    val isDevelopmentMode = webappSrcDir.getAbsolutePath.equals(webappTarget.getAbsolutePath)
-
     val classpath = (fullClasspath in Runtime).value
     val webInfDir = webappTarget / "WEB-INF"
     val webappLibDir = webInfDir / "lib"
 
-    if (!isDevelopmentMode) {
-      cacheify(
-        "webapp",
-        { in =>
-          for {
-            f <- Some(in)
-            if !f.isDirectory
-            r <- IO.relativizeFile(webappSrcDir, f)
-          } yield IO.resolve(webappTarget, r)
-        },
-        (webappSrcDir ** "*").get.toSet
-      )
-    }
+    cacheify(
+      "webapp",
+      { in =>
+        for {
+          f <- Some(in)
+          if !f.isDirectory
+          r <- IO.relativizeFile(webappSrcDir, f)
+        } yield IO.resolve(webappTarget, r)
+      },
+      (webappSrcDir ** "*").get.toSet
+    )
 
     if (webappWebInfClasses.value) {
       // copy this project's classes directly to WEB-INF/classes
@@ -126,11 +122,7 @@ object WebappPlugin extends AutoPlugin {
       }
     )
 
-    if (isDevelopmentMode) {
-      streams.value.log.info("starting server in development mode, postProcess not available!")
-    } else {
-      webappPostProcess.value(webappTarget)
-    }
+    webappPostProcess.value(webappTarget)
 
     (webappTarget ** "*") pair (relativeTo(webappTarget) | flat)
   }
