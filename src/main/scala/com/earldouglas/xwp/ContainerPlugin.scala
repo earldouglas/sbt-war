@@ -7,10 +7,10 @@ import sbt._, Keys._
 object ContainerPlugin extends AutoPlugin {
 
   lazy val quickstart = taskKey[Process]("quickstart container")
-  lazy val start = taskKey[Process]("start container")
-  lazy val debug = taskKey[Process]("start container in debug mode")
-  lazy val join  = taskKey[Option[Int]]("join container")
-  lazy val stop  = taskKey[Unit]("stop container")
+  lazy val start      = taskKey[Process]("start container")
+  lazy val debug      = taskKey[Process]("start container in debug mode")
+  lazy val join       = taskKey[Option[Int]]("join container")
+  lazy val stop       = taskKey[Unit]("stop container")
 
   object autoImport {
     val Container = config("container").hide
@@ -86,35 +86,11 @@ object ContainerPlugin extends AutoPlugin {
       (target in webappPrepare).value.absolutePath
   }
 
-  private def startTask = startOrDebugTask(false)
-  private def debugTask = startOrDebugTask(true)
+  private def startTask      = startOrDebugTask(false, false)
+  private def debugTask      = startOrDebugTask(false, true)
+  private def quickstartTask = startOrDebugTask(true, false)
 
-  private val quickstartTask = Def.task {
-    val log = streams.value.log
-    val conf = configuration.value
-    val instance = containerInstance.value
-
-    shutdown(log, instance)
-
-    val cp: Seq[File] =
-      (fullClasspath in Runtime).value.map( _.data) ++
-      Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
-
-    val webappSrcDir = (sourceDirectory in webappPrepare).value
-
-    containerLaunchCmd.value match {
-      case Nil =>
-        sys.error("no launch command specified")
-      case launchCmd =>
-        val quicklaunchCmd = launchCmd.reverse.drop(1).reverse :+ webappSrcDir.absolutePath
-        val args = javaOptions.value ++ quicklaunchCmd
-        val process = startup(log, cp, args, containerForkOptions.value)
-        instance.set(Option(process))
-        process
-    }
-  }
-
-  private def startOrDebugTask(debug: Boolean) = Def.task {
+  private def startOrDebugTask(quick: Boolean, debug: Boolean) = Def.task {
     val log = streams.value.log
     val conf = configuration.value
     val instance = containerInstance.value
@@ -122,13 +98,26 @@ object ContainerPlugin extends AutoPlugin {
     shutdown(log, instance)
 
     val libs: Seq[File] =
-      Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
+      if (quick) {
+        (fullClasspath in Runtime).value.map( _.data)
+      } else {
+        Seq.empty
+      } ++ Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
 
     containerLaunchCmd.value match {
       case Nil =>
         sys.error("no launch command specified")
       case launchCmd =>
-        val args = javaOptions.value ++ (if (debug) debugOptions.value else Seq.empty) ++ launchCmd
+        val args: Seq[String] =
+          javaOptions.value ++
+          (if (debug) debugOptions.value else Seq.empty) ++
+          launchCmd map { x =>
+            if (quick && x == (target in webappPrepare).value.absolutePath) {
+              (sourceDirectory in webappPrepare).value.absolutePath
+            } else {
+              x
+            }
+          }
         val process = startup(log, libs, args, containerForkOptions.value)
         instance.set(Option(process))
         process
