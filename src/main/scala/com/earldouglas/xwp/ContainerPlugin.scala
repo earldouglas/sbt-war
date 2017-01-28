@@ -7,10 +7,10 @@ import sbt._, Keys._
 object ContainerPlugin extends AutoPlugin {
 
   lazy val quickstart = taskKey[Process]("quickstart container")
-  lazy val start = taskKey[Process]("start container")
-  lazy val debug = taskKey[Process]("start container in debug mode")
-  lazy val join  = taskKey[Option[Int]]("join container")
-  lazy val stop  = taskKey[Unit]("stop container")
+  lazy val start      = taskKey[Process]("start container")
+  lazy val debug      = taskKey[Process]("start container in debug mode")
+  lazy val join       = taskKey[Option[Int]]("join container")
+  lazy val stop       = taskKey[Unit]("stop container")
 
   object autoImport {
     val Container = config("container").hide
@@ -28,7 +28,8 @@ object ContainerPlugin extends AutoPlugin {
     val containerLaunchCmd      = taskKey[Seq[String]]("command to launch container")
   }
 
-  private lazy val containerInstance = settingKey[AtomicReference[Option[Process]]]("Current container process")
+  private lazy val containerInstance =
+    settingKey[AtomicReference[Option[Process]]]("Current container process")
 
   import WebappPlugin.autoImport.webappPrepare
   import autoImport._
@@ -65,7 +66,9 @@ object ContainerPlugin extends AutoPlugin {
   , containerForkOptions    := new ForkOptions
   , containerInstance       := new AtomicReference(Option.empty[Process])
   , containerShutdownOnExit := true
-  , debugOptions            := Seq("-Xdebug", "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n")
+  , debugOptions            := Seq( "-Xdebug"
+                                  , "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n"
+                                  )
   )
 
   private def defaultLaunchCmd = Def.task {
@@ -86,62 +89,48 @@ object ContainerPlugin extends AutoPlugin {
       (target in webappPrepare).value.absolutePath
   }
 
-  private def startTask = startOrDebugTask(false)
-  private def debugTask = startOrDebugTask(true)
+  private def startTask      = launchTask(false, false)
+  private def debugTask      = launchTask(false, true)
+  private def quickstartTask = launchTask(true, false)
 
-  private val quickstartTask = Def.task {
-    val log = streams.value.log
-    val conf = configuration.value
-    val instance = containerInstance.value
+  private def launchTask(quick: Boolean, debug: Boolean) =
+    Def.task {
+      val log = streams.value.log
+      val conf = configuration.value
+      val instance = containerInstance.value
 
-    shutdown(log, instance)
+      shutdown(log, instance)
 
-    val cp: Seq[File] =
-      (fullClasspath in Runtime).value.map( _.data) ++
-      Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
+      val libs: Seq[File] =
+        Seq( if (quick) (fullClasspath in Runtime).value.map(_.data) else Seq.empty
+           , Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
+           ).flatten
 
-    val webappSrcDir = (sourceDirectory in webappPrepare).value
-
-    containerLaunchCmd.value match {
-      case Nil =>
-        sys.error("no launch command specified")
-      case launchCmd =>
-        val quicklaunchCmd = launchCmd.reverse.drop(1).reverse :+ webappSrcDir.absolutePath
-        val args = javaOptions.value ++ quicklaunchCmd
-        val process = startup(log, cp, args, containerForkOptions.value)
-        instance.set(Option(process))
-        process
+      containerLaunchCmd.value match {
+        case Nil =>
+          sys.error("no launch command specified")
+        case launchCmd =>
+          val args: Seq[String] =
+            javaOptions.value ++
+            (if (debug) debugOptions.value else Seq.empty) ++
+            launchCmd map { x =>
+              if (quick && x == (target in webappPrepare).value.absolutePath) {
+                (sourceDirectory in webappPrepare).value.absolutePath
+              } else {
+                x
+              }
+            }
+          val process = startup(log, libs, args, containerForkOptions.value)
+          instance.set(Option(process))
+          process
+      }
     }
-  }
 
-  private def startOrDebugTask(debug: Boolean) = Def.task {
-    val log = streams.value.log
-    val conf = configuration.value
-    val instance = containerInstance.value
+  private def joinTask: Def.Initialize[Task[Option[Int]]] =
+    Def.task { containerInstance.value.get map { _.exitValue } }
 
-    shutdown(log, instance)
-
-    val libs: Seq[File] =
-      Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
-
-    containerLaunchCmd.value match {
-      case Nil =>
-        sys.error("no launch command specified")
-      case launchCmd =>
-        val args = javaOptions.value ++ (if (debug) debugOptions.value else Seq.empty) ++ launchCmd
-        val process = startup(log, libs, args, containerForkOptions.value)
-        instance.set(Option(process))
-        process
-    }
-  }
-
-  private def joinTask: Def.Initialize[Task[Option[Int]]] = Def.task {
-    containerInstance.value.get map { _.exitValue }
-  }
-
-  private def stopTask: Def.Initialize[Task[Unit]] = Def.task {
-    shutdown(streams.value.log, containerInstance.value)
-  }
+  private def stopTask: Def.Initialize[Task[Unit]] =
+    Def.task { shutdown(streams.value.log, containerInstance.value) }
 
   private def validateSbtVerison(version: String): Unit = {
     val versionArray = version.split("\\.").map(_.toInt)
@@ -159,18 +148,23 @@ object ContainerPlugin extends AutoPlugin {
     }
   }
 
-  private def onLoadSetting: Def.Initialize[State => State] = Def.setting {
-    (onLoad in Global).value compose { state: State =>
-      validateSbtVerison(state.configuration.provider.id.version)
-      if ((containerShutdownOnExit).value) {
-        state.addExitHook(shutdown(state.log, containerInstance.value))
-      } else {
-        state
+  private def onLoadSetting: Def.Initialize[State => State] =
+    Def.setting {
+      (onLoad in Global).value compose { state: State =>
+        validateSbtVerison(state.configuration.provider.id.version)
+        if ((containerShutdownOnExit).value) {
+          state.addExitHook(shutdown(state.log, containerInstance.value))
+        } else {
+          state
+        }
       }
     }
-  }
 
-  private def startup(l: Logger, libs: Seq[File], args: Seq[String], forkOptions: ForkOptions): Process = {
+  private def startup( l: Logger
+                     , libs: Seq[File]
+                     , args: Seq[String]
+                     , forkOptions: ForkOptions
+                     ): Process = {
     l.info("starting server ...")
     val cp = Path.makeString(libs)
     new Fork("java", None).fork(forkOptions, Seq("-cp", cp) ++ args)
@@ -191,7 +185,9 @@ object ContainerPlugin extends AutoPlugin {
     System.setErr(err)
   }
 
-  private def shutdown(l: Logger, atomicRef: AtomicReference[Option[Process]]): Unit = {
+  private def shutdown( l: Logger
+                      , atomicRef: AtomicReference[Option[Process]]
+                      ): Unit = {
     val oldProcess = atomicRef.getAndSet(None)
     oldProcess.foreach(stopProcess(l))
   }
