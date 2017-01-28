@@ -15,10 +15,13 @@ object TomcatPlugin extends AutoPlugin {
 
   override val projectConfigurations = Seq(Tomcat)
 
+  val webappRunner = "com.github.jsimone" % "webapp-runner" % "8.5.5.2"
+
   override lazy val projectSettings =
     ContainerPlugin.containerSettings(Tomcat) ++
-      inConfig(Tomcat)(Seq(
-        containerLibs := Seq(("com.github.jsimone" % "webapp-runner" % "8.5.5.2").intransitive())
-      , containerMain := "webapp.runner.launch.Main"
-      ))
+      inConfig(Tomcat)(
+        Seq( containerLibs := Seq(webappRunner.intransitive())
+           , containerMain := "webapp.runner.launch.Main"
+           )
+      )
 }
