@@ -98,11 +98,9 @@ object ContainerPlugin extends AutoPlugin {
     shutdown(log, instance)
 
     val libs: Seq[File] =
-      if (quick) {
-        (fullClasspath in Runtime).value.map( _.data)
-      } else {
-        Seq.empty
-      } ++ Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
+      Seq( if (quick) (fullClasspath in Runtime).value.map(_.data) else Seq.empty
+         , Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
+         ).flatten
 
     containerLaunchCmd.value match {
       case Nil =>
