@@ -248,7 +248,7 @@ Seq(
 
 ### Jetty version
 
-By default, Jetty 9.3.13 is used.  To use a different version, set
+By default, Jetty 9.4.1 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala
