@@ -248,7 +248,7 @@ Seq(
 
 ### Jetty version
 
-By default, Jetty 9.3.13 is used.  To use a different version, set
+By default, Jetty 9.4.1 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala
@@ -306,7 +306,7 @@ This option can be used to enable SSL and HTTPS.
 
 ### Tomcat version
 
-By default, Tomcat 8.5 is used.  To use a different version, set
+By default, Tomcat 8.5.9.0 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala

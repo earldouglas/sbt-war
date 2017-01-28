@@ -26,11 +26,10 @@ object WarPlugin extends AutoPlugin {
 
   override lazy val projectSettings =
     Defaults.packageTaskSettings(pkg, WebappPlugin.autoImport.webappPrepare) ++
-      Seq(artifact in pkg := Artifact(moduleName.value, "war", "war")) ++
-      addArtifact(artifact in (Compile, pkg), pkg) ++
-      Seq(
-          inheritJarManifest := false
-        , packageOptions in sbt.Keys.`package` ++= manifestOptions.value
-      )
+    Seq(artifact in pkg := Artifact(moduleName.value, "war", "war")) ++
+    addArtifact(artifact in (Compile, pkg), pkg) ++
+    Seq( inheritJarManifest := false
+       , packageOptions in sbt.Keys.`package` ++= manifestOptions.value
+       )
 
 }
