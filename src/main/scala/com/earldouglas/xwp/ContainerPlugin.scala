@@ -86,11 +86,11 @@ object ContainerPlugin extends AutoPlugin {
       (target in webappPrepare).value.absolutePath
   }
 
-  private def startTask      = startOrDebugTask(false, false)
-  private def debugTask      = startOrDebugTask(false, true)
-  private def quickstartTask = startOrDebugTask(true, false)
+  private def startTask      = launchTask(false, false)
+  private def debugTask      = launchTask(false, true)
+  private def quickstartTask = launchTask(true, false)
 
-  private def startOrDebugTask(quick: Boolean, debug: Boolean) = Def.task {
+  private def launchTask(quick: Boolean, debug: Boolean) = Def.task {
     val log = streams.value.log
     val conf = configuration.value
     val instance = containerInstance.value
