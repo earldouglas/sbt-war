@@ -102,9 +102,8 @@ object ContainerPlugin extends AutoPlugin {
       shutdown(log, instance)
 
       val libs: Seq[File] =
-        Seq( if (quick) (fullClasspath in Runtime).value.map(_.data) else Seq.empty
-           , Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
-           ).flatten
+        (fullClasspath in Runtime).value.map(_.data).filter(_ => quick) ++
+        Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
 
       containerLaunchCmd.value match {
         case Nil =>
@@ -112,7 +111,7 @@ object ContainerPlugin extends AutoPlugin {
         case launchCmd =>
           val args: Seq[String] =
             javaOptions.value ++
-            (if (debug) debugOptions.value else Seq.empty) ++
+            debugOptions.value.filter(_ => debug) ++
             launchCmd map { x =>
               if (quick && x == (target in webappPrepare).value.absolutePath) {
                 (sourceDirectory in webappPrepare).value.absolutePath
