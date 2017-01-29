@@ -477,41 +477,6 @@ packageBin)`, set `inheritJarManifest` to `true`:
 inheritJarManifest := true
 ```
 
-### Using JRebel
-
-Add the JRebel sbt plugin (which generates *jrebel.xml*) to
-*project/plugins.sbt*:
-
-```scala
-addSbtPlugin("fi.gekkio.sbtplugins" % "sbt-jrebel-plugin" % "0.10.0")
-```
-
-Add the following lines to *build.sbt*, making sure to specify the
-correct path to JRebel:
-
-```scala
-jrebelSettings
-
-jrebel.webLinks += (sourceDirectory in Compile).value / "webapp"
-
-jrebel.enabled := true
-
-javaOptions in Jetty ++= Seq(
-    "-javaagent:/path/to/jrebel/jrebel.jar",
-    "-noverify",
-    "-XX:+UseConcMarkSweepGC",
-    "-XX:+CMSClassUnloadingEnabled"
-)
-```
-
-Start the container, and trigger `~compile`, and your changes should be
-picked up automatically:
-
-```scala
-> jetty:start
-> ~compile
-```
-
 ### Container shutdown and sbt
 
 By default, sbt will shutdown the running container when exiting sbt.
@@ -553,6 +518,24 @@ container in quickstart mode:
 
 Note that this necessarily circumvents any behavior set in
 `webappPostProcess`.
+
+#### JRebel integration
+
+The development cycle can be further sped up by skipping server restarts
+between code recompilation.
+
+Add `-agentpath` to the container's JVM options:
+
+```
+javaOptions in Jetty += "-agentpath:/path/to/jrebel/lib/libjrebel64.so"
+```
+
+Launch the container with `quickstart`, and run triggered compilation:
+
+```
+> jetty:quickstart
+> ~compile
+```
 
 [3]: http://www.scala-sbt.org/0.13/docs/Triggered-Execution.html
 [4]: http://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference
