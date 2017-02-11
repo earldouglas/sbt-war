@@ -526,6 +526,17 @@ container in quickstart mode:
 Note that this necessarily circumvents any behavior set in
 `webappPostProcess`.
 
+### Running multiple containers
+
+To launch more than a single container, set `containerScale`:
+
+```scala
+containerScale := 5
+```
+
+This will start the container in five forked JVMs, using five sequential
+ports starting from `containerPort`.
+
 #### JRebel integration
 
 The development cycle can be further sped up by skipping server restarts
@@ -542,18 +553,6 @@ Launch the container with `quickstart`, and run triggered compilation:
 ```
 > jetty:quickstart
 > ~compile
-```
-
-## Running multiple containers
-
-To launch more than a single container, set `containerScale`:
-
-```scala
-containerScale := 5
-```
-
-This will start the container in five forked JVMs, using five sequential
-ports starting from `containerPort`.
 ```
 
 [3]: http://www.scala-sbt.org/0.13/docs/Triggered-Execution.html
