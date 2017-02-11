@@ -175,12 +175,7 @@ containerLibs in Container := Seq(
 )
 
 containerLaunchCmd in Container :=
-  { port =>
-      Seq( "runner.Run"
-         , port.toString
-         , (target in webappPrepare).value.absolutePath
-         )
-  }
+  { (port, path) => Seq("runner.Run", port.toString, path) }
 ```
 
 *sbt:*
