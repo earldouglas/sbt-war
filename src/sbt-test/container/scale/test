@@ -1,0 +1,16 @@
+-> get http://localhost:8080/test 200
+-> get http://localhost:8081/test 200
+-> get http://localhost:8082/test 200
+-> get http://localhost:8083/test 200
+
+> jetty:start
+> get http://localhost:8080/test 200
+> get http://localhost:8081/test 200
+> get http://localhost:8082/test 200
+-> get http://localhost:8083/test 200
+
+> jetty:stop
+-> get http://localhost:8080/test 200
+-> get http://localhost:8081/test 200
+-> get http://localhost:8082/test 200
+-> get http://localhost:8083/test 200
