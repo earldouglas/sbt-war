@@ -15,7 +15,8 @@ object ContainerPlugin extends AutoPlugin {
   object autoImport {
     val Container = config("container").hide
 
-    val debugOptions            = settingKey[Seq[String]]("debug options")
+    val debugAddress            = settingKey[String]("address to be used for debugging")
+    val debugOptions            = settingKey[String => Seq[String]]("debug options")
 
     val containerLibs           = settingKey[Seq[ModuleID]]("container libraries")
     val containerMain           = settingKey[String]("container main class")
@@ -59,6 +60,22 @@ object ContainerPlugin extends AutoPlugin {
       , containerLaunchCmd <<= defaultLaunchCmd
       ))
 
+  val _debugAddress: String =
+    if (System.getProperty("os.name").toLowerCase.indexOf("win") >= 0) {
+      "debug"
+    } else {
+      "8888"
+    }
+
+  def _debugOptions(address: String): Seq[String] =
+    Seq( "-Xdebug"
+       , Seq( "-Xrunjdwp:transport=dt_socket"
+            , "address=" + address
+            , "server=y"
+            , "suspend=n"
+            ).mkString(",")
+       )
+
   lazy val baseContainerSettings =
     Seq( containerPort           := -1
        , containerConfigFile     := None
@@ -66,9 +83,8 @@ object ContainerPlugin extends AutoPlugin {
        , containerForkOptions    := new ForkOptions
        , containerInstance       := new AtomicReference(Option.empty[Process])
        , containerShutdownOnExit := true
-       , debugOptions            := Seq( "-Xdebug"
-                                       , "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n"
-                                       )
+       , debugAddress            := _debugAddress
+       , debugOptions            := _debugOptions
        )
 
   private def defaultLaunchCmd = Def.task {
@@ -111,7 +127,7 @@ object ContainerPlugin extends AutoPlugin {
         case launchCmd =>
           val args: Seq[String] =
             javaOptions.value ++
-            debugOptions.value.filter(_ => debug) ++
+            debugOptions.value(debugAddress.value).filter(_ => debug) ++
             launchCmd map { x =>
               if (quick && x == (target in webappPrepare).value.absolutePath) {
                 (sourceDirectory in webappPrepare).value.absolutePath
