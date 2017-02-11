@@ -27,7 +27,7 @@ object ContainerPlugin extends AutoPlugin {
     val containerShutdownOnExit = settingKey[Boolean]("shutdown container on sbt exit")
     val containerScale          = settingKey[Int]("number of container instances to start")
 
-    val containerLaunchCmd      = taskKey[Int => Seq[String]]("command to launch container")
+    val containerLaunchCmd      = taskKey[(Int, String) => Seq[String]]("command to launch container")
   }
 
   private lazy val containerInstances =
@@ -89,20 +89,19 @@ object ContainerPlugin extends AutoPlugin {
        , containerScale          := 1
        )
 
-  private def defaultLaunchCmd = Def.task { port: Int =>
-    val portArg: Seq[String] = Seq("--port", port.toString)
-
-    val configArg: Seq[String] = containerConfigFile.value match {
-      case Some(file) => Seq("--config", file.absolutePath)
-      case None => Nil
+  private def defaultLaunchCmd =
+    Def.task { (port: Int, context: String) =>
+      val portArg: Seq[String] = Seq("--port", port.toString)
+      val configArg: Seq[String] = containerConfigFile.value match {
+        case Some(file) => Seq("--config", file.absolutePath)
+        case None => Nil
+      }
+      Seq(containerMain.value) ++
+        portArg ++
+        configArg ++
+        containerArgs.value :+
+        (target in webappPrepare).value.absolutePath
     }
-
-    Seq(containerMain.value) ++
-      portArg ++
-      configArg ++
-      containerArgs.value :+
-      (target in webappPrepare).value.absolutePath
-  }
 
   private def startTask      = launchTask(false, false)
   private def debugTask      = launchTask(false, true)
@@ -120,17 +119,18 @@ object ContainerPlugin extends AutoPlugin {
         (fullClasspath in Runtime).value.map(_.data).filter(_ => quick) ++
         Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
 
+      val context =
+        if (quick) {
+          (sourceDirectory in webappPrepare).value.absolutePath
+        } else {
+          (target in webappPrepare).value.absolutePath
+        }
+
       def launchFn(port: Int): Process = {
         val args: Seq[String] =
           javaOptions.value ++
           debugOptions.value(debugAddress.value).filter(_ => debug) ++
-          containerLaunchCmd.value(port) map { x =>
-            if (quick && x == (target in webappPrepare).value.absolutePath) {
-              (sourceDirectory in webappPrepare).value.absolutePath
-            } else {
-              x
-            }
-          }
+          containerLaunchCmd.value(port, context)
         startup(log, libs, args, containerForkOptions.value)
       }
 

@@ -13,7 +13,7 @@ containerLibs in Container := Seq(
 )
 
 containerLaunchCmd in Container :=
-  { port =>
+  { (port, context) =>
       Seq( "runner.Run"
          , port.toString
          , (target in webappPrepare).value.absolutePath
