@@ -100,7 +100,7 @@ object ContainerPlugin extends AutoPlugin {
         portArg ++
         configArg ++
         containerArgs.value :+
-        (target in webappPrepare).value.absolutePath
+        path
     }
 
   private def startTask      = launchTask(false, false)
@@ -119,12 +119,10 @@ object ContainerPlugin extends AutoPlugin {
         (fullClasspath in Runtime).value.map(_.data).filter(_ => quick) ++
         Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
 
-      val path =
-        if (quick) {
-          (sourceDirectory in webappPrepare).value.absolutePath
-        } else {
-          (target in webappPrepare).value.absolutePath
-        }
+      val path = {
+        if (quick) sourceDirectory in webappPrepare
+        else target in webappPrepare
+      }.value.absolutePath
 
       def launchFn(port: Int): Process = {
         val args: Seq[String] =
