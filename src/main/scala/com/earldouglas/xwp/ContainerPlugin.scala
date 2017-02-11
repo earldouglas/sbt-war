@@ -78,7 +78,7 @@ object ContainerPlugin extends AutoPlugin {
        )
 
   lazy val baseContainerSettings =
-    Seq( containerPort           := -1
+    Seq( containerPort           := 8080
        , containerConfigFile     := None
        , containerArgs           := Nil
        , containerForkOptions    := new ForkOptions
@@ -93,10 +93,7 @@ object ContainerPlugin extends AutoPlugin {
        )
 
   private def defaultLaunchCmd = Def.task {
-    val portArg: Seq[String] = containerPort.value match {
-      case p if p > 0 => Seq("--port", p.toString)
-      case _ => Nil
-    }
+    val portArg: Seq[String] = Seq("--port", containerPort.value.toString)
 
     val configArg: Seq[String] = containerConfigFile.value match {
       case Some(file) => Seq("--config", file.absolutePath)
@@ -149,7 +146,7 @@ object ContainerPlugin extends AutoPlugin {
           val startPort: Int = containerPort.value
           val endPort: Int = containerPort.value + containerScale.value - 1
 
-          val processes = (startPort to endPort) map launchFn
+          val processes: Seq[Process] = (startPort to endPort) map launchFn
           instances.set(processes)
           processes
       }
