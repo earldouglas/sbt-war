@@ -528,14 +528,14 @@ Note that this necessarily circumvents any behavior set in
 
 ### Running multiple containers
 
-To launch more than a single container, set `containerScale`:
+To launch using more than a single container, set `containerScale`:
 
 ```scala
 containerScale := 5
 ```
 
-This will start the container in five forked JVMs, using five sequential
-ports starting from `containerPort`.
+This will configure the container to launch in five forked JVMs, using
+five sequential ports starting from `containerPort`.
 
 #### JRebel integration
 
