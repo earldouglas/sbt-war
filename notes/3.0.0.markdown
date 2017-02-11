@@ -1,0 +1,3 @@
+* Add `containerScale` to allow forking of many instances of the container
+* Make `containerLaunchCmd` dependent on `containerPort` and *webapp* path
+* Make `debugOptions` dependent on `debugPort`
