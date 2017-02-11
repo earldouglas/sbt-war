@@ -243,10 +243,10 @@ To enable debugging through [JDWP][jdwp], use `jetty:debug` or
 which defaults to:
 
 ```scala
-address =>
+port =>
   Seq( "-Xdebug"
      , Seq( "-Xrunjdwp:transport=dt_socket"
-          , "address=" + address
+          , "address=" + port
           , "server=y"
           , "suspend=n"
           ).mkString(",")
@@ -536,6 +536,9 @@ containerScale := 5
 
 This will configure the container to launch in five forked JVMs, using
 five sequential ports starting from `containerPort`.
+
+In debug mode, five additional sequential debug ports starting from
+`debugPort` will be opened.
 
 #### JRebel integration
 
