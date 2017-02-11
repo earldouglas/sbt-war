@@ -12,7 +12,13 @@ containerLibs in Container := Seq(
   , "test"              %% "runner"       % "0.1.0-SNAPSHOT"
 )
 
-containerLaunchCmd in Container := Seq("runner.Run", "8080", (target in webappPrepare).value.absolutePath)
+containerLaunchCmd in Container :=
+  { port =>
+      Seq( "runner.Run"
+         , port.toString
+         , (target in webappPrepare).value.absolutePath
+         )
+  }
 
 lazy val root = (project in file("."))
 
