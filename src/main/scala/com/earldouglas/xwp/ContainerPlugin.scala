@@ -59,17 +59,17 @@ object ContainerPlugin extends AutoPlugin {
       , containerLaunchCmd <<= defaultLaunchCmd
       ))
 
-  lazy val baseContainerSettings = Seq(
-    containerPort           := -1
-  , containerConfigFile     := None
-  , containerArgs           := Nil
-  , containerForkOptions    := new ForkOptions
-  , containerInstance       := new AtomicReference(Option.empty[Process])
-  , containerShutdownOnExit := true
-  , debugOptions            := Seq( "-Xdebug"
-                                  , "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n"
-                                  )
-  )
+  lazy val baseContainerSettings =
+    Seq( containerPort           := -1
+       , containerConfigFile     := None
+       , containerArgs           := Nil
+       , containerForkOptions    := new ForkOptions
+       , containerInstance       := new AtomicReference(Option.empty[Process])
+       , containerShutdownOnExit := true
+       , debugOptions            := Seq( "-Xdebug"
+                                       , "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n"
+                                       )
+       )
 
   private def defaultLaunchCmd = Def.task {
     val portArg: Seq[String] = containerPort.value match {
