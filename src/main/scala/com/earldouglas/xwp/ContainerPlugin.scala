@@ -90,7 +90,7 @@ object ContainerPlugin extends AutoPlugin {
        )
 
   private def defaultLaunchCmd =
-    Def.task { (port: Int, context: String) =>
+    Def.task { (port: Int, path: String) =>
       val portArg: Seq[String] = Seq("--port", port.toString)
       val configArg: Seq[String] = containerConfigFile.value match {
         case Some(file) => Seq("--config", file.absolutePath)
@@ -119,7 +119,7 @@ object ContainerPlugin extends AutoPlugin {
         (fullClasspath in Runtime).value.map(_.data).filter(_ => quick) ++
         Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
 
-      val context =
+      val path =
         if (quick) {
           (sourceDirectory in webappPrepare).value.absolutePath
         } else {
@@ -130,7 +130,7 @@ object ContainerPlugin extends AutoPlugin {
         val args: Seq[String] =
           javaOptions.value ++
           debugOptions.value(debugAddress.value).filter(_ => debug) ++
-          containerLaunchCmd.value(port, context)
+          containerLaunchCmd.value(port, path)
         startup(log, libs, args, containerForkOptions.value)
       }
 
