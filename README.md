@@ -543,6 +543,18 @@ Launch the container with `quickstart`, and run triggered compilation:
 > ~compile
 ```
 
+## Running multiple containers
+
+To launch more than a single container, set `containerScale`:
+
+```scala
+containerScale := 5
+```
+
+This will start the container in five forked JVMs, using five sequential
+ports starting from `containerPort`.
+```
+
 [3]: http://www.scala-sbt.org/0.13/docs/Triggered-Execution.html
 [4]: http://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference
 [5]: https://github.com/jsimone/webapp-runner#options
