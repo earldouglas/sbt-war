@@ -87,9 +87,6 @@ object ContainerPlugin extends AutoPlugin {
        , debugAddress            := _debugAddress
        , debugOptions            := _debugOptions
        , containerScale          := 1
-       , debugOptions            := Seq( "-Xdebug"
-                                       , "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n"
-                                       )
        )
 
   private def defaultLaunchCmd = Def.task {
