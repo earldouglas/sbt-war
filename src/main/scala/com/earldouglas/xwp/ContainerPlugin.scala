@@ -15,8 +15,8 @@ object ContainerPlugin extends AutoPlugin {
   object autoImport {
     val Container = config("container").hide
 
-    val debugAddress            = settingKey[String]("address to be used for debugging")
-    val debugOptions            = settingKey[String => Seq[String]]("debug options")
+    val debugPort               = settingKey[Int]("port to be used for debugging")
+    val debugOptions            = settingKey[Int => Seq[String]]("debug options")
 
     val containerLibs           = settingKey[Seq[ModuleID]]("container libraries")
     val containerMain           = settingKey[String]("container main class")
@@ -61,17 +61,10 @@ object ContainerPlugin extends AutoPlugin {
       , containerLaunchCmd := defaultLaunchCmd.value
       ))
 
-  val _debugAddress: String =
-    if (System.getProperty("os.name").toLowerCase.indexOf("win") >= 0) {
-      "debug"
-    } else {
-      "8888"
-    }
-
-  def _debugOptions(address: String): Seq[String] =
+  def _debugOptions(port: Int): Seq[String] =
     Seq( "-Xdebug"
        , Seq( "-Xrunjdwp:transport=dt_socket"
-            , "address=" + address
+            , "address=" + port
             , "server=y"
             , "suspend=n"
             ).mkString(",")
@@ -84,7 +77,7 @@ object ContainerPlugin extends AutoPlugin {
        , containerForkOptions    := new ForkOptions
        , containerInstances      := new AtomicReference(Seq.empty[Process])
        , containerShutdownOnExit := true
-       , debugAddress            := _debugAddress
+       , debugPort               := 8888
        , debugOptions            := _debugOptions
        , containerScale          := 1
        )
@@ -124,18 +117,25 @@ object ContainerPlugin extends AutoPlugin {
         else target in webappPrepare
       }.value.absolutePath
 
-      def launchFn(port: Int): Process = {
+      def launchFn(_containerPort: Int, _debugPort: Int): Process = {
         val args: Seq[String] =
           javaOptions.value ++
-          debugOptions.value(debugAddress.value).filter(_ => debug) ++
-          containerLaunchCmd.value(port, path)
+          debugOptions.value(_debugPort).filter(_ => debug) ++
+          containerLaunchCmd.value(_containerPort, path)
         startup(log, libs, args, containerForkOptions.value)
       }
 
-      val startPort: Int = containerPort.value
-      val endPort: Int = containerPort.value + containerScale.value - 1
+      val startContainerPort: Int = containerPort.value
+      val endContainerPort: Int = containerPort.value + containerScale.value - 1
 
-      val processes: Seq[Process] = (startPort to endPort) map launchFn
+      val startDebugPort: Int = debugPort.value
+      val endDebugPort: Int = debugPort.value + containerScale.value - 1
+
+      val ports: Seq[(Int,Int)] =
+        (startContainerPort to endContainerPort) zip
+        (startDebugPort to endDebugPort)
+
+      val processes: Seq[Process] = ports map { case (c, d) => launchFn(c, d) }
       instances.set(processes)
       processes
     }
