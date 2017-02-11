@@ -237,13 +237,19 @@ Name this configuration, and run it in debug mode.
 ### Debug mode
 
 To enable debugging through [JDWP][jdwp], use `jetty:debug` or
-`tomcat:debug`, and optionally set `debugOptions`, which defaults to:
+`tomcat:debug`.  Optionally set `debugAddress`, which defaults to
+`"debug"` under Windows and `"8888"` otherwise, and `debugOptions`,
+which defaults to:
 
 ```scala
-Seq(
-    "-Xdebug"
-  , "-Xrunjdwp:transport=dt_socket,address=8888,server=y,suspend=n"
-)
+address =>
+  Seq( "-Xdebug"
+     , Seq( "-Xrunjdwp:transport=dt_socket"
+          , "address=" + address
+          , "server=y"
+          , "suspend=n"
+          ).mkString(",")
+     )
 ```
 
 ### Jetty version
