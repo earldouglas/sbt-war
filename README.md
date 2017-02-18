@@ -461,7 +461,7 @@ needed, but the packaged *.war* file isn't.
 *sbt console:*
 
 ```
-webapp:prepare
+webappPrepare
 ```
 
 ### Add manifest attributes
