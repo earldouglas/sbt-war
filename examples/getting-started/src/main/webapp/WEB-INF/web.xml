@@ -1,18 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
-           http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
+<web-app>
 
   <servlet>
-    <servlet-name>xwp template</servlet-name>
-    <servlet-class>com.earldouglas.xwptemplate.XwpTemplateServlet</servlet-class>
+    <servlet-name>getting started</servlet-name>
+    <servlet-class>GettingStartedServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>xwp template</servlet-name>
-    <url-pattern>/app</url-pattern>
+    <servlet-name>getting started</servlet-name>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
 </web-app>
