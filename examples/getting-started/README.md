@@ -1,26 +1,20 @@
 # Getting started with xsbt-web-plugin
 
-This project shows how to build a basic Scala Web application using sbt
-and [xsbt-web-plugin][1].  To get started, either clone this project or
-follow the steps below to recreate it.
-
-[1]: https://github.com/earldouglas/xsbt-web-plugin
-
 ## Starting from scratch
 
 Create a new empty project:
 
 ```
-mkdir xwp-template
-cd xwp-template
+$ mkdir getting-started
+$ cd getting-started
 ```
 
 Set up the project structure:
 
 ```
-mkdir project
-mkdir -p src/main/scala
-mkdir -p src/main/webapp/WEB-INF
+$ mkdir project
+$ mkdir -p src/main/scala
+$ mkdir -p src/main/webapp/WEB-INF
 ```
 
 Configure sbt:
@@ -28,45 +22,36 @@ Configure sbt:
 *project/build.properties*:
 
 ```
-sbt.version=0.13.8
+sbt.version=0.13.13
 ```
 
-*project/plugins.sbt*:
+*project/build.sbt*:
+
 ```
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "2.0.5")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.0")
 ```
 
 *build.sbt*:
+
 ```
-name := "xwp-template"
-
-organization := "com.earldouglas"
-
-scalaVersion := "2.11.7"
-
+scalaVersion := "2.12.1"
 enablePlugins(JettyPlugin)
-
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
 ```
 
 Add a servlet:
 
-*src/main/scala/XwpTemplateServlet.scala*:
+*src/main/scala/GettingStartedServlet.scala*:
 
 ```scala
-package com.earldouglas.xwptemplate
+class GettingStartedServlet extends javax.servlet.http.HttpServlet {
 
-import javax.servlet.http.HttpServlet
+  override def doGet( req: javax.servlet.http.HttpServletRequest
+                    , res: javax.servlet.http.HttpServletResponse
+                    ) {
 
-class XwpTemplateServlet extends HttpServlet {
-
-  import javax.servlet.http.HttpServletRequest
-  import javax.servlet.http.HttpServletResponse
-
-  override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
-
-    response.setContentType("text/html")
-    response.setCharacterEncoding("UTF-8")
+    res.setContentType("text/html")
+    res.setCharacterEncoding("UTF-8")
 
     val responseBody: String =
       """<html>
@@ -75,7 +60,7 @@ class XwpTemplateServlet extends HttpServlet {
         |    <a href="/">home</a>
         |  </body>
         |</html>""".stripMargin
-    response.getWriter.write(responseBody)
+    res.getWriter.write(responseBody)
   }
 }
 ```
@@ -83,20 +68,15 @@ class XwpTemplateServlet extends HttpServlet {
 *src/main/webapp/WEB-INF/web.xml*:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
-           http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
+<web-app>
 
   <servlet>
-    <servlet-name>xwp template</servlet-name>
-    <servlet-class>com.earldouglas.xwptemplate.XwpTemplateServlet</servlet-class>
+    <servlet-name>getting started</servlet-name>
+    <servlet-class>GettingStartedServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>xwp template</servlet-name>
+    <servlet-name>getting started</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
@@ -109,33 +89,36 @@ From sbt, run the command `jetty:start`:
 
 ```
 > jetty:start
-[info] jetty-9.1.0.v20131115
-[info] NO JSP Support for /, did not find org.apache.jasper.servlet.JspServlet
-[info] Started SelectChannelConnector@0.0.0.0:8080
-[success] Total time: 0 s, completed May 27, 2013 11:29:14 AM
->
+2017-02-20 10:17:10.331:INFO:oejs.Server:main: Started @1296ms
 ```
 
-The Web application is now running at *http://localhost:8080/*.  Take a look with a Web browser, or via curl:
+The container is now running at *http://localhost:8080*:
 
 ```
 $ curl -i localhost:8080
 HTTP/1.1 200 OK
-Content-Type: text/html; charset=utf-8
-Content-Length: 48
-Server: Jetty(6.1.22)
+Date: Mon, 20 Feb 2017 17:18:24 GMT
+Content-Type: text/html;charset=utf-8
+Content-Length: 85
+Server: Jetty(9.4.1.v20170120)
 
-<html><body><h1>Hello, world!</h1></body></html>
+<html>
+  <body>
+    <h1>Hello, world!</h1>
+    <a href="/">home</a>
+  </body>
+</html>
 ```
 
 ## Deploying to a servlet container
 
-To build a WAR file suitable for deployment, run the command `package` from sbt:
+To build a WAR file suitable for deployment, run the command `package`
+from sbt:
 
 ```
 > package
-[success] Total time: 0 s, completed May 27, 2013 11:31:59 AM
-> 
+[success] Total time: 1 s, completed Feb 20, 2017 10:18:47 AM
 ```
 
-The WAR file can be found in *target/scala-2.11/xwp-template_2.11-0.1.0-SNAPSHOT.war*.
+The *.war* file is named *getting-started_2.12-0.1-SNAPSHOT.war*, and
+can be found in *getting-started/target/scala-2.12/*.
