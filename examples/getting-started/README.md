@@ -57,7 +57,6 @@ class GettingStartedServlet extends javax.servlet.http.HttpServlet {
       """<html>
         |  <body>
         |    <h1>Hello, world!</h1>
-        |    <a href="/">home</a>
         |  </body>
         |</html>""".stripMargin
     res.getWriter.write(responseBody)
@@ -105,7 +104,6 @@ Server: Jetty(9.4.1.v20170120)
 <html>
   <body>
     <h1>Hello, world!</h1>
-    <a href="/">home</a>
   </body>
 </html>
 ```
