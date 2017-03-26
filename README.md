@@ -520,6 +520,29 @@ Deploy to Heroku with `herokuDeploy`:
 
 Check out your application at `https://my-heroku-app.herokuapp.com/`.
 
+## Deploying to Elastic Beanstalk
+
+Before trying to deploy anything, create an application and a
+Tomcat-based environment for it in Elastic Beanstalk.
+
+Enable the `ElasticBeanstalkDeployPlugin` plugin, and configure your
+application's name, environment, and region:
+
+```scala
+enablePlugins(ElasticBeanstalkDeployPlugin)
+elasticBeanstalkAppName := "xwp-getting-started"
+elasticBeanstalkEnvName := "xwp-getting-started"
+elasticBeanstalkRegion  := "us-west-1"
+```
+
+Add AWS credentials to your environment, launch sbt, and deploy your
+application by running `elasticBeanstalkDeploy`:
+
+```
+$ AWS_ACCESS_KEY=foo AWS_SECRET_KEY=bar sbt
+> elasticBeanstalkDeploy
+```
+
 ## Block sbt on running container
 
 To start the container from the command line and block sbt from exiting
