@@ -497,7 +497,28 @@ containerShutdownOnExit := false
 
 ## Deploying to Heroku
 
-See [sbt-heroku-deploy][26].
+Either install the [Heroku Toolbelt](https://toolbelt.heroku.com/), or
+set your Heroku API key as an environment variable:
+
+```
+$ export HEROKU_API_KEY="xxx-xxx-xxxx"
+```
+
+Enable the `HerokuDeploy` plugin and configure your app name:
+
+```scala
+enablePlugins(HerokuDeploy)
+
+herokuAppName := "my-heroku-app"
+```
+
+Deploy to Heroku with `herokuDeploy`:
+
+```
+> herokuDeploy
+```
+
+Check out your application at `https://my-heroku-app.herokuapp.com/`.
 
 ## Block sbt on running container
 
@@ -581,7 +602,6 @@ Launch the container with `quickstart`, and run triggered compilation:
 [23]: src/sbt-test/webapp/web-inf-lib
 [24]: src/sbt-test/webapp/webapp-dest
 [25]: src/sbt-test/webapp/webapp-src
-[26]: https://github.com/earldouglas/sbt-heroku-deploy
 [artifacts]: http://www.scala-sbt.org/0.13/docs/Artifacts.html#Modifying+default+artifacts
 [ebs]: https://console.aws.amazon.com/elasticbeanstalk/home
 [ejb]: http://en.wikipedia.org/wiki/Ejb
