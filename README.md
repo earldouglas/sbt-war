@@ -1,6 +1,6 @@
 # xsbt-web-plugin
 
-*Current release: 3.0.0*
+*Current release: 3.0.1*
 
 xsbt-web-plugin is an [sbt] extension for building [J2EE][j2ee] Web
 applications in Scala and Java.  It is best suited for projects that:
@@ -29,7 +29,7 @@ For previous releases, see the [docs](docs) directory.  Releases follow
 Add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.1")
 ```
 
 Enable the Jetty plugin:
@@ -80,7 +80,7 @@ sbt.version=0.13.8
 *project/build.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.0")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.1")
 ```
 
 *build.sbt:*
@@ -497,7 +497,54 @@ containerShutdownOnExit := false
 
 ## Deploying to Heroku
 
-See [sbt-heroku-deploy][26].
+Either install the [Heroku Toolbelt](https://toolbelt.heroku.com/), or
+set your Heroku API key as an environment variable:
+
+```
+$ export HEROKU_API_KEY="xxx-xxx-xxxx"
+```
+
+Enable the `HerokuDeploy` plugin and configure your app name:
+
+```scala
+enablePlugins(HerokuDeploy)
+
+herokuAppName := "my-heroku-app"
+```
+
+Deploy to Heroku with `herokuDeploy`:
+
+```
+> herokuDeploy
+```
+
+Check out your application at `https://my-heroku-app.herokuapp.com/`.
+
+## Deploying to Elastic Beanstalk
+
+Before trying to deploy anything, create an application and a
+Tomcat-based environment for it in Elastic Beanstalk.
+
+Enable the `ElasticBeanstalkDeployPlugin` plugin, and configure your
+application's name, environment, and region:
+
+```scala
+enablePlugins(ElasticBeanstalkDeployPlugin)
+
+elasticBeanstalkAppName := "my-elastic-beanstalk-app"
+
+elasticBeanstalkEnvName := "production"
+
+elasticBeanstalkRegion  := "us-west-1"
+```
+
+Add AWS credentials to your environment, launch sbt, and deploy your
+application by running `elasticBeanstalkDeploy`:
+
+```
+$ AWS_ACCESS_KEY=foo AWS_SECRET_KEY=bar sbt
+> elasticBeanstalkDeploy
+```
 
 ## Block sbt on running container
 
@@ -581,7 +628,6 @@ Launch the container with `quickstart`, and run triggered compilation:
 [23]: src/sbt-test/webapp/web-inf-lib
 [24]: src/sbt-test/webapp/webapp-dest
 [25]: src/sbt-test/webapp/webapp-src
-[26]: https://github.com/earldouglas/sbt-heroku-deploy
 [artifacts]: http://www.scala-sbt.org/0.13/docs/Artifacts.html#Modifying+default+artifacts
 [ebs]: https://console.aws.amazon.com/elasticbeanstalk/home
 [ejb]: http://en.wikipedia.org/wiki/Ejb

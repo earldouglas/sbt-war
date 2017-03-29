@@ -22,3 +22,7 @@ scriptedBufferLog  := false
 scriptedLaunchOpts <+= version { "-Dplugin.version=" + _ }
 
 watchSources       <++= sourceDirectory map { path => (path ** "*").get }
+
+libraryDependencies += "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % "1.11.105"
+
+libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3"               % "1.11.105"
