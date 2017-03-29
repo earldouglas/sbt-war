@@ -530,8 +530,11 @@ application's name, environment, and region:
 
 ```scala
 enablePlugins(ElasticBeanstalkDeployPlugin)
+
 elasticBeanstalkAppName := "xwp-getting-started"
+
 elasticBeanstalkEnvName := "xwp-getting-started"
+
 elasticBeanstalkRegion  := "us-west-1"
 ```
 
