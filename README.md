@@ -497,13 +497,6 @@ containerShutdownOnExit := false
 
 ## Deploying to Heroku
 
-Either install the [Heroku Toolbelt](https://toolbelt.heroku.com/), or
-set your Heroku API key as an environment variable:
-
-```
-$ export HEROKU_API_KEY="xxx-xxx-xxxx"
-```
-
 Enable the `HerokuDeploy` plugin and configure your app name:
 
 ```scala
@@ -512,9 +505,12 @@ enablePlugins(HerokuDeploy)
 herokuAppName := "my-heroku-app"
 ```
 
-Deploy to Heroku with `herokuDeploy`:
+Either install the [Heroku Toolbelt](https://toolbelt.heroku.com/), or
+set your Heroku API key as an environment variable, launch sbt, and
+deploy with `herokuDeploy`:
 
 ```
+$ HEROKU_API_KEY="xxx-xxx-xxxx" sbt
 > herokuDeploy
 ```
 
@@ -538,11 +534,11 @@ elasticBeanstalkEnvName := "production"
 elasticBeanstalkRegion  := "us-west-1"
 ```
 
-Add AWS credentials to your environment, launch sbt, and deploy your
-application by running `elasticBeanstalkDeploy`:
+Add AWS credentials to your environment, launch sbt, and deploy with
+`elasticBeanstalkDeploy`:
 
 ```
-$ AWS_ACCESS_KEY=foo AWS_SECRET_KEY=bar sbt
+$ AWS_ACCESS_KEY="xxx" AWS_SECRET_KEY="xxx" sbt
 > elasticBeanstalkDeploy
 ```
 
