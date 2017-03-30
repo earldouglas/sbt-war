@@ -514,7 +514,8 @@ $ HEROKU_API_KEY="xxx-xxx-xxxx" sbt
 > herokuDeploy
 ```
 
-Check out your application at `https://my-heroku-app.herokuapp.com/`.
+Check out your deployed application at
+`https://my-heroku-app.herokuapp.com`.
 
 ## Deploying to Elastic Beanstalk
 
@@ -541,6 +542,9 @@ Add AWS credentials to your environment, launch sbt, and deploy with
 $ AWS_ACCESS_KEY="xxx" AWS_SECRET_KEY="xxx" sbt
 > elasticBeanstalkDeploy
 ```
+
+Check out your deployed application at
+`http://my-elastic-beanstalk-app.us-west-1.elasticbeanstalk.com`.
 
 ## Block sbt on running container
 
