@@ -2,6 +2,8 @@ package com.earldouglas.xwp
 
 import java.util.concurrent.atomic.AtomicReference
 import sbt._
+import sbt.Def.taskKey
+import sbt.Def.settingKey
 import sbt.Keys._
 
 object ContainerPlugin extends AutoPlugin {

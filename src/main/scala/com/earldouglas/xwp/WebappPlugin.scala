@@ -3,6 +3,8 @@ package com.earldouglas.xwp
 import java.util.jar.Manifest
 
 import sbt._
+import sbt.Def.taskKey
+import sbt.Def.settingKey
 import sbt.Keys._
 import sbt.FilesInfo.lastModified
 import sbt.FilesInfo.exists

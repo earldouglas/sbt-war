@@ -15,9 +15,11 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import java.io.File
 import java.net.URLEncoder
 import java.util.Arrays
+import sbt._
+import sbt.Def.taskKey
+import sbt.Def.settingKey
 import sbt.Keys._
 import sbt.Keys.{`package` => pkg}
-import sbt._
 
 object ElasticBeanstalkDeployPlugin extends AutoPlugin {
 

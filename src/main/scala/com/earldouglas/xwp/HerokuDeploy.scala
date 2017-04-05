@@ -1,8 +1,10 @@
 package com.earldouglas.xwp
 
 import sbt._
-import Keys._
-import Keys.{`package` => pkg}
+import sbt.Def.taskKey
+import sbt.Def.settingKey
+import sbt.Keys._
+import sbt.Keys.{`package` => pkg}
 
 object HerokuDeploy extends AutoPlugin {
 

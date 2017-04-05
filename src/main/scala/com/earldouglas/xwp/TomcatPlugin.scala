@@ -1,6 +1,8 @@
 package com.earldouglas.xwp
 
 import sbt._
+import sbt.Def.taskKey
+import sbt.Def.settingKey
 
 object TomcatPlugin extends AutoPlugin {
 
