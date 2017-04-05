@@ -5,6 +5,7 @@
 xsbt-web-plugin is an [sbt] extension for building [J2EE][j2ee] Web
 applications in Scala and Java.  It is best suited for projects that:
 
+* Need to be packaged as a [*.war* file][war]
 * Deploy to common cloud platforms (e.g. [Google App Engine][gae],
   [Heroku][heroku], [Elastic Beanstalk][ebs], [Jelastic][jelastic])
 * Deploy to production J2EE environments (e.g. Tomcat, Jetty, GlassFish,
@@ -12,7 +13,6 @@ applications in Scala and Java.  It is best suited for projects that:
 * Incorporate J2EE libraries (e.g. [JSP][jsp], [JSF][jsf], [EJB][ejb])
 * Utilize J2EE technologies (e.g. [`Servlet`][servlet],
   [`Filter`][filter], [JNDI][jndi])
-* Have a specific need to be packaged as a [*.war* file][war]
 
 For previous releases, see the [docs](docs) directory.  Releases follow
 [Specified Versioning][specver] guidelines.
