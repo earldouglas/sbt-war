@@ -495,7 +495,7 @@ To allow the container to continue running after sbt exits, set
 containerShutdownOnExit := false
 ```
 
-## Deploying to Heroku
+### Deploying to Heroku
 
 Enable the `HerokuDeploy` plugin and configure your app name:
 
@@ -517,7 +517,7 @@ $ HEROKU_API_KEY="xxx-xxx-xxxx" sbt
 Check out your deployed application at
 `https://my-heroku-app.herokuapp.com`.
 
-## Deploying to Elastic Beanstalk
+### Deploying to Elastic Beanstalk
 
 Before trying to deploy anything, create an application and a
 Tomcat-based environment for it in Elastic Beanstalk.
@@ -587,7 +587,7 @@ five sequential ports starting from `containerPort`.
 In debug mode, five additional sequential debug ports starting from
 `debugPort` will be opened.
 
-#### JRebel integration
+### JRebel integration
 
 The development cycle can be further sped up by skipping server restarts
 between code recompilation.
