@@ -203,7 +203,9 @@ configuration:
 javaOptions in Jetty += "-Dh2g2=42"
 ```
 
-To attach an Eclipse debugger, set `-Xdebug` and `-Xrunjdwp`:
+*Example: [container/java-options][8]*
+
+To attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
 
 *build.sbt:*
 
@@ -214,24 +216,20 @@ javaOptions in Jetty ++= Seq(
 )
 ```
 
-This is a handy way to change configuration for local development and
-testing:
+In Eclipse:
 
-```scala
-javaOptions in Jetty += "-DdbUrl=jdbc:sqlite:test.db"
-```
+* Create and run a new *Remote Java Application* launch configuration
+* Set *Connection Type* to *Scala debugger (Socket Attach)*
+* Configure to connect to *localhost* on port *8000*
 
-In Eclipse, create and run a new *Remote Java Application* launch
-configuration with a *Connection Type* of *Scala debugger (Socket
-Attach)*, set to connect to *localhost* on port *8000*.
+In IntelliJ IDEA:
 
-*Example: [container/java-options][8]*
-
-Similarly, to attach an IntelliJ IDEA debugger, add a Remote run configuration:
-*Run* -> *Edit Configurations...*
-Under *Defaults* select *Remote* and push the "+" button to add a new configuration.
-By default the configuration will use port 5005.  (Use the same port in the -Xrunjdwp address.)
-Name this configuration, and run it in debug mode.
+* Add a Remote run configuration: *Run* -> *Edit Configurations...*
+* Under *Defaults* select *Remote* and push `+` to add a new
+  configuration
+* By default the configuration uses port 5005; update it to 8000 as
+  above
+* Name this configuration, and run it in debug mode
 
 ### Debug mode
 
