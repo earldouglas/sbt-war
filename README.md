@@ -22,8 +22,6 @@ For previous releases, see the [docs](docs) directory.  Releases follow
 * Scala 2.10.2+
 * sbt 0.13.6+
 
-*Scala 2.11 and 2.12 are [not yet supported by sbt][issues/166].*
-
 ## Quick reference
 
 Add xsbt-web-plugin to *project/plugins.sbt*:
