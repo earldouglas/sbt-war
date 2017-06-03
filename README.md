@@ -385,7 +385,7 @@ directly in the project artifact *.jar* file.
 To add a custom resources directory, set `unmanagedResourceDirectories`:
 
 ```scala
-unmanagedResourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
+unmanagedResourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"
 ```
 
 *Example: [webapp/unmanaged-resources][20]*
@@ -398,7 +398,7 @@ the project artifact *.jar* file.
 To add a custom sources directory, set `unmanagedSourceDirectories`:
 
 ```scala
-unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile)(_ / "extra")
+unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"
 ```
 
 *Example: [webapp/unmanaged-sources][21]*
