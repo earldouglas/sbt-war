@@ -1,5 +1,5 @@
--> get http://localhost:8080/test 200
--> get http://localhost:8080/index.html 200
+-> get http://localhost:8080/test 200 0
+-> get http://localhost:8080/index.html 200 0
 
 > tomcat:start
 > get http://localhost:8080/test 200
@@ -13,6 +13,6 @@ $ copy-file src/main/webapp/index.html src/main/webapp/index2.html
 > get http://localhost:8080/index2.html 200
 
 > tomcat:stop
--> get http://localhost:8080/test 200
--> get http://localhost:8080/index.html 200
--> get http://localhost:8080/index2.html 200
+-> get http://localhost:8080/test 200 0
+-> get http://localhost:8080/index.html 200 0
+-> get http://localhost:8080/index2.html 200 0
