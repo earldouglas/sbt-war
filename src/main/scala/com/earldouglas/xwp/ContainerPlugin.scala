@@ -149,7 +149,7 @@ object ContainerPlugin extends AutoPlugin {
     Def.task { shutdown(streams.value.log, containerInstances.value) }
 
   private def validateSbtVerison(version: String): Unit = {
-    val versionArray = version.split("\\.").map(_.toInt)
+    val versionArray = version.split("\\.").map(_.split("-")).map(_(0).toInt)
     val major = versionArray(0)
     val minor = versionArray(1)
     val patch = versionArray(2)
