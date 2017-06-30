@@ -1,19 +1,19 @@
--> get http://localhost:8080/test 200
--> get http://localhost:8081/test 200
--> get http://localhost:8082/test 200
--> get http://localhost:8083/test 200
+-> get http://localhost:8080/test 200 0
+-> get http://localhost:8081/test 200 0
+-> get http://localhost:8082/test 200 0
+-> get http://localhost:8083/test 200 0
 
 > jetty:start
 > get http://localhost:8080/test 200
 > get http://localhost:8081/test 200
 > get http://localhost:8082/test 200
--> get http://localhost:8083/test 200
+-> get http://localhost:8083/test 200 0
 
 > jetty:stop
--> get http://localhost:8080/test 200
--> get http://localhost:8081/test 200
--> get http://localhost:8082/test 200
--> get http://localhost:8083/test 200
+-> get http://localhost:8080/test 200 0
+-> get http://localhost:8081/test 200 0
+-> get http://localhost:8082/test 200 0
+-> get http://localhost:8083/test 200 0
 
 > jetty:quickstart
 > get http://localhost:8080/index2.html 404
@@ -26,9 +26,9 @@ $ copy-file src/main/webapp/index.html src/main/webapp/index2.html
 > get http://localhost:8082/index2.html 200
 
 > jetty:stop
--> get http://localhost:8080/index2.html 200
--> get http://localhost:8081/index2.html 200
--> get http://localhost:8082/index2.html 200
+-> get http://localhost:8080/index2.html 200 0
+-> get http://localhost:8081/index2.html 200 0
+-> get http://localhost:8082/index2.html 200 0
 
 > jetty:debug
 > get http://localhost:8080/test 200
@@ -36,6 +36,6 @@ $ copy-file src/main/webapp/index.html src/main/webapp/index2.html
 > get http://localhost:8082/test 200
 
 > jetty:stop
--> get http://localhost:8080/test 200
--> get http://localhost:8081/test 200
--> get http://localhost:8082/test 200
+-> get http://localhost:8080/test 200 0
+-> get http://localhost:8081/test 200 0
+-> get http://localhost:8082/test 200 0
