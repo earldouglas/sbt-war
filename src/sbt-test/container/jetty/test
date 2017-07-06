@@ -1,18 +1,36 @@
--> get http://localhost:8080/test 200 0
--> get http://localhost:8080/index.html 200 0
+# jetty default
 
 > jetty:start
 > get http://localhost:8080/test 200
-> get http://localhost:8080/index.html 200
-> get http://localhost:8080/index2.html 404
-
-$ copy-file src/main/webapp/index.html src/main/webapp/index2.html
-> get http://localhost:8080/index2.html 404
-
-> jetty:start
-> get http://localhost:8080/index2.html 200
-
 > jetty:stop
 -> get http://localhost:8080/test 200 0
--> get http://localhost:8080/index.html 200 0
--> get http://localhost:8080/index2.html 200 0
+
+# jetty 7
+
+> reload
+> 'set containerLibs in Jetty := Seq("org.mortbay.jetty" % "jetty-runner" % "7.0.0.v20091005" intransitive())'
+> 'set containerMain in Jetty := "org.mortbay.jetty.runner.Runner"'
+> jetty:start
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200 0
+
+# jetty 8
+
+> reload
+> 'set containerLibs in Jetty := Seq("org.mortbay.jetty" % "jetty-runner" % "8.0.0.v20110901" intransitive())'
+> 'set containerMain in Jetty := "org.mortbay.jetty.runner.Runner"'
+> jetty:start
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200 0
+
+# jetty 9
+
+> reload
+> 'set containerLibs in Jetty := Seq("org.eclipse.jetty" % "jetty-runner" % "9.3.13.v20161014" intransitive())'
+> 'set containerMain in Jetty := "org.eclipse.jetty.runner.Runner"'
+> jetty:start
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200 0
