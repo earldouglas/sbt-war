@@ -1,6 +1,6 @@
 > tomcat:start
--> get http://localhost:8080/index.html 200
--> get http://localhost:8080/test 200
+-> get http://localhost:8080/index.html 200 0
+-> get http://localhost:8080/test 200 0
 > get http://localhost:9090/index.html 200
 > get http://localhost:9090/test 200
 > tomcat:stop

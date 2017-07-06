@@ -33,6 +33,12 @@ get := baseDirectory { d =>
         sys.error("Caught exception " + e.toString)
     }
   }
-  val args: Seq[String] = complete.DefaultParsers.spaceDelimited("<arg>").parsed
-  get(args(0), args(1).toInt, 10)
+  complete.DefaultParsers.spaceDelimited("<arg>").parsed.toList match {
+    case List(url, status) =>
+      get(url, status.toInt, 10)
+    case List(url, status, retries) =>
+      get(url, status.toInt, retries.toInt)
+    case _ =>
+      throw new Exception("Usage: get <url> <expected status> [retries]")
+  }
 }
