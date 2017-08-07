@@ -23,9 +23,9 @@ $ absent remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war
 > package
 
 $ exists mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
-> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths.jar
--> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/remote.jar
+> findInZip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths.jar
+-> findInZip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/remote.jar
 
 $ exists remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war
-> find-in-zip remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/remote.jar
--> find-in-zip remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths_2.10-0.1.0-SNAPSHOT.jar
+> findInZip remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/remote.jar
+-> findInZip remoteweb/target/scala-2.10/remoteweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths_2.10-0.1.0-SNAPSHOT.jar

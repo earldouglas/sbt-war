@@ -1,5 +1,5 @@
 > project runner
-> publish-local
+> publishLocal
 
 > project root
 > container:start
