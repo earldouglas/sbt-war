@@ -17,7 +17,7 @@ $ absent numbers/target/scala-2.10/numbers_2.10-0.1.0-SNAPSHOT.war
 $ absent typeclasses/target/scala-2.10/typeclasses_2.10-0.1.0-SNAPSHOT.war
 $ absent maths/target/scala-2.10/maths_2.10-0.1.0-SNAPSHOT.war
 $ exists mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war
-> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/mathsweb_2.10-0.1.0-SNAPSHOT.jar
-> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/numbers.jar
-> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths.jar
-> find-in-zip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/typeclasses.jar
+> findInZip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/mathsweb_2.10-0.1.0-SNAPSHOT.jar
+> findInZip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/numbers.jar
+> findInZip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/maths.jar
+> findInZip mathsweb/target/scala-2.10/mathsweb_2.10-0.1.0-SNAPSHOT.war WEB-INF/lib/typeclasses.jar
