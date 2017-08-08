@@ -17,8 +17,9 @@ object WarPlugin extends AutoPlugin {
   import autoImport._
 
   private def manifestOptions = Def.task {
+    val opt = (packageOptions in (Compile, packageBin)).value
     if (inheritJarManifest.value) {
-      (packageOptions in (Compile, packageBin)).value filter {
+      opt.filter {
         case x: Package.ManifestAttributes => true
         case _ => false
       }

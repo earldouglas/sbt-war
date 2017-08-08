@@ -5,6 +5,7 @@ import sbt._
 import sbt.Def.taskKey
 import sbt.Def.settingKey
 import sbt.Keys._
+import Compat.Process
 
 object ContainerPlugin extends AutoPlugin {
 
@@ -76,7 +77,7 @@ object ContainerPlugin extends AutoPlugin {
     Seq( containerPort           := 8080
        , containerConfigFile     := None
        , containerArgs           := Nil
-       , containerForkOptions    := new ForkOptions
+       , containerForkOptions    := ForkOptions()
        , containerInstances      := new AtomicReference(Seq.empty[Process])
        , containerShutdownOnExit := true
        , debugPort               := 8888
@@ -85,17 +86,23 @@ object ContainerPlugin extends AutoPlugin {
        )
 
   private def defaultLaunchCmd =
-    Def.task { (port: Int, path: String) =>
-      val portArg: Seq[String] = Seq("--port", port.toString)
-      val configArg: Seq[String] = containerConfigFile.value match {
-        case Some(file) => Seq("--config", file.absolutePath)
-        case None => Nil
+    Def.task {
+      val c = containerConfigFile.value
+      val main = containerMain.value
+      val args = containerArgs.value
+
+      { (port: Int, path: String) =>
+        val portArg: Seq[String] = Seq("--port", port.toString)
+        val configArg: Seq[String] = c match {
+          case Some(file) => Seq("--config", file.absolutePath)
+          case None => Nil
+        }
+        Seq(main) ++
+          portArg ++
+          configArg ++
+          args :+
+          path
       }
-      Seq(containerMain.value) ++
-        portArg ++
-        configArg ++
-        containerArgs.value :+
-        path
     }
 
   private def startTask      = launchTask(false, false)
