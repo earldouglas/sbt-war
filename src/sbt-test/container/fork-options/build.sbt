@@ -6,4 +6,4 @@ libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provid
 
 enablePlugins(JettyPlugin)
 
-containerForkOptions := new ForkOptions(runJVMOptions = Seq("-Dh2g2=42"))
+containerForkOptions := com.earldouglas.xwp.Compat.forkOptionsWithRunJVMOptions(Seq("-Dh2g2=42"))

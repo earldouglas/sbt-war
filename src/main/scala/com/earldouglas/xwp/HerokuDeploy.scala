@@ -29,12 +29,11 @@ object HerokuDeploy extends AutoPlugin {
              classpathTypes: Set[String],
              update: UpdateReport,
              herokuDeployMain: String): Unit = {
-    val options = ForkOptions(
-      runJVMOptions =
-        herokuOptions ++ Seq(
-          "-Dheroku.appName=" + herokuAppName,
-          "-Dheroku.warFile=" + herokuWarFile.getPath
-        )
+    val options = Compat.forkOptionsWithRunJVMOptions(
+      herokuOptions.toVector ++ Seq(
+        "-Dheroku.appName=" + herokuAppName,
+        "-Dheroku.warFile=" + herokuWarFile.getPath
+      )
     )
     val libs: Seq[File] =
       Classpaths.managedJars(Deploy, classpathTypes, update).map(_.data)

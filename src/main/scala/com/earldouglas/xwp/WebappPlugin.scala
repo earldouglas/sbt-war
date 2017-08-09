@@ -29,13 +29,13 @@ object WebappPlugin extends AutoPlugin {
       , webappPrepare                    := webappPrepareTask.value
       , webappPostProcess                := { _ => () }
       , webappWebInfClasses              := false
-      , watchSources                    ++= ((sourceDirectory in webappPrepare).value ** "*").get
+      , Compat.watchSourceSetting
     )
 
   private def webappPrepareTask = Def.task {
 
     def cacheify(name: String, dest: File => Option[File], in: Set[File]): Set[File] =
-      cached(streams.value.cacheDirectory / "xsbt-web-plugin" / name)(lastModified, exists)({
+      Compat.cached(streams.value.cacheDirectory / "xsbt-web-plugin" / name, lastModified, exists)({
         (inChanges, outChanges) =>
           // toss out removed files
           for {
@@ -70,18 +70,21 @@ object WebappPlugin extends AutoPlugin {
       (webappSrcDir ** "*").get.toSet
     )
 
+    val m = (mappings in (Compile, packageBin)).value
+    val p = (packagedArtifact in (Compile, packageBin)).value._2 
+
     if (webappWebInfClasses.value) {
       // copy this project's classes directly to WEB-INF/classes
       cacheify(
         "classes",
         { in =>
-          (mappings in (Compile, packageBin)).value find {
+          m find {
             case (src, dest) => src == in
           } map { case (src, dest) =>
             webInfDir / "classes" / dest
           }
         },
-        ((mappings in (Compile, packageBin)).value filter {
+        (m filter {
           case (src, dest) => !src.isDirectory
         } map { case (src, dest) =>
           src
@@ -92,7 +95,7 @@ object WebappPlugin extends AutoPlugin {
       cacheify(
         "lib-art",
         { in => Some(webappLibDir / in.getName) },
-        Set((packagedArtifact in (Compile, packageBin)).value._2)
+        Set(p)
       )
     }
 
@@ -126,7 +129,7 @@ object WebappPlugin extends AutoPlugin {
 
     webappPostProcess.value(webappTarget)
 
-    (webappTarget ** "*") pair (relativeTo(webappTarget) | flat)
+    (webappTarget ** "*") pair (Path.relativeTo(webappTarget) | Path.flat)
   }
 
 }
