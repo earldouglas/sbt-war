@@ -1,6 +1,6 @@
 # xsbt-web-plugin
 
-*Current release: 3.0.3*
+*Current release: 3.0.4*
 
 xsbt-web-plugin is an [sbt] extension for building [J2EE][j2ee] Web
 applications in Scala and Java.  It is best suited for projects that:
@@ -27,7 +27,7 @@ For previous releases, see the [docs](docs) directory.  Releases follow
 Add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.3")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.4")
 ```
 
 Enable the Jetty plugin:
@@ -78,7 +78,7 @@ sbt.version=0.13.8
 *project/build.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.3")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "3.0.4")
 ```
 
 *build.sbt:*
@@ -251,7 +251,7 @@ port =>
 
 ### Jetty version
 
-By default, Jetty 9.4.1 is used.  To use a different version, set
+By default, Jetty 9.4.6 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala
@@ -309,7 +309,7 @@ This option can be used to enable SSL and HTTPS.
 
 ### Tomcat version
 
-By default, Tomcat 8.5.9.0 is used.  To use a different version, set
+By default, Tomcat 8.5.15.1 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala
