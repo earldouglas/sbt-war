@@ -70,3 +70,13 @@ $ copy-file sbt/jetty.sbt jetty.sbt
 > jetty:stop
 -> get http://localhost:8080/test 200
 -> get https://localhost:8443/test 200
+
+## fork options
+
+> reload
+> 'set containerForkOptions := com.earldouglas.xwp.Compat.forkOptionsWithRunJVMOptions(Seq("-Dh2g2=42"))'
+> jetty:start
+> await 8080
+> get http://localhost:8080/h2g2 42
+> jetty:stop
+-> get http://localhost:8080/h2g2 42
