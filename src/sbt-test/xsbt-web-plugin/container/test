@@ -10,6 +10,11 @@ $ copy-file sbt/tomcat.sbt tomcat.sbt
 > get http://localhost:8080/test 200
 > tomcat:stop
 -> get http://localhost:8080/test 200
+> tomcat:quickstart
+> await 8080
+> get http://localhost:8080/test 200
+> tomcat:stop
+-> get http://localhost:8080/test 200
 
 # jetty
 
@@ -20,6 +25,11 @@ $ copy-file sbt/jetty.sbt jetty.sbt
 
 > reload
 > jetty:start
+> await 8080
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200
+> jetty:quickstart
 > await 8080
 > get http://localhost:8080/test 200
 > jetty:stop
