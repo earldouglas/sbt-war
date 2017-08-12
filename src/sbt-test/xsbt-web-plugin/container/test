@@ -2,7 +2,7 @@
 
 $ copy-file sbt/tomcat.sbt tomcat.sbt
 
-## basic tomcat
+## default tomcat
 
 > reload
 > tomcat:start
@@ -11,14 +11,47 @@ $ copy-file sbt/tomcat.sbt tomcat.sbt
 > tomcat:stop
 -> get http://localhost:8080/test 200
 
-## jetty
+# jetty
 
 $ delete tomcat.sbt
 $ copy-file sbt/jetty.sbt jetty.sbt
 
-## basic jetty
+## default jetty
 
 > reload
+> jetty:start
+> await 8080
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200
+
+## jetty 7
+
+> reload
+> 'set containerLibs in Jetty := Seq("org.mortbay.jetty" % "jetty-runner" % "7.0.0.v20091005" intransitive())'
+> 'set containerMain in Jetty := "org.mortbay.jetty.runner.Runner"'
+> jetty:start
+> await 8080
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200
+
+## jetty 8
+
+> reload
+> 'set containerLibs in Jetty := Seq("org.mortbay.jetty" % "jetty-runner" % "8.0.0.v20110901" intransitive())'
+> 'set containerMain in Jetty := "org.mortbay.jetty.runner.Runner"'
+> jetty:start
+> await 8080
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200
+
+## jetty 9
+
+> reload
+> 'set containerLibs in Jetty := Seq("org.eclipse.jetty" % "jetty-runner" % "9.3.13.v20161014" intransitive())'
+> 'set containerMain in Jetty := "org.eclipse.jetty.runner.Runner"'
 > jetty:start
 > await 8080
 > get http://localhost:8080/test 200
