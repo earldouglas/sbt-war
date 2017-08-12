@@ -116,3 +116,21 @@ $ copy-file sbt/jetty.sbt jetty.sbt
 > get http://localhost:9090/test 200
 > jetty:stop
 -> get http://localhost:9090/test 200
+
+## scale
+
+> reload
+> 'set containerScale := 3'
+> jetty:start
+> await 8080
+> await 8081
+> await 8082
+> get http://localhost:8080/test 200
+> get http://localhost:8081/test 200
+> get http://localhost:8082/test 200
+-> get http://localhost:8083/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200
+-> get http://localhost:8081/test 200
+-> get http://localhost:8082/test 200
+-> get http://localhost:8083/test 200
