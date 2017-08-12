@@ -287,10 +287,11 @@ containerPort := 9090
 
 ### *jetty.xml*
 
-To use a *jetty.xml* configuration file, set `containerConfigFile`:
+To use a *jetty.xml* configuration file, set `--config` in
+`containerArgs`:
 
 ```scala
-containerConfigFile := Some(file("etc/jetty.xml"))
+containerArgs := Seq("--config", "/path/to/jetty.xml")
 ```
 
 This option can be used to enable SSL and HTTPS.
