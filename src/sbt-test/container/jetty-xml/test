@@ -1,0 +1,13 @@
+# jetty.xml
+
+$ copy-file sbt/jetty.sbt jetty.sbt
+> reload
+> 'set containerConfigFile := Some(file(s"${baseDirectory.value}/etc/jetty.xml"))'
+> jetty:start
+> await 8080
+> await 8443
+> get http://localhost:8080/test 200
+> get https://localhost:8443/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200
+-> get https://localhost:8443/test 200

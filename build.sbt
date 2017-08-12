@@ -19,7 +19,10 @@ ScriptedPlugin.scriptedSettings
 
 scriptedBufferLog  := false
 
-scriptedLaunchOpts  += { "-Dplugin.version=" + version.value }
+scriptedLaunchOpts ++= Seq( "-Djavax.net.ssl.trustStore=" + (baseDirectory.value / "src/sbt-test/container/jetty-xml/etc/keystore").getPath
+                          , "-Djavax.net.ssl.trustStorePassword=storepwd"
+                          , "-Dplugin.version=" + version.value
+                          )
 
 watchSources       ++= { (sourceDirectory.value ** "*").get }
 
