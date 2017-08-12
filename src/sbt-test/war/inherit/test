@@ -1,5 +1,0 @@
-> package
--> find-in-manifest target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war "Sealed: true"
-> set inheritJarManifest := true
-> package
-> findInManifest target/scala-2.10/test_2.10-0.1.0-SNAPSHOT.war "Sealed: true"
