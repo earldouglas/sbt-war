@@ -24,11 +24,17 @@ $ copy-file sbt/jetty.sbt jetty.sbt
 ## default jetty
 
 > reload
+
 > jetty:start
 > await 8080
 > get http://localhost:8080/test 200
+> get http://localhost:8080/h2g2 200
+> get http://localhost:8080/annotation 200
 > jetty:stop
 -> get http://localhost:8080/test 200
+-> get http://localhost:8080/h2g2 200
+-> get http://localhost:8080/annotation 200
+
 > jetty:quickstart
 > await 8080
 > get http://localhost:8080/test 200
