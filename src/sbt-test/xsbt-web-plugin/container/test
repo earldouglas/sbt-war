@@ -1,6 +1,32 @@
-# jetty.xml
+# tomcat
 
+$ copy-file sbt/tomcat.sbt tomcat.sbt
+
+## basic tomcat
+
+> reload
+> tomcat:start
+> await 8080
+> get http://localhost:8080/test 200
+> tomcat:stop
+-> get http://localhost:8080/test 200
+
+## jetty
+
+$ delete tomcat.sbt
 $ copy-file sbt/jetty.sbt jetty.sbt
+
+## basic jetty
+
+> reload
+> jetty:start
+> await 8080
+> get http://localhost:8080/test 200
+> jetty:stop
+-> get http://localhost:8080/test 200
+
+## jetty with jetty.xml
+
 > reload
 > 'set containerArgs := Seq("--config", s"${baseDirectory.value}/etc/jetty.xml")'
 > jetty:start
