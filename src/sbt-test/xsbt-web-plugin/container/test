@@ -80,3 +80,13 @@ $ copy-file sbt/jetty.sbt jetty.sbt
 > get http://localhost:8080/h2g2 42
 > jetty:stop
 -> get http://localhost:8080/h2g2 42
+
+## java options
+
+> reload
+> 'set javaOptions in Jetty += "-Dh2g2=42"'
+> jetty:start
+> await 8080
+> get http://localhost:8080/h2g2 42
+> jetty:stop
+-> get http://localhost:8080/h2g2 42
