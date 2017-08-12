@@ -19,10 +19,7 @@ ScriptedPlugin.scriptedSettings
 
 scriptedBufferLog  := false
 
-scriptedLaunchOpts ++= Seq( "-Djavax.net.ssl.trustStore=" + (baseDirectory.value / "src/sbt-test/xsbt-web-plugin/container/etc/keystore").getPath
-                          , "-Djavax.net.ssl.trustStorePassword=storepwd"
-                          , "-Dplugin.version=" + version.value
-                          )
+scriptedLaunchOpts += { "-Dplugin.version=" + version.value }
 
 watchSources       ++= { (sourceDirectory.value ** "*").get }
 
