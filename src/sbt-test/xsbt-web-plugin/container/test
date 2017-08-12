@@ -90,3 +90,13 @@ $ copy-file sbt/jetty.sbt jetty.sbt
 > get http://localhost:8080/h2g2 42
 > jetty:stop
 -> get http://localhost:8080/h2g2 42
+
+## jetty port 9090
+
+> reload
+> 'set containerPort := 9090'
+> jetty:start
+> await 9090
+> get http://localhost:9090/test 200
+> jetty:stop
+-> get http://localhost:9090/test 200
