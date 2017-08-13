@@ -13,4 +13,10 @@ $ delete src/main/webapp/index.html
 > webappPrepare
 $ absent target/webapp/index.html
 
+## unmanaged resources
 
+> reload
+> 'set unmanagedResourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"'
+> webappPrepare
+> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.scala
+-> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.class
