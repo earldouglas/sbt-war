@@ -11,5 +11,5 @@ in Scala and Java.  It is best suited for projects that:
 * Incorporate J2EE libraries (e.g. JSP, JSF, EJB)
 * Utilize J2EE technologies (e.g. Servlet, Filter, JNDI)
 
-The current release is [*3.0.3*](docs/3.0.md).  For prior releases, see
+The current release is [*4.0.0*](docs/4.0.md).  For prior releases, see
 [docs/](docs/).  Releases follow Specified Versioning guidelines.
