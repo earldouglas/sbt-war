@@ -18,9 +18,10 @@ xsbt-web-plugin is best suited for projects that:
 * [Current release: *4.0.0*](docs/4.0.x.md)
 * [Prior releases](docs/)
 
-Releases follow Specified Versioning guidelines.
+Releases follow [Specified
+Versioning](https://earldouglas.com/posts/specver.html) guidelines.
 
 ## Getting help
 
-* Look for *earldouglas* on the `#sbt` channel on Freenode
+* Look for *earldouglas* in the `#sbt` channel on Freenode
 * Submit a bug report or feature request as a new GitHub issue
