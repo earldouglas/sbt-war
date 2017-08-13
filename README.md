@@ -15,7 +15,7 @@ xsbt-web-plugin is best suited for projects that:
 
 ## Documentation
 
-* [Current release: *4.0.0*](docs/4.0.md)
+* [Current release: *4.0.0*](docs/4.0.x.md)
 * [Prior releases](docs/)
 
 Releases follow Specified Versioning guidelines.
