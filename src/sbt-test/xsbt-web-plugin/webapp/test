@@ -3,19 +3,20 @@
 ## changes
 
 > webappPrepare
-$ absent target/webapp/index.html
+$ absent target/webapp/index2.html
 
-$ copy-file changes/index.html src/main/webapp/index.html
+$ copy-file changes/index2.html src/main/webapp/index2.html
 > webappPrepare
-$ exists target/webapp/index.html
+$ exists target/webapp/index2.html
 
-$ delete src/main/webapp/index.html
+$ delete src/main/webapp/index2.html
 > webappPrepare
-$ absent target/webapp/index.html
+$ absent target/webapp/index2.html
 
 ## unmanaged resources
 
 > reload
+> clean
 > 'set unmanagedResourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"'
 > webappPrepare
 > findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.scala
@@ -24,8 +25,21 @@ $ absent target/webapp/index.html
 ## unmanaged sources
 
 > reload
+> clean
 > 'set unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"'
 > webappPrepare
 -> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.scala
 > findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.class
+
+## webapp destination
+
+> reload
+> clean
+> 'set target in webappPrepare := target.value / "WebContent"'
+> webappPrepare
+$ exists target/WebContent/index.html
+$ exists target/WebContent/styles/style.css
+$ exists target/WebContent/WEB-INF/web.xml
+$ absent target/WebContent/WEB-INF/classes
+$ exists target/WebContent/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
 
