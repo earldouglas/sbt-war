@@ -19,7 +19,7 @@ ScriptedPlugin.scriptedSettings
 
 scriptedBufferLog  := false
 
-scriptedLaunchOpts  += { "-Dplugin.version=" + version.value }
+scriptedLaunchOpts += { "-Dplugin.version=" + version.value }
 
 watchSources       ++= { (sourceDirectory.value ** "*").get }
 

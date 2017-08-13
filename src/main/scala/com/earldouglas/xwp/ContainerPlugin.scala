@@ -24,7 +24,6 @@ object ContainerPlugin extends AutoPlugin {
     val containerLibs           = settingKey[Seq[ModuleID]]("container libraries")
     val containerMain           = settingKey[String]("container main class")
     val containerPort           = settingKey[Int]("port number to be used by container")
-    val containerConfigFile     = settingKey[Option[File]]("path of container configuration file")
     val containerArgs           = settingKey[Seq[String]]("additional container args")
     val containerForkOptions    = settingKey[ForkOptions]("fork options")
     val containerShutdownOnExit = settingKey[Boolean]("shutdown container on sbt exit")
@@ -75,7 +74,6 @@ object ContainerPlugin extends AutoPlugin {
 
   lazy val baseContainerSettings =
     Seq( containerPort           := 8080
-       , containerConfigFile     := None
        , containerArgs           := Nil
        , containerForkOptions    := ForkOptions()
        , containerInstances      := new AtomicReference(Seq.empty[Process])
@@ -87,19 +85,13 @@ object ContainerPlugin extends AutoPlugin {
 
   private def defaultLaunchCmd =
     Def.task {
-      val c = containerConfigFile.value
       val main = containerMain.value
       val args = containerArgs.value
 
       { (port: Int, path: String) =>
         val portArg: Seq[String] = Seq("--port", port.toString)
-        val configArg: Seq[String] = c match {
-          case Some(file) => Seq("--config", file.absolutePath)
-          case None => Nil
-        }
         Seq(main) ++
           portArg ++
-          configArg ++
           args :+
           path
       }

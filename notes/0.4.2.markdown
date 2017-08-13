@@ -1,6 +1,0 @@
-### Improvements
-
-* Fix Scala binary version compatibility issue with Tomcat container ([994cfe](https://github.com/JamesEarlDouglas/xsbt-web-plugin/commit/994cfef669e21ffaaf9dbd0e428bcd34739182d4))
-* Remove Tomcat's automatic reloading ([d7b062](https://github.com/JamesEarlDouglas/xsbt-web-plugin/commit/d7b062f92a5c626d3e94c71fa5f2a44415813297))
-
-Thanks to [cdow](https://github.com/cdow)'s detective work!

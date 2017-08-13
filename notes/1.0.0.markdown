@@ -1,8 +1,0 @@
-* Complete rewrite of xsbt-web-plugin
-* Configuration is cleaner and more uniform
-* Containers are always launched in forked JVMs
-* Containers are run from community/third party libraries
-* Container JVMs are configured independently of sbt JVM
-* Artifacts are published to Bintray
-* Tests are more comprehensive
-* Internals are (hopefully) cleaner and faster to maintain

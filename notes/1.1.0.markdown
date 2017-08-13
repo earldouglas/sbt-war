@@ -1,6 +1,0 @@
-* Add a Jetty-based AutoPlugin
-* AutoPlugin configuration via sbt settings
-* Silence noisy JVM fork destruction
-* Update to sbt 0.13.7
-* Update to Scala 2.10.5
-* Various documentation improvements

@@ -1,6 +1,0 @@
-### New features
-
-* Resources are copied in the same order that the JVM resolves resources
-* Tomcat 7 is supported as a container
-* Versioning follows the common SBT plugin pattern
-* `ssl` is a more configurable `TaskKey`

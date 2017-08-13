@@ -1,1 +1,0 @@
-* Fix the wrong-package *.war* file publishing ([#275](https://github.com/earldouglas/xsbt-web-plugin/pull/275))

@@ -1,5 +1,0 @@
-> webappPrepare
-$ exists target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
-$ absent target/webapp/WEB-INF/classes
-> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar foo/bar.properties
-> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar foo/bar/Bar.class

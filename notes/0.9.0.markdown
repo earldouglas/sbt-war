@@ -1,6 +1,0 @@
-### Changelog
-
-* Add a blocking container:launch command ([#152](https://github.com/earldouglas/xsbt-web-plugin/issues/152))
-* Apply useFileMappedBuffer=false only under MS Windows ([#156](https://github.com/earldouglas/xsbt-web-plugin/issues/156))
-* Order the Jetty 9 configurations per the 9.1 spec ([#157](https://github.com/earldouglas/xsbt-web-plugin/issues/157))
-* Remove unused references to deprecated TagLibConfiguration ([#158](https://github.com/earldouglas/xsbt-web-plugin/issues/158))

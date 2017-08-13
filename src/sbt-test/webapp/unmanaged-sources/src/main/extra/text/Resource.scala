@@ -1,3 +1,0 @@
-package text
-
-class Resource { }
