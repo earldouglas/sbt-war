@@ -1,9 +1,0 @@
-### Improvements
-
-* Handle non-jar classpath components ([#126](https://github.com/JamesEarlDouglas/xsbt-web-plugin/pull/126))
-* Fix tab completion for contexts ([#130](https://github.com/JamesEarlDouglas/xsbt-web-plugin/pull/130))
-* Avoid file locking problem on windows set useFileMappedBuffer to false for jetty ([#134](https://github.com/JamesEarlDouglas/xsbt-web-plugin/pull/134))
-* Fix for restart functionality ([3e1ddc](https://github.com/JamesEarlDouglas/xsbt-web-plugin/commit/3e1ddcd51673c729e225994185c7673ab2085128))
-* Add support for jetty 9.1 ([83250d](https://github.com/JamesEarlDouglas/xsbt-web-plugin/commit/83250d45bb308f9952f74fb0d1565d6065d0106e))
-
-Thanks to [jannic](https://github.com/jannic), [agjini](https://github.com/agjini), and [cdow](https://github.com/cdow)!

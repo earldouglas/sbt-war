@@ -1,4 +1,0 @@
-### New features
-
-* sbt 0.13.0-RC4 support
-* Jetty 9 container support

@@ -1,5 +1,0 @@
-### New features
-
-* Cusomizable classpath in the webapp package
-* Tomcat `baseDir` uses a temporary directory
-* Code cleanup/simplification
