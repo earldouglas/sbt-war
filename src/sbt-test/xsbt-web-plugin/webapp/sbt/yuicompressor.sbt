@@ -1,9 +1,3 @@
-name := "test"
-
-version := "0.1.0-SNAPSHOT"
-
-enablePlugins(WebappPlugin)
-
 webappPostProcess := {
   webappDir =>
     import com.yahoo.platform.yui.compressor.YUICompressor

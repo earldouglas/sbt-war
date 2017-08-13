@@ -75,3 +75,13 @@ $ absent target/webapp/WEB-INF/classes
 > findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar foo/bar.properties
 > findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar foo/bar/Bar.class
 
+## yuicompressor
+
+$ copy-file sbt/yuicompressor.sbt yuicompressor.sbt
+$ copy-file sbt/project/yuicompressor.sbt project/yuicompressor.sbt
+> reload
+> clean
+> webappPrepare
+$ exists target/webapp/script-min.js
+$ delete yuicompressor.sbt
+$ delete project/yuicompressor.sbt
