@@ -19,3 +19,8 @@ xsbt-web-plugin is best suited for projects that:
 * [Prior releases](docs/)
 
 Releases follow Specified Versioning guidelines.
+
+## Getting help
+
+* Look for *earldouglas* on the `#sbt` channel on Freenode
+* Submit a bug report or feature request as a new GitHub issue
