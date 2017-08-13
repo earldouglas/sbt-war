@@ -3,4 +3,8 @@ language: scala
 jdk:
   - oraclejdk8
 script:
-  - sbt "^ scripted"
+  - sbt "^^ ${SBT_VERSION}" scripted
+matrix:
+  include:
+  - env: SBT_VERSION="0.13.6"
+  - env: SBT_VERSION="1.0.0"
