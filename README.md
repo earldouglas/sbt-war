@@ -1,7 +1,6 @@
 # xsbt-web-plugin
 
-xsbt-web-plugin is tool for building J2EE Web applications in Scala and
-Java.
+xsbt-web-plugin is tool for building J2EE Web applications in Scala.
 
 ## Features
 
