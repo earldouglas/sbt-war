@@ -10,7 +10,7 @@ def isOpen(port: Int): Boolean =
     case e: Exception => false
   }
 
-def awaitOpen(port: Int, retries: Int = 40): Unit =
+def awaitOpen(port: Int, retries: Int = 4 * 30): Unit =
   if (!isOpen(port)) {
     if (retries > 0) {
       Thread.sleep(250)
@@ -20,7 +20,7 @@ def awaitOpen(port: Int, retries: Int = 40): Unit =
     }
   } else { Thread.sleep(5000) }
 
-def awaitClosed(port: Int, retries: Int = 40): Unit =
+def awaitClosed(port: Int, retries: Int = 4 * 30): Unit =
   if (isOpen(port)) {
     if (retries > 0) {
       Thread.sleep(250)
