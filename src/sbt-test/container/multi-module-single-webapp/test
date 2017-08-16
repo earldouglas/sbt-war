@@ -1,4 +1,5 @@
 > jetty:start
+> await 8080
 > get http://localhost:8080/index.html 200
 > get http://localhost:8080/test 200
 > jetty:stop
