@@ -1,10 +1,12 @@
 > jetty:start
 
+> await 8081
 > get http://localhost:8081/index.html 200
 > get http://localhost:8081/test 500
 > get http://localhost:8081/test?x=ten 500
 > get http://localhost:8081/test?x=10 200
 
+> await 8080
 > get http://localhost:8080/index.html 200
 > get http://localhost:8080/test 500
 > get http://localhost:8080/test?x=ten 500
