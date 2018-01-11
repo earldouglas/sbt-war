@@ -19,5 +19,10 @@ Versioning](https://earldouglas.com/posts/specver.html) guidelines.
 
 ## Getting help
 
-* Look for *earldouglas* in the `#sbt` channel on Freenode
-* Submit a bug report or feature request as a new GitHub issue
+* Look for *earldouglas* in the [`#sbt`
+  channel](https://webchat.freenode.net/?channels=sbt) on Freenode
+* Use the [*xsbt-web-plugin*
+  tag](https://stackoverflow.com/questions/tagged/xsbt-web-plugin) on
+  Stack Overflow
+* Submit a bug report or feature request as a [new GitHub
+  issue](https://github.com/earldouglas/xsbt-web-plugin/issues/new)
