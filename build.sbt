@@ -8,7 +8,7 @@ sbtPlugin         := true
 
 // bintray-sbt
 publishMavenStyle := false
-licenses          += ("BSD New", url("http://opensource.org/licenses/BSD-3-Clause"))
+licenses          += ("BSD New", url("https://opensource.org/licenses/BSD-3-Clause"))
 
 // scripted-plugin
 ScriptedPlugin.scriptedSettings
