@@ -2,7 +2,7 @@
 organization  := "com.earldouglas"
 name          := "xsbt-web-plugin"
 
-scalacOptions    ++= Seq("-feature", "-deprecation")
+scalacOptions    ++= Seq("-feature", "-deprecation", "-Ywarn-unused", "-Ywarn-unused-import")
 crossSbtVersions  := Seq("0.13.6", "1.0.0")
 sbtPlugin         := true
 
