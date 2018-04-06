@@ -22,6 +22,7 @@ Versioning](https://earldouglas.com/posts/specver.html) guidelines.
 * [Getting started](docs/examples/getting-started)
 * [Scalatra](docs/examples/scalatra)
 * [http4s](docs/examples/http4s)
+* [spray](docs/examples/spray)
 
 ## Getting help
 
