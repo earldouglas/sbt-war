@@ -1,7 +1,11 @@
-class GettingStartedServlet extends javax.servlet.http.HttpServlet {
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
-  override def doGet( req: javax.servlet.http.HttpServletRequest
-                    , res: javax.servlet.http.HttpServletResponse
+class GettingStartedServlet extends HttpServlet {
+
+  override def doGet( req: HttpServletRequest
+                    , res: HttpServletResponse
                     ) {
 
     res.setContentType("text/html")
