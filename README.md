@@ -17,6 +17,12 @@ xsbt-web-plugin is tool for building J2EE Web applications in Scala.
 Releases follow [Specified
 Versioning](https://earldouglas.com/posts/specver.html) guidelines.
 
+## Examples
+
+* [Getting started](docs/examples/getting-started)
+* [Scalatra](docs/examples/scalatra)
+* [http4s](docs/examples/http4s)
+
 ## Getting help
 
 * Look for *earldouglas* in the [`#sbt`
