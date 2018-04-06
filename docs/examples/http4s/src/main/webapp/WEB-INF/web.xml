@@ -1,0 +1,14 @@
+<web-app>
+
+  <servlet>
+    <servlet-name>hello world</servlet-name>
+    <servlet-class>HelloWorldServlet</servlet-class>
+    <async-supported>true</async-supported>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>hello world</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
