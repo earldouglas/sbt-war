@@ -1,0 +1,13 @@
+<web-app>
+
+  <filter>
+    <filter-name>LiftFilter</filter-name>
+    <filter-class>net.liftweb.http.LiftFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>LiftFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+</web-app>
