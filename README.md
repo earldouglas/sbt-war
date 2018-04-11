@@ -20,9 +20,10 @@ Versioning](https://earldouglas.com/posts/specver.html) guidelines.
 ## Examples
 
 * [Getting started](docs/examples/getting-started)
-* [http4s](docs/examples/http4s)
 * [Lift](docs/examples/lift)
+* [Scala.js](docs/examples/scala-js)
 * [Scalatra](docs/examples/scalatra)
+* [http4s](docs/examples/http4s)
 * [spray](docs/examples/spray)
 
 ## Getting help
