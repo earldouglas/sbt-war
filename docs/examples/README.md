@@ -1,6 +1,7 @@
 # Examples
 
 * [Getting started](getting-started)
+* [HTTPS with Tomcat](https)
 * [Lift](lift)
 * [Mustache](mustache)
 * [Scala.js](scala-js)
