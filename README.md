@@ -14,19 +14,10 @@ xsbt-web-plugin is tool for building J2EE Web applications with [sbt](https://ww
 
 * [Current release: 4.0.2](docs/4.0.x.md)
 * [Prior releases](docs/)
+* [Examples](docs/examples/)
 
 Releases follow [Specified
 Versioning](https://earldouglas.com/posts/specver.html) guidelines.
-
-## Examples
-
-* [Getting started](docs/examples/getting-started)
-* [Lift](docs/examples/lift)
-* [Mustache](docs/examples/mustache)
-* [Scala.js](docs/examples/scala-js)
-* [Scalatra](docs/examples/scalatra)
-* [http4s](docs/examples/http4s)
-* [spray](docs/examples/spray)
 
 ## Getting help
 
