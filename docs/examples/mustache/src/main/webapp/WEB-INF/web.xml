@@ -1,0 +1,13 @@
+<web-app>
+
+  <servlet>
+    <servlet-name>mustache</servlet-name>
+    <servlet-class>MustacheServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>mustache</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

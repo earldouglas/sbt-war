@@ -22,6 +22,7 @@ Versioning](https://earldouglas.com/posts/specver.html) guidelines.
 
 * [Getting started](docs/examples/getting-started)
 * [Lift](docs/examples/lift)
+* [Mustache](docs/examples/mustache)
 * [Scala.js](docs/examples/scala-js)
 * [Scalatra](docs/examples/scalatra)
 * [http4s](docs/examples/http4s)
