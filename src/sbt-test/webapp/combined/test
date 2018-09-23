@@ -1,5 +1,15 @@
 # webapp
 
+## webxml setting
+
+$ copy-file sbt/web-xml.sbt web-xml.sbt
+> reload
+> clean
+> webappPrepare
+$ exists target/webapp/WEB-INF/web.xml
+$ delete web-xml.sbt
+$ copy-file sbt/web.xml src/main/webapp/WEB-INF/web.xml
+
 ## changes
 
 > webappPrepare

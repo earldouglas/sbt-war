@@ -1,0 +1,1 @@
+webXmlServlets += WebXmlServlet("servlets.TestServlet", "/")

@@ -37,6 +37,7 @@ addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.0.2")
 scalaVersion := "2.12.5"
 enablePlugins(JettyPlugin)
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
+webXmlServlets += WebXmlServlet("GettingStartedServlet", "/*")
 ```
 
 Add a servlet:
@@ -66,24 +67,6 @@ class GettingStartedServlet extends HttpServlet {
     res.getWriter.write(responseBody)
   }
 }
-```
-
-*src/main/webapp/WEB-INF/web.xml*:
-
-```xml
-<web-app>
-
-  <servlet>
-    <servlet-name>getting started</servlet-name>
-    <servlet-class>GettingStartedServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>getting started</servlet-name>
-    <url-pattern>/*</url-pattern>
-  </servlet-mapping>
-
-</web-app>
 ```
 
 ## Launching from sbt

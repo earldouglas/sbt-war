@@ -20,7 +20,7 @@ object WebappPlugin extends AutoPlugin {
 
   import autoImport._
 
-  override def requires = plugins.JvmPlugin
+  override def requires = WebXmlPlugin
 
   override def projectSettings: Seq[Setting[_]] =
     Seq(
