@@ -7,18 +7,27 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.io.Source
 import scala.util.Try
 
-class AdderServlet extends HttpServlet {
+trait CommandServlet extends HttpServlet {
 
-  private val c: Connection = {
-    Class.forName(sys.env("DB_DRIVER"))
-    val c: Connection =
-      DriverManager.getConnection( sys.env("DB_URL")
-                                 , sys.env("DB_USER")
-                                 , sys.env("DB_PASS")
-                                 )
-    c.setAutoCommit(false)
-    c
+  def c: Connection
+
+  override def doPost( req: HttpServletRequest
+                     , res: HttpServletResponse
+                     ) {
+
+    res.setStatus(201)
+    res.setHeader("Location", "/")
+
+    val reqBody: String =
+      Source.fromInputStream(req.getInputStream).mkString
+    val s: Service[Unit] = Adder.add(reqBody.toInt)
+    Service.unsafeRunSync(s, c, 1000)
   }
+}
+
+trait QueryServlet extends HttpServlet {
+
+  def c: Connection
 
   private val updater: Thread =
     new Thread {
@@ -31,12 +40,13 @@ class AdderServlet extends HttpServlet {
     }
 
   override def init(): Unit = {
-    Service.unsafeRunSync(Adder.init, c, 1000)
     updater.start
+    super.init()
   }
 
   override def destroy(): Unit = {
     updater.interrupt
+    super.destroy()
   }
 
   override def doGet( req: HttpServletRequest
@@ -54,17 +64,27 @@ class AdderServlet extends HttpServlet {
         res.getWriter.write(message)
     }
   }
+}
 
-  override def doPost( req: HttpServletRequest
-                     , res: HttpServletResponse
-                     ) {
+class AdderServlet extends CommandServlet with QueryServlet {
 
-    res.setStatus(201)
-    res.setHeader("Location", "/")
+  val c: Connection = {
+    Class.forName(sys.env("DB_DRIVER"))
+    val c: Connection =
+      DriverManager.getConnection( sys.env("DB_URL")
+                                 , sys.env("DB_USER")
+                                 , sys.env("DB_PASS")
+                                 )
+    c.setAutoCommit(false)
+    c
+  }
 
-    val reqBody: String =
-      Source.fromInputStream(req.getInputStream).mkString
-    val s: Service[Unit] = Adder.add(reqBody.toInt)
-    Service.unsafeRunSync(s, c, 1000)
+  override def init(): Unit = {
+    Service.unsafeRunSync(Adder.init, c, 1000)
+    super.init()
+  }
+
+  override def destroy(): Unit = {
+    super.destroy()
   }
 }
