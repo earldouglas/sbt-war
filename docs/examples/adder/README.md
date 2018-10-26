@@ -5,12 +5,13 @@ $ docker run --rm --name adder-db -e MYSQL_ALLOW_EMPTY_PASSWORD=true -p 3306:330
 ```
 
 ```
-$ docker exec -it adder-db bash
-root@cbfb3c6b92e8:/# echo '    
-  create database adder;
-  create user adder;
-  grant all on adder.* to adder;
-' | mysql 
+$ echo "
+    echo '
+      create database adder;
+      create user adder;
+      grant all on adder.* to adder;
+    ' | mysql
+  " | docker exec -i adder-db bash
 ```
 
 ## Run
