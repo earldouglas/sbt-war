@@ -1,8 +1,6 @@
 import java.sql.Connection
 import java.sql.PreparedStatement
-import scala.concurrent.Await
 import scala.concurrent.Future
-import scala.concurrent.duration.Duration
 import scala.concurrent.{ ExecutionContext => EC }
 import scala.util.Failure
 import scala.util.Success
@@ -15,24 +13,21 @@ object `package` {
 
 object Service {
 
-  def unsafeRunSync[A]( s: Service[A]
-                      , c: Connection
-                      , t: Long
-                      )(implicit ec: EC): Either[Error, A] =
-    Await.result( c synchronized {
-                    val ea =
-                      s.run(c) map {
-                        case r@Right(_) =>
-                          c.commit()
-                          r
-                        case l@Left(_) =>
-                          c.rollback()
-                          l
-                      }
-                    ea
-                  }
-                , Duration(t, "millis")
-                )
+  def unsafeRun[A]( s: Service[A]
+                  , c: Connection
+                  )(implicit ec: EC): Future[Either[Error, A]] =
+    c synchronized {
+      val ea =
+        s.run(c) map {
+          case r@Right(_) =>
+            c.commit()
+            r
+          case l@Left(_) =>
+            c.rollback()
+            l
+        }
+      ea
+    }
 
   def success[A](a: => A)(implicit ec: EC): Service[A] =
     Service(_ => Future(Right(a)))

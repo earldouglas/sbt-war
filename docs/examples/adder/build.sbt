@@ -25,7 +25,7 @@ containerForkOptions :=
 
 fork in Test:= true
 envVars in Runtime := Map( "DB_DRIVER" -> "org.h2.Driver"
-                         , "DB_URL" -> "jdbc:h2:file:./target/adder"
+                         , "DB_URL" -> "jdbc:h2:mem:adder"
                          , "DB_USER" -> "sa"
                          , "DB_PASS" -> ""
                          )

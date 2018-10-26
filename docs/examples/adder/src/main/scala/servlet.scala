@@ -1,15 +1,28 @@
 import java.sql.Connection
 import java.sql.DriverManager
+import javax.servlet.AsyncContext
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.io.Source
-import scala.util.Try
 
-trait CommandServlet extends HttpServlet {
+trait JdbcServlet {
 
   def c: Connection
+
+  def unsafeRun[A]( s: Service[A]
+                  , ctx: AsyncContext
+                  , onError: String => Unit = _ => ()
+                  ): Future[Unit] =
+    Service.unsafeRun(s, c) map {
+      case Right(_) =>
+      case Left(message) => onError(message)
+    } map { _ => ctx.complete() }
+}
+
+trait CommandServlet extends HttpServlet with JdbcServlet {
 
   override def doPost( req: HttpServletRequest
                      , res: HttpServletResponse
@@ -20,12 +33,12 @@ trait CommandServlet extends HttpServlet {
 
     val reqBody: String =
       Source.fromInputStream(req.getInputStream).mkString
-    val s: Service[Unit] = Adder.add(reqBody.toInt)
-    Service.unsafeRunSync(s, c, 1000)
+
+    unsafeRun(Adder.add(reqBody.toInt), req.startAsync())
   }
 }
 
-trait QueryServlet extends HttpServlet {
+trait QueryServlet extends HttpServlet with JdbcServlet {
 
   def c: Connection
 
@@ -33,7 +46,7 @@ trait QueryServlet extends HttpServlet {
     new Thread {
       override def run(): Unit = {
         while (!isInterrupted) {
-          Try(Service.unsafeRunSync(Adder.update, c, 10000))
+          Service.unsafeRun(Adder.update, c)
           Thread.sleep(250)
         }
       }
@@ -56,13 +69,16 @@ trait QueryServlet extends HttpServlet {
     res.setContentType("text/plain")
     res.setCharacterEncoding("UTF-8")
 
-    Service.unsafeRunSync(Adder.getSum, c, 1000) match {
-      case Right((_, result)) =>
-        res.getWriter.write(s"${result}\n")
-      case Left(message) =>
-        res.setStatus(500)
-        res.getWriter.write(message)
-    }
+    unsafeRun( Adder.getSum map {
+                 case ((_, result)) =>
+                   res.getWriter.write(s"${result}\n")
+               }
+             , req.startAsync()
+             , { message =>
+                   res.setStatus(500)
+                   res.getWriter.write(message)
+               }
+             )
   }
 }
 
@@ -80,8 +96,7 @@ class AdderServlet extends CommandServlet with QueryServlet {
   }
 
   override def init(): Unit = {
-    Service.unsafeRunSync(Adder.init, c, 1000)
-    super.init()
+    Service.unsafeRun(Adder.init, c) map { _ => super.init() }
   }
 
   override def destroy(): Unit = {
