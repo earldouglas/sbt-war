@@ -13,7 +13,11 @@ object Http {
     c.setDoInput(true)
     c.setDoOutput(false)
     val status = c.getResponseCode
-    val responseBody = Source.fromInputStream(c.getInputStream).mkString
+    val responseStream =
+      if (status < 400) c.getInputStream
+      else c.getErrorStream
+    val responseBody =
+      Source.fromInputStream(responseStream).mkString
     c.disconnect()
     (status, responseBody)
   }
@@ -25,7 +29,11 @@ object Http {
     c.setDoOutput(true)
     c.getOutputStream.write(body.getBytes("UTF-8"))
     val status = c.getResponseCode
-    val responseBody = Source.fromInputStream(c.getInputStream).mkString
+    val responseStream =
+      if (status < 400) c.getInputStream
+      else c.getErrorStream
+    val responseBody =
+      Source.fromInputStream(responseStream).mkString
     c.disconnect()
     (status, responseBody)
   }
@@ -58,5 +66,9 @@ class Suite extends FunSuite with BeforeAndAfterAll with Matchers {
     Http.post("http://localhost:8080/", "17") shouldBe (201, "")
     Thread.sleep(300)
     Http.get("http://localhost:8080/") shouldBe (200, "42\n")
+  }
+
+  test("post an unparseable number") {
+    Http.post("http://localhost:8080/", "forty-two") shouldBe (400, "couldn't parse number")
   }
 }

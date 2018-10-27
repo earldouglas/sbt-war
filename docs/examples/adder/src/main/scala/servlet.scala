@@ -1,25 +1,22 @@
 import java.sql.Connection
 import java.sql.DriverManager
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.servlet.AsyncContext
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.Duration
 import scala.io.Source
 
 trait JdbcServlet {
 
   def c: Connection
 
-  def unsafeRun[A]( s: Service[A]
-                  , ctx: AsyncContext
-                  , onError: String => Unit = _ => ()
-                  ): Future[Unit] =
-    Service.unsafeRun(s, c) map {
-      case Right(_) =>
-      case Left(message) => onError(message)
-    } map { _ => ctx.complete() }
+  def unsafeRun[A](ctx: AsyncContext)(s: Service[A]): Future[Unit] =
+    Service.unsafeRun(s, c) map { _ => ctx.complete() }
 }
 
 trait CommandServlet extends HttpServlet with JdbcServlet {
@@ -27,14 +24,24 @@ trait CommandServlet extends HttpServlet with JdbcServlet {
   override def doPost( req: HttpServletRequest
                      , res: HttpServletResponse
                      ) {
-
-    res.setStatus(201)
-    res.setHeader("Location", "/")
-
-    val reqBody: String =
-      Source.fromInputStream(req.getInputStream).mkString
-
-    unsafeRun(Adder.add(reqBody.toInt), req.startAsync())
+    unsafeRun(req.startAsync()) {
+      Service {
+        Source.fromInputStream(req.getInputStream)
+              .mkString
+              .toInt
+      } mapLeft { _ =>
+        (400, "couldn't parse number")
+      } flatMap { amount =>
+        Adder.add(amount)
+      } map { _ =>
+        res.setStatus(201)
+        res.setHeader("Location", "/")
+      } withLeft { case (status, message) =>
+        res.setContentType("text/plain")
+        res.setStatus(status)
+        res.getWriter.write(message)
+      }
+    }
   }
 }
 
@@ -65,20 +72,17 @@ trait QueryServlet extends HttpServlet with JdbcServlet {
   override def doGet( req: HttpServletRequest
                     , res: HttpServletResponse
                     ) {
-
-    res.setContentType("text/plain")
-    res.setCharacterEncoding("UTF-8")
-
-    unsafeRun( Adder.getSum map {
-                 case ((_, result)) =>
-                   res.getWriter.write(s"${result}\n")
-               }
-             , req.startAsync()
-             , { message =>
-                   res.setStatus(500)
-                   res.getWriter.write(message)
-               }
-             )
+    unsafeRun(req.startAsync()) {
+      Adder.getSum map { case (_, result) =>
+        res.setContentType("text/plain")
+        res.setCharacterEncoding("UTF-8")
+        res.getWriter.write(s"${result}\n")
+      } withLeft { case (status, message) =>
+        res.setContentType("text/plain")
+        res.setStatus(status)
+        res.getWriter.write(message)
+      }
+    }
   }
 }
 
@@ -96,7 +100,10 @@ class AdderServlet extends CommandServlet with QueryServlet {
   }
 
   override def init(): Unit = {
-    Service.unsafeRun(Adder.init, c) map { _ => super.init() }
+    Await.result( Service.unsafeRun(Adder.init, c)
+                , Duration(5000, MILLISECONDS)
+                )
+    super.init()
   }
 
   override def destroy(): Unit = {
