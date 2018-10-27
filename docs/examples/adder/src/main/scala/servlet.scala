@@ -13,7 +13,16 @@ import scala.io.Source
 
 trait JdbcServlet {
 
-  def c: Connection
+  val c: Connection = {
+    Class.forName(sys.env("DB_DRIVER"))
+    val c: Connection =
+      DriverManager.getConnection( sys.env("DB_URL")
+                                 , sys.env("DB_USER")
+                                 , sys.env("DB_PASS")
+                                 )
+    c.setAutoCommit(false)
+    c
+  }
 
   def unsafeRun[A](ctx: AsyncContext)(s: Service[A]): Future[Unit] =
     Service.unsafeRun(s, c) map { _ => ctx.complete() }
@@ -45,9 +54,7 @@ trait CommandServlet extends HttpServlet with JdbcServlet {
   }
 }
 
-trait QueryServlet extends HttpServlet with JdbcServlet {
-
-  def c: Connection
+trait UpdateServlet extends HttpServlet with JdbcServlet {
 
   private val updater: Thread =
     new Thread {
@@ -68,6 +75,9 @@ trait QueryServlet extends HttpServlet with JdbcServlet {
     updater.interrupt
     super.destroy()
   }
+}
+
+trait QueryServlet extends HttpServlet with JdbcServlet {
 
   override def doGet( req: HttpServletRequest
                     , res: HttpServletResponse
@@ -86,18 +96,9 @@ trait QueryServlet extends HttpServlet with JdbcServlet {
   }
 }
 
-class AdderServlet extends CommandServlet with QueryServlet {
-
-  val c: Connection = {
-    Class.forName(sys.env("DB_DRIVER"))
-    val c: Connection =
-      DriverManager.getConnection( sys.env("DB_URL")
-                                 , sys.env("DB_USER")
-                                 , sys.env("DB_PASS")
-                                 )
-    c.setAutoCommit(false)
-    c
-  }
+class AdderServlet extends CommandServlet
+                   with UpdateServlet
+                   with QueryServlet {
 
   override def init(): Unit = {
     Await.result( Service.unsafeRun(Adder.init, c)
