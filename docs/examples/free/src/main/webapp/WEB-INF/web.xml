@@ -1,0 +1,13 @@
+<web-app>
+
+  <servlet>
+    <servlet-name>free</servlet-name>
+    <servlet-class>FreeServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>free</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
