@@ -1,7 +1,6 @@
 enablePlugins(ContainerPlugin)
 
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
-libraryDependencies += "javax.ws.rs" % "javax.ws.rs-api" % "2.0"
+libraryDependencies += "javax.ws.rs" % "javax.ws.rs-api" % "2.0" % "provided"
 
 containerLibs in Container :=
   Seq("fish.payara.extras" % "payara-micro" % "5.191")
