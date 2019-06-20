@@ -1,0 +1,14 @@
+<web-app>
+
+  <servlet>
+    <servlet-name>ZioServlet</servlet-name>
+    <servlet-class>ZioServlet</servlet-class>
+    <async-supported>true</async-supported>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ZioServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

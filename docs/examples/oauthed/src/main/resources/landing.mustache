@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>OAuthed</title>
+    <style>
+      @media screen {
+        body {
+          max-width: 120ex;
+          margin: 1em auto;
+          padding: 0 2ex;
+        }
+      }
+      a {
+        color: blue
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+      {{#profile}}
+        <li>Name: {{name}}</li>
+        <li>Email: {{email}}</li>
+      {{/profile}}
+    </ul>
+    {{^profile}}
+      <div><a href="/google">Sign in with Google</a></div>
+    {{/profile}}
+  </body>
+</html>

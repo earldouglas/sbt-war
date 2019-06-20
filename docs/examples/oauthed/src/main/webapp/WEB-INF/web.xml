@@ -1,0 +1,13 @@
+<web-app>
+
+  <servlet>
+    <servlet-name>OAuthedServlet</servlet-name>
+    <servlet-class>OAuthedServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>OAuthedServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
