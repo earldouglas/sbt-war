@@ -1,3 +1,5 @@
+import argonaut.Argonaut._
+import argonaut._
 import com.github.scribejava.apis.GoogleApi20
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.OAuth2AccessToken
@@ -16,8 +18,15 @@ object GoogleApiClient {
 
   def getProfile(accessToken: OAuth2AccessToken): Either[String,Profile] = {
 
-    import argonaut._
-    import argonaut.Argonaut._
+    /*
+     * Scopes needed:
+     * - https://www.googleapis.com/auth/userinfo.email
+     * - https://www.googleapis.com/auth/userinfo.profile
+     *
+     * See also:
+     * - https://developers.google.com/identity/protocols/googlescopes
+     * - https://developers.google.com/apis-explorer/#p/oauth2/v2/oauth2.userinfo.get
+     */
 
     val request: OAuthRequest =
       new OAuthRequest( Verb.GET
