@@ -11,9 +11,9 @@ object MustacheSupport {
   }
 
   implicit class MustacheResonse(res: HttpServletResponse) {
-    def render( templateName: String
-              , model: Any
-              ): Unit = {
+    def mustache( templateName: String
+                , model: Any
+                ): Unit = {
       val path: String =
         getClass.getClassLoader
                 .getResource(templateName)

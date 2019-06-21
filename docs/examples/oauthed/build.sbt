@@ -5,6 +5,7 @@ libraryDependencies += "com.github.spullara.mustache.java" %  "compiler"        
 libraryDependencies += "com.github.spullara.mustache.java" %  "scala-extensions-2.12" % "0.9.5"
 libraryDependencies += "org.scalatra"                      %% "scalatra"              % "2.5.0"
 libraryDependencies += "io.argonaut"                       %% "argonaut"              % "6.2.2"
+libraryDependencies += "org.scalaz"                        %% "scalaz-zio"            % "1.0-RC4"
 
 libraryDependencies += "javax.servlet"                     %  "javax.servlet-api"     % "3.1.0" % "provided"
 

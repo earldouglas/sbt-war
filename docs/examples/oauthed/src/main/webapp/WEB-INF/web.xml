@@ -3,6 +3,7 @@
   <servlet>
     <servlet-name>OAuthedServlet</servlet-name>
     <servlet-class>OAuthedServlet</servlet-class>
+    <async-supported>true</async-supported>
   </servlet>
 
   <servlet-mapping>
