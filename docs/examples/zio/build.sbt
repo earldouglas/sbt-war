@@ -3,7 +3,7 @@ scalaVersion := "2.12.8"
 libraryDependencies += "javax.servlet"  %  "javax.servlet-api" % "3.1.0" % "provided"
 
 libraryDependencies += "com.h2database" %  "h2"         % "1.4.194"
-libraryDependencies += "org.scalaz"     %% "scalaz-zio" % "1.0-RC4"
+libraryDependencies += "org.scalaz"     %% "scalaz-zio" % "1.0-RC5"
 
 enablePlugins(JettyPlugin)
 
