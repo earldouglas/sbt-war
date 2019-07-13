@@ -2,9 +2,9 @@ import java.sql.SQLException
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import scalaz.zio.Runtime
-import scalaz.zio.ZIO
-import scalaz.zio.internal.PlatformLive
+import zio.Runtime
+import zio.ZIO
+import zio.internal.PlatformLive
 
 object ServletEffects {
 

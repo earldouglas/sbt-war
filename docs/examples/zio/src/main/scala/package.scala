@@ -1,7 +1,7 @@
 import java.sql.Connection
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import scalaz.zio.ZIO
+import zio.ZIO
 
 trait WithConnection {
   def connection: Connection

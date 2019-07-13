@@ -1,6 +1,6 @@
 import java.sql.Connection
 import java.sql.DriverManager
-import scalaz.zio.ZIO
+import zio.ZIO
 
 object Database {
 
