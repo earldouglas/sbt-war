@@ -57,9 +57,8 @@ object Services {
       _       <- setContentType("text/html;charset=UTF-8")
       entries <- Database.getEntries
       _       <- write("<ul>\n")
-      _       <- entries.foldRight(write("")) {
-                   case ((name, message), e) =>
-                     e.zipRight(write(s"  <li>${name}: ${message}</li>\n"))
+      _       <- ZIO.foreach(entries) { case (name, message) =>
+                   write(s"  <li>${name}: ${message}</li>\n")
                  }
       _       <- write("</ul>\n")
     } yield ()
