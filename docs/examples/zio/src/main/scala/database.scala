@@ -1,16 +1,25 @@
+import com.jolbox.bonecp.BoneCP
+import com.jolbox.bonecp.BoneCPConfig
 import java.sql.Connection
-import java.sql.DriverManager
 import zio.ZIO
 
 object Database {
 
-  val c: Connection = {
+  private val connectionPool: BoneCP = {
     Class.forName(sys.env("DB_DRIVER"))
+    val config = new BoneCPConfig()
+    config.setJdbcUrl(sys.env("DB_URL"))
+    config.setUsername(sys.env("DB_USER"))
+    config.setPassword(sys.env("DB_PASS"))
+    config.setMinConnectionsPerPartition(5)
+    config.setMaxConnectionsPerPartition(10)
+    config.setPartitionCount(1)
+    new BoneCP(config)
+  }
+
+  def c: Connection = {
     val c: Connection =
-      DriverManager.getConnection( sys.env("DB_URL")
-                                 , sys.env("DB_USER")
-                                 , sys.env("DB_PASS")
-                                 )
+      connectionPool.getConnection
     c.setAutoCommit(false)
     c
   }

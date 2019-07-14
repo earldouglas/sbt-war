@@ -99,23 +99,24 @@ class ZioServlet extends HttpServlet {
                   , res: HttpServletResponse
                   )( k: ZIO[Env, Throwable, A]
                   ): Either[SQLException, A] = {
-    val rt: Runtime[Env] =
-      Runtime( new WithConnection with WithRequest with WithResponse {
-                 val connection = Database.c
-                 val request = req
-                 val response = res
-               }
-             , PlatformLive.Default
-             )
+    val env: Env =
+      new WithConnection with WithRequest with WithResponse {
+        val connection = Database.c
+        val request = req
+        val response = res
+      }
+    val rt: Runtime[Env] = Runtime(env, PlatformLive.Default)
     rt.unsafeRun {
       k.map({ a =>
           println("COMMITTING TRANSACTION")
-        Database.c.commit()
+        env.connection.commit()
+        env.connection.close()
         Right(a)
       }).catchSome {
         case e: SQLException =>
           println("ROLLING BACK TRANSACTION")
-          Database.c.rollback()
+          env.connection.rollback()
+          env.connection.close()
           ZIO.succeed(Left[SQLException, A](e))
       }
     }
