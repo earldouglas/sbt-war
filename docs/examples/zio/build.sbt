@@ -17,8 +17,9 @@ scalacOptions ++= Seq( "-deprecation"
 
 resolvers += Resolver.bintrayRepo("earldouglas", "maven")
 
-libraryDependencies += "dev.zio"         %% "zio"      % "1.0.0-RC10-1"
-libraryDependencies += "com.earldouglas" %% "zio-jdbc" % "1.0.0"
+libraryDependencies += "dev.zio"         %% "zio"         % "1.0.0-RC10-1"
+libraryDependencies += "com.earldouglas" %% "zio-jdbc"    % "1.0.0"
+libraryDependencies += "com.earldouglas" %% "zio-servlet" % "1.0.0"
 
 libraryDependencies += "javax.servlet"  %  "javax.servlet-api" % "3.1.0" % "provided"
 
