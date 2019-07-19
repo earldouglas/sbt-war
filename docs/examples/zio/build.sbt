@@ -15,12 +15,15 @@ scalacOptions ++= Seq( "-deprecation"
                      , "-Ywarn-unused-import"
                      )
 
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
+resolvers += Resolver.bintrayRepo("earldouglas", "maven")
 
-libraryDependencies += "com.h2database" % "h2" % "1.4.194"
+libraryDependencies += "dev.zio"         %% "zio"      % "1.0.0-RC10-1"
+libraryDependencies += "com.earldouglas" %% "zio-jdbc" % "1.0.0"
+
+libraryDependencies += "javax.servlet"  %  "javax.servlet-api" % "3.1.0" % "provided"
+
+libraryDependencies += "com.h2database" %  "h2"         % "1.4.194"
 libraryDependencies += "com.jolbox" % "bonecp" % "0.8.0.RELEASE"
-
-libraryDependencies += "dev.zio" %% "zio" % "1.0.0-RC10-1"
 
 enablePlugins(JettyPlugin)
 
