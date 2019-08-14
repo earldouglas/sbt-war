@@ -1,4 +1,0 @@
-sudo: false
-language: scala
-script:
-  - sbt ^scripted
