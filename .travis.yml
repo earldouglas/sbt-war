@@ -1,5 +1,7 @@
 sudo: false
 language: scala
+scala:
+  - 2.12.8
 script:
   - sbt "^^ ${SBT_VERSION}" scripted
 matrix:
