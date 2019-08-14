@@ -1,7 +1,5 @@
 sudo: false
 language: scala
-jdk:
-  - oraclejdk9
 script:
   - sbt "^^ ${SBT_VERSION}" scripted
 matrix:
