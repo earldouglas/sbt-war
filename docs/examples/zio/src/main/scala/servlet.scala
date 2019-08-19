@@ -73,37 +73,19 @@ class ZioServlet extends HttpServlet {
     unsafeRun(null, null)(Database.init)
   }
 
-  override def doGet( req: HttpServletRequest
-                    , res: HttpServletResponse
-                    ): Unit = {
-    res.setContentType("text/html;charset=UTF-8")
-    unsafeRun(req, res) {
-      Database.getEntries map { entries =>
-        res.getWriter.write("<ul>\n")
-        entries map { case (name, message) =>
-          res.getWriter.write(s"  <li>${name}: ${message}</li>\n")
+  override def service(req: HttpServletRequest, res: HttpServletResponse): Unit = {
+    try {
+      unsafeRun(req, res) {
+        Request.route {
+          case "GET"  :: Nil => Services.getMessages
+          case "POST" :: Nil => Services.addMessage
+          case _             => Response.setStatus(404)
         }
-        res.getWriter.write("</ul>\n")
       }
-    }
-  }
-
-  override def doPost( req: HttpServletRequest
-                     , res: HttpServletResponse
-                     ): Unit = {
-
-    val entry: Option[(String, String)] =
-      for {
-        name    <- Option(req.getParameter("name"))
-        message <- Option(req.getParameter("message"))
-      } yield (name, message)
-
-    entry match {
-      case Some((name, message)) =>
-        unsafeRun(req, res)(Database.addEntry(name, message))
-        res.sendRedirect("/")
-      case None =>
-        res.setStatus(400)
+    } catch {
+      case t: Throwable =>
+        t.printStackTrace
+        res.setStatus(500)
     }
   }
 }
