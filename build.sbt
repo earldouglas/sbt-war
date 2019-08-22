@@ -17,5 +17,5 @@ scriptedLaunchOpts  += { "-Dplugin.version=" + version.value }
 watchSources       ++= { (sourceDirectory.value ** "*").get }
 
 // AWS deployment support
-libraryDependencies += "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % "1.11.105"
-libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3"               % "1.11.105"
+libraryDependencies += "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % "1.11.616"
+libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3"               % "1.11.616"
