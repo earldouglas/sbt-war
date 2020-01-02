@@ -1,5 +1,7 @@
 # xsbt-web-plugin
 
+![Build Status](https://github.com/earldouglas/xsbt-web-plugin/workflows/build/badge.svg)
+
 xsbt-web-plugin is tool for building J2EE Web applications with [sbt](https://www.scala-sbt.org/).
 
 ## Features
