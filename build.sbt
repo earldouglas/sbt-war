@@ -9,6 +9,7 @@ sbtPlugin         := true
 // bintray-sbt
 publishMavenStyle := false
 licenses          += ("BSD New", url("https://opensource.org/licenses/BSD-3-Clause"))
+bintrayVcsUrl     := Some("git@github.com:earldouglas/xsbt-web-plugin.git")
 
 // scripted-plugin
 ScriptedPlugin.scriptedSettings
