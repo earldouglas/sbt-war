@@ -27,7 +27,7 @@ sbt.version=1.2.8
 *project/plugins.sbt*:
 
 ```
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.0.3")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.1.0")
 ```
 
 *build.sbt*:
