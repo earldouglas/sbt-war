@@ -14,6 +14,8 @@ object ContainerPlugin extends AutoPlugin {
   lazy val debug      = taskKey[Seq[Process]]("start container in debug mode")
   lazy val join       = taskKey[Seq[Int]]("join container")
   lazy val stop       = taskKey[Unit]("stop container")
+  lazy val quicktest  = taskKey[Unit]("test under quickstarted container")
+  lazy val test       = taskKey[Unit]("test under started container")
 
   object autoImport {
     val Container = config("container").hide
@@ -58,6 +60,8 @@ object ContainerPlugin extends AutoPlugin {
       , debug              := (debugTask dependsOn webappPrepare).value
       , join               := joinTask.value
       , stop               := stopTask.value
+      , quicktest          := ((test in Test) dependsOn awaitOpenTask dependsOn quickstart dependsOn (compile in Test)).value
+      , test               := ((test in Test) dependsOn awaitOpenTask dependsOn start dependsOn (compile in Test)).value
       , onLoad in Global   := onLoadSetting.value
       , javaOptions        := (javaOptions in Compile).value
       , containerLaunchCmd := defaultLaunchCmd.value
@@ -205,5 +209,33 @@ object ContainerPlugin extends AutoPlugin {
                       ): Unit = {
     val oldProcess = atomicRef.getAndSet(Seq.empty[Process])
     oldProcess.foreach(stopProcess(l))
+  }
+
+  private def awaitOpenTask: Def.Initialize[Task[Unit]] = {
+    def awaitOpen(port: Int, retries: Int = (30 * 4)): Unit = {
+      def isOpen(port: Int): Boolean =
+        try {
+          import java.net.Socket
+          import java.net.InetSocketAddress
+          val socket = new Socket()
+          socket.connect(new InetSocketAddress("localhost", port))
+          socket.close()
+          true
+        } catch {
+          case e: Exception => false
+        }
+      if (!isOpen(port)) {
+        if (retries > 0) {
+          Thread.sleep(250)
+          awaitOpen(port, retries - 1)
+        } else {
+          throw new Exception(s"gave up waiting for port $port to be open")
+        }
+      }
+    }
+    Def.task {
+      val port = containerPort.value
+      awaitOpen(port)
+    }
   }
 }
