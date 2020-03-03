@@ -22,10 +22,10 @@ Configure sbt:
 *project/build.properties*:
 
 ```
-sbt.version=1.1.2
+sbt.version=1.3.8
 ```
 
-*project/build.sbt*:
+*project/plugins.sbt*:
 
 ```
 addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.1.0")
@@ -34,7 +34,7 @@ addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.1.0")
 *build.sbt*:
 
 ```
-scalaVersion := "2.12.5"
+scalaVersion := "2.13.1"
 enablePlugins(JettyPlugin)
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
 ```
