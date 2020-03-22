@@ -38,6 +38,7 @@ object ContainerPlugin extends AutoPlugin {
     settingKey[AtomicReference[Seq[Process]]]("current container process")
 
   import WebappPlugin.autoImport.webappPrepare
+  import WebappPlugin.autoImport.webappPrepareQuick
   import autoImport._
 
   override def requires = WarPlugin
@@ -56,7 +57,7 @@ object ContainerPlugin extends AutoPlugin {
       Seq(libraryDependencies ++= (containerLibs in conf).value.map(_ % conf)) ++
       inConfig(conf)(Seq(
         start              := (startTask dependsOn webappPrepare).value
-      , quickstart         := quickstartTask.value
+      , quickstart         := (quickstartTask dependsOn webappPrepareQuick).value
       , debug              := (debugTask dependsOn webappPrepare).value
       , join               := joinTask.value
       , stop               := stopTask.value
@@ -118,8 +119,11 @@ object ContainerPlugin extends AutoPlugin {
         Classpaths.managedJars(conf, classpathTypes.value, update.value).map(_.data)
 
       val path = {
-        if (quick) sourceDirectory in webappPrepare
-        else target in webappPrepare
+        if (quick) {
+          target in webappPrepareQuick
+        } else {
+          target in webappPrepare
+        }
       }.value.absolutePath
 
       def launchFn(_containerPort: Int, _debugPort: Int): Process = {
