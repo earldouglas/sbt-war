@@ -1,0 +1,14 @@
+<web-app>
+
+  <servlet>
+    <servlet-name>AsyncServlet</servlet-name>
+    <servlet-class>AsyncServlet</servlet-class>
+    <async-supported>true</async-supported>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>AsyncServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
