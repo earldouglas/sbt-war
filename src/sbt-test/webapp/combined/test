@@ -81,6 +81,10 @@ $ copy-file sbt/yuicompressor.sbt yuicompressor.sbt
 $ copy-file sbt/project/yuicompressor.sbt project/yuicompressor.sbt
 > reload
 > clean
+$ absent target/webapp-quick/script-min.js
+> webappPrepareQuick
+$ exists target/webapp-quick/script-min.js
+$ absent target/webapp/script-min.js
 > webappPrepare
 $ exists target/webapp/script-min.js
 $ delete yuicompressor.sbt

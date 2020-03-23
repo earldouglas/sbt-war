@@ -14,6 +14,7 @@ object WebappPlugin extends AutoPlugin {
 
   object autoImport {
     lazy val webappPrepare       = taskKey[Seq[(File, String)]]("prepare webapp contents for packaging")
+    lazy val webappPrepareQuick  = taskKey[Seq[(File, String)]]("prepare webapp contents for quickstart")
     lazy val webappPostProcess   = taskKey[File => Unit]("additional task after preparing the webapp")
     lazy val webappWebInfClasses = settingKey[Boolean]("use WEB-INF/classes instead of WEB-INF/lib")
   }
@@ -26,110 +27,145 @@ object WebappPlugin extends AutoPlugin {
     Seq(
         sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "webapp"
       , target in webappPrepare          := (target in Compile).value / "webapp"
+      , target in webappPrepareQuick     := (target in Compile).value / "webapp-quick"
       , webappPrepare                    := webappPrepareTask.value
+      , webappPrepareQuick               := webappPrepareQuickTask.value
       , webappPostProcess                := { _ => () }
       , webappWebInfClasses              := false
       , Compat.watchSourceSetting
     )
 
-  private def webappPrepareTask = Def.task {
-
-    def cacheify(name: String, dest: File => Option[File], in: Set[File]): Set[File] =
-      Compat.cached(streams.value.cacheDirectory / "xsbt-web-plugin" / name, lastModified, exists)({
-        (inChanges, outChanges) =>
-          // toss out removed files
-          for {
-            removed  <- inChanges.removed
-            toRemove <- dest(removed)
-          } yield IO.delete(toRemove)
-
-          // apply and report changes
-          for {
-            in  <- inChanges.added ++ inChanges.modified -- inChanges.removed
-            out <- dest(in)
-            _    = IO.copyFile(in, out)
-          } yield out
-      }).apply(in)
-
-    val webappSrcDir = (sourceDirectory in webappPrepare).value
-    val webappTarget = (target in webappPrepare).value
-
-    val classpath = (fullClasspath in Runtime).value
-    val webInfDir = webappTarget / "WEB-INF"
-    val webappLibDir = webInfDir / "lib"
-
-    cacheify(
-      "webapp",
-      { in =>
+  private def cacheify( name: String
+                      , dest: File => Option[File]
+                      , in: Set[File]
+                      , streams: TaskStreams
+                      ): Set[File] =
+    Compat.cached(streams.cacheDirectory / "xsbt-web-plugin" / name, lastModified, exists)({
+      (inChanges, outChanges) =>
+        // toss out removed files
         for {
-          f <- Some(in)
-          if !f.isDirectory
-          r <- IO.relativizeFile(webappSrcDir, f)
-        } yield IO.resolve(webappTarget, r)
-      },
-      (webappSrcDir ** "*").get.toSet
-    )
+          removed  <- inChanges.removed
+          toRemove <- dest(removed)
+        } yield IO.delete(toRemove)
 
-    val m = (mappings in (Compile, packageBin)).value
-    val p = (packagedArtifact in (Compile, packageBin)).value._2 
+        // apply and report changes
+        for {
+          in  <- inChanges.added ++ inChanges.modified -- inChanges.removed
+          out <- dest(in)
+          _    = IO.copyFile(in, out)
+        } yield out
+    }).apply(in)
 
-    if (webappWebInfClasses.value) {
-      // copy this project's classes directly to WEB-INF/classes
-      cacheify(
-        "classes",
-        { in =>
-          m find {
-            case (src, dest) => src == in
-          } map { case (src, dest) =>
-            webInfDir / "classes" / dest
-          }
-        },
-        (m filter {
-          case (src, dest) => !src.isDirectory
-        } map { case (src, dest) =>
-          src
-        }).toSet
-      )
-    } else {
-      // copy this project's classes as a .jar file in WEB-INF/lib
-      cacheify(
-        "lib-art",
-        { in => Some(webappLibDir / in.getName) },
-        Set(p)
-      )
+  private def _webappPrepare( webappTarget: SettingKey[File]
+                            , cacheName: String
+                            ) =
+    Def.task {
+
+      val webappSrcDir = (sourceDirectory in webappPrepare).value
+
+      cacheify( cacheName
+              , { in =>
+                  for {
+                    f <- Some(in)
+                    if !f.isDirectory
+                    r <- IO.relativizeFile(webappSrcDir, f)
+                  } yield IO.resolve(webappTarget.value, r)
+                }
+              , (webappSrcDir ** "*").get.toSet
+              , streams.value
+              )
+
+      webappTarget.value
     }
 
-    // create .jar files for depended-on projects in WEB-INF/lib
-    for {
-      cpItem    <- classpath.toList
-      dir        = cpItem.data
-      if dir.isDirectory
-      artEntry  <- cpItem.metadata.entries find { e => e.key.label == "artifact" }
-      cpArt      = artEntry.value.asInstanceOf[Artifact]
-      artifact   = (packagedArtifact in (Compile, packageBin)).value._1
-      if cpArt  != artifact
-      files      = (dir ** "*").get flatMap { file =>
-        if (!file.isDirectory)
-          IO.relativize(dir, file) map { p => (file, p) }
-        else
-          None
+  private def webappPrepareQuickTask =
+    Def.task {
+
+      val webappTarget =
+        _webappPrepare( target in webappPrepareQuick
+                      , "webapp-quick"
+                      ).value
+
+      webappPostProcess.value(webappTarget)
+
+      (webappTarget ** "*") pair (Path.relativeTo(webappTarget) | Path.flat)
+    }
+
+  private def webappPrepareTask =
+    Def.task {
+
+      val taskStreams = streams.value
+
+      val webappTarget =
+        _webappPrepare( target in webappPrepare
+                      , "webapp"
+                      ).value
+
+      val m = (mappings in (Compile, packageBin)).value
+      val p = (packagedArtifact in (Compile, packageBin)).value._2 
+
+      val webInfDir = webappTarget / "WEB-INF"
+      val webappLibDir = webInfDir / "lib"
+
+      if (webappWebInfClasses.value) {
+        // copy this project's classes directly to WEB-INF/classes
+        cacheify( "classes"
+                , { in =>
+                    m find {
+                      case (src, dest) => src == in
+                    } map { case (src, dest) =>
+                      webInfDir / "classes" / dest
+                    }
+                  }
+                , (m filter {
+                    case (src, dest) => !src.isDirectory
+                  } map { case (src, dest) =>
+                    src
+                  }).toSet
+                , taskStreams
+                )
+      } else {
+        // copy this project's classes as a .jar file in WEB-INF/lib
+        cacheify( "lib-art"
+                , { in => Some(webappLibDir / in.getName) }
+                , Set(p)
+                , taskStreams
+                )
       }
-      jarFile    = cpArt.name + ".jar"
-      _          = IO.jar(files, webappLibDir / jarFile, new Manifest)
-    } yield ()
 
-    // copy this project's library dependency .jar files to WEB-INF/lib
-    cacheify(
-      "lib-deps",
-      { in => Some(webappTarget / "WEB-INF" / "lib" / in.getName) },
-      classpath.map(_.data).toSet filter { in =>
-        !in.isDirectory && in.getName.endsWith(".jar")
-      }
-    )
+      val classpath = (fullClasspath in Runtime).value
 
-    webappPostProcess.value(webappTarget)
+      // create .jar files for depended-on projects in WEB-INF/lib
+      for {
+        cpItem    <- classpath.toList
+        dir        = cpItem.data
+        if dir.isDirectory
+        artEntry  <- cpItem.metadata.entries find { e => e.key.label == "artifact" }
+        cpArt      = artEntry.value.asInstanceOf[Artifact]
+        artifact   = (packagedArtifact in (Compile, packageBin)).value._1
+        if cpArt  != artifact
+        files      = (dir ** "*").get flatMap { file =>
+          if (!file.isDirectory)
+            IO.relativize(dir, file) map { p => (file, p) }
+          else
+            None
+        }
+        jarFile    = cpArt.name + ".jar"
+        _          = IO.jar(files, webappLibDir / jarFile, new Manifest)
+      } yield ()
 
-    (webappTarget ** "*") pair (Path.relativeTo(webappTarget) | Path.flat)
-  }
+      // copy this project's library dependency .jar files to WEB-INF/lib
+      cacheify( "lib-deps"
+              , { in => Some(webappTarget / "WEB-INF" / "lib" / in.getName) }
+              , classpath.map(_.data).toSet filter { in =>
+                  !in.isDirectory && in.getName.endsWith(".jar")
+                }
+              , taskStreams
+              )
+
+      webappPostProcess.value(webappTarget)
+
+      (webappTarget ** "*") pair (Path.relativeTo(webappTarget) | Path.flat)
+    }
 
 }
