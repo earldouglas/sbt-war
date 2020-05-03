@@ -14,7 +14,6 @@ bintrayVcsUrl     := Some("git@github.com:earldouglas/xsbt-web-plugin.git")
 // scripted-plugin
 ScriptedPlugin.scriptedSettings
 scriptedBufferLog   := false
-scriptedLaunchOpts  += { "-Dplugin.version=" + version.value }
 watchSources       ++= { (sourceDirectory.value ** "*").get }
 
 // AWS deployment support
