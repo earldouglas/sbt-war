@@ -14,6 +14,6 @@ jobs:
       with:
         java-version: 11
     - name: Run Scala tests
-      run: sbt "^ test"
+      run: sbt ^test
     - name: Run sbt tests
-      run: sbt "^ scripted"
+      run: sbt scripted
