@@ -1,7 +1,7 @@
 organization := "test"
 
 val commonSettings = Seq(
-  scalaVersion := "2.10.2"
+  scalaVersion := "2.12.11"
 )
 
 lazy val root = (project in file(".")).aggregate(maths, mathsweb, remote, remoteweb)
