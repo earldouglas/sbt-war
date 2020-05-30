@@ -6,7 +6,7 @@ xsbt-web-plugin is tool for building J2EE Web applications with [sbt](https://ww
 
 ## Features
 
-* Code in any language supported by sbt (Scala, Java, etc.)
+* Use any language supported by sbt (Scala, Java, etc.)
 * Build a project on Java servlets
 * Package a project as a *.war* file
 * Run a project under Jetty or Tomcat
