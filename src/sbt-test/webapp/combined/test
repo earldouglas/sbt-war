@@ -19,8 +19,8 @@ $ absent target/webapp/index2.html
 > clean
 > 'set unmanagedResourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"'
 > webappPrepare
-> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.scala
--> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.class
+> findInZip target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar text/Resource.scala
+-> findInZip target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar text/Resource.class
 
 ## unmanaged sources
 
@@ -28,8 +28,8 @@ $ absent target/webapp/index2.html
 > clean
 > 'set unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"'
 > webappPrepare
--> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.scala
-> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar text/Resource.class
+-> findInZip target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar text/Resource.scala
+> findInZip target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar text/Resource.class
 
 ## webapp destination
 
@@ -41,7 +41,7 @@ $ exists target/WebContent/index.html
 $ exists target/WebContent/styles/style.css
 $ exists target/WebContent/WEB-INF/web.xml
 $ absent target/WebContent/WEB-INF/classes
-$ exists target/WebContent/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
+$ exists target/WebContent/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar
 
 ## webapp source
 
@@ -53,7 +53,7 @@ $ exists target/webapp/index3.html
 $ exists target/webapp/styles/style.css
 $ exists target/webapp/WEB-INF/web.xml
 $ absent target/webapp/WEB-INF/classes
-$ exists target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
+$ exists target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar
 
 ## web-inf classes
 
@@ -61,7 +61,7 @@ $ exists target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
 > clean
 > 'set webappWebInfClasses := true'
 > webappPrepare
-$ absent target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
+$ absent target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar
 $ exists target/webapp/WEB-INF/classes/foo/bar.properties
 $ exists target/webapp/WEB-INF/classes/foo/bar/Bar.class
 
@@ -70,10 +70,10 @@ $ exists target/webapp/WEB-INF/classes/foo/bar/Bar.class
 > reload
 > clean
 > webappPrepare
-$ exists target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar
+$ exists target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar
 $ absent target/webapp/WEB-INF/classes
-> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar foo/bar.properties
-> findInZip target/webapp/WEB-INF/lib/test_2.10-0.1.0-SNAPSHOT.jar foo/bar/Bar.class
+> findInZip target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar foo/bar.properties
+> findInZip target/webapp/WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar foo/bar/Bar.class
 
 ## yuicompressor
 

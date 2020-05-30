@@ -2,9 +2,11 @@
 organization  := "com.earldouglas"
 name          := "xsbt-web-plugin"
 
+scalaVersion      := "2.12.11"
 scalacOptions    ++= Seq("-feature", "-deprecation")
 crossSbtVersions  := Seq("0.13.6", "1.0.0")
 sbtPlugin         := true
+enablePlugins(SbtPlugin)
 
 // bintray-sbt
 publishMavenStyle := false
@@ -12,7 +14,6 @@ licenses          += ("BSD New", url("https://opensource.org/licenses/BSD-3-Clau
 bintrayVcsUrl     := Some("git@github.com:earldouglas/xsbt-web-plugin.git")
 
 // scripted-plugin
-ScriptedPlugin.scriptedSettings
 scriptedBufferLog   := false
 watchSources       ++= { (sourceDirectory.value ** "*").get }
 
