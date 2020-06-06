@@ -1,5 +1,5 @@
-import org.eclipse.jetty.server._
-import org.eclipse.jetty.servlet._
+import java.net.InetSocketAddress
+import java.net.Socket
 import org.scalatest._
 import scala.io.Source
 
@@ -42,17 +42,23 @@ object Http {
 
 class Suite extends FunSuite with BeforeAndAfterAll with Matchers {
 
-  val server = new Server(8080)
+  private def awaitPort(port: Int, retries: Int = 40): Unit =
+    try {
+      val socket = new Socket()
+      socket.connect(new InetSocketAddress("localhost", port))
+      socket.close()
+    } catch {
+      case _: Exception =>
+        if (retries > 0) {
+          Thread.sleep(250)
+          awaitPort(port, retries - 1)
+        } else {
+          throw new Exception(s"expected port $port to be open")
+        }
+    }
 
   override def beforeAll(): Unit = {
-    val handler = new ServletHandler()
-    server.setHandler(handler)
-    handler.addServletWithMapping(classOf[AdderServlet], "/*")
-    server.start()
-  }
-
-  override def afterAll(): Unit = {
-    server.stop()
+    awaitPort(8080)
   }
 
   test("get sum") {
