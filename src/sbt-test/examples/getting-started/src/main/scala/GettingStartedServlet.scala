@@ -12,11 +12,11 @@ class GettingStartedServlet extends HttpServlet {
     res.setCharacterEncoding("UTF-8")
 
     val responseBody: String =
-      """<html>
-        |  <body>
-        |    <h1>Hello, world!</h1>
-        |  </body>
-        |</html>""".stripMargin
+      """|<html>
+         |  <body>
+         |    <h1>Hello, world!</h1>
+         |  </body>
+         |</html>""".stripMargin
     res.getWriter.write(responseBody)
   }
 }
