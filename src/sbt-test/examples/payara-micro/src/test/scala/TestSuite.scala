@@ -14,6 +14,6 @@ class TestSuite extends FunSuite with BeforeAndAfterAll with Matchers {
 
   test("hello") {
     Request("GET", "http://localhost:8080/hello?name=James", Map.empty, None) shouldBe
-      Response(status = 200, Map("Content-Type" -> "text/plain;charset=utf-8"), "Hallo James\n")
+      Response(status = 200, Map("X-Frame-Options" -> "SAMEORIGIN", "Content-Type" -> "text/plain"), "Hallo James\n")
   }
 }
