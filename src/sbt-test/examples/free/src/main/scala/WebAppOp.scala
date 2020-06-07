@@ -89,7 +89,7 @@ object WebAppOp {
                    }
     } yield user
 
-  def authz[A]( required: Set[Permission]
+  def authZ[A]( required: Set[Permission]
               , k: => A
               ): Free[WebAppOp, A] =
     for {
@@ -102,9 +102,9 @@ object WebAppOp {
 
   val getPermissions: Free[WebAppOp, Set[Permission]] =
     for {
-      user     <- WebAppOp.authN
+      user <- WebAppOp.authN
     } yield permissions.getOrElse(user.username, Set.empty)
 
   val getSecret: Free[WebAppOp, String] =
-    authz(Set(Read), "The duck flies at midnight.")
+    authZ(Set(Read), "The duck flies at midnight.")
 }
