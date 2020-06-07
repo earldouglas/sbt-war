@@ -1,4 +1,4 @@
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.11"
 scalacOptions ++= Seq( "-deprecation"
                      , "-encoding", "utf8"
                      , "-feature"
@@ -16,6 +16,8 @@ scalacOptions ++= Seq( "-deprecation"
                      )
 
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 enablePlugins(JettyPlugin)
 
