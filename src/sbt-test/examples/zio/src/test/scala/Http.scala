@@ -1,17 +1,16 @@
 import java.net._
-import org.scalatest._
 import scala.collection.JavaConverters._
 import scala.io.Source
 
-trait HttpSuite extends FunSuite with BeforeAndAfterAll {
+case class Response(
+  status: Int,
+  headers: Map[String, String],
+  body: String
+)
 
-  case class Response(
-    status: Int,
-    headers: Map[String, String],
-    body: String
-  )
+object Request {
 
-  def request(
+  def apply(
     method: String,
     url: String,
     headers: Map[String, String],
@@ -61,24 +60,5 @@ trait HttpSuite extends FunSuite with BeforeAndAfterAll {
     c.disconnect()
 
     response
-  }
-
-  private def awaitPort(port: Int, retries: Int = 40): Unit =
-    try {
-      val socket = new Socket()
-      socket.connect(new InetSocketAddress("localhost", port))
-      socket.close()
-    } catch {
-      case _: Exception =>
-        if (retries > 0) {
-          Thread.sleep(250)
-          awaitPort(port, retries - 1)
-        } else {
-          throw new Exception(s"expected port $port to be open")
-        }
-    }
-
-  override def beforeAll() {
-    awaitPort(8080)
   }
 }

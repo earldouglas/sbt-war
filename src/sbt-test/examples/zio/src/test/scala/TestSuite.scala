@@ -1,9 +1,9 @@
 import org.scalatest._
 
-class TestSuite extends HttpSuite with Matchers {
+class TestSuite extends FunSuite with Matchers {
 
   test("no messages yet") {
-    request(
+    Request(
       method = "GET",
       url = "http://localhost:8080/",
       headers = Map.empty,
@@ -21,7 +21,7 @@ class TestSuite extends HttpSuite with Matchers {
   }
 
   test("add a message") {
-    request(
+    Request(
       method = "POST",
       url = "http://localhost:8080/",
       headers = Map.empty,
@@ -36,7 +36,7 @@ class TestSuite extends HttpSuite with Matchers {
   }
 
   test("retrieve the message") {
-    request(
+    Request(
       method = "GET",
       url = "http://localhost:8080/",
       headers = Map.empty,
