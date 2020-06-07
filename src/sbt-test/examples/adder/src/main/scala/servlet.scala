@@ -44,7 +44,6 @@ trait CommandServlet extends HttpServlet with JdbcServlet {
         Adder.add(amount)
       } map { _ =>
         res.setStatus(201)
-        res.setHeader("Location", "/")
       } withLeft { case (status, message) =>
         res.setContentType("text/plain")
         res.setStatus(status)
