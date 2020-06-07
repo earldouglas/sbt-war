@@ -1,17 +1,10 @@
 import org.scalatest._
 
-class TestSuite extends HttpSuite with Matchers {
+class TestSuite extends FunSuite with Matchers {
 
   test("/") {
-    request(
-      method = "GET",
-      url = "http://localhost:8080/",
-      headers = Map.empty,
-      body = None
-    ) shouldBe {
-      Response(
-        status = 200,
-        headers = Map("Content-Type" -> "text/html;charset=utf-8"),
+    Request("GET", "http://localhost:8080/", Map.empty, None) shouldBe
+      Response(200, Map("Content-Type" -> "text/html;charset=utf-8"),
         body = 
           """|<html>
              |  <body>
@@ -19,6 +12,5 @@ class TestSuite extends HttpSuite with Matchers {
              |  </body>
              |</html>""".stripMargin
       )
-    }
   }
 }
