@@ -1,0 +1,3 @@
+> fastOptJS
+> jetty:test
+$ exists target/webapp/scala-js.js
