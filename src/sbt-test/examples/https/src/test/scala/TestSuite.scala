@@ -29,7 +29,13 @@ class TestSuite extends FunSuite with BeforeAndAfterAll with Matchers {
 
   test("/") {
     Request("GET", "https://localhost:8443/", Map.empty, None) shouldBe
-      Response(status = 200, Map("Content-Type" -> "text/html;charset=UTF-8"),
+      Response(
+        200,
+        Map(
+          "Keep-Alive" -> "timeout=60",
+          "Connection" -> "keep-alive",
+          "Content-Type" -> "text/html;charset=UTF-8"
+        ),
         """<html>
           |  <body>
           |    <h1>Hello, world!</h1>
