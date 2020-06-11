@@ -14,7 +14,7 @@ xsbt-web-plugin is tool for building J2EE Web applications with [sbt](https://ww
 
 ## Documentation
 
-* [Current release: 4.2.0](docs/4.2.x.md)
+* [Current release: 4.2.1](docs/4.2.x.md)
 * [Prior releases](docs/)
 * [Examples](src/sbt-test/examples/)
 
