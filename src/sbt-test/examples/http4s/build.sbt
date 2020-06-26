@@ -1,4 +1,4 @@
-scalaVersion := "2.13.2"
+scalaVersion := "2.13.3"
 
 libraryDependencies += "org.http4s"    %% "http4s-dsl"        % "0.21.4"
 libraryDependencies += "org.http4s"    %% "http4s-servlet"    % "0.21.4"
