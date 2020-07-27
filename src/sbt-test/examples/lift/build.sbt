@@ -1,4 +1,4 @@
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.3"
 
 libraryDependencies += "net.liftweb" %% "lift-webkit" % "3.2.0"
 

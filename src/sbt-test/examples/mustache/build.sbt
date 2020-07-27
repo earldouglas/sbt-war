@@ -1,4 +1,4 @@
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.3"
 
 libraryDependencies += "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
 libraryDependencies += "com.github.spullara.mustache.java" % "scala-extensions-2.12" % "0.9.5"

@@ -1,4 +1,4 @@
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.3"
 
 libraryDependencies += "org.scalatra" %% "scalatra" % "2.5.0"
 

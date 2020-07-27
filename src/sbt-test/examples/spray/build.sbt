@@ -1,4 +1,4 @@
-scalaVersion := "2.10.7"
+scalaVersion := "2.13.3"
 
 libraryDependencies += "io.spray" % "spray-servlet" % "1.3.1"
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.16"
