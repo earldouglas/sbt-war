@@ -1,9 +1,7 @@
 scalaVersion := "2.13.3"
 
-libraryDependencies += "net.liftweb" %% "lift-webkit" % "3.2.0"
-
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
-
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
+libraryDependencies += "net.liftweb" %% "lift-webkit" % "3.4.1"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 enablePlugins(JettyPlugin)

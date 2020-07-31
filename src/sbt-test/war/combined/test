@@ -9,7 +9,7 @@ $ exists target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war
 > findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war styles/style.css
 > findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/web.xml
 > findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/lib/test_2.13-0.1.0-SNAPSHOT.jar
-> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/lib/scala-library-2.13.11.jar
+> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/lib/scala-library-2.13.3.jar
 -> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/lib/javax.servlet-api-3.0.1.jar
 
 ## inherit manifest
