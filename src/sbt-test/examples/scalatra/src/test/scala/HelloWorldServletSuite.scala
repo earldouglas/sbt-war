@@ -10,13 +10,13 @@ class HelloWorldServletSuite extends ScalatraSuite with FunSuiteLike with Matche
     get(uri = "/") {
       status shouldBe 200
       response.headers.get("Content-Type") shouldBe
-        Some(List("text/html; charset=UTF-8"))
+        Some(List("text/html;charset=utf-8"))
       body shouldBe
-        """<html>
-          |  <body>
-          |    <h1>Hello, world!</h1>
-          |  </body>
-          |</html>""".stripMargin
+        """|<html>
+           |  <body>
+           |    <h1>Hello, world!</h1>
+           |  </body>
+           |</html>""".stripMargin
     }
   }
 }

@@ -1,10 +1,10 @@
 name := "test"
 
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.3"
 
 version := "0.1.0-SNAPSHOT"
 
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
+libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
 
 enablePlugins(WarPlugin)
 

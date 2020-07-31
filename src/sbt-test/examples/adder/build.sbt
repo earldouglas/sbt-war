@@ -1,14 +1,13 @@
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.3"
 scalacOptions ++= Seq( "-deprecation"
                      , "-feature"
                      , "-unchecked"
                      , "-Ywarn-unused"
-                     , "-Ywarn-unused-import"
                      )
 
-libraryDependencies += "com.h2database" % "h2" % "1.4.194"
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+libraryDependencies += "com.h2database" % "h2" % "1.4.200"
+libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 enablePlugins(JettyPlugin)
 

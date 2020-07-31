@@ -1,4 +1,4 @@
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.3"
 scalacOptions ++= Seq( "-deprecation"
                      , "-encoding", "utf8"
                      , "-feature"
@@ -9,16 +9,14 @@ scalacOptions ++= Seq( "-deprecation"
                      , "-unchecked"
                      , "-Xfatal-warnings"
                      , "-Xlint"
-                     , "-Ypartial-unification"
                      , "-Yrangepos"
                      , "-Ywarn-unused"
-                     , "-Ywarn-unused-import"
                      )
 
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % "provided"
+libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 enablePlugins(JettyPlugin)
 
-addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.8")
+addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)

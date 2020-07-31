@@ -3,22 +3,22 @@
 ## simple war
 
 > package
-$ exists target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war
-> findInZip target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war META-INF/MANIFEST.MF
-> findInZip target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war index.html
-> findInZip target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war styles/style.css
-> findInZip target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war WEB-INF/web.xml
-> findInZip target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/test_2.12-0.1.0-SNAPSHOT.jar
-> findInZip target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/scala-library-2.12.11.jar
--> findInZip target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/javax.servlet-api-3.0.1.jar
+$ exists target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war
+> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war META-INF/MANIFEST.MF
+> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war index.html
+> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war styles/style.css
+> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/web.xml
+> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/lib/test_2.13-0.1.0-SNAPSHOT.jar
+> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/lib/scala-library-2.13.3.jar
+-> findInZip target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war WEB-INF/lib/javax.servlet-api-3.0.1.jar
 
 ## inherit manifest
 
 > reload
 > 'set packageOptions in (Compile, packageBin) += Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )'
 > package
--> find-in-manifest target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war "Sealed: true"
+-> find-in-manifest target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war "Sealed: true"
 > set inheritJarManifest := true
 > clean
 > package
-> findInManifest target/scala-2.12/test_2.12-0.1.0-SNAPSHOT.war "Sealed: true"
+> findInManifest target/scala-2.13/test_2.13-0.1.0-SNAPSHOT.war "Sealed: true"

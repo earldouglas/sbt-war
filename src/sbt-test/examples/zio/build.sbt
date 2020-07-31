@@ -1,4 +1,4 @@
-scalaVersion := "2.12.11"
+scalaVersion := "2.12.12"
 scalacOptions ++= Seq( "-deprecation"
                      , "-encoding", "utf8"
                      , "-feature"
@@ -22,12 +22,12 @@ libraryDependencies += "com.earldouglas" %% "zio-httpclient" % "1.0.0"
 libraryDependencies += "com.earldouglas" %% "zio-jdbc"       % "1.0.0"
 libraryDependencies += "com.earldouglas" %% "zio-servlet"    % "1.1.0"
 
-libraryDependencies += "javax.servlet"  %  "javax.servlet-api" % "3.1.0" % "provided"
+libraryDependencies += "javax.servlet"  %  "javax.servlet-api" % "4.0.1" % "provided"
 
-libraryDependencies += "com.h2database" %  "h2"    % "1.4.194"
+libraryDependencies += "com.h2database" %  "h2"    % "1.4.200"
 libraryDependencies += "com.jolbox"     % "bonecp" % "0.8.0.RELEASE"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 enablePlugins(JettyPlugin)
 

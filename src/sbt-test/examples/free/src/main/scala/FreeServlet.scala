@@ -35,7 +35,7 @@ class FreeServlet extends HttpServlet {
 
   override def doPost( req: HttpServletRequest
                      , res: HttpServletResponse
-                     ) {
+                     ): Unit = {
     WebAppOp.signIn.foldMap(interpreter(req)) match {
       case Right(sessionId) =>
         res.setStatus(201)
@@ -48,7 +48,7 @@ class FreeServlet extends HttpServlet {
 
   override def doGet( req: HttpServletRequest
                     , res: HttpServletResponse
-                    ) {
+                    ): Unit = {
     WebAppOp.getSecret.foldMap(interpreter(req)) match {
       case Right(secret) =>
         res.setStatus(200)
