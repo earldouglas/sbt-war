@@ -169,7 +169,8 @@ To pass extra arguments to the Jetty or Tomcat container, set
 containerArgs := Seq("--path", "/myservice")
 ```
 
-* For available Jetty arguments, see the [Jetty Runner docs]
+* For available Jetty arguments, see the [Jetty Runner
+  docs](https://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference)
 * For available Tomcat arguments, see [webapp-runner#options](https://github.com/heroku/webapp-runner#options)
 
 ### Custom container
@@ -261,7 +262,9 @@ port =>
 
 ### Jetty version
 
-By default, Jetty 9.4.29 is used.  To use a different version, set
+By default, [Jetty
+Runner](https://www.eclipse.org/jetty/documentation/current/runner.html)
+9.4.34 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala
@@ -639,5 +642,3 @@ Launch the container with `quickstart`, and run triggered compilation:
 > jetty:quickstart
 > ~compile
 ```
-
-[Jetty Runner docs]: https://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference
