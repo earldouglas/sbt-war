@@ -169,7 +169,8 @@ To pass extra arguments to the Jetty or Tomcat container, set
 containerArgs := Seq("--path", "/myservice")
 ```
 
-* For available Jetty arguments, see the [Jetty Runner docs]
+* For available Jetty arguments, see the [Jetty Runner
+  docs](https://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference)
 * For available Tomcat arguments, see [webapp-runner#options]
 
 ### Custom container
@@ -642,5 +643,4 @@ Launch the container with `quickstart`, and run triggered compilation:
 > ~compile
 ```
 
-[Jetty Runner docs]: https://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference
 [webapp-runner#options]: https://github.com/heroku/webapp-runner#options
