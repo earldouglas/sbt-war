@@ -261,7 +261,7 @@ port =>
 
 ### Jetty version
 
-By default, Jetty 9.4.29 is used.  To use a different version, set
+By default, Jetty 9.4.34 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala
