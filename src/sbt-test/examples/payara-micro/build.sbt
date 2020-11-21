@@ -1,9 +1,6 @@
-scalaVersion := "2.13.3"
-
 enablePlugins(ContainerPlugin)
 
 libraryDependencies += "javax.ws.rs" % "javax.ws.rs-api" % "2.1.1" % "provided"
-
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 containerLibs in Container :=

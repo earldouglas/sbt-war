@@ -1,5 +1,3 @@
-scalaVersion := "2.13.3"
-
 enablePlugins(JettyPlugin)
 
 javacOptions ++= Seq("-encoding", "UTF-8")
