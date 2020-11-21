@@ -170,7 +170,7 @@ containerArgs := Seq("--path", "/myservice")
 ```
 
 * For available Jetty arguments, see the [Jetty Runner docs]
-* For available Tomcat arguments, see [webapp-runner#options]
+* For available Tomcat arguments, see [webapp-runner#options](https://github.com/heroku/webapp-runner#options)
 
 ### Custom container
 
@@ -297,7 +297,7 @@ This option can be used to enable SSL and HTTPS.
 
 ### Tomcat version
 
-By default, [webapp-runner](https://github.com/heroku/webapp-runner)
+By default, [Webapp Runner](https://github.com/heroku/webapp-runner)
 9.0.38.0 is used.  To use a different version, set `containerLibs`:
 
 ```scala
@@ -641,4 +641,3 @@ Launch the container with `quickstart`, and run triggered compilation:
 ```
 
 [Jetty Runner docs]: https://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference
-[webapp-runner#options]: https://github.com/heroku/webapp-runner#options
