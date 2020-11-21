@@ -297,7 +297,7 @@ This option can be used to enable SSL and HTTPS.
 
 ### Tomcat version
 
-By default, Tomcat 9.0.31.0 is used.  To use a different version, set
+By default, Tomcat 9.0.38.0 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala
