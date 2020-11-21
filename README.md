@@ -13,6 +13,7 @@ servlets](https://en.wikipedia.org/wiki/Java_servlet).
 * Test and run under Jetty or Tomcat
 * Deploy directly to Heroku or AWS
 * Supports sbt 0.13.6+ and 1.0.0+
+* Supports Scala 2.10.2+
 
 ## Getting help
 
