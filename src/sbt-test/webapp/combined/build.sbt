@@ -1,1 +1,3 @@
+name := "combined"
+
 enablePlugins(WebappPlugin)
