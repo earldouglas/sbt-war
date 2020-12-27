@@ -1,3 +1,5 @@
+name := "combined"
+
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
 
 enablePlugins(WarPlugin)
