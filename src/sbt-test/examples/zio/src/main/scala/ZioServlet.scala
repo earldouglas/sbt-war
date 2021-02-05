@@ -1,18 +1,9 @@
-import com.earldouglas.zio.jdbc.JdbcIO
-import com.earldouglas.zio.servlet.Request
-import com.earldouglas.zio.servlet.RequestIO
-import com.earldouglas.zio.servlet.Response
-import com.earldouglas.zio.servlet.ResponseIO
 import javax.servlet.http.HttpServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import zio.Runtime
 import zio.ZIO
-import zio.internal.PlatformLive
 
 object Services {
 
-  val getMessages: ZIO[RequestIO with ResponseIO with JdbcIO, Throwable, Unit] =
+  val getMessages: ZIO[WithRequest with WithResponse with JdbcIO, Throwable, Unit] =
     for {
       _       <- Response.setContentType("text/html;charset=UTF-8")
       entries <- Database.getEntries
@@ -24,7 +15,7 @@ object Services {
       _        = writer.write("</ul>\n")
     } yield ()
 
-  val addMessage: ZIO[RequestIO with ResponseIO with JdbcIO, Throwable, Unit] =
+  val addMessage: ZIO[WithRequest with WithResponse with JdbcIO, Throwable, Unit] =
     for {
       nameO    <- Request.getParameter("name")
       messageO <- Request.getParameter("message")
@@ -45,21 +36,26 @@ object Services {
 
 class ZioServlet extends HttpServlet {
 
+  import javax.servlet.http.HttpServletRequest
+  import javax.servlet.http.HttpServletResponse
+  import zio.internal.PlatformLive
+  import zio.Runtime
+
   def unsafeRun[A](
        req: HttpServletRequest
      , res: HttpServletResponse
-     )( k: ZIO[RequestIO with ResponseIO with JdbcIO, Throwable, A]
+     )( k: ZIO[WithRequest with WithResponse with JdbcIO, Throwable, A]
      ): Either[Throwable, A] = {
 
       val env =
-        new RequestIO with ResponseIO with JdbcIO {
+        new WithRequest with WithResponse with JdbcIO {
           Class.forName("org.h2.Driver")
           val request = req
           val response = res
           val connection = Database.connectionPool.getConnection
         }
 
-      val runtime: Runtime[RequestIO with ResponseIO with JdbcIO] =
+      val runtime: Runtime[WithRequest with WithResponse with JdbcIO] =
         Runtime(env, PlatformLive.Default)
 
       runtime.unsafeRun {

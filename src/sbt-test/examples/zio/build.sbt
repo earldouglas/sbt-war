@@ -1,9 +1,4 @@
-resolvers += Resolver.bintrayRepo("earldouglas", "maven")
-
-libraryDependencies += "dev.zio" %% "zio" % "1.0.0-RC10-1"
-libraryDependencies += "com.earldouglas" %% "zio-httpclient" % "1.0.0"
-libraryDependencies += "com.earldouglas" %% "zio-jdbc" % "1.0.0"
-libraryDependencies += "com.earldouglas" %% "zio-servlet" % "1.1.0"
+libraryDependencies += "dev.zio" %% "zio" % "1.0.0-RC16"
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
 libraryDependencies += "com.h2database" % "h2" % "1.4.200"
 libraryDependencies += "com.jolbox" % "bonecp" % "0.8.0.RELEASE"
@@ -13,9 +8,9 @@ enablePlugins(JettyPlugin)
 
 containerForkOptions :=
  ForkOptions().withEnvVars {
- Map( "DB_DRIVER" -> "org.h2.Driver"
- , "DB_URL" -> "jdbc:h2:mem:zio"
- , "DB_USER" -> "sa"
- , "DB_PASS" -> ""
- )
+   Map( "DB_DRIVER" -> "org.h2.Driver"
+      , "DB_URL" -> "jdbc:h2:mem:zio"
+      , "DB_USER" -> "sa"
+      , "DB_PASS" -> ""
+      )
  }
