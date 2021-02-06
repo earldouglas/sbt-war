@@ -1,11 +1,11 @@
-import com.earldouglas.zio.jdbc.JdbcIO
-import com.jolbox.bonecp.BoneCP
-import com.jolbox.bonecp.BoneCPConfig
-import zio.ZIO
-
 object Database {
 
+  import com.jolbox.bonecp.BoneCP
+  import com.jolbox.bonecp.BoneCPConfig
+  import zio.ZIO
+
   val connectionPool: BoneCP = {
+
     Class.forName(sys.env("DB_DRIVER"))
     val config = new BoneCPConfig()
     config.setJdbcUrl(sys.env("DB_URL"))
