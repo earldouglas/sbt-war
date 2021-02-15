@@ -42,18 +42,39 @@ object WebappPlugin extends AutoPlugin {
                       ): Set[File] =
     Compat.cached(streams.cacheDirectory / "xsbt-web-plugin" / name, lastModified, exists)({
       (inChanges, outChanges) =>
+
         // toss out removed files
         for {
           removed  <- inChanges.removed
           toRemove <- dest(removed)
         } yield IO.delete(toRemove)
 
-        // apply and report changes
-        for {
-          in  <- inChanges.added ++ inChanges.modified -- inChanges.removed
-          out <- dest(in)
-          _    = IO.copyFile(in, out)
-        } yield out
+        // new files
+        val newFiles =
+          for {
+            in  <- inChanges.added -- inChanges.removed
+            out <- dest(in)
+            _    = IO.copyFile(in, out)
+          } yield out
+
+        // modified files
+        val modifiedFiles =
+          for {
+            in  <- inChanges.modified -- inChanges.removed
+            out <- dest(in)
+            _    = IO.copyFile(in, out)
+          } yield out
+
+        // missing files
+        val missingFiles =
+          for {
+            in  <- inChanges.checked -- inChanges.removed
+            out <- dest(in).toSet & outChanges.modified
+            _    = IO.copyFile(in, out)
+          } yield out
+
+        // all files
+        newFiles ++ modifiedFiles ++ missingFiles
     }).apply(in)
 
   private def _webappPrepare( webappTarget: SettingKey[File]
@@ -102,7 +123,7 @@ object WebappPlugin extends AutoPlugin {
                       ).value
 
       val m = (mappings in (Compile, packageBin)).value
-      val p = (packagedArtifact in (Compile, packageBin)).value._2 
+      val p = (packagedArtifact in (Compile, packageBin)).value._2
 
       val webInfDir = webappTarget / "WEB-INF"
       val webappLibDir = webInfDir / "lib"

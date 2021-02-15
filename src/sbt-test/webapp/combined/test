@@ -9,6 +9,16 @@ $ copy-file changes/index2.html src/main/webapp/index2.html
 > webappPrepare
 $ exists target/webapp/index2.html
 
+########################################################################
+# https://github.com/earldouglas/xsbt-web-plugin/issues/376
+
+$ delete target/webapp/index2.html
+$ absent target/webapp/index2.html
+> webappPrepare
+$ exists target/webapp/index2.html
+
+########################################################################
+
 $ delete src/main/webapp/index2.html
 > webappPrepare
 $ absent target/webapp/index2.html
