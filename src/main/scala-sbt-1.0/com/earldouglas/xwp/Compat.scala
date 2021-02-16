@@ -18,4 +18,11 @@ object Compat {
 
   def cached(cacheBaseDirectory: File, inStyle: Style, outStyle: Style)(action: (ChangeReport[File], ChangeReport[File]) => Set[File]): Set[File] => Set[File] = 
     sbt.util.FileFunction.cached(CacheStoreFactory(cacheBaseDirectory), inStyle = inStyle, outStyle = outStyle)(action = action)
+
+  def jar(sources: Traversable[(File, String)], outputJar: File, manifest: java.util.jar.Manifest): Unit =
+    io.IO.jar( sources = sources
+             , outputJar = outputJar
+             , manifest = manifest
+             , time = None
+             )
 }
