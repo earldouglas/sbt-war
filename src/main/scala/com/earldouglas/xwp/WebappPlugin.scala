@@ -154,7 +154,7 @@ object WebappPlugin extends AutoPlugin {
                 )
       }
 
-      val classpath = (fullClasspath in Runtime).value
+      val classpath = (dependencyClasspath in Runtime).value
 
       // create .jar files for depended-on projects in WEB-INF/lib
       for {
