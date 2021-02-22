@@ -1,5 +1,5 @@
 // General
-crossSbtVersions := Seq("0.13.6", "1.0.0")
+crossSbtVersions := Seq("0.13.18", "1.4.7")
 enablePlugins(SbtPlugin)
 name := "xsbt-web-plugin"
 organization := "com.earldouglas"
