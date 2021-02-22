@@ -15,3 +15,4 @@ jobs:
     - run: sbt ^test
     - run: sbt ^publishLocal
     - run: sbt scripted
+    - run: cd src/sbt-test/reqs/min && sbt jetty:test
