@@ -172,7 +172,10 @@ object WebappPlugin extends AutoPlugin {
             None
         }
         jarFile    = cpArt.name + ".jar"
-        _          = IO.jar(files, webappLibDir / jarFile, new Manifest)
+        _          = Compat.jar( sources = files
+                               , outputJar = webappLibDir / jarFile
+                               , manifest = new Manifest
+                               )
       } yield ()
 
       // copy this project's library dependency .jar files to WEB-INF/lib
