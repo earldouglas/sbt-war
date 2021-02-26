@@ -7,5 +7,5 @@ containerLibs in Container :=
   Seq("fish.payara.extras" % "payara-micro" % "5.2020.3")
 
 containerLaunchCmd in Container := { (port, path) =>
-  Seq("fish.payara.micro.PayaraMicro", "--deploy", "target/webapp", "--contextroot", "/")
+  Seq("fish.payara.micro.PayaraMicro", "--deploy", path, "--contextroot", "/")
 }
