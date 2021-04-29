@@ -10,6 +10,7 @@ function test() {
   cat scalaVersion.sbt
 
   sbt \
+    -Dsbt.global.base=`mktemp -d` \
     -Dsbt.boot.directory=`mktemp -d` \
     -Dsbt.ivy.home=`mktemp -d` \
     clean \
