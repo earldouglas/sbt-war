@@ -9,7 +9,11 @@ function test() {
   cat project/build.properties
   cat scalaVersion.sbt
 
-  sbt -Dsbt.boot.directory=`mktemp -d` clean jetty:test
+  sbt \
+    -Dsbt.boot.directory=`mktemp -d` \
+    -Dsbt.ivy.home=`mktemp -d` \
+    clean \
+    jetty:test
 }
 
 SCALA_VERSION=2.10.2 SBT_VERSION=0.13.6 test
