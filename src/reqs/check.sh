@@ -9,10 +9,12 @@ function test() {
   cat project/build.properties
   cat scalaVersion.sbt
 
-  HOME=`mktemp -d` sbt clean jetty:test
+  curl -s -L $SBT_LAUNCH -o sbt-launch.jar
+
+  HOME=`mktemp -d` java -jar sbt-launch.jar clean jetty:test
 }
 
-SCALA_VERSION=2.10.2 SBT_VERSION=0.13.6 test
-SCALA_VERSION=2.10.2 SBT_VERSION=0.13.18 test
-SCALA_VERSION=2.13.4 SBT_VERSION=1.3.0 test
-SCALA_VERSION=2.13.4 SBT_VERSION=1.5.0 test
+SCALA_VERSION=2.10.2 SBT_VERSION=0.13.6 SBT_LAUNCH=https://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.6/sbt-launch.jar test
+SCALA_VERSION=2.10.2 SBT_VERSION=0.13.18 SBT_LAUNCH=https://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.18/sbt-launch.jar test
+SCALA_VERSION=2.13.4 SBT_VERSION=1.3.0 SBT_LAUNCH=https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.3.0/sbt-launch-1.3.0.jar test
+SCALA_VERSION=2.13.4 SBT_VERSION=1.5.0 SBT_LAUNCH=https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.5.0/sbt-launch-1.5.0.jar test
