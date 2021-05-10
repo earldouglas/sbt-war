@@ -19,6 +19,6 @@ function test() {
 SCALA_VERSION=2.10.2 SBT_VERSION=0.13.6 SBT_LAUNCH=https://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.6/sbt-launch.jar test
 SCALA_VERSION=2.10.2 SBT_VERSION=0.13.18 SBT_LAUNCH=https://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.18/sbt-launch.jar test
 SCALA_VERSION=2.13.4 SBT_VERSION=1.3.0 SBT_LAUNCH=https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.3.0/sbt-launch-1.3.0.jar test
-SCALA_VERSION=2.13.4 SBT_VERSION=1.5.1 SBT_LAUNCH=https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.5.1/sbt-launch-1.5.1.jar test
+SCALA_VERSION=2.13.4 SBT_VERSION=1.5.2 SBT_LAUNCH=https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.5.2/sbt-launch-1.5.2.jar test
 
 popd
