@@ -6,7 +6,7 @@ class GettingStartedServlet extends HttpServlet {
 
   override def doGet( req: HttpServletRequest
                     , res: HttpServletResponse
-                    ) {
+                    ): Unit = {
 
     res.setContentType("text/html")
     res.setCharacterEncoding("UTF-8")
