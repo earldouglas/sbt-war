@@ -5,15 +5,24 @@ set -e
 pushd `dirname $0`
 
 function test() {
+  TMP_SRC_DIR=`mktemp -d`
+  cp -rf . $TMP_SRC_DIR
+
+  pushd $TMP_SRC_DIR
+
   echo "scalaVersion := \"$SCALA_VERSION\"" > scalaVersion.sbt
   echo "sbt.version=$SBT_VERSION" > project/build.properties
 
   cat project/build.properties
   cat scalaVersion.sbt
 
-  curl -s -L $SBT_LAUNCH -o sbt-launch-$SBT_VERSION.jar
+  TMP_HOME_DIR=`mktemp -d`
 
-  HOME=`mktemp -d` java -jar sbt-launch-$SBT_VERSION.jar clean jetty:test
+  curl -s -L $SBT_LAUNCH -o $TMP_HOME_DIR/sbt-launch-$SBT_VERSION.jar
+
+  HOME=$TMP_HOME_DIR java -jar $TMP_HOME_DIR/sbt-launch-$SBT_VERSION.jar clean jetty:test
+
+  popd
 }
 
 SCALA_VERSION=2.10.2 SBT_VERSION=0.13.6 SBT_LAUNCH=https://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.6/sbt-launch.jar test
