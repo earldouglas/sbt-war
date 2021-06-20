@@ -17,13 +17,15 @@ object JettyPlugin extends AutoPlugin {
 
   override val projectConfigurations = Seq(Jetty)
 
-  val jettyRunner = "org.eclipse.jetty" % "jetty-runner" % "9.4.34.v20201102"
+  val jettyRunner =
+    "org.eclipse.jetty" % "jetty-runner" % "9.4.34.v20201102"
 
   override lazy val projectSettings =
     ContainerPlugin.containerSettings(Jetty) ++
       inConfig(Jetty)(
-        Seq( containerLibs := Seq(jettyRunner.intransitive())
-           , containerMain := "org.eclipse.jetty.runner.Runner"
-           )
+        Seq(
+          containerLibs := Seq(jettyRunner.intransitive()),
+          containerMain := "org.eclipse.jetty.runner.Runner"
+        )
       )
 }

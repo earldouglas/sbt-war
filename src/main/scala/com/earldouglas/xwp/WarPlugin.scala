@@ -11,29 +11,37 @@ object WarPlugin extends AutoPlugin {
   override def requires = WebappPlugin
 
   object autoImport {
-    val inheritJarManifest = settingKey[Boolean]("inherit .jar manifest")
+    val inheritJarManifest =
+      settingKey[Boolean]("inherit .jar manifest")
   }
 
   import autoImport._
 
-  private def manifestOptions = Def.task {
-    val opt = (packageOptions in (Compile, packageBin)).value
-    if (inheritJarManifest.value) {
-      opt.filter {
-        case x: Package.ManifestAttributes => true
-        case _ => false
+  private def manifestOptions =
+    Def.task {
+      val opt = (packageOptions in (Compile, packageBin)).value
+      if (inheritJarManifest.value) {
+        opt.filter {
+          case x: Package.ManifestAttributes => true
+          case _                             => false
+        }
+      } else {
+        Seq.empty
       }
-    } else {
-      Seq.empty
     }
-  }
 
   override lazy val projectSettings =
-    Defaults.packageTaskSettings(pkg, WebappPlugin.autoImport.webappPrepare) ++
-    Seq(artifact in pkg := Artifact(moduleName.value, "war", "war")) ++
-    addArtifact(artifact in (Compile, pkg), pkg) ++
-    Seq( inheritJarManifest := false
-       , packageOptions in sbt.Keys.`package` ++= manifestOptions.value
-       )
+    Defaults.packageTaskSettings(
+      pkg,
+      WebappPlugin.autoImport.webappPrepare
+    ) ++
+      Seq(
+        artifact in pkg := Artifact(moduleName.value, "war", "war")
+      ) ++
+      addArtifact(artifact in (Compile, pkg), pkg) ++
+      Seq(
+        inheritJarManifest := false,
+        packageOptions in sbt.Keys.`package` ++= manifestOptions.value
+      )
 
 }
