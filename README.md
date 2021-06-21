@@ -91,7 +91,7 @@ addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.2")
 ```scala
 scalaVersion := "3.0.0"
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
-enablePlugins(JettyPlugin)
+enablePlugins(TomcatPlugin)
 ```
 
 Add a servlet:
