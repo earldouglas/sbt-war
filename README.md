@@ -302,10 +302,10 @@ This option can be used to enable SSL and HTTPS.
 ### Tomcat version
 
 By default, [Webapp Runner](https://github.com/heroku/webapp-runner)
-9.0.38.0 is used.  To use a different version, set `containerLibs`:
-
+9.0.41.0 is used.  To use a different version, set `containerLibs`:
+41
 ```scala
-containerLibs in Tomcat := Seq("com.github.jsimone" % "webapp-runner" % "7.0.34.1" intransitive())
+containerLibs in Tomcat := Seq("com.heroku" % "webapp-runner" % "8.5.61.0" intransitive())
 ```
 
 Depending on the version, it may also be necessary to specify the name

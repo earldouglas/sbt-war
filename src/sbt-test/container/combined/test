@@ -16,6 +16,36 @@ $ copy-file sbt/tomcat.sbt tomcat.sbt
 > tomcat:stop
 -> get http://localhost:8080/test 200
 
+## tomcat 7
+
+> reload
+> 'set containerLibs in Tomcat := Seq("com.github.jsimone" % "webapp-runner" % "7.0.91.0" intransitive())'
+> tomcat:start
+> await 8080
+> get http://localhost:8080/test 200
+> tomcat:stop
+-> get http://localhost:8080/test 200
+
+## tomcat 8
+
+> reload
+> 'set containerLibs in Tomcat := Seq("com.github.jsimone" % "webapp-runner" % "8.0.52.0" intransitive())'
+> tomcat:start
+> await 8080
+> get http://localhost:8080/test 200
+> tomcat:stop
+-> get http://localhost:8080/test 200
+
+## tomcat 8.5
+
+> reload
+> 'set containerLibs in Tomcat := Seq("com.heroku" % "webapp-runner" % "8.5.61.0" intransitive())'
+> tomcat:start
+> await 8080
+> get http://localhost:8080/test 200
+> tomcat:stop
+-> get http://localhost:8080/test 200
+
 # jetty
 
 $ delete tomcat.sbt
