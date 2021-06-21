@@ -78,7 +78,7 @@ Configure sbt:
 *project/build.properties:*
 
 ```
-sbt.version=1.5.3
+sbt.version=1.5.4
 ```
 
 *project/plugins.sbt:*
