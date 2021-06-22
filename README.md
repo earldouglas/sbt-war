@@ -69,8 +69,7 @@ Set up the project structure:
 
 ```
 mkdir project
-mkdir -p src/main/scala
-mkdir -p src/main/webapp/WEB-INF
+mkdir -p src/main/scala/mypackage
 ```
 
 Configure sbt:
@@ -91,48 +90,41 @@ addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.2")
 
 ```scala
 scalaVersion := "3.0.0"
-
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
-
-enablePlugins(JettyPlugin)
+enablePlugins(TomcatPlugin)
 ```
 
 Add a servlet:
 
-*src/main/scala/servlets.scala*:
+*src/main/scala/mypackage/MyServlet.scala*:
 
 ```scala
-package servlets
+package mypackage
 
-import javax.servlet.http._
+import javax.servlet.annotation.WebServlet
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
-class MyServlet extends HttpServlet {
-
-  override def doGet(request: HttpServletRequest, response: HttpServletResponse) {
-    response.setContentType("text/html")
-    response.setCharacterEncoding("UTF-8")
-    response.getWriter.write("""<h1>Hello, world!</h1>""")
-  }
-
-}
+@WebServlet(urlPatterns = Array("/hello"))
+class MyServlet extends HttpServlet:
+  println("HEY")
+  override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit =
+    res.setContentType("text/html")
+    res.setCharacterEncoding("UTF-8")
+    res.getWriter.write("""<h1>Hello, world!</h1>""")
 ```
 
-*src/main/webapp/WEB-INF/web.xml*:
+Run it with `tomcat:start`:
 
-```xml
-<web-app>
+```
+$ sbt
+> tomcat:start
+```
 
-  <servlet>
-    <servlet-name>my servlet</servlet-name>
-    <servlet-class>servlets.MyServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>my servlet</servlet-name>
-    <url-pattern>/*</url-pattern>
-  </servlet-mapping>
-
-</web-app>
+```
+$ curl localhost:8080/hello
+<h1>Hello, world!</h1>
 ```
 
 ## Configuration and use
