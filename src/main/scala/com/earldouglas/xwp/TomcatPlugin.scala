@@ -22,8 +22,9 @@ object TomcatPlugin extends AutoPlugin {
   override lazy val projectSettings =
     ContainerPlugin.containerSettings(Tomcat) ++
       inConfig(Tomcat)(
-        Seq( containerLibs := Seq(webappRunner.intransitive())
-           , containerMain := "webapp.runner.launch.Main"
-           )
+        Seq(
+          containerLibs := Seq(webappRunner.intransitive()),
+          containerMain := "webapp.runner.launch.Main"
+        )
       )
 }

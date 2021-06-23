@@ -12,6 +12,7 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 8
+    - run: sbt scalafmtCheckAll
     - run: sbt ^test
     - run: sbt ^publishLocal
     - run: sbt scripted
