@@ -54,7 +54,7 @@ object HerokuDeploy extends AutoPlugin {
     Seq(
       herokuOptions := Seq("-Xmx1g"),
       herokuWarFile := (
-        Compile / pkg / packagedArtifact,
+        packagedArtifact in (Compile, pkg),
         pkg
       )._2.value,
       herokuDeployLib := "com.heroku.sdk" % "heroku-deploy" % "2.0.16",
@@ -64,8 +64,8 @@ object HerokuDeploy extends AutoPlugin {
         herokuOptions.value,
         herokuAppName.value,
         herokuWarFile.value,
-        (Deploy / classpathTypes).value,
-        (Deploy / update).value,
+        (classpathTypes in Deploy).value,
+        (update in Deploy).value,
         herokuDeployMain.value
       )
     )

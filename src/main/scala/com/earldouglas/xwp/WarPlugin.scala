@@ -19,7 +19,7 @@ object WarPlugin extends AutoPlugin {
 
   private def manifestOptions =
     Def.task {
-      val opt = (Compile / packageBin / packageOptions).value
+      val opt = (packageOptions in (Compile, packageBin)).value
       if (inheritJarManifest.value) {
         opt.filter {
           case x: Package.ManifestAttributes => true
@@ -36,12 +36,12 @@ object WarPlugin extends AutoPlugin {
       WebappPlugin.autoImport.webappPrepare
     ) ++
       Seq(
-        pkg / artifact := Artifact(moduleName.value, "war", "war")
+        artifact in pkg := Artifact(moduleName.value, "war", "war")
       ) ++
-      addArtifact(Compile / pkg / artifact, pkg) ++
+      addArtifact(artifact in (Compile, pkg), pkg) ++
       Seq(
         inheritJarManifest := false,
-        sbt.Keys.`package` / packageOptions ++= manifestOptions.value
+        packageOptions in sbt.Keys.`package` ++= manifestOptions.value
       )
 
 }

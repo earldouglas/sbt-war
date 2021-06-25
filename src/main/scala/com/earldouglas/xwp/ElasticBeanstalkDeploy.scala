@@ -41,7 +41,7 @@ object ElasticBeanstalkDeployPlugin extends AutoPlugin {
   override def projectSettings =
     Seq(
       elasticBeanstalkDeploy := deploy(
-        pkg.value,
+        (packagedArtifact in (Compile, pkg), pkg)._2.value,
         elasticBeanstalkRegion.value,
         elasticBeanstalkAppName.value,
         elasticBeanstalkEnvName.value,
