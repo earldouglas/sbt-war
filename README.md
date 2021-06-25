@@ -257,7 +257,7 @@ port =>
 
 By default, [Jetty
 Runner](https://www.eclipse.org/jetty/documentation/current/runner.html)
-9.4.34 is used.  To use a different version, set
+9.4.42 is used.  To use a different version, set
 `containerLibs`:
 
 ```scala

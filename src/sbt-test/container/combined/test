@@ -96,7 +96,7 @@ $ copy-file sbt/jetty.sbt jetty.sbt
 ## jetty 9
 
 > reload
-> 'set containerLibs in Jetty := Seq("org.eclipse.jetty" % "jetty-runner" % "9.3.13.v20161014" intransitive())'
+> 'set containerLibs in Jetty := Seq("org.eclipse.jetty" % "jetty-runner" % "9.4.42.v20210604" intransitive())'
 > 'set containerMain in Jetty := "org.eclipse.jetty.runner.Runner"'
 > jetty:start
 > await 8080
