@@ -32,9 +32,9 @@ object WebappPlugin extends AutoPlugin {
 
   override def projectSettings: Seq[Setting[_]] =
     Seq(
-      sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "webapp",
-      target in webappPrepare := (target in Compile).value / "webapp",
-      target in webappPrepareQuick := (target in Compile).value / "webapp-quick",
+      webappPrepare / sourceDirectory := (Compile / sourceDirectory).value / "webapp",
+      webappPrepare / target := (Compile / target).value / "webapp",
+      webappPrepareQuick / target := (Compile / target).value / "webapp-quick",
       webappPrepare := webappPrepareTask.value,
       webappPrepareQuick := webappPrepareQuickTask.value,
       webappPostProcess := { _ => () },
@@ -95,7 +95,7 @@ object WebappPlugin extends AutoPlugin {
   ) =
     Def.task {
 
-      val webappSrcDir = (sourceDirectory in webappPrepare).value
+      val webappSrcDir = (webappPrepare / sourceDirectory).value
 
       cacheify(
         cacheName,
@@ -118,7 +118,7 @@ object WebappPlugin extends AutoPlugin {
 
       val webappTarget =
         _webappPrepare(
-          target in webappPrepareQuick,
+          webappPrepareQuick / target,
           "webapp-quick"
         ).value
 
@@ -135,10 +135,10 @@ object WebappPlugin extends AutoPlugin {
       val taskStreams = streams.value
 
       val webappTarget =
-        _webappPrepare(target in webappPrepare, "webapp").value
+        _webappPrepare(webappPrepare / target, "webapp").value
 
-      val m = (mappings in (Compile, packageBin)).value
-      val p = (packagedArtifact in (Compile, packageBin)).value._2
+      val m = (Compile / packageBin / mappings).value
+      val p = (Compile / packageBin / packagedArtifact).value._2
 
       val webInfDir = webappTarget / "WEB-INF"
       val webappLibDir = webInfDir / "lib"
@@ -173,7 +173,7 @@ object WebappPlugin extends AutoPlugin {
         )
       }
 
-      val classpath = (fullClasspath in Runtime).value
+      val classpath = (Runtime / fullClasspath).value
 
       // create .jar files for depended-on projects in WEB-INF/lib
       for {
@@ -184,7 +184,7 @@ object WebappPlugin extends AutoPlugin {
           e.key.label == "artifact"
         }
         cpArt = artEntry.value.asInstanceOf[Artifact]
-        artifact = (packagedArtifact in (Compile, packageBin)).value._1
+        artifact = (Compile / packageBin / packagedArtifact).value._1
         if cpArt != artifact
         files = (dir ** "*").get flatMap { file =>
           if (!file.isDirectory)
