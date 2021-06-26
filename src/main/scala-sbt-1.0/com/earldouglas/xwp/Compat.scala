@@ -15,7 +15,7 @@ object Compat {
     ForkOptions().withRunJVMOptions(options.toVector)
 
   val watchSourceSetting = watchSources += new Source(
-    (sourceDirectory in webappPrepare).value,
+    (webappPrepare / sourceDirectory).value,
     AllPassFilter,
     NothingFilter
   )
