@@ -29,8 +29,8 @@ Release it:
 
 Wait for it to be synced to Maven Central:
 
-* <https://repo1.maven.org/maven2/com/earldouglas/xsbt-web-plugin_2.10_0.13/4.2.2/>
-* <https://repo1.maven.org/maven2/com/earldouglas/xsbt-web-plugin_2.12_1.0/4.2.2/>
+* <https://repo1.maven.org/maven2/com/earldouglas/xsbt-web-plugin_2.10_0.13/>
+* <https://repo1.maven.org/maven2/com/earldouglas/xsbt-web-plugin_2.12_1.0/>
 
 Update the documentation:
 
