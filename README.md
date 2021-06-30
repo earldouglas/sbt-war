@@ -27,7 +27,7 @@ servlets](https://en.wikipedia.org/wiki/Java_servlet).
 Add xsbt-web-plugin to *project/plugins.sbt*:
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.2")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.3")
 ```
 
 Enable the Jetty plugin:
@@ -83,7 +83,7 @@ sbt.version=1.5.4
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.2")
+addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.3")
 ```
 
 *build.sbt:*
