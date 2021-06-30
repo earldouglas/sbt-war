@@ -17,15 +17,15 @@ $ sbt
 
 Review it:
 
-* [ ] Go to [Staging Repositories][2] on Nexus Repository Manager
-* [ ] Review the contents of the staging repository
+* Go to [Staging Repositories][2] on Nexus Repository Manager
+* Review the contents of the staging repository
 
 [2]: https://oss.sonatype.org/#stagingRepositories
 
 Release it:
 
-* [ ] Close the staging repository
-* [ ] Release the staging repository to promote to Maven Central
+* Close the staging repository
+* Release the staging repository to promote to Maven Central
 
 Wait for it to be synced to Maven Central:
 
