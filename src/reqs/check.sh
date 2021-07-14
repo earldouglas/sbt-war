@@ -38,7 +38,7 @@ function _test() {
 # sbt 0.13
 for SBT_VERSION in 0.13.6 0.13.18
 do
-  SBT_LAUNCH=https://dl.bintray.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/$SBT_VERSION/sbt-launch.jar
+  SBT_LAUNCH=https://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/$SBT_VERSION/sbt-launch.jar
   test
 done
 
