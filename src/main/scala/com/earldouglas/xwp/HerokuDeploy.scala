@@ -47,7 +47,12 @@ object HerokuDeploy extends AutoPlugin {
     val cp: String =
       libs map (_.getPath) mkString java.io.File.pathSeparator
 
-    Fork.java(options, Seq("-cp", cp, herokuDeployMain))
+    val exitCode: Int =
+      Fork.java(options, Seq("-cp", cp, herokuDeployMain))
+
+    if (exitCode != 0) {
+      sys.error("Couldn't deploy to Heroku")
+    }
   }
 
   override def projectSettings =
