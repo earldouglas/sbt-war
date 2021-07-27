@@ -89,7 +89,7 @@ addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.4")
 *build.sbt:*
 
 ```scala
-scalaVersion := "3.0.0"
+scalaVersion := "3.0.1"
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
 enablePlugins(TomcatPlugin)
 ```
