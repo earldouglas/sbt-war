@@ -26,7 +26,7 @@ object Request {
 
   val headers: ZIO[WithRequest, Throwable, Map[String, List[String]]] =
     getHeaderNames() flatMap { namesO =>
-      ZIO sequence {
+      ZIO.collectAll {
         namesO.map(_.asScala.toList).getOrElse(Nil)
               .map({ name =>
                     getHeaders(name) map { valuesO =>

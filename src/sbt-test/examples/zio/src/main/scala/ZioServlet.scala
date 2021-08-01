@@ -38,7 +38,6 @@ class ZioServlet extends HttpServlet {
 
   import javax.servlet.http.HttpServletRequest
   import javax.servlet.http.HttpServletResponse
-  import zio.internal.PlatformLive
   import zio.Runtime
 
   def unsafeRun[A](
@@ -55,13 +54,14 @@ class ZioServlet extends HttpServlet {
           val connection = Database.connectionPool.getConnection
         }
 
-      val runtime: Runtime[WithRequest with WithResponse with JdbcIO] =
-        Runtime(env, PlatformLive.Default)
-
-      runtime.unsafeRun {
-        JdbcIO.transact(k).map(a => Right(a)) catchAll { t =>
-          ZIO.succeed(Left[Throwable, A](t))
-        }
+      Runtime.default.unsafeRun {
+        JdbcIO
+          .transact(k)
+          .map(a => Right(a))
+          .catchAll { t =>
+            ZIO.succeed(Left[Throwable, A](t))
+          }
+          .provide(env)
       }
     }
 
