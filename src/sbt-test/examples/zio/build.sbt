@@ -1,4 +1,4 @@
-libraryDependencies += "dev.zio" %% "zio" % "1.0.0-RC16"
+libraryDependencies += "dev.zio" %% "zio" % "2.0.0-M1"
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
 libraryDependencies += "com.h2database" % "h2" % "1.4.200"
 libraryDependencies += "com.jolbox" % "bonecp" % "0.8.0.RELEASE"
