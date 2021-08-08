@@ -169,8 +169,8 @@ object ContainerPlugin extends AutoPlugin {
         (startContainerPort to endContainerPort) zip
           (startDebugPort to endDebugPort)
 
-      val processes: Seq[Process] = ports map {
-        case (c, d) => launchFn(c, d)
+      val processes: Seq[Process] = ports map { case (c, d) =>
+        launchFn(c, d)
       }
       instances.set(processes)
       processes
