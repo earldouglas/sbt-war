@@ -148,18 +148,16 @@ object WebappPlugin extends AutoPlugin {
         cacheify(
           "classes",
           { in =>
-            m find {
-              case (src, dest) => src == in
-            } map {
-              case (src, dest) =>
-                webInfDir / "classes" / dest
+            m find { case (src, dest) =>
+              src == in
+            } map { case (src, dest) =>
+              webInfDir / "classes" / dest
             }
           },
-          (m filter {
-            case (src, dest) => !src.isDirectory
-          } map {
-            case (src, dest) =>
-              src
+          (m filter { case (src, dest) =>
+            !src.isDirectory
+          } map { case (src, dest) =>
+            src
           }).toSet,
           taskStreams
         )
