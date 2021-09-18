@@ -19,7 +19,7 @@
 > set scalaVersion := "2.12.1"
 > jetty:test
 
-> set scalaVersion := "2.12.14"
+> set scalaVersion := "2.12.15"
 > jetty:test
 
 # Scala 2.13
