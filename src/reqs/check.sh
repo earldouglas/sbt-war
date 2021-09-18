@@ -8,7 +8,7 @@ function test() {
   # Note Scala 2.12.0 is not supported:
   # /tmp/sbt_10cf059/scala/ZincCompat.scala:19: error: type PlainNioFile is not a member of package scala.reflect.io
   #   type PlainNioFile = scala.reflect.io.PlainNioFile
-  for SCALA_VERSION in 2.10.2 2.10.7 2.11.0 2.11.12 2.12.1 2.12.13 2.13.0 2.13.6
+  for SCALA_VERSION in 2.10.2 2.10.7 2.11.0 2.11.12 2.12.1 2.12.15 2.13.0 2.13.6
   do
     _test
   done
