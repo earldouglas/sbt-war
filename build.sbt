@@ -13,8 +13,8 @@ scriptedBufferLog := false
 watchSources ++= { (sourceDirectory.value ** "*").get }
 
 // AWS deployment support
-libraryDependencies += "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % "1.12.99"
-libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % "1.12.99"
+libraryDependencies += "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % "1.12.103"
+libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % "1.12.103"
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
 credentials := List(Credentials(Path.userHome / ".sbt" / "sonatype_credentials"))
