@@ -3,7 +3,7 @@ import org.scalatest._
 class TestSuite extends FunSuite with Matchers {
 
   test("/") {
-    Request("GET", "http://localhost:8080/", Map.empty, None) shouldBe     
+    Request("GET", "http://localhost:8080/", Map.empty, None) shouldBe
       Response(
         200,
         Map(

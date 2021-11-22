@@ -5,6 +5,7 @@ findInZip := {
   val zipFile = new java.util.zip.ZipFile(args(0))
   Option(zipFile.getEntry(args(1))) match {
     case Some(_) => ()
-    case None => sys.error("File " + args(1) + " not found in zip " + args(0))
+    case None =>
+      sys.error("File " + args(1) + " not found in zip " + args(0))
   }
 }

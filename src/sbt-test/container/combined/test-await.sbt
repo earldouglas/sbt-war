@@ -35,7 +35,7 @@ val await = inputKey[Unit]("await")
 await := {
   complete.DefaultParsers.spaceDelimited("<arg>").parsed.toList match {
     case List(port) => awaitOpen(port.toInt)
-    case _ => throw new Exception("Usage: await <port>")
+    case _          => throw new Exception("Usage: await <port>")
   }
 }
 
@@ -44,6 +44,6 @@ val awaitClosed = inputKey[Unit]("awaitClosed")
 awaitClosed := {
   complete.DefaultParsers.spaceDelimited("<arg>").parsed.toList match {
     case List(port) => awaitClosed(port.toInt)
-    case _ => throw new Exception("Usage: awaitClosed <port>")
+    case _          => throw new Exception("Usage: awaitClosed <port>")
   }
 }

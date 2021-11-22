@@ -13,7 +13,10 @@ findInZip := {
         val entry = entries.nextElement()
         contents = contents + entry.getName()
       }
-      var contentsS = contents.toList.sorted.map(n => s"  ${n}").mkString("\n")
-      sys.error(s"File ${args(1)} not found in zip file ${args(0)}:\n\n${contentsS}")
+      var contentsS =
+        contents.toList.sorted.map(n => s"  ${n}").mkString("\n")
+      sys.error(
+        s"File ${args(1)} not found in zip file ${args(0)}:\n\n${contentsS}"
+      )
   }
 }

@@ -5,7 +5,7 @@ import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.webapp.WebAppContext
 
 object Run extends App {
- 
+
   val port: Int = args(0).toInt
   val war: String = args(1)
   val contextPath: String = "/"

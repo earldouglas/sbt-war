@@ -1,9 +1,10 @@
 def get(url: String, expect: Int, retries: Int): Unit = {
-  val status: Either[Exception,Int] =
+  val status: Either[Exception, Int] =
     try {
       import java.net.URL
       import java.net.HttpURLConnection
-      val conn = (new URL(url)).openConnection.asInstanceOf[HttpURLConnection]
+      val conn =
+        (new URL(url)).openConnection.asInstanceOf[HttpURLConnection]
       conn.setInstanceFollowRedirects(false)
       conn.setRequestMethod("GET")
       conn.setDoOutput(false)
@@ -32,6 +33,8 @@ get := {
     case List(url, status, retries) =>
       get(url, status.toInt, retries.toInt)
     case _ =>
-      throw new Exception("Usage: get <url> <expected status> [retries]")
+      throw new Exception(
+        "Usage: get <url> <expected status> [retries]"
+      )
   }
 }

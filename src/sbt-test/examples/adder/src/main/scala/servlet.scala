@@ -16,10 +16,11 @@ trait JdbcServlet {
   val c: Connection = {
     Class.forName(sys.env("DB_DRIVER"))
     val c: Connection =
-      DriverManager.getConnection( sys.env("DB_URL")
-                                 , sys.env("DB_USER")
-                                 , sys.env("DB_PASS")
-                                 )
+      DriverManager.getConnection(
+        sys.env("DB_URL"),
+        sys.env("DB_USER"),
+        sys.env("DB_PASS")
+      )
     c.setAutoCommit(false)
     c
   }
@@ -30,14 +31,13 @@ trait JdbcServlet {
 
 trait CommandServlet extends HttpServlet with JdbcServlet {
 
-  override def doPost( req: HttpServletRequest
-                     , res: HttpServletResponse
-                     ) {
+  override def doPost(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ) {
     unsafeRun(req.startAsync()) {
       Service {
-        Source.fromInputStream(req.getInputStream)
-              .mkString
-              .toInt
+        Source.fromInputStream(req.getInputStream).mkString.toInt
       } mapLeft { _ =>
         (400, "couldn't parse number")
       } flatMap { amount =>
@@ -78,9 +78,10 @@ trait UpdateServlet extends HttpServlet with JdbcServlet {
 
 trait QueryServlet extends HttpServlet with JdbcServlet {
 
-  override def doGet( req: HttpServletRequest
-                    , res: HttpServletResponse
-                    ) {
+  override def doGet(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ) {
     unsafeRun(req.startAsync()) {
       Adder.getSum map { case (_, result) =>
         res.setContentType("text/plain")
@@ -95,14 +96,16 @@ trait QueryServlet extends HttpServlet with JdbcServlet {
   }
 }
 
-class AdderServlet extends CommandServlet
-                   with UpdateServlet
-                   with QueryServlet {
+class AdderServlet
+    extends CommandServlet
+    with UpdateServlet
+    with QueryServlet {
 
   override def init(): Unit = {
-    Await.result( Service.unsafeRun(Adder.init, c)
-                , Duration(5000, MILLISECONDS)
-                )
+    Await.result(
+      Service.unsafeRun(Adder.init, c),
+      Duration(5000, MILLISECONDS)
+    )
     super.init()
   }
 

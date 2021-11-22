@@ -6,9 +6,10 @@ enablePlugins(JettyPlugin)
 
 containerForkOptions :=
   ForkOptions().withEnvVars(
-    Map( "DB_DRIVER" -> "org.h2.Driver"
-       , "DB_URL" -> "jdbc:h2:mem:adder"
-       , "DB_USER" -> "sa"
-       , "DB_PASS" -> ""
-       )
+    Map(
+      "DB_DRIVER" -> "org.h2.Driver",
+      "DB_URL" -> "jdbc:h2:mem:adder",
+      "DB_USER" -> "sa",
+      "DB_PASS" -> ""
+    )
   )

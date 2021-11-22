@@ -12,8 +12,13 @@ findInManifest := {
       if (manifestLines.contains(manifestAttribute)) {
         ()
       } else {
-        sys.error("Manifest " + manifestFilename + " is missing expected attribute " + manifestAttribute)
+        sys.error(
+          "Manifest " + manifestFilename + " is missing expected attribute " + manifestAttribute
+        )
       }
-    case None => sys.error("File " + manifestFilename + " not found in zip " + args(0))
+    case None =>
+      sys.error(
+        "File " + manifestFilename + " not found in zip " + args(0)
+      )
   }
 }

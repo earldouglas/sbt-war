@@ -10,9 +10,10 @@ class AsyncServlet extends HttpServlet {
     execSvc.shutdown
   }
 
-  override def service( req: HttpServletRequest
-                      , res: HttpServletResponse
-                      ) {
+  override def service(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ) {
 
     val ctx = req.startAsync
 

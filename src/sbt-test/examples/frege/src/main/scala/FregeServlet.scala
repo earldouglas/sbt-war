@@ -3,8 +3,8 @@ package fregeweb
 import scala.language.implicitConversions
 
 import javax.servlet.http.HttpServlet
-import javax.servlet.http.{ HttpServletRequest => HSReq }
-import javax.servlet.http.{ HttpServletResponse => HSRes }
+import javax.servlet.http.{HttpServletRequest => HSReq}
+import javax.servlet.http.{HttpServletResponse => HSRes}
 
 import FregeWeb.TRequest
 import FregeWeb.TResponse
@@ -23,10 +23,10 @@ object `package` {
   implicit class HSResService(val hsRes: HSRes) extends AnyVal {
 
     def service(hsReq: HSReq): Unit = {
-      val tReq: TRequest = TRequest.mk( new Box(hsReq.method)
-                                      , new Box(hsReq.uri)
-                                      )
-      val tRes: TResponse = FregeWeb.service(tReq).asInstanceOf[TResponse]
+      val tReq: TRequest =
+        TRequest.mk(new Box(hsReq.method), new Box(hsReq.uri))
+      val tRes: TResponse =
+        FregeWeb.service(tReq).asInstanceOf[TResponse]
       write(tRes)
     }
 

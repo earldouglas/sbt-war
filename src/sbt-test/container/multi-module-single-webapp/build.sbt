@@ -1,4 +1,9 @@
-lazy val root = (project in file(".")).aggregate(numbers, maths, mathsweb, typeclasses)
+lazy val root = (project in file(".")).aggregate(
+  numbers,
+  maths,
+  mathsweb,
+  typeclasses
+)
 
 lazy val numbers = project
 

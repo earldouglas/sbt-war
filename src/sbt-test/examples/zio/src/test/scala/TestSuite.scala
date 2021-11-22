@@ -12,8 +12,7 @@ class TestSuite extends FunSuite with Matchers {
       Response(
         status = 200,
         headers = Map("Content-Type" -> "text/html;charset=utf-8"),
-        body = 
-          """|<ul>
+        body = """|<ul>
              |</ul>
              |""".stripMargin
       )
@@ -25,7 +24,7 @@ class TestSuite extends FunSuite with Matchers {
       method = "POST",
       url = "http://localhost:8080/",
       headers = Map.empty,
-      body = Some("name=jdoe&message=Howdy!"),
+      body = Some("name=jdoe&message=Howdy!")
     ) shouldBe {
       Response(
         status = 302,
@@ -45,8 +44,7 @@ class TestSuite extends FunSuite with Matchers {
       Response(
         status = 200,
         headers = Map("Content-Type" -> "text/html;charset=utf-8"),
-        body = 
-          """|<ul>
+        body = """|<ul>
              |  <li>jdoe: Howdy!</li>
              |</ul>
              |""".stripMargin

@@ -18,19 +18,23 @@ sealed trait WebAppErr {
   def status: Int
   def message: String
 }
-case class InsufficientPermissions( required: Set[Permission]
-                                  , permissions: Set[Permission]
-                                  ) extends WebAppErr {
+case class InsufficientPermissions(
+    required: Set[Permission],
+    permissions: Set[Permission]
+) extends WebAppErr {
   val status: Int = 403
-  val message: String = s"Insufficient permissions; required: ${required}, present: ${permissions}"
+  val message: String =
+    s"Insufficient permissions; required: ${required}, present: ${permissions}"
 }
 case class InvalidSession(sessionId: String) extends WebAppErr {
   val status: Int = 401
   val message: String = s"Invalid session: ${sessionId}"
 }
-case class InvalidUsernameOrPassword(username: String) extends WebAppErr {
+case class InvalidUsernameOrPassword(username: String)
+    extends WebAppErr {
   val status: Int = 404
-  val message: String = s"Invalid username or password; username: ${username}"
+  val message: String =
+    s"Invalid username or password; username: ${username}"
 }
 case class MissingParameter(name: String) extends WebAppErr {
   val status: Int = 400
@@ -48,56 +52,56 @@ case class InternalServerError(throwable: Throwable) extends WebAppErr {
 object WebAppOp {
 
   private val permissions: Map[String, Set[Permission]] =
-    Map( "tbuckland" -> Set(Read, Write)
-       , "lbracco"   -> Set(Write)
-       , "jdoe"      -> Set(Read)
-       )
+    Map(
+      "tbuckland" -> Set(Read, Write),
+      "lbracco" -> Set(Write),
+      "jdoe" -> Set(Read)
+    )
 
   private val passwordsByUsername: Map[String, String] =
-    Map( "tbuckland" -> "alligator3"
-       , "lbracco"   -> "secret"
-       , "jdoe"      -> "unguessable"
-       )
+    Map(
+      "tbuckland" -> "alligator3",
+      "lbracco" -> "secret",
+      "jdoe" -> "unguessable"
+    )
 
   private var sessions: Map[String, User] =
     Map.empty
 
   def signIn: Free[WebAppOp, String] =
     for {
-      username  <- Free.liftM(RequestParam("username"))
-      password  <- Free.liftM(RequestParam("password"))
+      username <- Free.liftM(RequestParam("username"))
+      password <- Free.liftM(RequestParam("password"))
       sessionId <- Free.liftM {
-                     if (passwordsByUsername.get(username) == Some(password)) {
-                       val sessionId = UUID.randomUUID.toString
-                       val user = User(username)
-                       sessions = sessions + (sessionId -> user)
-                       Value(sessionId)
-                     } else {
-                       Error(InvalidUsernameOrPassword(username))
-                     }
-                   }
+        if (passwordsByUsername.get(username) == Some(password)) {
+          val sessionId = UUID.randomUUID.toString
+          val user = User(username)
+          sessions = sessions + (sessionId -> user)
+          Value(sessionId)
+        } else {
+          Error(InvalidUsernameOrPassword(username))
+        }
+      }
     } yield sessionId
 
   def authN: Free[WebAppOp, User] =
     for {
       sessionId <- Free.liftM(RequestHeader("x-session-id"))
-      user      <- Free.liftM {
-                     sessions.get(sessionId) match {
-                       case Some(user) => Value(user)
-                       case None => Error(InvalidSession(sessionId))
-                     }
-                   }
+      user <- Free.liftM {
+        sessions.get(sessionId) match {
+          case Some(user) => Value(user)
+          case None       => Error(InvalidSession(sessionId))
+        }
+      }
     } yield user
 
-  def authZ[A]( required: Set[Permission]
-              , k: => A
-              ): Free[WebAppOp, A] =
+  def authZ[A](required: Set[Permission], k: => A): Free[WebAppOp, A] =
     for {
-      perms  <- getPermissions
+      perms <- getPermissions
       result <- Free.liftM {
-                  if ((required -- perms).isEmpty) Value(k)
-                  else Error(InsufficientPermissions(required, perms))
-                }
+        if ((required -- perms).isEmpty) Value(k)
+        else Error(InsufficientPermissions(required, perms))
+      }
     } yield result
 
   val getPermissions: Free[WebAppOp, Set[Permission]] =

@@ -1,7 +1,7 @@
 import java.sql.Connection
 import java.sql.PreparedStatement
 import scala.concurrent.Future
-import scala.concurrent.{ ExecutionContext => EC }
+import scala.concurrent.{ExecutionContext => EC}
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -13,16 +13,16 @@ object `package` {
 
 object Service {
 
-  def unsafeRun[A]( s: Service[A]
-                  , c: Connection
-                  )(implicit ec: EC): Future[Either[Error, A]] =
+  def unsafeRun[A](s: Service[A], c: Connection)(implicit
+      ec: EC
+  ): Future[Either[Error, A]] =
     c synchronized {
       val ea =
         s.run(c) map {
-          case r@Right(_) =>
+          case r @ Right(_) =>
             c.commit()
             r
-          case l@Left(_) =>
+          case l @ Left(_) =>
             c.rollback()
             l
         }
@@ -56,7 +56,9 @@ object Service {
       s.close()
     }
 
-  def update(q: String, k: PreparedStatement => Unit)(implicit ec: EC): Service[Unit] =
+  def update(q: String, k: PreparedStatement => Unit)(implicit
+      ec: EC
+  ): Service[Unit] =
     apply { c =>
       val s = c.prepareStatement(q)
       k(s)
@@ -64,7 +66,9 @@ object Service {
       s.close()
     }
 
-  def query[A](q: String, k: PreparedStatement => A)(implicit ec: EC): Service[A] =
+  def query[A](q: String, k: PreparedStatement => A)(implicit
+      ec: EC
+  ): Service[A] =
     apply { c =>
       val s = c.prepareStatement(q)
       val a = k(s)
@@ -78,7 +82,7 @@ case class Service[A](run: JDBC[Future[Either[Error, A]]]) {
   def map[B](f: A => B)(implicit ec: EC): Service[B] =
     Service { c =>
       run(c) map {
-        case Left(e) => Left(e)
+        case Left(e)  => Left(e)
         case Right(a) => Right(f(a))
       }
     }
@@ -86,7 +90,7 @@ case class Service[A](run: JDBC[Future[Either[Error, A]]]) {
   def mapLeft(f: Error => Error)(implicit ec: EC): Service[A] =
     Service { c =>
       run(c) map {
-        case Left(e) => Left(f(e))
+        case Left(e)  => Left(f(e))
         case Right(a) => Right(a)
       }
     }
@@ -94,7 +98,7 @@ case class Service[A](run: JDBC[Future[Either[Error, A]]]) {
   def withLeft(f: Error => Unit)(implicit ec: EC): Service[A] =
     Service { c =>
       run(c) map {
-        case Left(e) => f(e) ; Left(e)
+        case Left(e)  => f(e); Left(e)
         case Right(a) => Right(a)
       }
     }
@@ -102,7 +106,7 @@ case class Service[A](run: JDBC[Future[Either[Error, A]]]) {
   def flatMap[B](f: A => Service[B])(implicit ec: EC): Service[B] =
     Service { c =>
       run(c) flatMap {
-        case Left(e) => Future(Left(e))
+        case Left(e)  => Future(Left(e))
         case Right(a) => f(a).run(c)
       }
     }

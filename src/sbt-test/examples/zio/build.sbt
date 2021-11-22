@@ -7,10 +7,11 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 enablePlugins(JettyPlugin)
 
 containerForkOptions :=
- ForkOptions().withEnvVars {
-   Map( "DB_DRIVER" -> "org.h2.Driver"
-      , "DB_URL" -> "jdbc:h2:mem:zio"
-      , "DB_USER" -> "sa"
-      , "DB_PASS" -> ""
-      )
- }
+  ForkOptions().withEnvVars {
+    Map(
+      "DB_DRIVER" -> "org.h2.Driver",
+      "DB_URL" -> "jdbc:h2:mem:zio",
+      "DB_USER" -> "sa",
+      "DB_PASS" -> ""
+    )
+  }

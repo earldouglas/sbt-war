@@ -5,11 +5,11 @@ import java.net.URL
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
-class TestServletSuite extends FunSuite
-                       with Matchers {
+class TestServletSuite extends FunSuite with Matchers {
 
   def getStatus(url: String): Int = {
-    val c = (new URL(url)).openConnection.asInstanceOf[HttpURLConnection]
+    val c =
+      (new URL(url)).openConnection.asInstanceOf[HttpURLConnection]
     c.setRequestMethod("GET")
     c.setDoInput(true)
     c.setDoOutput(false)

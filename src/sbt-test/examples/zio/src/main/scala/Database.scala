@@ -32,7 +32,10 @@ object Database {
       stmt.close()
     }
 
-  def addEntry(name: String, message: String): ZIO[JdbcIO, Throwable, Unit] =
+  def addEntry(
+      name: String,
+      message: String
+  ): ZIO[JdbcIO, Throwable, Unit] =
     JdbcIO.effect { c =>
       val s = "insert into guestbook (name, message) values (?, ?)"
       val stmt = c.prepareStatement(s)
@@ -48,7 +51,9 @@ object Database {
       val stmt = c.createStatement
       val rs = stmt.executeQuery(q)
 
-      def _entries(acc: List[(String, String)]): List[(String, String)] =
+      def _entries(
+          acc: List[(String, String)]
+      ): List[(String, String)] =
         if (rs.next()) {
           val entry = (rs.getString("name"), rs.getString("message"))
           _entries(entry :: acc)

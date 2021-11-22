@@ -4,9 +4,10 @@ import javax.servlet.http.HttpServletResponse
 
 class GettingStartedServlet extends HttpServlet {
 
-  override def doGet( req: HttpServletRequest
-                    , res: HttpServletResponse
-                    ) {
+  override def doGet(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ) {
 
     res.setContentType("text/html")
     res.setCharacterEncoding("UTF-8")
