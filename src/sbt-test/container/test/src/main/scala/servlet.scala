@@ -6,9 +6,10 @@ import javax.servlet.http.HttpServletResponse
 
 class TestServlet extends HttpServlet {
 
-  override def doGet( req: HttpServletRequest
-                    , res: HttpServletResponse
-                    ): Unit = {
+  override def doGet(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ): Unit = {
     res.setStatus(200)
   }
 }

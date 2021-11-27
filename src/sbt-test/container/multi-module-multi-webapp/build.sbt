@@ -1,4 +1,5 @@
-lazy val root = (project in file(".")).aggregate(maths, mathsweb, remote, remoteweb)
+lazy val root =
+  (project in file(".")).aggregate(maths, mathsweb, remote, remoteweb)
 
 lazy val maths = project
 

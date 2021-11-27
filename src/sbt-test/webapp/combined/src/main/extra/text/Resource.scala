@@ -1,3 +1,3 @@
 package text
 
-class Resource { }
+class Resource {}

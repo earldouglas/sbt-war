@@ -7,16 +7,18 @@ object HttpClient {
   import zio.Task
   import zio.ZIO
 
-  case class Request( method: String
-                    , url: URL
-                    , headers: Map[String, String]
-                    , body: Option[String]
-                    )
+  case class Request(
+      method: String,
+      url: URL,
+      headers: Map[String, String],
+      body: Option[String]
+  )
 
-  case class Response( status: Int
-                     , headers: Map[String, String]
-                     , body: String
-                     )
+  case class Response(
+      status: Int,
+      headers: Map[String, String],
+      body: String
+  )
 
   def request(r: Request): Task[Response] =
     ZIO effect {
@@ -31,7 +33,9 @@ object HttpClient {
 
       r.headers foreach { case (k, v) => c.setRequestProperty(k, v) }
 
-      r.body foreach { b => c.getOutputStream.write(b.getBytes("UTF-8")) }
+      r.body foreach { b =>
+        c.getOutputStream.write(b.getBytes("UTF-8"))
+      }
 
       val responseStatus = c.getResponseCode
 
@@ -53,42 +57,43 @@ object HttpClient {
 
       c.disconnect()
 
-      Response( status = responseStatus
-              , headers = responseHeaders
-              , body = responseBody
-              )
+      Response(
+        status = responseStatus,
+        headers = responseHeaders,
+        body = responseBody
+      )
     }
 
-  def post( url: URL
-          , headers: Map[String, String] = Map.empty
-          , body: Option[String] = None
-          ): Task[Response] =
+  def post(
+      url: URL,
+      headers: Map[String, String] = Map.empty,
+      body: Option[String] = None
+  ): Task[Response] =
     request(Request("POST", url, headers, body))
 
-  def get( url: URL
-         , headers: Map[String, String] = Map.empty
-         ): Task[Response] =
+  def get(
+      url: URL,
+      headers: Map[String, String] = Map.empty
+  ): Task[Response] =
     request(Request("GET", url, headers, None))
 
-  def put( url: URL
-         , headers: Map[String, String] = Map.empty
-         , body: Option[String] = None
-         ): Task[Response] =
+  def put(
+      url: URL,
+      headers: Map[String, String] = Map.empty,
+      body: Option[String] = None
+  ): Task[Response] =
     request(Request("PUT", url, headers, body))
 
-  def delete( url: URL
-            , headers: Map[String, String] = Map.empty
-            ): Task[Response] =
+  def delete(
+      url: URL,
+      headers: Map[String, String] = Map.empty
+  ): Task[Response] =
     request(Request("DELETE", url, headers, None))
 
-  def head( url: URL
-          , headers: Map[String, String]
-          ): Task[Response] =
+  def head(url: URL, headers: Map[String, String]): Task[Response] =
     request(Request("HEAD", url, headers, None))
 
-  def options( url: URL
-             , headers: Map[String, String]
-             ): Task[Response] =
+  def options(url: URL, headers: Map[String, String]): Task[Response] =
     request(Request("OPTIONS", url, headers, None))
 
 }

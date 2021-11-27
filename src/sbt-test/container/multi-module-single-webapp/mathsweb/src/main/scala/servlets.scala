@@ -10,7 +10,10 @@ import typeclasses.Show._
 
 class TestServlet extends HttpServlet {
 
-  override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
+  override def doGet(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ) {
     res.setStatus(200)
     res.getWriter.write("10! is " + factorial(10).show)
   }

@@ -6,7 +6,10 @@ import javax.servlet.http.HttpServletResponse
 
 class TestServlet extends HttpServlet {
 
-  override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
+  override def doGet(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ) {
     val x = req.getParameter("x").toInt
     val y = remote.get("http://localhost:8081/test?x=" + x).toInt
     res.setStatus(200)

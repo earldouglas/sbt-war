@@ -8,34 +8,48 @@ object Request {
   import scala.collection.JavaConverters._
   import zio.ZIO
 
-  def effect[A](k: HttpServletRequest => A): ZIO[WithRequest, Throwable, A] =
+  def effect[A](
+      k: HttpServletRequest => A
+  ): ZIO[WithRequest, Throwable, A] =
     ZIO.fromFunctionM { e => ZIO.effect { k(e.request) } }
 
-  def effectO[A](k: HttpServletRequest => A): ZIO[WithRequest, Throwable, Option[A]] =
+  def effectO[A](
+      k: HttpServletRequest => A
+  ): ZIO[WithRequest, Throwable, Option[A]] =
     ZIO.fromFunctionM { e => ZIO.effect { Option(k(e.request)) } }
 
-  def route[A, R <: WithRequest]( k: PartialFunction[List[String]
-              , ZIO[R, Throwable, A]]
-              ): ZIO[R, Throwable, A] =
+  def route[A, R <: WithRequest](
+      k: PartialFunction[List[String], ZIO[R, Throwable, A]]
+  ): ZIO[R, Throwable, A] =
     for {
-      method  <- getMethod
+      method <- getMethod
       context <- getServletPath
-      uri     <- getRequestURI
-      a       <- k(method :: uri.substring(context.length).split("/").drop(1).toList)
+      uri <- getRequestURI
+      a <- k(
+        method :: uri
+          .substring(context.length)
+          .split("/")
+          .drop(1)
+          .toList
+      )
     } yield a
 
   val headers: ZIO[WithRequest, Throwable, Map[String, List[String]]] =
     getHeaderNames() flatMap { namesO =>
       ZIO.collectAll {
-        namesO.map(_.asScala.toList).getOrElse(Nil)
-              .map({ name =>
-                    getHeaders(name) map { valuesO =>
-                      ( name
-                      , valuesO.map(_.asScala.toList)
-                               .getOrElse(Nil)
-                      )
-                    }
-                  })
+        namesO
+          .map(_.asScala.toList)
+          .getOrElse(Nil)
+          .map({ name =>
+            getHeaders(name) map { valuesO =>
+              (
+                name,
+                valuesO
+                  .map(_.asScala.toList)
+                  .getOrElse(Nil)
+              )
+            }
+          })
       } map {
         _.toMap
       }
@@ -148,13 +162,19 @@ object Request {
   def startAsync() =
     effect(_.startAsync())
 
-  def startAsync(servletRequest: ServletRequest, servletResponse: ServletResponse) =
+  def startAsync(
+      servletRequest: ServletRequest,
+      servletResponse: ServletResponse
+  ) =
     effect(_.startAsync(servletRequest, servletResponse))
 
   // HttpServletRequest methods:
 
-  def authenticate: ZIO[WithRequest with WithResponse, Throwable, Boolean] =
-    ZIO.fromFunctionM { e => ZIO.effect { e.request.authenticate(e.response) } }
+  def authenticate
+      : ZIO[WithRequest with WithResponse, Throwable, Boolean] =
+    ZIO.fromFunctionM { e =>
+      ZIO.effect { e.request.authenticate(e.response) }
+    }
 
   def changeSessionId() =
     effect(_.changeSessionId())
@@ -254,10 +274,14 @@ object Response {
   import javax.servlet.http.HttpServletResponse
   import zio.ZIO
 
-  def effect[A](k: HttpServletResponse => A): ZIO[WithResponse, Throwable, A] =
+  def effect[A](
+      k: HttpServletResponse => A
+  ): ZIO[WithResponse, Throwable, A] =
     ZIO.fromFunctionM { e => ZIO.effect { k(e.response) } }
 
-  def effectO[A](k: HttpServletResponse => A): ZIO[WithResponse, Throwable, Option[A]] =
+  def effectO[A](
+      k: HttpServletResponse => A
+  ): ZIO[WithResponse, Throwable, Option[A]] =
     ZIO.fromFunctionM { e => ZIO.effect { Option(k(e.response)) } }
 
   // ServletResponse methods:

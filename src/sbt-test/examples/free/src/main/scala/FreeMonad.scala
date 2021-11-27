@@ -4,7 +4,7 @@ trait ~>[F[_], G[_]] {
 
 trait Monad[F[_]] {
   def pure[A](a: A): F[A]
-  def bind[A,B](fa: F[A])(f: A => F[B]): F[B]
+  def bind[A, B](fa: F[A])(f: A => F[B]): F[B]
 }
 
 sealed trait Free[F[_], A] {
@@ -17,11 +17,12 @@ sealed trait Free[F[_], A] {
 
   def foldMap[G[_]: Monad](nt: F ~> G): G[A] =
     this match {
-      case Pure(a) => implicitly[Monad[G]].pure(a)
+      case Pure(a)     => implicitly[Monad[G]].pure(a)
       case Suspend(fa) => nt(fa)
-      case Bind(fa, f) => val mg = implicitly[Monad[G]]
-                          val ga = fa.foldMap(nt)
-                          mg.bind(ga)(f(_).foldMap(nt))
+      case Bind(fa, f) =>
+        val mg = implicitly[Monad[G]]
+        val ga = fa.foldMap(nt)
+        mg.bind(ga)(f(_).foldMap(nt))
     }
 
 }
@@ -34,7 +35,6 @@ object Free {
 
   final case class Pure[F[_], A](a: A) extends Free[F, A]
   final case class Suspend[F[_], A](fa: F[A]) extends Free[F, A]
-  final case class Bind[F[_], A, B]( fa: Free[F, A]
-                                   , f: A => Free[F, B]
-                                   ) extends Free[F, B]
+  final case class Bind[F[_], A, B](fa: Free[F, A], f: A => Free[F, B])
+      extends Free[F, B]
 }

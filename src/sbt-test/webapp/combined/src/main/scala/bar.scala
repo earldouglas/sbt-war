@@ -1,3 +1,3 @@
 package foo.bar
 
-class Bar { }
+class Bar {}

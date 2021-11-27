@@ -2,7 +2,10 @@ import org.scalatest.FunSuiteLike
 import org.scalatest.Matchers
 import org.scalatra.test.scalatest.ScalatraSuite
 
-class HelloWorldServletSuite extends ScalatraSuite with FunSuiteLike with Matchers {
+class HelloWorldServletSuite
+    extends ScalatraSuite
+    with FunSuiteLike
+    with Matchers {
 
   addServlet(classOf[HelloWorldServlet], "/*")
 
