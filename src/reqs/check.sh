@@ -55,7 +55,7 @@ done
 
 # sbt 1.5
 # Scala 3 support was introduced in sbt 1.5.0
-for SBT_VERSION in 1.5.0 1.5.6
+for SBT_VERSION in 1.5.0 1.5.7 1.6.0-RC2
 do
   SCALA_VERSION=3.0.0 SBT_LAUNCH=https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/$SBT_VERSION/sbt-launch-$SBT_VERSION.jar
   _test
