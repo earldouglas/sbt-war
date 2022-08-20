@@ -6,7 +6,7 @@ name := "xsbt-web-plugin"
 organization := "com.earldouglas"
 sbtPlugin := true
 scalacOptions ++= Seq("-feature", "-deprecation")
-scalaVersion := "2.13.8"
+scalaVersion := "2.12.16"
 
 // scripted-plugin
 scriptedBufferLog := false
