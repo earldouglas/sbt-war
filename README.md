@@ -476,32 +476,9 @@ Deployment](https://devcenter.heroku.com/articles/war-deployment) guide.
 
 ### Deploying to Elastic Beanstalk
 
-Before trying to deploy anything, create an application and a
-Tomcat-based environment for it in Elastic Beanstalk.
-
-Enable the `ElasticBeanstalkDeployPlugin` plugin, and configure your
-application's name, environment, and region:
-
-```scala
-enablePlugins(ElasticBeanstalkDeployPlugin)
-
-elasticBeanstalkAppName := "my-elastic-beanstalk-app"
-
-elasticBeanstalkEnvName := "production"
-
-elasticBeanstalkRegion  := "us-west-1"
-```
-
-Add AWS credentials to your environment, launch sbt, and deploy with
-`elasticBeanstalkDeploy`:
-
-```
-$ AWS_ACCESS_KEY="xxx" AWS_SECRET_KEY="xxx" sbt
-> elasticBeanstalkDeploy
-```
-
-Check out your deployed application at
-`http://my-elastic-beanstalk-app.us-west-1.elasticbeanstalk.com`.
+See [Working with
+Java](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_Java.html)
+in the AWS Elastic Beanstalk developer guide.
 
 ### Block sbt on running container
 
