@@ -592,6 +592,44 @@ $ curl localhost:8080/myproject_2.10-0.1-SNAPSHOT/hello
 </html>
 ```
 
+### Build a Docker image
+
+Configure a Docker build with `sbt-native-packager`:
+
+*project/plugins.sbt:*
+
+```scala
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.11")
+```
+
+*build.sbt:*
+
+```scala
+enablePlugins(DockerPlugin)
+
+dockerBaseImage := "tomcat:9.0"
+
+Docker / defaultLinuxInstallLocation := "/usr/local/tomcat/webapps"
+
+dockerExposedVolumes := Seq((Docker / defaultLinuxInstallLocation).value)
+
+Docker / mappings += sbt.Keys.`package`.value -> "/usr/local/tomcat/webapps/ROOT.war"
+
+dockerEntrypoint := Seq("catalina.sh", "run")
+```
+
+Build the project from sbt as a Docker image:
+
+```
+> docker:publishLocal
+```
+
+Run it:
+
+```
+$ docker run -it --rm -p 8080:8080 my-web-project:0.1.0-SNAPSHOT
+```
+
 ### Quickstart mode
 
 The development cycle can be sped up by serving static resources
