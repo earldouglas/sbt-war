@@ -1,4 +1,4 @@
-libraryDependencies += "com.h2database" % "h2" % "1.4.200"
+libraryDependencies += "com.h2database" % "h2" % "2.1.214"
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
