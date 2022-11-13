@@ -17,7 +17,7 @@ object TomcatPlugin extends AutoPlugin {
 
   override val projectConfigurations = Seq(Tomcat)
 
-  val webappRunner = "com.heroku" % "webapp-runner" % "9.0.41.0"
+  val webappRunner = "com.heroku" % "webapp-runner" % "9.0.68.0"
 
   override lazy val projectSettings =
     ContainerPlugin.containerSettings(Tomcat) ++
