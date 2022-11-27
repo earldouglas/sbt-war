@@ -15,3 +15,5 @@ containerForkOptions :=
       "DB_PASS" -> ""
     )
   }
+
+test := (Jetty / test).value

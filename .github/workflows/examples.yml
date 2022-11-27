@@ -1,10 +1,9 @@
-name: build
+name: examples
 
 on:
   push:
-    paths-ignore:
+    paths:
       - 'examples/**'
-      - '.github/workflows/examples.yml'
 
 jobs:
   build:
@@ -16,7 +15,10 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 8
-    - run: sbt scalafmtCheckAll
-    - run: sbt ^test
-    - run: sbt ^publishLocal
-    - run: sbt scripted
+    - run: |
+        for i in examples/*
+        do
+          pushd $i
+          sbt test
+          popd
+        done
