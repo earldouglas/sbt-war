@@ -21,7 +21,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.9" % "test"
 enablePlugins(JettyPlugin)
 
 addCompilerPlugin(
-  "org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full
+  "org.typelevel" %% "kind-projector" % "0.11.3" cross CrossVersion.full
 )
 
 test := (Jetty / test).value

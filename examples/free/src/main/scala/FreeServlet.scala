@@ -4,12 +4,12 @@ import javax.servlet.http.HttpServletResponse
 
 class FreeServlet extends HttpServlet {
 
-  implicit val responseMonad: Monad[Either[WebAppErr, ?]] =
-    new Monad[Either[WebAppErr, ?]] {
-      def pure[A](a: A): Either[WebAppErr, ?][A] = Right(a)
+  implicit val responseMonad: Monad[Either[WebAppErr, *]] =
+    new Monad[Either[WebAppErr, *]] {
+      def pure[A](a: A): Either[WebAppErr, *][A] = Right(a)
       def bind[A, B](
-          fa: Either[WebAppErr, ?][A]
-      )(f: A => Either[WebAppErr, ?][B]): Either[WebAppErr, ?][B] =
+          fa: Either[WebAppErr, *][A]
+      )(f: A => Either[WebAppErr, *][B]): Either[WebAppErr, *][B] =
         fa match {
           case Left(e)  => Left(e)
           case Right(a) => f(a)
@@ -20,9 +20,9 @@ class FreeServlet extends HttpServlet {
 
   def interpreter(
       req: HttpServletRequest
-  ): WebAppOp ~> Either[WebAppErr, ?] =
-    new ~>[WebAppOp, Either[WebAppErr, ?]] {
-      def apply[A](c: WebAppOp[A]): Either[WebAppErr, ?][A] =
+  ): WebAppOp ~> Either[WebAppErr, *] =
+    new ~>[WebAppOp, Either[WebAppErr, *]] {
+      def apply[A](c: WebAppOp[A]): Either[WebAppErr, *][A] =
         try {
           c match {
             case Value(x)    => Right(x)
