@@ -12,8 +12,8 @@ servlets](https://en.wikipedia.org/wiki/Java_servlet).
 * Package a project as a *.war* file
 * Test and run under Jetty or Tomcat
 * Deploy directly to Heroku or AWS
-* Supports sbt 1.3.0+ and 0.13.6 - 0.13.18
-* Supports Scala 2.10.2+
+* Supports sbt 0.13.6 and up
+* Supports Scala 2.10.2 and up
 
 ## Getting help
 
