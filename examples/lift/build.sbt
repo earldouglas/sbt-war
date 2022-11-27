@@ -3,3 +3,5 @@ libraryDependencies += "net.liftweb" %% "lift-webkit" % "3.4.3"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 
 enablePlugins(JettyPlugin)
+
+test := (Jetty / test).value
