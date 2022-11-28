@@ -3,8 +3,8 @@ name: build
 on:
   push:
     paths-ignore:
+      - '.github/workflows/examples-**'
       - 'examples/**'
-      - '.github/workflows/examples-*.yml'
 
 jobs:
   build:
