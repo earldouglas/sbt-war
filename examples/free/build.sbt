@@ -16,12 +16,12 @@ scalacOptions ++= Seq(
 )
 
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.9" % "test"
 
 enablePlugins(JettyPlugin)
 
 addCompilerPlugin(
-  "org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full
+  "org.typelevel" %% "kind-projector" % "0.11.3" cross CrossVersion.full
 )
 
 test := (Jetty / test).value

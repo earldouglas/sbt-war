@@ -6,17 +6,18 @@ object Request {
   import javax.servlet.http.HttpServletRequest
   import javax.servlet.http.HttpUpgradeHandler
   import scala.collection.JavaConverters._
+  import zio.ZEnvironment
   import zio.ZIO
 
   def effect[A](
       k: HttpServletRequest => A
   ): ZIO[WithRequest, Throwable, A] =
-    ZIO.fromFunctionM { e => ZIO.effect { k(e.request) } }
+    ZIO.environmentWithZIO(e => ZIO.attempt(k(e.get.request)))
 
   def effectO[A](
       k: HttpServletRequest => A
   ): ZIO[WithRequest, Throwable, Option[A]] =
-    ZIO.fromFunctionM { e => ZIO.effect { Option(k(e.request)) } }
+    ZIO.environmentWithZIO(e => ZIO.attempt(Option(k(e.get.request))))
 
   def route[A, R <: WithRequest](
       k: PartialFunction[List[String], ZIO[R, Throwable, A]]
@@ -170,10 +171,11 @@ object Request {
 
   // HttpServletRequest methods:
 
-  def authenticate
-      : ZIO[WithRequest with WithResponse, Throwable, Boolean] =
-    ZIO.fromFunctionM { e =>
-      ZIO.effect { e.request.authenticate(e.response) }
+  def authenticate: ZIO[WithRequest with WithResponse, Throwable, Boolean] =
+    ZIO.environmentWithZIO { req: ZEnvironment[WithRequest] =>
+      ZIO.environmentWithZIO { res: ZEnvironment[WithResponse] =>
+        ZIO.attempt(req.get.request.authenticate(res.get.response))
+      }
     }
 
   def changeSessionId() =
@@ -277,12 +279,12 @@ object Response {
   def effect[A](
       k: HttpServletResponse => A
   ): ZIO[WithResponse, Throwable, A] =
-    ZIO.fromFunctionM { e => ZIO.effect { k(e.response) } }
+    ZIO.environmentWithZIO(e => ZIO.attempt(k(e.get.response)))
 
   def effectO[A](
       k: HttpServletResponse => A
   ): ZIO[WithResponse, Throwable, Option[A]] =
-    ZIO.fromFunctionM { e => ZIO.effect { Option(k(e.response)) } }
+    ZIO.environmentWithZIO(e => ZIO.attempt(Option(k(e.get.response))))
 
   // ServletResponse methods:
 
