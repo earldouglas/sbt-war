@@ -4,7 +4,7 @@ on:
   push:
     paths-ignore:
       - 'examples/**'
-      - '.github/workflows/examples.yml'
+      - '.github/workflows/examples-*.yml'
 
 jobs:
   build:

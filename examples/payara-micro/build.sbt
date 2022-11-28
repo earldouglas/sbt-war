@@ -15,5 +15,3 @@ containerLaunchCmd in Container := { (port, path) =>
     "/"
   )
 }
-
-test := (Container / test).value

@@ -23,5 +23,3 @@ enablePlugins(JettyPlugin)
 addCompilerPlugin(
   "org.typelevel" %% "kind-projector" % "0.11.3" cross CrossVersion.full
 )
-
-test := (Jetty / test).value

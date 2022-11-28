@@ -6,8 +6,3 @@ enablePlugins(JettyPlugin)
 enablePlugins(ScalaJSPlugin)
 
 scalaJSUseMainModuleInitializer := true
-
-test := {
-  (Compile / fastOptJS).value
-  (Jetty / test).value
-}
