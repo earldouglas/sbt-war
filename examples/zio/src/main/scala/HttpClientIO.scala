@@ -21,7 +21,7 @@ object HttpClient {
   )
 
   def request(r: Request): Task[Response] =
-    ZIO effect {
+    ZIO.attempt {
 
       val c = r.url.openConnection().asInstanceOf[HttpURLConnection]
 

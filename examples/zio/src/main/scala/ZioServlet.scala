@@ -47,6 +47,8 @@ class ZioServlet extends HttpServlet {
   import javax.servlet.http.HttpServletRequest
   import javax.servlet.http.HttpServletResponse
   import zio.Runtime
+  import zio.Unsafe
+  import zio.ZLayer
 
   def unsafeRun[A](
       req: HttpServletRequest,
@@ -55,22 +57,28 @@ class ZioServlet extends HttpServlet {
       k: ZIO[WithRequest with WithResponse with JdbcIO, Throwable, A]
   ): Either[Throwable, A] = {
 
-    val env =
-      new WithRequest with WithResponse with JdbcIO {
+    val requestEnv = new WithRequest { val request = req }
+    val responseEnv = new WithResponse { val response = res }
+    val jdbcEnv =
+      new JdbcIO {
         Class.forName("org.h2.Driver")
-        val request = req
-        val response = res
         val connection = Database.connectionPool.getConnection
       }
 
-    Runtime.default.unsafeRun {
-      JdbcIO
-        .transact(k)
-        .map(a => Right(a))
-        .catchAll { t =>
-          ZIO.succeed(Left[Throwable, A](t))
-        }
-        .provide(env)
+    Unsafe.unsafe { implicit u: Unsafe =>
+      Runtime.default.unsafe.run(
+        JdbcIO
+          .transact(k)
+          .map(a => Right(a))
+          .catchAll { t =>
+            ZIO.succeed(Left[Throwable, A](t))
+          }
+          .provide(
+            ZLayer.succeed(requestEnv) ++
+            ZLayer.succeed(responseEnv) ++
+            ZLayer.succeed(jdbcEnv)
+          )
+      ).getOrThrowFiberFailure()
     }
   }
 
