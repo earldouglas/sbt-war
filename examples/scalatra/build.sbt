@@ -5,5 +5,3 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.4" % "test"
 enablePlugins(JettyPlugin)
 
 Test / fork := true
-
-test := (Jetty / test).value

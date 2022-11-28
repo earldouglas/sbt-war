@@ -3,7 +3,8 @@ name: examples
 on:
   push:
     paths:
-      - 'examples/**'
+      - '.github/workflows/examples-https.yml'
+      - 'examples/https/**'
 
 jobs:
   build:
@@ -16,9 +17,5 @@ jobs:
       with:
         java-version: 8
     - run: |
-        for i in examples/*
-        do
-          pushd $i
-          sbt test
-          popd
-        done
+        cd examples/https
+        sbt Tomcat/test

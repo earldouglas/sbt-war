@@ -6,5 +6,3 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.9" % "test"
 enablePlugins(JettyPlugin)
 
 webappWebInfClasses := true
-
-test := (Jetty / test).value

@@ -15,5 +15,3 @@ Tomcat / javaOptions ++= Seq(
 )
 
 containerPort := 8443
-
-test := (Tomcat / test).value

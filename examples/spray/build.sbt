@@ -6,5 +6,3 @@ libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provid
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.9" % "test"
 
 enablePlugins(JettyPlugin)
-
-test := (Jetty / test).value

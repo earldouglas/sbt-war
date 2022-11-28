@@ -1,0 +1,21 @@
+name: examples
+
+on:
+  push:
+    paths:
+      - '.github/workflows/examples-free.yml'
+      - 'examples/free/**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - run: |
+        cd examples/free
+        sbt Jetty/test
