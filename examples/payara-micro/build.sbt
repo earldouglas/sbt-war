@@ -1,17 +1,23 @@
 enablePlugins(ContainerPlugin)
 
-libraryDependencies += "javax.ws.rs" % "javax.ws.rs-api" % "2.1.1" % "provided"
+libraryDependencies += "jakarta.platform" % "jakarta.jakartaee-api" % "10.0.0" % "provided"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.9" % "test"
 
-containerLibs in Container :=
-  Seq("fish.payara.extras" % "payara-micro" % "5.2022.4")
+Container / javaOptions ++=
+  Seq(
+    "--add-opens",
+    "java.base/jdk.internal.loader=ALL-UNNAMED"
+  )
 
-containerLaunchCmd in Container := { (port, path) =>
+Container / containerLibs :=
+  Seq("fish.payara.extras" % "payara-micro" % "6.2022.1")
+
+Container / containerLaunchCmd := { (port, path) =>
   Seq(
     "fish.payara.micro.PayaraMicro",
     "--deploy",
     path,
     "--contextroot",
-    "/"
+    "/mycontext"
   )
 }

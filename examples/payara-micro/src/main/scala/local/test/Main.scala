@@ -1,17 +1,8 @@
 package local.test
 
-import java.util
+import jakarta.ws.rs.ApplicationPath
+import jakarta.ws.rs.core.Application
 
-import javax.ws.rs.ApplicationPath
-import javax.ws.rs.core.Application
-import local.test.endpoint.Hello
-
-@ApplicationPath("/*")
+@ApplicationPath("myapp")
 class Main extends Application {
-
-  override def getClasses: util.Set[Class[_]] = {
-    val h = new util.HashSet[Class[_]]
-    h.add(classOf[Hello])
-    h
-  }
 }
