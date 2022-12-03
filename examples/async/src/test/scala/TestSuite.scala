@@ -1,6 +1,7 @@
-import org.scalatest._
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class TestSuite extends FunSuite with Matchers {
+class TestSuite extends AnyFunSuite with Matchers {
 
   test("add a message") {
     Request("GET", "http://localhost:8080/", Map.empty, None) shouldBe
