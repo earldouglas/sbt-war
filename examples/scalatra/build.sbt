@@ -1,4 +1,4 @@
-libraryDependencies += "org.scalatra" %% "scalatra" % "2.7.1"
+libraryDependencies += "org.scalatra" %% "scalatra" % "2.8.4"
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.4" % "test"
 
