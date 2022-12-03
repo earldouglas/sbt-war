@@ -1,9 +1,13 @@
 package local.test.endpoint
 
-import javax.ws.rs.core.{MediaType, Response}
-import javax.ws.rs.{GET, Path, Produces, QueryParam}
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
 
-@Path("/hello")
+@Path("hello")
 class Hello {
 
   @GET

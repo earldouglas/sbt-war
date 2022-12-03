@@ -5,7 +5,7 @@ class TestSuite extends FunSuite with BeforeAndAfterAll with Matchers {
   def waitForServer(retries: Int = 30): Unit =
     Request(
       "GET",
-      "http://localhost:8080/hello",
+      "http://localhost:8080/mycontext/myapp/hello",
       Map.empty,
       None
     ).status match {
@@ -21,7 +21,7 @@ class TestSuite extends FunSuite with BeforeAndAfterAll with Matchers {
   test("hello") {
     Request(
       "GET",
-      "http://localhost:8080/hello?name=James",
+      "http://localhost:8080/mycontext/myapp/hello?name=James",
       Map.empty,
       None
     ) shouldBe
