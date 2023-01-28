@@ -66,19 +66,21 @@ class ZioServlet extends HttpServlet {
       }
 
     Unsafe.unsafe { implicit u: Unsafe =>
-      Runtime.default.unsafe.run(
-        JdbcIO
-          .transact(k)
-          .map(a => Right(a))
-          .catchAll { t =>
-            ZIO.succeed(Left[Throwable, A](t))
-          }
-          .provide(
-            ZLayer.succeed(requestEnv) ++
-            ZLayer.succeed(responseEnv) ++
-            ZLayer.succeed(jdbcEnv)
-          )
-      ).getOrThrowFiberFailure()
+      Runtime.default.unsafe
+        .run(
+          JdbcIO
+            .transact(k)
+            .map(a => Right(a))
+            .catchAll { t =>
+              ZIO.succeed(Left[Throwable, A](t))
+            }
+            .provide(
+              ZLayer.succeed(requestEnv) ++
+                ZLayer.succeed(responseEnv) ++
+                ZLayer.succeed(jdbcEnv)
+            )
+        )
+        .getOrThrowFiberFailure()
     }
   }
 
