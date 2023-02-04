@@ -8,8 +8,7 @@ class TestSuite extends AnyFunSuite with Matchers {
       Response(
         200,
         Map("Content-Type" -> "text/html;charset=utf-8"),
-        body =
-          """|<html>
+        body = """|<html>
              |  <body>
              |    <h1>Hello, world!</h1>
              |  </body>

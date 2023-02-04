@@ -171,7 +171,8 @@ object Request {
 
   // HttpServletRequest methods:
 
-  def authenticate: ZIO[WithRequest with WithResponse, Throwable, Boolean] =
+  def authenticate
+      : ZIO[WithRequest with WithResponse, Throwable, Boolean] =
     ZIO.environmentWithZIO { req: ZEnvironment[WithRequest] =>
       ZIO.environmentWithZIO { res: ZEnvironment[WithResponse] =>
         ZIO.attempt(req.get.request.authenticate(res.get.response))
