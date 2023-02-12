@@ -1,4 +1,4 @@
-name: examples
+name: examples-http4s
 
 on:
   push:
