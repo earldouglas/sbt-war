@@ -1,21 +1,19 @@
 name: examples-http4s
-
 on:
   push:
     paths:
       - '.github/workflows/examples-http4s.yml'
       - 'examples/http4s/**'
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-java@v1
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v18
       with:
-        java-version: 11
-    - run: |
-        cd examples/http4s
-        sbt jetty:test
+        nix_path: nixpkgs=channel:nixos-22.11
+    - uses: workflow/nix-shell-action@v3
+      with:
+        script: |
+          cd examples/http4s
+          nix-shell --run 'sbt "Jetty / test"'
