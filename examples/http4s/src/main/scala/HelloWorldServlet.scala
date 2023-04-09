@@ -17,7 +17,9 @@ class HelloWorldServlet
       servletIo = NonBlockingServletIo(4096),
       serviceErrorHandler = DefaultServiceErrorHandler,
       dispatcher = new Dispatcher[IO] {
-        override def unsafeToFutureCancelable[A](fa: IO[A]): (Future[A], () => Future[Unit]) =
+        override def unsafeToFutureCancelable[A](
+            fa: IO[A]
+        ): (Future[A], () => Future[Unit]) =
           (fa.unsafeToFuture()(IORuntime.global), () => Future(()))
       }
     )(IO.asyncForIO)
