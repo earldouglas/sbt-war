@@ -10,7 +10,7 @@ Container / javaOptions ++=
   )
 
 Container / containerLibs :=
-  Seq("fish.payara.extras" % "payara-micro" % "6.2023.3")
+  Seq("fish.payara.extras" % "payara-micro" % "6.2023.4")
 
 Container / containerLaunchCmd := { (port, path) =>
   Seq(
