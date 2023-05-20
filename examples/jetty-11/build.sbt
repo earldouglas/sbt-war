@@ -1,5 +1,5 @@
 libraryDependencies += "jakarta.servlet" % "jakarta.servlet-api" % "5.0.0" % "provided"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test"
 
 enablePlugins(JettyPlugin)
 
