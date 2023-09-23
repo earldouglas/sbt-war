@@ -1,6 +1,6 @@
 enablePlugins(ScalaJSPlugin)
 
-libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.6.0"
+libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.7.0"
 
 // Send generated JS to the XWP webapp dir
 crossTarget in fastOptJS := (target in webappPrepare).value
