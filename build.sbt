@@ -13,7 +13,7 @@ scriptedBufferLog := false
 watchSources ++= { (sourceDirectory.value ** "*").get }
 
 // AWS deployment support
-val awsJavaSdkVersion = "1.12.620"
+val awsJavaSdkVersion = "1.12.629"
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % awsJavaSdkVersion
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % awsJavaSdkVersion
 
