@@ -1,5 +1,4 @@
 // General
-crossSbtVersions := Seq("0.13.18", "1.5.4")
 Global / excludeLintKeys += crossSbtVersions // don't warn about unused setting
 enablePlugins(SbtPlugin)
 name := "xsbt-web-plugin"
