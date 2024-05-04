@@ -1,4 +1,4 @@
-scalaVersion := "2.13.13" // needed for fancy type inference
+scalaVersion := "2.13.14" // needed for fancy type inference
 scalacOptions ++= Seq(
   "-deprecation",
   "-encoding",
