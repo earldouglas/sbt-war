@@ -17,7 +17,7 @@ $ exists target/scala-2.12/combined_2.12-0.1.0-SNAPSHOT.war
 > reload
 > 'set packageOptions in (Compile, packageBin) += Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )'
 > package
--> find-in-manifest target/scala-2.12/combined_2.12-0.1.0-SNAPSHOT.war "Sealed: true"
+-> findInManifest target/scala-2.12/combined_2.12-0.1.0-SNAPSHOT.war "Sealed: true"
 > set inheritJarManifest := true
 > clean
 > package

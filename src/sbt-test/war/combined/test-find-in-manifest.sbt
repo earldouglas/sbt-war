@@ -1,4 +1,4 @@
-val findInManifest = InputKey[Unit]("find-in-manifest")
+val findInManifest = InputKey[Unit]("findInManifest")
 
 findInManifest := {
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
