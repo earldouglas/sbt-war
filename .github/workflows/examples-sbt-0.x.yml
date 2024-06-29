@@ -1,10 +1,10 @@
-name: examples-sbt-0.13
+name: examples-sbt-0.x
 
 on:
   push:
     paths:
-      - '.github/workflows/examples-sbt-0.13.yml'
-      - 'examples/sbt-0.13/**'
+      - '.github/workflows/examples-sbt-0.x.yml'
+      - 'examples/sbt-0.x/**'
 
 jobs:
   build:
@@ -17,5 +17,5 @@ jobs:
       with:
         java-version: 8
     - run: |
-        cd examples/sbt-0.13
+        cd examples/sbt-0.x
         sbt jetty:test
