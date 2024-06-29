@@ -46,3 +46,4 @@ scmInfo := Some(
     "scm:git@github.com:earldouglas/xsbt-web-plugin.git"
   )
 )
+ThisBuild / versionScheme := Some("semver-spec")
