@@ -1,5 +1,34 @@
 # Contributing
 
+## Testing
+
+Publish to the local Maven repository:
+
+```
+$ sbt
+> set version := "4.2.5"
+> ^publishM2
+```
+
+Update the versions in plugins.sbt:
+
+```
+$ find examples -type f -name plugins.sbt -exec sed -i 's/4.2.4/4.2.5/' {} \;
+```
+
+Run the tests for each:
+
+```
+$ for i in examples/*
+  do
+    pushd $i
+    grep -q JettyPlugin build.sbt && sbt Jetty/test
+    grep -q TomcatPlugin build.sbt && sbt Tomcat/test
+    grep -q ContainerPlugin build.sbt && sbt Container/test
+    popd
+  done
+```
+
 ## Publishing
 
 xsbt-web-plugin uses the process outlined in the [Using Sonatype][1]
@@ -11,7 +40,7 @@ Create a staging release in Sonatype:
 
 ```
 $ sbt
-> set version := "4.2.3"
+> set version := "4.2.5"
 > ^publishSigned
 ```
 
@@ -35,17 +64,17 @@ Wait for it to be synced to Maven Central:
 Update the documentation:
 
 ```
-$ git checkout -b v4.2.3
-$ sed -i 's/4\.2\.2/4.2.3/g' README.md
+$ git checkout -b v4.2.5
+$ sed -i 's/4\.2\.2/4.2.5/g' README.md
 $ git add README.md
-$ git commit -m "Update version to 4.2.3"
-$ git push origin v4.2.3
+$ git commit -m "Update version to 4.2.5"
+$ git push origin v4.2.5
 ```
 
 Tag the release:
 
 ```
-$ git tag 4.2.3
+$ git tag 4.2.5
 $ git push --tags origin
 ```
 
