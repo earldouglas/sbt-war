@@ -2,9 +2,7 @@
 > get http://localhost:8080/index.html 200
 > get http://localhost:8080/test 200
 > jetty:stop
-$ exists mathsweb/target/webapp/WEB-INF/lib/numbers.jar
-$ exists mathsweb/target/webapp/WEB-INF/lib/maths.jar
-$ exists mathsweb/target/webapp/WEB-INF/lib/typeclasses.jar
+$ exists mathsweb/target/webapp/WEB-INF/lib/mathsweb_2.12-0.1.0-SNAPSHOT.jar
 $ absent target/scala-2.12/root_2.12-0.1.0-SNAPSHOT.war
 $ absent numbers/target/scala-2.12/numbers_2.12-0.1.0-SNAPSHOT.war
 $ absent typeclasses/target/scala-2.12/typeclasses_2.12-0.1.0-SNAPSHOT.war
@@ -18,6 +16,3 @@ $ absent typeclasses/target/scala-2.12/typeclasses_2.12-0.1.0-SNAPSHOT.war
 $ absent maths/target/scala-2.12/maths_2.12-0.1.0-SNAPSHOT.war
 $ exists mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war
 > findInZip mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/mathsweb_2.12-0.1.0-SNAPSHOT.jar
-> findInZip mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/numbers.jar
-> findInZip mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/maths.jar
-> findInZip mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/typeclasses.jar

@@ -12,20 +12,13 @@
 
 > jetty:stop
 
-$ exists mathsweb/target/webapp/WEB-INF/lib/maths.jar
-$ absent mathsweb/target/webapp/WEB-INF/lib/remote.jar
 $ absent mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war
-
-$ exists remoteweb/target/webapp/WEB-INF/lib/remote.jar
-$ absent remoteweb/target/webapp/WEB-INF/lib/maths.jar
 $ absent remoteweb/target/scala-2.12/remoteweb_2.12-0.1.0-SNAPSHOT.war
 
 > package
 
 $ exists mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war
-> findInZip mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/maths.jar
--> findInZip mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/remote.jar
+> findInZip mathsweb/target/scala-2.12/mathsweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/mathsweb_2.12-0.1.0-SNAPSHOT.jar
 
 $ exists remoteweb/target/scala-2.12/remoteweb_2.12-0.1.0-SNAPSHOT.war
-> findInZip remoteweb/target/scala-2.12/remoteweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/remote.jar
--> findInZip remoteweb/target/scala-2.12/remoteweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/maths_2.12-0.1.0-SNAPSHOT.jar
+> findInZip remoteweb/target/scala-2.12/remoteweb_2.12-0.1.0-SNAPSHOT.war WEB-INF/lib/remoteweb_2.12-0.1.0-SNAPSHOT.jar

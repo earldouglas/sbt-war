@@ -1,0 +1,14 @@
+<web-app>
+
+  <servlet>
+    <servlet-name>MainServlet</servlet-name>
+    <servlet-class>runners.MainServlet</servlet-class>
+    <async-supported>true</async-supported>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>MainServlet</servlet-name>
+    <url-pattern>/count</url-pattern>
+  </servlet-mapping>
+
+</web-app>
