@@ -1,9 +1,8 @@
 package com.earldouglas.xwp
 
-import sbt._
-import sbt.Def.taskKey
 import sbt.Def.settingKey
 import sbt.Keys._
+import sbt._
 
 object WarPlugin extends AutoPlugin {
   import Keys.{`package` => pkg}
@@ -19,7 +18,7 @@ object WarPlugin extends AutoPlugin {
 
   private def manifestOptions =
     Def.task {
-      val opt = (packageOptions in (Compile, packageBin)).value
+      val opt = (Compile / packageBin / packageOptions).value
       if (inheritJarManifest.value) {
         opt.filter {
           case x: Package.ManifestAttributes => true
@@ -36,12 +35,12 @@ object WarPlugin extends AutoPlugin {
       WebappPlugin.autoImport.webappPrepare
     ) ++
       Seq(
-        artifact in pkg := Artifact(moduleName.value, "war", "war")
+        pkg / artifact := Artifact(moduleName.value, "war", "war")
       ) ++
-      addArtifact(artifact in (Compile, pkg), pkg) ++
+      addArtifact(Compile / pkg / artifact, pkg) ++
       Seq(
         inheritJarManifest := false,
-        packageOptions in sbt.Keys.`package` ++= manifestOptions.value
+        sbt.Keys.`package` / packageOptions ++= manifestOptions.value
       )
 
 }

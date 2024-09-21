@@ -1,6 +1,4 @@
 // General
-Global / excludeLintKeys += crossSbtVersions // don't warn about unused setting
-crossSbtVersions := Seq("0.13.18", "1.10.0")
 enablePlugins(SbtPlugin)
 name := "xsbt-web-plugin"
 organization := "com.earldouglas"
@@ -16,6 +14,11 @@ watchSources ++= { (sourceDirectory.value ** "*").get }
 val awsJavaSdkVersion = "1.12.772"
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-elasticbeanstalk" % awsJavaSdkVersion
 libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % awsJavaSdkVersion
+
+// Scalafix
+semanticdbEnabled := true
+semanticdbVersion := scalafixSemanticdb.revision
+scalacOptions += "-Ywarn-unused-import"
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
 credentials := List(

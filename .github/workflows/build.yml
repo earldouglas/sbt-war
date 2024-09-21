@@ -17,6 +17,7 @@ jobs:
       with:
         java-version: 8
     - run: sbt scalafmtCheckAll
+    - run: sbt "scalafixAll --check"
     - run: sbt ^test
     - run: sbt ^publishLocal
     - run: sbt scripted

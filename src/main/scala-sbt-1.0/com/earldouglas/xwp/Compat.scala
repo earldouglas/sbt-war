@@ -1,9 +1,10 @@
 package com.earldouglas.xwp
 
-import sbt._
 import sbt.Keys._
+import sbt._
 import sbt.internal.io.Source
 import sbt.util.CacheStoreFactory
+
 import FileInfo.Style
 import WebappPlugin.autoImport.webappPrepare
 

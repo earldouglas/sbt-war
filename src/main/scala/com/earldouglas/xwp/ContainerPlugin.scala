@@ -1,10 +1,12 @@
 package com.earldouglas.xwp
 
-import java.util.concurrent.atomic.AtomicReference
-import sbt._
-import sbt.Def.taskKey
 import sbt.Def.settingKey
+import sbt.Def.taskKey
 import sbt.Keys._
+import sbt._
+
+import java.util.concurrent.atomic.AtomicReference
+
 import Compat.Process
 
 object ContainerPlugin extends AutoPlugin {
@@ -67,7 +69,7 @@ object ContainerPlugin extends AutoPlugin {
   def containerSettings(conf: Configuration) =
     baseContainerSettings ++
       Seq(
-        libraryDependencies ++= (containerLibs in conf).value
+        libraryDependencies ++= (conf / containerLibs).value
           .map(_ % conf)
       ) ++
       inConfig(conf)(
@@ -77,10 +79,10 @@ object ContainerPlugin extends AutoPlugin {
           debug := (debugTask dependsOn webappPrepare).value,
           join := joinTask.value,
           stop := stopTask.value,
-          quicktest := ((test in Test) dependsOn awaitOpenTask dependsOn quickstart dependsOn (compile in Test)).value,
-          test := ((test in Test) dependsOn awaitOpenTask dependsOn start dependsOn (compile in Test)).value,
-          onLoad in Global := onLoadSetting.value,
-          javaOptions := (javaOptions in Compile).value,
+          quicktest := ((Test / test) dependsOn awaitOpenTask dependsOn quickstart dependsOn (Test / compile)).value,
+          test := ((Test / test) dependsOn awaitOpenTask dependsOn start dependsOn (Test / compile)).value,
+          Global / onLoad := onLoadSetting.value,
+          javaOptions := (Compile / javaOptions).value,
           containerLaunchCmd := defaultLaunchCmd.value
         )
       )
@@ -135,7 +137,7 @@ object ContainerPlugin extends AutoPlugin {
       shutdown(log, instances)
 
       val libs: Seq[File] =
-        (fullClasspath in Runtime).value
+        (Runtime / fullClasspath).value
           .map(_.data)
           .filter(_ => quick) ++
           Classpaths
@@ -144,9 +146,9 @@ object ContainerPlugin extends AutoPlugin {
 
       val path = {
         if (quick) {
-          target in webappPrepareQuick
+          webappPrepareQuick / target
         } else {
-          target in webappPrepare
+          webappPrepare / target
         }
       }.value.absolutePath
 
@@ -203,7 +205,7 @@ object ContainerPlugin extends AutoPlugin {
 
   private def onLoadSetting: Def.Initialize[State => State] =
     Def.setting {
-      (onLoad in Global).value compose { state: State =>
+      (Global / onLoad).value compose { state: State =>
         validateSbtVerison(state.configuration.provider.id.version)
         if ((containerShutdownOnExit).value) {
           state.addExitHook(
