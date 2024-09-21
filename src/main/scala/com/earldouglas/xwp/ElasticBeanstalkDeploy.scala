@@ -1,25 +1,24 @@
 package com.earldouglas.xwp
 
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider
-import com.amazonaws.regions.Regions
 import com.amazonaws.services.elasticbeanstalk.AWSElasticBeanstalk
 import com.amazonaws.services.elasticbeanstalk.AWSElasticBeanstalkClientBuilder
 import com.amazonaws.services.elasticbeanstalk.model.CreateApplicationVersionRequest
 import com.amazonaws.services.elasticbeanstalk.model.DeleteApplicationVersionRequest
 import com.amazonaws.services.elasticbeanstalk.model.DescribeApplicationVersionsRequest
-import com.amazonaws.services.elasticbeanstalk.model.EnvironmentTier
 import com.amazonaws.services.elasticbeanstalk.model.S3Location
 import com.amazonaws.services.elasticbeanstalk.model.UpdateEnvironmentRequest
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
+import sbt.Def.settingKey
+import sbt.Def.taskKey
+import sbt.Keys._
+import sbt.Keys.{`package` => pkg}
+import sbt._
+
 import java.io.File
 import java.net.URLEncoder
 import java.util.Arrays
-import sbt._
-import sbt.Def.taskKey
-import sbt.Def.settingKey
-import sbt.Keys._
-import sbt.Keys.{`package` => pkg}
 
 object ElasticBeanstalkDeployPlugin extends AutoPlugin {
 
@@ -41,7 +40,7 @@ object ElasticBeanstalkDeployPlugin extends AutoPlugin {
   override def projectSettings =
     Seq(
       elasticBeanstalkDeploy := deploy(
-        (packagedArtifact in (Compile, pkg), pkg)._2.value,
+        (Compile / pkg / packagedArtifact, pkg)._2.value,
         elasticBeanstalkRegion.value,
         elasticBeanstalkAppName.value,
         elasticBeanstalkEnvName.value,
