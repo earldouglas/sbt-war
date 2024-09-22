@@ -20,6 +20,9 @@ semanticdbEnabled := true
 semanticdbVersion := scalafixSemanticdb.revision
 scalacOptions += "-Ywarn-unused-import"
 
+// Testing
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
 credentials := List(
   Credentials(Path.userHome / ".sbt" / "sonatype_credentials")

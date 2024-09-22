@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <link rel="stylesheet" href="/styles/theme.css">
+    <title>Example</title>
+    <script>
+      function load() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (this.readyState === 4 && this.status === 200) {
+            var result = JSON.parse(xhr.responseText);
+            document.getElementById('count').innerHTML = result.count;
+          }
+        }
+        xhr.open('GET', '/count', true);
+        xhr.send();
+      }
+    </script>
+  </head>
+  <body onload="load()">
+    Hit count: <span id="count"></span>
+  </body>
+</html>

@@ -1,5 +1,7 @@
 package com.earldouglas.xwp
 
+import com.earldouglas.sbt.war.WebappComponents
+import com.earldouglas.sbt.war.WebappComponentsPlugin
 import sbt.Def.settingKey
 import sbt.Def.taskKey
 import sbt.FilesInfo.exists
@@ -27,7 +29,7 @@ object WebappPlugin extends AutoPlugin {
 
   import autoImport._
 
-  override def requires = plugins.JvmPlugin
+  override def requires = WebappComponentsPlugin
 
   override def projectSettings: Seq[Setting[_]] =
     Seq(
@@ -94,22 +96,33 @@ object WebappPlugin extends AutoPlugin {
   ) =
     Def.task {
 
-      val webappSrcDir = (webappPrepare / sourceDirectory).value
+      val webappResourcesDir: File =
+        (webappPrepare / sourceDirectory).value
+
+      val webappTargetDir: File =
+        webappTarget.value
+
+      val resourceFiles: Set[File] =
+        WebappComponents
+          .getResources(webappResourcesDir)
+          .filterNot(x => x._1.isDirectory())
+          .map(_._1)
+          .toSet
 
       cacheify(
         cacheName,
         { in =>
           for {
             f <- Some(in)
-            if !f.isDirectory
-            r <- IO.relativizeFile(webappSrcDir, f)
-          } yield IO.resolve(webappTarget.value, r)
+            r <- IO.relativizeFile(webappResourcesDir, f)
+            t = IO.resolve(webappTargetDir, r)
+          } yield t
         },
-        (webappSrcDir ** "*").get.toSet,
+        resourceFiles,
         streams.value
       )
 
-      webappTarget.value
+      webappTargetDir
     }
 
   private def webappPrepareQuickTask =
@@ -136,74 +149,62 @@ object WebappPlugin extends AutoPlugin {
       val webappTarget =
         _webappPrepare(webappPrepare / target, "webapp").value
 
-      val m = (Compile / packageBin / mappings).value
-      val p = (Compile / packageBin / packagedArtifact).value._2
-
       val webInfDir = webappTarget / "WEB-INF"
       val webappLibDir = webInfDir / "lib"
 
-      if (webappWebInfClasses.value) {
-        // copy this project's classes directly to WEB-INF/classes
+      val classpath: Seq[File] =
+        (Runtime / fullClasspath).value
+          .map(_.data)
+
+      val webappClasses: Map[File, String] =
+        WebappComponents.getClasses(classpath)
+
+      // copy this project's classes directly to WEB-INF/classes
+      def classesAsClasses(): Set[File] = {
+
         cacheify(
           "classes",
           { in =>
-            m find { case (src, dest) =>
-              src == in
-            } map { case (src, dest) =>
-              webInfDir / "classes" / dest
-            }
+            webappClasses
+              .find { case (src, dest) => src == in }
+              .map { case (src, dest) => webInfDir / "classes" / dest }
           },
-          (m filter { case (src, dest) =>
-            !src.isDirectory
-          } map { case (src, dest) =>
-            src
-          }).toSet,
-          taskStreams
-        )
-      } else {
-        // copy this project's classes as a .jar file in WEB-INF/lib
-        cacheify(
-          "lib-art",
-          { in => Some(webappLibDir / in.getName) },
-          Set(p),
+          webappClasses
+            .filter { case (src, dest) => !src.isDirectory }
+            .map { case (src, dest) => src }
+            .toSet,
           taskStreams
         )
       }
 
-      val classpath = (Runtime / fullClasspath).value
+      // copy this project's classes as a .jar file in WEB-INF/lib
+      def classesAsJar(): Set[File] = {
 
-      // create .jar files for depended-on projects in WEB-INF/lib
-      for {
-        cpItem <- classpath.toList
-        dir = cpItem.data
-        if dir.isDirectory
-        artEntry <- cpItem.metadata.entries find { e =>
-          e.key.label == "artifact"
-        }
-        cpArt = artEntry.value.asInstanceOf[Artifact]
-        artifact = (Compile / packageBin / packagedArtifact).value._1
-        if cpArt != artifact
-        files = (dir ** "*").get flatMap { file =>
-          if (!file.isDirectory)
-            IO.relativize(dir, file) map { p => (file, p) }
-          else
-            None
-        }
-        jarFile = cpArt.name + ".jar"
-        _ = Compat.jar(
-          sources = files,
-          outputJar = webappLibDir / jarFile,
+        val jarFilename: String =
+          (Compile / packageBin / packagedArtifact).value._2.getName()
+
+        val outputJar = webappLibDir / jarFilename
+
+        Compat.jar(
+          sources = webappClasses,
+          outputJar = outputJar,
           manifest = new Manifest
         )
-      } yield ()
+
+        Set(outputJar)
+      }
+
+      if (webappWebInfClasses.value) {
+        classesAsClasses()
+      } else {
+        classesAsJar()
+      }
 
       // copy this project's library dependency .jar files to WEB-INF/lib
       cacheify(
         "lib-deps",
-        { in => Some(webappTarget / "WEB-INF" / "lib" / in.getName) },
-        classpath.map(_.data).toSet filter { in =>
-          !in.isDirectory && in.getName.endsWith(".jar")
-        },
+        { in => Some(webappTarget / "WEB-INF" / "lib" / in.getName()) },
+        WebappComponents.getLib(classpath).keySet,
         taskStreams
       )
 
