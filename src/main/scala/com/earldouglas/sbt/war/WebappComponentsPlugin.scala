@@ -27,25 +27,27 @@ object WebappComponentsPlugin extends AutoPlugin {
 
   override def requires = plugins.JvmPlugin
 
-  private val webappResourcesDir: Initialize[File] =
-    Def.setting((Compile / sourceDirectory).value / "webapp")
+  override def projectSettings: Seq[Setting[_]] = {
 
-  val webappResourcesSetting: Initialize[Map[File, String]] =
-    Def.setting(WebappComponents.getResources(webappResourcesDir.value))
+    val webappResourcesDir: Initialize[File] =
+      Def.setting((Compile / sourceDirectory).value / "webapp")
 
-  private val classpathFiles: Initialize[Task[Seq[File]]] =
-    Def.task((Runtime / fullClasspath).value.files)
+    val webappResourcesTask: Initialize[Task[Map[File, String]]] =
+      Def.task(WebappComponents.getResources(webappResourcesDir.value))
 
-  val webappClassesTask: Initialize[Task[Map[File, String]]] =
-    Def.task(WebappComponents.getClasses(classpathFiles.value))
+    val classpathFiles: Initialize[Task[Seq[File]]] =
+      Def.task((Runtime / fullClasspath).value.files)
 
-  val webappLibTask: Initialize[Task[Map[File, String]]] =
-    Def.task(WebappComponents.getLib(classpathFiles.value))
+    val webappClassesTask: Initialize[Task[Map[File, String]]] =
+      Def.task(WebappComponents.getClasses(classpathFiles.value))
 
-  override def projectSettings: Seq[Setting[_]] =
+    val webappLibTask: Initialize[Task[Map[File, String]]] =
+      Def.task(WebappComponents.getLib(classpathFiles.value))
+
     Seq(
-      webappResources := webappResourcesSetting.value,
+      webappResources := webappResourcesTask.value,
       webappClasses := webappClassesTask.value,
       webappLib := webappLibTask.value
     )
+  }
 }
