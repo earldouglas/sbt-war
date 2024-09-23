@@ -1,0 +1,23 @@
+# template
+
+> scalafixAll --check
+> scalafmtCheckAll
+> scalafmtSbtCheck
+
+# webapp-plugin
+
+$ copy-file scenarios/webapp-plugin.sbt webapp-plugin.sbt
+
+> reload
+> check
+
+$ delete webapp-plugin.sbt
+
+# war-plugin
+
+$ copy-file scenarios/war-package-plugin.sbt war-package-plugin.sbt
+
+> reload
+> check
+
+$ delete war-package-plugin.sbt
