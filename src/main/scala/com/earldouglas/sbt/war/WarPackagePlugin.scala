@@ -1,8 +1,8 @@
 package com.earldouglas.sbt.war
 
 import sbt.Def.Initialize
-import sbt.Keys.moduleName
 import sbt.Keys.artifact
+import sbt.Keys.moduleName
 import sbt.Keys.{`package` => pkg}
 import sbt._
 
@@ -10,33 +10,22 @@ object WarPackagePlugin extends AutoPlugin {
 
   override def requires = WebappComponentsPlugin
 
-  object autoImport {}
-
-  val webappContents: Initialize[Task[Seq[(File, String)]]] =
+  val warContents: Initialize[Task[Seq[(File, String)]]] =
     Def.task {
 
-      val webappResources: Map[File, String] =
-        WebappComponentsPlugin.autoImport.webappResources.value
+      import WebappComponentsPlugin.autoImport._
 
-      val webappClasses: Map[File, String] =
-        WebappComponentsPlugin.autoImport.webappClasses.value
-          .map { case (k, v) => k -> s"classes/${v}" }
-
-      val webappLib: Map[File, String] =
-        WebappComponentsPlugin.autoImport.webappLib.value
-          .map { case (k, v) => k -> s"lib/${v}" }
-
-      Seq(
-        webappResources,
-        webappClasses,
-        webappLib
-      ).flatten
+      WarPackage.getWarContents(
+        webappResources = webappResources.value,
+        webappClasses = webappClasses.value,
+        webappLib = webappLib.value
+      )
     }
 
   override lazy val projectSettings: Seq[Setting[_]] = {
 
     val packageTaskSettings: Seq[Setting[_]] =
-      Defaults.packageTaskSettings(pkg, webappContents)
+      Defaults.packageTaskSettings(pkg, warContents)
 
     val packageArtifactSetting: Setting[_] =
       pkg / artifact := Artifact(moduleName.value, "war", "war")
