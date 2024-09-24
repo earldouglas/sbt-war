@@ -1,12 +1,12 @@
 package com.earldouglas.sbt.war
 
 import sbt.Def.Initialize
-import sbt.Keys._
+import sbt.Keys.moduleName
+import sbt.Keys.artifact
+import sbt.Keys.{`package` => pkg}
 import sbt._
 
 object WarPackagePlugin extends AutoPlugin {
-
-  import Keys.{`package` => pkg}
 
   override def requires = WebappComponentsPlugin
 
