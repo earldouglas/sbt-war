@@ -24,10 +24,10 @@ class WarPackageTest extends AnyFunSuite with Matchers {
         "src/test/fakeproject/src/main/webapp/foo.html" -> "foo.html",
         "src/test/fakeproject/src/main/webapp/bar.html" -> "bar.html",
         "src/test/fakeproject/src/main/webapp/baz/raz.css" -> "baz/raz.css",
-        "src/test/fakeproject/classes/foo.class" -> "classes/foo.class",
-        "src/test/fakeproject/classes/bar.class" -> "classes/bar.class",
-        "src/test/fakeproject/lib/baz.jar" -> "lib/baz.jar",
-        "src/test/fakeproject/lib/raz.jar" -> "lib/raz.jar"
+        "src/test/fakeproject/classes/foo.class" -> "WEB-INF/classes/foo.class",
+        "src/test/fakeproject/classes/bar.class" -> "WEB-INF/classes/bar.class",
+        "src/test/fakeproject/lib/baz.jar" -> "WEB-INF/lib/baz.jar",
+        "src/test/fakeproject/lib/raz.jar" -> "WEB-INF/lib/raz.jar"
       ).map { case (src, dst) => new File(src) -> dst }
 
     val obtained: Seq[(File, String)] =
