@@ -14,9 +14,21 @@ $ copy-file scenarios/webapp-plugin.sbt webapp-plugin.sbt
 $ delete webapp-plugin.sbt
 
 ########################################################################
-# war-plugin
+# war-package-plugin
 
 $ copy-file scenarios/war-package-plugin.sbt war-package-plugin.sbt
 > reload
 > check
 $ delete war-package-plugin.sbt
+
+########################################################################
+# war-runner-plugin
+
+$ copy-file scenarios/war-runner-plugin.sbt war-runner-plugin.sbt
+> reload
+> War / start
+> awaitOpen
+> check
+> War / stop
+> awaitClosed
+$ delete war-runner-plugin.sbt
