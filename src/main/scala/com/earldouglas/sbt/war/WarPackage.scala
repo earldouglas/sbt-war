@@ -26,7 +26,7 @@ object WarPackage {
   ): Seq[(File, String)] =
     Seq(
       webappResources,
-      webappClasses.map { case (k, v) => k -> s"classes/${v}" },
-      webappLib.map { case (k, v) => k -> s"lib/${v}" }
+      webappClasses.map { case (k, v) => k -> s"WEB-INF/classes/${v}" },
+      webappLib.map { case (k, v) => k -> s"WEB-INF/lib/${v}" }
     ).flatten
 }
