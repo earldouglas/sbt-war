@@ -32,3 +32,15 @@ $ copy-file scenarios/war-runner-plugin.sbt war-runner-plugin.sbt
 > warStop
 > awaitClosed
 $ delete war-runner-plugin.sbt
+
+########################################################################
+# webapp-components-runner-plugin
+
+$ copy-file scenarios/webapp-components-runner-plugin.sbt webapp-components-runner-plugin.sbt
+> reload
+> webappStart
+> awaitOpen
+> check
+> webappStop
+> awaitClosed
+$ delete webapp-components-runner-plugin.sbt
