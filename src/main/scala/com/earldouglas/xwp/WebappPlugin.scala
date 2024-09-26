@@ -106,7 +106,7 @@ object WebappPlugin extends AutoPlugin {
         WebappComponents
           .getResources(webappResourcesDir)
           .map(_._2)
-          .filterNot(_.isDirectory())
+          .filter(_.isFile())
           .toSet
 
       cacheify(
@@ -157,7 +157,9 @@ object WebappPlugin extends AutoPlugin {
           .map(_.data)
 
       val webappClasses: Map[String, File] =
-        WebappComponents.getClasses(classpath)
+        WebappComponents
+          .getClasses(classpath)
+          .map({ case (path, file) => (path.replaceAll("^WEB-INF/classes/", ""), file) })
 
       // copy this project's classes directly to WEB-INF/classes
       def classesAsClasses(): Set[File] = {
@@ -166,12 +168,12 @@ object WebappPlugin extends AutoPlugin {
           "classes",
           { in =>
             webappClasses
-              .find { case (path, file) => file == in }
-              .map { case (path, file) => webInfDir / "classes" / path }
+              .find { case (_, file) => file == in }
+              .map { case (path, _) => webInfDir / "classes" / path }
           },
           webappClasses
-            .filter { case (path, file) => file.isFile() }
-            .map { case (path, file) => file }
+            .filter { case (_, file) => file.isFile() }
+            .map { case (_, file) => file }
             .toSet,
           taskStreams
         )
