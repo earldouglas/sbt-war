@@ -159,7 +159,9 @@ object WebappPlugin extends AutoPlugin {
       val webappClasses: Map[String, File] =
         WebappComponents
           .getClasses(classpath)
-          .map({ case (path, file) => (path.replaceAll("^WEB-INF/classes/", ""), file) })
+          .map({ case (path, file) =>
+            (path.replaceAll("^WEB-INF/classes/", ""), file)
+          })
 
       // copy this project's classes directly to WEB-INF/classes
       def classesAsClasses(): Set[File] = {
