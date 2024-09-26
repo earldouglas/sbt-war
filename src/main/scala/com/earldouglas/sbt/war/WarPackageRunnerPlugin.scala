@@ -9,6 +9,9 @@ import sbt._
 import java.util.concurrent.atomic.AtomicReference
 import scala.sys.process.{Process => ScalaProcess}
 
+/** Launches the .war file managed by WarPackagePlugin. Uses a forked
+  * JVM to run Tomcat via webapp-runner.
+  */
 object WarPackageRunnerPlugin extends AutoPlugin {
 
   object autoImport {
