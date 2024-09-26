@@ -105,8 +105,8 @@ object WebappPlugin extends AutoPlugin {
       val resourceFiles: Set[File] =
         WebappComponents
           .getResources(webappResourcesDir)
-          .filterNot(x => x._1.isDirectory())
-          .map(_._1)
+          .map(_._2)
+          .filterNot(_.isDirectory())
           .toSet
 
       cacheify(
@@ -156,7 +156,7 @@ object WebappPlugin extends AutoPlugin {
         (Runtime / fullClasspath).value
           .map(_.data)
 
-      val webappClasses: Map[File, String] =
+      val webappClasses: Map[String, File] =
         WebappComponents.getClasses(classpath)
 
       // copy this project's classes directly to WEB-INF/classes
@@ -166,12 +166,12 @@ object WebappPlugin extends AutoPlugin {
           "classes",
           { in =>
             webappClasses
-              .find { case (src, dest) => src == in }
-              .map { case (src, dest) => webInfDir / "classes" / dest }
+              .find { case (path, file) => file == in }
+              .map { case (path, file) => webInfDir / "classes" / path }
           },
           webappClasses
-            .filter { case (src, dest) => !src.isDirectory }
-            .map { case (src, dest) => src }
+            .filter { case (path, file) => file.isFile() }
+            .map { case (path, file) => file }
             .toSet,
           taskStreams
         )
@@ -186,7 +186,7 @@ object WebappPlugin extends AutoPlugin {
         val outputJar = webappLibDir / jarFilename
 
         Compat.jar(
-          sources = webappClasses,
+          sources = webappClasses.map({ case (k, v) => (v, k) }).toMap,
           outputJar = outputJar,
           manifest = new Manifest
         )
@@ -204,7 +204,7 @@ object WebappPlugin extends AutoPlugin {
       cacheify(
         "lib-deps",
         { in => Some(webappTarget / "WEB-INF" / "lib" / in.getName()) },
-        WebappComponents.getLib(classpath).keySet,
+        WebappComponents.getLib(classpath).values.toSet,
         taskStreams
       )
 

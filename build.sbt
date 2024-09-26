@@ -20,8 +20,20 @@ semanticdbEnabled := true
 semanticdbVersion := scalafixSemanticdb.revision
 scalacOptions += "-Ywarn-unused-import"
 
+// webapp-runner
+lazy val webappRunnerVersion =
+  settingKey[String]("webapp-runner version")
+webappRunnerVersion := "9.0.68.1"
+libraryDependencies += "com.heroku" % "webapp-runner" % webappRunnerVersion.value intransitive ()
+
+// sbt-buildinfo
+enablePlugins(BuildInfoPlugin)
+buildInfoKeys := Seq[BuildInfoKey](webappRunnerVersion)
+buildInfoPackage := "com.earldouglas.sbt.war"
+
 // Testing
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+Test / fork := true
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
 credentials := List(

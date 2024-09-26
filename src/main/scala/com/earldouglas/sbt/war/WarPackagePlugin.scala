@@ -18,22 +18,14 @@ object WarPackagePlugin extends AutoPlugin {
 
   override def requires = WebappComponentsPlugin
 
-  val warContents: Initialize[Task[Seq[(File, String)]]] =
-    Def.task {
-
-      import WebappComponentsPlugin.autoImport._
-
-      WarPackage.getWarContents(
-        webappResources = webappResources.value,
-        webappClasses = webappClasses.value,
-        webappLib = webappLib.value
-      )
-    }
-
   override lazy val projectSettings: Seq[Setting[_]] = {
 
+    val packageContents: Initialize[Task[Seq[(java.io.File, String)]]] =
+      WebappComponentsPlugin.webappContents
+        .map(_.toSeq.map({ case (k, v) => (v, k) }))
+
     val packageTaskSettings: Seq[Setting[_]] =
-      Defaults.packageTaskSettings(pkg, warContents)
+      Defaults.packageTaskSettings(pkg, packageContents)
 
     val packageArtifactSetting: Setting[_] =
       pkg / artifact := Artifact(moduleName.value, "war", "war")

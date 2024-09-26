@@ -19,14 +19,14 @@ class WebappComponentsTest extends AnyFunSuite with Matchers {
 
   test("getResources") {
 
-    val expected: Map[File, String] =
+    val expected: Map[String, File] =
       Map(
-        "src/test/fakeproject/src/main/webapp/foo.html" -> "foo.html",
-        "src/test/fakeproject/src/main/webapp/bar.html" -> "bar.html",
-        "src/test/fakeproject/src/main/webapp/baz/raz.css" -> "baz/raz.css"
-      ).map { case (src, dst) => new File(src) -> dst }
+        "bar.html" -> "src/test/fakeproject/src/main/webapp/bar.html",
+        "baz/raz.css" -> "src/test/fakeproject/src/main/webapp/baz/raz.css",
+        "foo.html" -> "src/test/fakeproject/src/main/webapp/foo.html"
+      ).map { case (path, file) => path -> new File(file) }
 
-    val obtained: Map[File, String] =
+    val obtained: Map[String, File] =
       WebappComponents.getResources(fakeproject)
 
     obtained shouldBe expected
@@ -34,13 +34,13 @@ class WebappComponentsTest extends AnyFunSuite with Matchers {
 
   test("getClasses") {
 
-    val expected: Map[File, String] =
+    val expected: Map[String, File] =
       Map(
-        "src/test/fakeproject/classes/foo.class" -> "foo.class",
-        "src/test/fakeproject/classes/bar.class" -> "bar.class"
-      ).map { case (src, dst) => new File(src) -> dst }
+        "WEB-INF/classes/bar.class" -> "src/test/fakeproject/classes/bar.class",
+        "WEB-INF/classes/foo.class" -> "src/test/fakeproject/classes/foo.class"
+      ).map { case (path, file) => path -> new File(file) }
 
-    val obtained: Map[File, String] =
+    val obtained: Map[String, File] =
       WebappComponents.getClasses(fakeClasspath)
 
     obtained shouldBe expected
@@ -48,13 +48,13 @@ class WebappComponentsTest extends AnyFunSuite with Matchers {
 
   test("getLib") {
 
-    val expected: Map[File, String] =
+    val expected: Map[String, File] =
       Map(
-        "src/test/fakeproject/lib/baz.jar" -> "baz.jar",
-        "src/test/fakeproject/lib/raz.jar" -> "raz.jar"
-      ).map { case (src, dst) => new File(src) -> dst }
+        "WEB-INF/lib/baz.jar" -> "src/test/fakeproject/lib/baz.jar",
+        "WEB-INF/lib/raz.jar" -> "src/test/fakeproject/lib/raz.jar"
+      ).map { case (path, file) => path -> new File(file) }
 
-    val obtained: Map[File, String] =
+    val obtained: Map[String, File] =
       WebappComponents.getLib(fakeClasspath)
 
     obtained shouldBe expected

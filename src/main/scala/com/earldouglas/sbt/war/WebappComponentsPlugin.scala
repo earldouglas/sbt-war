@@ -14,13 +14,13 @@ object WebappComponentsPlugin extends AutoPlugin {
   object autoImport {
 
     lazy val webappResources =
-      taskKey[Map[File, String]]("webapp resources")
+      taskKey[Map[String, File]]("webapp resources")
 
     lazy val webappClasses =
-      taskKey[Map[File, String]]("webapp classes")
+      taskKey[Map[String, File]]("webapp classes")
 
     lazy val webappLib =
-      taskKey[Map[File, String]]("webapp lib")
+      taskKey[Map[String, File]]("webapp lib")
   }
 
   import autoImport._
@@ -32,16 +32,16 @@ object WebappComponentsPlugin extends AutoPlugin {
     val webappResourcesDir: Initialize[File] =
       Def.setting((Compile / sourceDirectory).value / "webapp")
 
-    val webappResourcesTask: Initialize[Task[Map[File, String]]] =
+    val webappResourcesTask: Initialize[Task[Map[String, File]]] =
       Def.task(WebappComponents.getResources(webappResourcesDir.value))
 
     val classpathFiles: Initialize[Task[Seq[File]]] =
       Def.task((Runtime / fullClasspath).value.files)
 
-    val webappClassesTask: Initialize[Task[Map[File, String]]] =
+    val webappClassesTask: Initialize[Task[Map[String, File]]] =
       Def.task(WebappComponents.getClasses(classpathFiles.value))
 
-    val webappLibTask: Initialize[Task[Map[File, String]]] =
+    val webappLibTask: Initialize[Task[Map[String, File]]] =
       Def.task(WebappComponents.getLib(classpathFiles.value))
 
     Seq(
@@ -50,4 +50,11 @@ object WebappComponentsPlugin extends AutoPlugin {
       webappLib := webappLibTask.value
     )
   }
+
+  lazy val webappContents: Initialize[Task[Map[String, File]]] =
+    Def.task {
+      webappResources.value ++
+        webappClasses.value ++
+        webappLib.value
+    }
 }
