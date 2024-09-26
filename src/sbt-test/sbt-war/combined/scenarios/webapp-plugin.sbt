@@ -13,8 +13,8 @@ val checkClasses: Def.Initialize[Task[Unit]] =
 
     def assertEquals(
         name: String,
-        expected: Map[File, String],
-        obtained: Map[File, String]
+        expected: Map[String, File],
+        obtained: Map[String, File]
     ): Unit = {
 
       val sizesDoNotMatch = expected.size != obtained.size
@@ -69,7 +69,7 @@ val checkClasses: Def.Initialize[Task[Unit]] =
       expected = {
         val root: File = (Compile / classDirectory).value
         expected
-          .map(x => root / x -> x)
+          .map(x => s"WEB-INF/classes/${x}" -> root / x)
           .toMap
       },
       obtained = webappClasses.value
@@ -84,17 +84,18 @@ val checkLib: Def.Initialize[Task[Unit]] =
     def assertContains(
         name: String,
         expected: Set[String],
-        obtained: Map[File, String]
+        obtained: Map[String, File]
     ): Unit = {
 
       val sizesDoNotMatch = expected.size != obtained.size
-      val mappingsDoNotMatch = expected != obtained.values.toSet
+      val mappingsDoNotMatch = expected != obtained.keys.toSet
 
       if (sizesDoNotMatch || mappingsDoNotMatch) {
         log.error(name)
         sys.error(
           s"""|${name}:
-              |  expected: ${expected}
+              |  expected:
+              |${expected.mkString("    - ", "\n    - ", "")}
               |  obtained:
               |${obtained.mkString("    - ", "\n    - ", "")}
               |""".stripMargin
@@ -119,7 +120,7 @@ val checkLib: Def.Initialize[Task[Unit]] =
 
     assertContains(
       name = "WebappComponentsPlugin: checkLib",
-      expected = expected,
+      expected = expected.map(x => s"WEB-INF/lib/${x}"),
       obtained = webappLib.value
     )
   }
@@ -131,8 +132,8 @@ lazy val checkResources: Def.Initialize[Task[Unit]] =
 
     def assertEquals(
         name: String,
-        expected: Map[File, String],
-        obtained: Map[File, String]
+        expected: Map[String, File],
+        obtained: Map[String, File]
     ): Unit = {
 
       val sizesDoNotMatch = expected.size != obtained.size
@@ -167,7 +168,7 @@ lazy val checkResources: Def.Initialize[Task[Unit]] =
       expected = {
         val root: File = (Compile / sourceDirectory).value
         expected
-          .map(x => root / "webapp" / x -> x)
+          .map(x => x -> root / "webapp" / x)
           .toMap
       },
       obtained = webappResources.value

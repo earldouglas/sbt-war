@@ -105,8 +105,8 @@ object WebappPlugin extends AutoPlugin {
       val resourceFiles: Set[File] =
         WebappComponents
           .getResources(webappResourcesDir)
-          .filterNot(x => x._1.isDirectory())
-          .map(_._1)
+          .map(_._2)
+          .filter(_.isFile())
           .toSet
 
       cacheify(
@@ -156,8 +156,12 @@ object WebappPlugin extends AutoPlugin {
         (Runtime / fullClasspath).value
           .map(_.data)
 
-      val webappClasses: Map[File, String] =
-        WebappComponents.getClasses(classpath)
+      val webappClasses: Map[String, File] =
+        WebappComponents
+          .getClasses(classpath)
+          .map({ case (path, file) =>
+            (path.replaceAll("^WEB-INF/classes/", ""), file)
+          })
 
       // copy this project's classes directly to WEB-INF/classes
       def classesAsClasses(): Set[File] = {
@@ -166,12 +170,12 @@ object WebappPlugin extends AutoPlugin {
           "classes",
           { in =>
             webappClasses
-              .find { case (src, dest) => src == in }
-              .map { case (src, dest) => webInfDir / "classes" / dest }
+              .find { case (_, file) => file == in }
+              .map { case (path, _) => webInfDir / "classes" / path }
           },
           webappClasses
-            .filter { case (src, dest) => !src.isDirectory }
-            .map { case (src, dest) => src }
+            .filter { case (_, file) => file.isFile() }
+            .map { case (_, file) => file }
             .toSet,
           taskStreams
         )
@@ -186,7 +190,7 @@ object WebappPlugin extends AutoPlugin {
         val outputJar = webappLibDir / jarFilename
 
         Compat.jar(
-          sources = webappClasses,
+          sources = webappClasses.map({ case (k, v) => (v, k) }).toMap,
           outputJar = outputJar,
           manifest = new Manifest
         )
@@ -204,7 +208,7 @@ object WebappPlugin extends AutoPlugin {
       cacheify(
         "lib-deps",
         { in => Some(webappTarget / "WEB-INF" / "lib" / in.getName()) },
-        WebappComponents.getLib(classpath).keySet,
+        WebappComponents.getLib(classpath).values.toSet,
         taskStreams
       )
 

@@ -17,15 +17,16 @@ object WebappComponents {
     * find all the files it contains.
     *
     * @return
-    *   a mapping from source to destination of webapp resources
+    *   a mapping from destination to source of webapp resources
     */
-  def getResources(resourcesDir: File): Map[File, String] = {
+  def getResources(resourcesDir: File): Map[String, File] = {
     (resourcesDir ** "*").get
+      .filter(_.exists())
       .filter(_.isFile())
-      .flatMap(src =>
+      .flatMap(file =>
         IO
-          .relativize(resourcesDir, src)
-          .map(dst => src -> dst)
+          .relativize(resourcesDir, file)
+          .map(path => path -> file)
       )
       .toMap
   }
@@ -34,38 +35,40 @@ object WebappComponents {
     * directories), traverse to find all the .class files.
     *
     * @return
-    *   a mapping from source to destination of .class files
+    *   a mapping from destination to source of .class files
     */
-  def getClasses(classpath: Seq[File]): Map[File, String] = {
+  def getClasses(classpath: Seq[File]): Map[String, File] = {
 
     val classpathDirs: Seq[File] =
       classpath
+        .filter(_.exists())
         .filter(_.isDirectory())
 
-    val classesMappings: Seq[(File, File)] =
+    val classesMappings: Seq[(String, File)] =
       for {
         classpathDir <- classpathDirs
         classFile <- (classpathDir ** "*").get
+        if classFile.exists()
         if classFile.isFile()
         relativeFile <- IO.relativizeFile(classpathDir, classFile)
-      } yield (classFile, relativeFile)
+        relativePath = s"WEB-INF/classes/${relativeFile.getPath()}"
+      } yield (relativePath, classFile)
 
-    classesMappings
-      .map({ case (src, dst) => src -> dst.getPath() })
-      .toMap
+    classesMappings.toMap
   }
 
   /** Given a classpath (potentially with both .jar files and classes
     * directories), traverse to find all the .jar files.
     *
     * @return
-    *   a mapping from source to destination of .jar files
+    *   a mapping from destination to source of .jar files
     */
-  def getLib(classpath: Seq[File]): Map[File, String] = {
+  def getLib(classpath: Seq[File]): Map[String, File] = {
     classpath
+      .filter(f => f.exists())
       .filter(f => f.isFile())
       .filter(f => f.getName().endsWith(".jar"))
-      .map(src => src -> src.getName())
+      .map(file => s"WEB-INF/lib/${file.getName()}" -> file)
       .toMap
   }
 }

@@ -26,9 +26,9 @@ $ delete war-package-plugin.sbt
 
 $ copy-file scenarios/war-runner-plugin.sbt war-runner-plugin.sbt
 > reload
-> War / start
+> warStart
 > awaitOpen
 > check
-> War / stop
+> warStop
 > awaitClosed
 $ delete war-runner-plugin.sbt
