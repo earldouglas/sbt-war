@@ -108,7 +108,6 @@ import javax.servlet.http.HttpServletResponse
 
 @WebServlet(urlPatterns = Array("/hello"))
 class MyServlet extends HttpServlet:
-  println("HEY")
   override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit =
     res.setContentType("text/html")
     res.setCharacterEncoding("UTF-8")
