@@ -39,8 +39,8 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       val runner: WebappComponentsRunner =
         WebappComponentsRunner(
           hostname = "localhost", // TODO this could be a settingKey
-          contextPath = "", // TODO this could be a settingKey
           port = webappPort.value,
+          contextPath = "", // TODO this could be a settingKey
           emptyWebappDir = emptyDir,
           emptyClassesDir = emptyDir,
           resourceMap = WebappComponentsPlugin.webappContents.value

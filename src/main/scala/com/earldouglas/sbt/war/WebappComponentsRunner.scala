@@ -77,6 +77,10 @@ object WebappComponentsRunner {
           emptyWebappDir.getAbsolutePath()
         )
 
+    // Set ClassLoader to prevent `ClassNotFoundException: ServletDef`
+    // See https://coderanch.com/t/615403/application-servers/Starting-Web-App-Embeded-Tomcat
+    context.setParentClassLoader(getClass().getClassLoader())
+
     val webResourceRoot: WebResourceRoot =
       new StandardRoot(context)
 
@@ -109,7 +113,13 @@ object WebappComponentsRunner {
       override def start(): Unit = tomcat.start()
       override def join(): Unit = tomcat.getServer().await()
       override def stop(): Unit = {
+
+        connector.stop()
+        context.stop()
         tomcat.stop()
+
+        connector.destroy()
+        context.destroy()
         tomcat.destroy()
       }
     }

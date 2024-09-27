@@ -4,7 +4,7 @@ name := "xsbt-web-plugin"
 organization := "com.earldouglas"
 sbtPlugin := true
 scalacOptions ++= Seq("-feature", "-deprecation")
-scalaVersion := "2.12.20"
+scalaVersion := "2.12.18" // https://scalameta.org/metals/blog/2023/07/19/silver#support-for-scala-21218
 
 // scripted-plugin
 scriptedBufferLog := false
@@ -19,6 +19,7 @@ libraryDependencies += "com.amazonaws" % "aws-java-sdk-s3" % awsJavaSdkVersion
 semanticdbEnabled := true
 semanticdbVersion := scalafixSemanticdb.revision
 scalacOptions += "-Ywarn-unused-import"
+scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
 
 // webapp-runner
 lazy val webappRunnerVersion =
