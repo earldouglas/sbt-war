@@ -35,7 +35,9 @@ class WebappComponentsRunnerTest
       "src/test/fakeproject/src/main/webapp"
 
     WebappComponentsRunner(
+      hostname = "localhost",
       port = 8989,
+      contextPath = "",
       emptyWebappDir = emptyDir,
       emptyClassesDir = emptyDir,
       resourceMap = Map(

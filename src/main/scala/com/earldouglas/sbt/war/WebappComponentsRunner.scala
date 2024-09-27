@@ -18,18 +18,24 @@ trait WebappComponentsRunner {
 
 /** Launches a webapp composed of in-place resources, classes, and
   * libraries.
+  *
+  * emptyWebappDir and emptyClassesDir need to point to one or two empty
+  * directories. They're not used to serve any content, but they are
+  * required by Tomcat's internals.
+  *
+  * To use a root context path (i.e. /), set contextPath to the empty
+  * string for some reason.
   */
 object WebappComponentsRunner {
 
   def apply(
+      hostname: String,
       port: Int,
+      contextPath: String,
       emptyWebappDir: File,
       emptyClassesDir: File,
       resourceMap: Map[String, File]
   ): WebappComponentsRunner = {
-
-    val hostname: String = "localhost"
-    val contextPath: String = ""
 
     val tomcat: Tomcat = new Tomcat()
     tomcat.setHostname(hostname)
