@@ -16,6 +16,9 @@ trait WebappComponentsRunner {
   def stop(): Unit
 }
 
+/** Launches a webapp composed of in-place resources, classes, and
+  * libraries.
+  */
 object WebappComponentsRunner {
 
   def apply(

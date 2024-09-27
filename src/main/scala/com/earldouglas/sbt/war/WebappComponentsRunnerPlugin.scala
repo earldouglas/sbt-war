@@ -8,6 +8,9 @@ import sbt._
 
 import java.util.concurrent.atomic.AtomicReference
 
+/** Launches the webapp composed of the resources, classes, and
+  * libraries specified by WebappComponentsPlugin.
+  */
 object WebappComponentsRunnerPlugin extends AutoPlugin {
 
   object autoImport {
