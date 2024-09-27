@@ -113,7 +113,13 @@ object WebappComponentsRunner {
       override def start(): Unit = tomcat.start()
       override def join(): Unit = tomcat.getServer().await()
       override def stop(): Unit = {
+
+        connector.stop()
+        context.stop()
         tomcat.stop()
+
+        connector.destroy()
+        context.destroy()
         tomcat.destroy()
       }
     }
