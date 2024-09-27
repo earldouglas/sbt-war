@@ -1,13 +1,13 @@
 <web-app>
 
   <servlet>
-    <servlet-name>MainServlet</servlet-name>
-    <servlet-class>runners.MainServlet</servlet-class>
+    <servlet-name>CountServlet</servlet-name>
+    <servlet-class>runners.CountServlet</servlet-class>
     <async-supported>true</async-supported>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>MainServlet</servlet-name>
+    <servlet-name>CountServlet</servlet-name>
     <url-pattern>/count</url-pattern>
   </servlet-mapping>
 

@@ -54,12 +54,14 @@ val checkClasses: Def.Initialize[Task[Unit]] =
         "drivers/mem/mem$package$.class",
         "drivers/mem/mem$package.class",
         "drivers/mem/mem$package.tasty",
+        "runners/CountServlet.class",
+        "runners/CountServlet.tasty",
+        "runners/HelloServlet.class",
+        "runners/HelloServlet.tasty",
         "runners/Main$$anon$1.class",
         "runners/Main$tx$.class",
         "runners/Main.class",
         "runners/Main.tasty",
-        "runners/MainServlet.class",
-        "runners/MainServlet.tasty",
         "usecases/Counter.class",
         "usecases/Counter.tasty"
       )

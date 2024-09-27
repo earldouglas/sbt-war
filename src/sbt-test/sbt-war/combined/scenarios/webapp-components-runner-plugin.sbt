@@ -170,4 +170,9 @@ TaskKey[Unit]("check") := {
                       |}
                       |""".stripMargin
   )
+
+  assertEquals(
+    url = s"http://localhost:${webappPort.value}/hello",
+    expectedBody = """<h1>Hello, world!</h1>"""
+  )
 }

@@ -1,12 +1,14 @@
 package runners
 
-import java.sql.Connection
-import java.sql.DriverManager
+import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class MainServlet extends HttpServlet with Main:
+class CountServlet extends HttpServlet with Main:
+
+  import java.sql.Connection
+  import java.sql.DriverManager
 
   override lazy val c: Connection =
     Class.forName("org.h2.Driver")
@@ -27,3 +29,14 @@ class MainServlet extends HttpServlet with Main:
   ): Unit =
     res.addHeader("Content-Type", "application/json")
     res.getWriter().write(unsafeIncrementAndGetAsJson())
+
+@WebServlet(urlPatterns = Array("/hello"))
+class HelloServlet extends HttpServlet:
+
+  override def doGet(
+      request: HttpServletRequest,
+      response: HttpServletResponse
+  ): Unit =
+    response.setCharacterEncoding("UTF-8")
+    response.setContentType("text/html")
+    response.getWriter.write("""<h1>Hello, world!</h1>""")
