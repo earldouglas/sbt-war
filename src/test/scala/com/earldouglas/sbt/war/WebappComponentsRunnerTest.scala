@@ -5,29 +5,14 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 import java.io.File
-import java.nio.file.FileAlreadyExistsException
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import java.nio.file.Path
 
 class WebappComponentsRunnerTest
     extends AnyFunSuite
     with Matchers
     with BeforeAndAfterAll {
 
-  lazy val emptyDir: File = {
-    val path: Path =
-      FileSystems
-        .getDefault()
-        .getPath("target", "empty")
-    try {
-      Files.createDirectory(path)
-      path.toFile()
-    } catch {
-      case e: FileAlreadyExistsException =>
-        path.toFile()
-    }
-  }
+  lazy val emptyDir: File =
+    WebappComponentsRunner.mkdir(new File("target", "empty"))
 
   lazy val runner = {
 

@@ -9,6 +9,10 @@ import org.apache.catalina.webresources.FileResourceSet
 import org.apache.catalina.webresources.StandardRoot
 
 import java.io.File
+import java.nio.file.FileAlreadyExistsException
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
 
 trait WebappComponentsRunner {
   def start(): Unit
@@ -27,6 +31,28 @@ trait WebappComponentsRunner {
   * string for some reason.
   */
 object WebappComponentsRunner {
+
+  def mkdir(file: File): File = {
+    if (file.exists()) {
+      if (!file.isDirectory()) {
+        throw new FileAlreadyExistsException(file.getPath())
+      } else {
+        file
+      }
+    } else {
+      val path: Path =
+        FileSystems
+          .getDefault()
+          .getPath("target", "empty")
+      try {
+        Files.createDirectory(path)
+        file
+      } catch {
+        case e: FileAlreadyExistsException =>
+          file
+      }
+    }
+  }
 
   def apply(
       hostname: String,

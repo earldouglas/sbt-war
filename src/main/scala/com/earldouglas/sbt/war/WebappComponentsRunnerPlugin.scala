@@ -6,8 +6,6 @@ import sbt.Def.taskKey
 import sbt.Keys._
 import sbt._
 
-import java.nio.file.Files
-import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 
 /** Launches the webapp composed of the resources, classes, and
@@ -33,10 +31,10 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
     Def.task {
       stopContainerInstance()
 
-      val emptyDir: File = {
-        val path: Path = ((Compile / target).value / "empty").toPath()
-        Files.createDirectory(path).toFile()
-      }
+      val emptyDir: File =
+        WebappComponentsRunner.mkdir(
+          ((Compile / target).value / "empty")
+        )
 
       val runner: WebappComponentsRunner =
         WebappComponentsRunner(
