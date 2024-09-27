@@ -27,13 +27,13 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
   private lazy val containerInstance =
     new AtomicReference[Option[WebappComponentsRunner]](None)
 
-  private val startTask: Initialize[Task[Unit]] =
+  private val startWebapp: Initialize[Task[Unit]] =
     Def.task {
       stopContainerInstance()
 
       val emptyDir: File =
         WebappComponentsRunner.mkdir(
-          ((Compile / target).value / "empty")
+          (Compile / target).value / "empty"
         )
 
       val runner: WebappComponentsRunner =
@@ -50,20 +50,14 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       containerInstance.set(Some(runner))
     }
 
-  private val joinTask: Initialize[Task[Unit]] =
-    Def.task {
-      containerInstance.get.foreach(_.join())
-    }
+  private val joinWebapp: Initialize[Task[Unit]] =
+    Def.task(containerInstance.get.foreach(_.join()))
 
-  private def stopContainerInstance(): Unit = {
-    val oldProcess = containerInstance.getAndSet(None)
-    oldProcess.foreach(_.stop())
-  }
+  private def stopContainerInstance(): Unit =
+    containerInstance.getAndSet(None).foreach(_.stop())
 
-  private val stopTask: Initialize[Task[Unit]] =
-    Def.task {
-      stopContainerInstance()
-    }
+  private val stopWebapp: Initialize[Task[Unit]] =
+    Def.task(stopContainerInstance())
 
   private val onLoadSetting: Initialize[State => State] =
     Def.setting {
@@ -75,9 +69,9 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
   override lazy val projectSettings: Seq[Setting[_]] =
     Seq(
       webappPort := 8080,
-      webappStart := startTask.value,
-      webappJoin := joinTask.value,
-      webappStop := stopTask.value,
+      webappStart := startWebapp.value,
+      webappJoin := joinWebapp.value,
+      webappStop := stopWebapp.value,
       Global / onLoad := onLoadSetting.value
     )
 }
