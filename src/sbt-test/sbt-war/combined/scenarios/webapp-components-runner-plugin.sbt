@@ -81,54 +81,50 @@ TaskKey[Unit]("check") := {
       url: String,
       expectedBody: String
   ): Unit = {
-    try {
-      val c: HttpURLConnection =
-        (new URI(url)
-          .toURL())
-          .openConnection
-          .asInstanceOf[HttpURLConnection]
+    val c: HttpURLConnection =
+      (new URI(url)
+        .toURL())
+        .openConnection
+        .asInstanceOf[HttpURLConnection]
 
-      val name: String = s"WebappComponentsRunnerPlugin: GET ${url}"
+    val name: String = s"WebappComponentsRunnerPlugin: GET ${url}"
 
-      c.setInstanceFollowRedirects(false)
-      c.setRequestMethod("GET")
-      c.setDoOutput(false)
+    c.setInstanceFollowRedirects(false)
+    c.setRequestMethod("GET")
+    c.setDoOutput(false)
 
-      val obtainedStatus: Int =
-        c.getResponseCode()
-      val obtainedBody: String =
-        Source.fromInputStream(c.getInputStream()).mkString
+    val obtainedStatus: Int =
+      c.getResponseCode()
+    val obtainedBody: String =
+      Source.fromInputStream(c.getInputStream()).mkString
 
-      val expectedStatus: Int = 200
+    val expectedStatus: Int = 200
 
-      val statusMatch: Boolean =
-        expectedStatus == obtainedStatus
-      val bodyMatch: Boolean =
-        expectedBody == obtainedBody
+    val statusMatch: Boolean =
+      expectedStatus == obtainedStatus
+    val bodyMatch: Boolean =
+      expectedBody == obtainedBody
 
-      if (!statusMatch || !bodyMatch) {
-        log.error(name)
-        sys.error(
-          s"""|${name}:
-              |  expected:
-              |    * status: ${expectedStatus}
-              |    * body:
-              |      > ${expectedBody
-               .toString()
-               .replaceAll("\n", "\n      > ")}
-              |  obtained:
-              |    * status: ${obtainedStatus}
-              |    * body:
-              |      > ${obtainedBody
-               .toString()
-               .replaceAll("\n", "\n      > ")}
-              |""".stripMargin
-        )
-      } else {
-        log.success(name)
-      }
-    } catch {
-      case e: Exception => log.error(s"${name}: ${e}")
+    if (!statusMatch || !bodyMatch) {
+      log.error(name)
+      sys.error(
+        s"""|${name}:
+            |  expected:
+            |    * status: ${expectedStatus}
+            |    * body:
+            |      > ${expectedBody
+             .toString()
+             .replaceAll("\n", "\n      > ")}
+            |  obtained:
+            |    * status: ${obtainedStatus}
+            |    * body:
+            |      > ${obtainedBody
+             .toString()
+             .replaceAll("\n", "\n      > ")}
+            |""".stripMargin
+      )
+    } else {
+      log.success(name)
     }
   }
 
