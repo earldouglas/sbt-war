@@ -9,8 +9,8 @@ lazy val checkWar: Def.Initialize[Task[Unit]] =
 
     val log: sbt.internal.util.ManagedLogger = streams.value.log
 
-    import Keys.{`package` => pkg}
-    import collection.JavaConverters._
+    import sbt.Keys.{`package` => pkg}
+    import scala.collection.JavaConverters._
     import java.util.zip.ZipEntry
     import java.util.zip.ZipFile
     import java.util.{Enumeration => JEnumeration}

@@ -9,6 +9,8 @@ scalaVersion := "2.12.18" // https://scalameta.org/metals/blog/2023/07/19/silver
 // scripted-plugin
 scriptedBufferLog := false
 watchSources ++= { (sourceDirectory.value ** "*").get }
+scriptedLaunchOpts +=
+  "-DtemplateDirectory=" + (sourceDirectory.value / "template")
 
 // Scalafix
 semanticdbEnabled := true
