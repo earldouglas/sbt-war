@@ -24,7 +24,7 @@ TaskKey[Unit]("await-open") := {
       }
     }
 
-  awaitOpen(webappPort.value)
+  awaitOpen((Webapp / port).value)
 }
 
 TaskKey[Unit]("await-closed") := {
@@ -51,7 +51,7 @@ TaskKey[Unit]("await-closed") := {
       }
     }
 
-  awaitClosed(webappPort.value)
+  awaitClosed((Webapp / port).value)
 }
 
 TaskKey[Unit]("check") := {
@@ -129,14 +129,14 @@ TaskKey[Unit]("check") := {
   }
 
   assertEquals(
-    url = s"http://localhost:${webappPort.value}/",
+    url = s"http://localhost:${(Webapp / port).value}/",
     expectedBody = Source
       .fromFile((Compile / sourceDirectory).value / "webapp" / "index.html")
       .mkString
   )
 
   assertEquals(
-    url = s"http://localhost:${webappPort.value}/count",
+    url = s"http://localhost:${(Webapp / port).value}/count",
     expectedBody = """|{
                       |  "count": 1
                       |}
@@ -144,7 +144,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${webappPort.value}/count",
+    url = s"http://localhost:${(Webapp / port).value}/count",
     expectedBody = """|{
                       |  "count": 2
                       |}
@@ -152,7 +152,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${webappPort.value}/count",
+    url = s"http://localhost:${(Webapp / port).value}/count",
     expectedBody = """|{
                       |  "count": 3
                       |}
@@ -160,7 +160,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${webappPort.value}/count",
+    url = s"http://localhost:${(Webapp / port).value}/count",
     expectedBody = """|{
                       |  "count": 4
                       |}
@@ -168,7 +168,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${webappPort.value}/hello",
+    url = s"http://localhost:${(Webapp / port).value}/hello",
     expectedBody = """<h1>Hello, world!</h1>"""
   )
 }

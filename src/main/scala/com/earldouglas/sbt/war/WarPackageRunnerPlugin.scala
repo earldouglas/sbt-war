@@ -2,7 +2,6 @@ package com.earldouglas.sbt.war
 
 import sbt.Def.Initialize
 import sbt.Def.settingKey
-import sbt.Def.taskKey
 import sbt.Keys._
 import sbt.Keys.{`package` => pkg}
 import sbt._
@@ -17,19 +16,16 @@ object WarPackageRunnerPlugin extends AutoPlugin {
 
   object autoImport {
     lazy val War = config("war").hide
-    lazy val warPort = settingKey[Int]("container port")
-    lazy val warStart = taskKey[Unit]("start container")
-    lazy val warJoin = taskKey[Option[Int]]("join container")
-    lazy val warStop = taskKey[Unit]("stop container")
-    lazy val warForkOptions =
-      settingKey[ForkOptions]("container fork options")
     lazy val webappRunnerVersion =
       settingKey[String]("webapp-runner version")
   }
 
   import autoImport._
+  import RunnerKeysPlugin.autoImport._
 
-  override val requires: Plugins = WarPackagePlugin
+  override val requires: Plugins =
+    WarPackagePlugin && RunnerKeysPlugin
+
   override val projectConfigurations: Seq[Configuration] = Seq(War)
 
   private lazy val containerInstance =
@@ -48,10 +44,17 @@ object WarPackageRunnerPlugin extends AutoPlugin {
       runners match {
         case runner :: Nil =>
           streams.value.log.info("[sbt-war] Starting server")
-          val process: ScalaProcess = Fork.java.fork(
-            warForkOptions.value,
-            Seq("-jar", runner.file.getPath(), pkg.value.getPath())
-          )
+          val process: ScalaProcess =
+            Fork.java.fork(
+              (War / forkOptions).value,
+              Seq(
+                "-jar",
+                runner.file.getPath(),
+                "--port",
+                (War / port).value.toString(),
+                pkg.value.getPath()
+              )
+            )
           containerInstance.set(Some(process))
         case _ :: _ =>
           streams.value.log.error(
@@ -65,10 +68,8 @@ object WarPackageRunnerPlugin extends AutoPlugin {
       }
     }
 
-  private val joinWar: Initialize[Task[Option[Int]]] =
-    Def.task {
-      containerInstance.get.map { _.exitValue }
-    }
+  private val joinWar: Initialize[Task[Unit]] =
+    Def.task(containerInstance.get.map(_.exitValue))
 
   private def stopContainerInstance(): Unit = {
     val oldProcess = containerInstance.getAndSet(None)
@@ -76,27 +77,26 @@ object WarPackageRunnerPlugin extends AutoPlugin {
   }
 
   private val stopWar: Initialize[Task[Unit]] =
-    Def.task {
-      stopContainerInstance()
-    }
+    Def.task(stopContainerInstance())
 
   private val onLoadSetting: Initialize[State => State] =
     Def.setting {
-      (Global / onLoad).value compose { state: State =>
-        state.addExitHook(stopContainerInstance())
-      }
+      (Global / onLoad).value
+        .compose { state: State =>
+          state.addExitHook(stopContainerInstance())
+        }
     }
 
   override lazy val projectSettings =
     Seq(
-      warPort := 8080,
-      warStart := startWar.value,
-      warJoin := joinWar.value,
-      warStop := stopWar.value,
-      warForkOptions := ForkOptions(),
-      webappRunnerVersion := BuildInfo.webappRunnerVersion,
+      War / port := 8080,
+      War / start := startWar.value,
+      War / join := joinWar.value,
+      War / stop := stopWar.value,
+      War / forkOptions := ForkOptions(),
+      War / webappRunnerVersion := BuildInfo.webappRunnerVersion,
       Global / onLoad := onLoadSetting.value,
       libraryDependencies +=
-        ("com.heroku" % "webapp-runner" % webappRunnerVersion.value intransitive ()) % War
+        ("com.heroku" % "webapp-runner" % (War / webappRunnerVersion).value intransitive ()) % War
     )
 }

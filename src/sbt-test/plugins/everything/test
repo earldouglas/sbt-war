@@ -1,8 +1,10 @@
 > setup
 > reload
 
+> Webapp / start
 > War / start
 > awaitOpen
 > check
+> Webapp / stop
 > War / stop
 > awaitClosed
