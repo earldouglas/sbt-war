@@ -41,21 +41,16 @@ object WarPackageRunnerPlugin extends AutoPlugin {
 
       val runners: Seq[File] =
         Classpaths
-          .managedJars(
-            War,
-            classpathTypes.value,
-            update.value
-          )
+          .managedJars(War, classpathTypes.value, update.value)
           .map(_.data)
           .toList
 
       runners match {
-        case r :: Nil =>
+        case runner :: Nil =>
           streams.value.log.info("[sbt-war] Starting server")
-          val process: ScalaProcess =
-            Fork.java.fork(
+          val process: ScalaProcess = Fork.java.fork(
               warForkOptions.value,
-              Seq("-jar", r.file.getPath(), pkg.value.getPath())
+              Seq("-jar", runner.file.getPath(), pkg.value.getPath())
             )
           containerInstance.set(Some(process))
         case _ :: _ =>
