@@ -1,3 +1,0 @@
-name := "combined"
-
-enablePlugins(WebappPlugin)
