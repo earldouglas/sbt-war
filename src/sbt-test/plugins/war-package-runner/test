@@ -1,0 +1,8 @@
+> setup
+> reload
+
+> warStart
+> awaitOpen
+> check
+> warStop
+> awaitClosed
