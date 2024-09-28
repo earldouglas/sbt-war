@@ -1,8 +1,8 @@
 > setup
 > reload
 
-> webappStart
+> Webapp / start
 > awaitOpen
 > check
-> webappStop
+> Webapp / stop
 > awaitClosed

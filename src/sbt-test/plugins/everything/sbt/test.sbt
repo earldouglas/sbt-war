@@ -1,4 +1,8 @@
+enablePlugins(WebappComponentsRunnerPlugin)
 enablePlugins(WarPackageRunnerPlugin)
+
+Webapp / port := 8081
+War / port := 8082
 
 TaskKey[Unit]("await-open") := {
 
@@ -24,6 +28,7 @@ TaskKey[Unit]("await-open") := {
       }
     }
 
+  awaitOpen((Webapp / port).value)
   awaitOpen((War / port).value)
 }
 
@@ -51,6 +56,7 @@ TaskKey[Unit]("await-closed") := {
       }
     }
 
+  awaitClosed((Webapp / port).value)
   awaitClosed((War / port).value)
 }
 
@@ -128,47 +134,53 @@ TaskKey[Unit]("check") := {
     }
   }
 
-  assertEquals(
-    url = s"http://localhost:${(War / port).value}/",
-    expectedBody = Source
-      .fromFile((Compile / sourceDirectory).value / "webapp" / "index.html")
-      .mkString
-  )
+  def check(port: Int): Unit = {
 
-  assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
-    expectedBody = """|{
-                      |  "count": 1
-                      |}
-                      |""".stripMargin
-  )
+    assertEquals(
+      url = s"http://localhost:${port}/",
+      expectedBody = Source
+        .fromFile((Compile / sourceDirectory).value / "webapp" / "index.html")
+        .mkString
+    )
 
-  assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
-    expectedBody = """|{
-                      |  "count": 2
-                      |}
-                      |""".stripMargin
-  )
+    assertEquals(
+      url = s"http://localhost:${port}/count",
+      expectedBody = """|{
+                        |  "count": 1
+                        |}
+                        |""".stripMargin
+    )
 
-  assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
-    expectedBody = """|{
-                      |  "count": 3
-                      |}
-                      |""".stripMargin
-  )
+    assertEquals(
+      url = s"http://localhost:${port}/count",
+      expectedBody = """|{
+                        |  "count": 2
+                        |}
+                        |""".stripMargin
+    )
 
-  assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
-    expectedBody = """|{
-                      |  "count": 4
-                      |}
-                      |""".stripMargin
-  )
+    assertEquals(
+      url = s"http://localhost:${port}/count",
+      expectedBody = """|{
+                        |  "count": 3
+                        |}
+                        |""".stripMargin
+    )
 
-  assertEquals(
-    url = s"http://localhost:${(War / port).value}/hello",
-    expectedBody = """<h1>Hello, world!</h1>"""
-  )
+    assertEquals(
+      url = s"http://localhost:${port}/count",
+      expectedBody = """|{
+                        |  "count": 4
+                        |}
+                        |""".stripMargin
+    )
+
+    assertEquals(
+      url = s"http://localhost:${port}/hello",
+      expectedBody = """<h1>Hello, world!</h1>"""
+    )
+  }
+
+  check((Webapp / port).value)
+  check((War / port).value)
 }
