@@ -49,9 +49,9 @@ object WarPackageRunnerPlugin extends AutoPlugin {
         case runner :: Nil =>
           streams.value.log.info("[sbt-war] Starting server")
           val process: ScalaProcess = Fork.java.fork(
-              warForkOptions.value,
-              Seq("-jar", runner.file.getPath(), pkg.value.getPath())
-            )
+            warForkOptions.value,
+            Seq("-jar", runner.file.getPath(), pkg.value.getPath())
+          )
           containerInstance.set(Some(process))
         case _ :: _ =>
           streams.value.log.error(
