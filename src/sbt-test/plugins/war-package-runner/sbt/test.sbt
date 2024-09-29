@@ -1,5 +1,7 @@
 enablePlugins(WarPackageRunnerPlugin)
 
+War / port := 8081
+
 TaskKey[Unit]("await-open") := {
 
   def isOpen(port: Int): Boolean =

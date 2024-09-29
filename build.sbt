@@ -11,6 +11,8 @@ scriptedBufferLog := false
 watchSources ++= { (sourceDirectory.value ** "*").get }
 scriptedLaunchOpts +=
   "-DtemplateDirectory=" + (sourceDirectory.value / "template")
+scriptedBatchExecution := true
+scriptedParallelInstances := 8
 
 // Scalafix
 semanticdbEnabled := true
