@@ -1,7 +1,8 @@
 package com.earldouglas.sbt.war
+
+import sbt.AutoPlugin
 import sbt.Def.settingKey
 import sbt.Def.taskKey
-import sbt._
 
 object RunnerKeysPlugin extends AutoPlugin {
 
