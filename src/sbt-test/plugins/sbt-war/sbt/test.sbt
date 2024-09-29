@@ -1,5 +1,4 @@
-enablePlugins(WebappComponentsRunnerPlugin)
-enablePlugins(WarPackageRunnerPlugin)
+enablePlugins(SbtWar)
 
 Webapp / port := 8081
 War / port := 8082
