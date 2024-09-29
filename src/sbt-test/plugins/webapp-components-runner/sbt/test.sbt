@@ -1,5 +1,7 @@
 enablePlugins(WebappComponentsRunnerPlugin)
 
+Webapp / port := 8082
+
 TaskKey[Unit]("await-open") := {
 
   def isOpen(port: Int): Boolean =
