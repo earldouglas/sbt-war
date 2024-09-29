@@ -2,6 +2,9 @@ package com.earldouglas.sbt.war
 import sbt.Def.settingKey
 import sbt._
 
+/** Launches a webapp composed of in-place resources, classes, and
+  * libraries.
+  */
 object WebappRunnerPlugin extends AutoPlugin {
 
   object autoImport {
