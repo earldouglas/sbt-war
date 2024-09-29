@@ -17,7 +17,7 @@ servlets](https://en.wikipedia.org/wiki/Java_servlet).
 
 ## Getting help
 
-* Look for *earldouglas* in [sbt/sbt](https://gitter.im/sbt/sbt) on Gitter
+* Look for *earldouglas* in the `#sbt` channel on the [Scala](https://discord.com/invite/scala) Discord server
 * Use the [*xsbt-web-plugin* tag](https://stackoverflow.com/questions/tagged/xsbt-web-plugin) on Stack Overflow
 * Submit a bug report or feature request as a [new GitHub issue](https://github.com/earldouglas/xsbt-web-plugin/issues/new)
 * See examples in the [examples/](examples/) directory
