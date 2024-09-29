@@ -1,7 +1,7 @@
 enablePlugins(SbtWar)
 
 Webapp / port := 8083
-War / port := 8084
+War / port := 8085
 
 TaskKey[Unit]("await-open") := {
 
