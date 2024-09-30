@@ -20,13 +20,13 @@ object WarPackageRunnerPlugin extends AutoPlugin {
     lazy val warStart = taskKey[Unit]("start war container")
     lazy val warJoin = taskKey[Unit]("join war container")
     lazy val warStop = taskKey[Unit]("stop war container")
-    lazy val webappRunnerVersion =
-      settingKey[String]("webapp-runner version")
   }
 
   import autoImport._
+  import WebappRunnerPlugin.autoImport._
 
-  override val requires: Plugins = WarPackagePlugin
+  override val requires: Plugins =
+    WarPackagePlugin && WebappRunnerPlugin
 
   override val projectConfigurations: Seq[Configuration] = Seq(War)
 
@@ -96,9 +96,8 @@ object WarPackageRunnerPlugin extends AutoPlugin {
       warJoin := joinWar.value,
       warStop := stopWar.value,
       War / forkOptions := ForkOptions(),
-      War / webappRunnerVersion := BuildInfo.webappRunnerVersion,
       Global / onLoad := onLoadSetting.value,
       libraryDependencies +=
-        ("com.heroku" % "webapp-runner" % (War / webappRunnerVersion).value intransitive ()) % War
+        ("com.heroku" % "webapp-runner" % webappRunnerVersion.value intransitive ()) % War
     )
 }
