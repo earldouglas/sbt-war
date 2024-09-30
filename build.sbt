@@ -24,7 +24,7 @@ scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
 lazy val webappRunnerVersion =
   settingKey[String]("webapp-runner version")
 webappRunnerVersion := "10.1.28.0"
-libraryDependencies += "com.heroku" % "webapp-runner" % webappRunnerVersion.value % "provided"
+libraryDependencies += "com.heroku" % "webapp-runner" % webappRunnerVersion.value
 
 // sbt-buildinfo
 enablePlugins(BuildInfoPlugin)
