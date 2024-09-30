@@ -13,13 +13,15 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
 
   object autoImport {
     lazy val Webapp = config("webapp").hide
+    lazy val webappPort = settingKey[Int]("webapp container port")
+    lazy val webappStart = taskKey[Unit]("start webapp container")
+    lazy val webappJoin = taskKey[Unit]("join webapp container")
+    lazy val webappStop = taskKey[Unit]("stop webapp container")
   }
 
   import autoImport._
-  import RunnerKeysPlugin.autoImport._
 
-  override val requires: Plugins =
-    WebappComponentsPlugin && RunnerKeysPlugin
+  override val requires: Plugins = WebappComponentsPlugin
 
   private lazy val containerInstance =
     new AtomicReference[Option[WebappComponentsRunner]](None)
@@ -36,7 +38,7 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       val runner: WebappComponentsRunner =
         WebappComponentsRunner(
           hostname = "localhost", // TODO this could be a settingKey
-          port = (Webapp / port).value,
+          port = webappPort.value,
           contextPath = "", // TODO this could be a settingKey
           emptyWebappDir = emptyDir,
           emptyClassesDir = emptyDir,
@@ -65,10 +67,10 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
 
   override lazy val projectSettings: Seq[Setting[_]] =
     Seq(
-      Webapp / port := 8080,
-      Webapp / start := startWebapp.value,
-      Webapp / join := joinWebapp.value,
-      Webapp / stop := stopWebapp.value,
+      webappPort := 8080,
+      webappStart := startWebapp.value,
+      webappJoin := joinWebapp.value,
+      webappStop := stopWebapp.value,
       Global / onLoad := onLoadSetting.value
     )
 }

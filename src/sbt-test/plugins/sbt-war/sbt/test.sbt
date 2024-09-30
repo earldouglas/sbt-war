@@ -1,7 +1,7 @@
 enablePlugins(SbtWar)
 
-Webapp / port := 8083
-War / port := 8085
+webappPort := 8083
+warPort := 8085
 
 TaskKey[Unit]("await-open") := {
 
@@ -27,8 +27,8 @@ TaskKey[Unit]("await-open") := {
       }
     }
 
-  awaitOpen((Webapp / port).value)
-  awaitOpen((War / port).value)
+  awaitOpen(webappPort.value)
+  awaitOpen(warPort.value)
 }
 
 TaskKey[Unit]("await-closed") := {
@@ -55,8 +55,8 @@ TaskKey[Unit]("await-closed") := {
       }
     }
 
-  awaitClosed((Webapp / port).value)
-  awaitClosed((War / port).value)
+  awaitClosed(webappPort.value)
+  awaitClosed(warPort.value)
 }
 
 TaskKey[Unit]("check") := {
@@ -180,6 +180,6 @@ TaskKey[Unit]("check") := {
     )
   }
 
-  check((Webapp / port).value)
-  check((War / port).value)
+  check(webappPort.value)
+  check(warPort.value)
 }
