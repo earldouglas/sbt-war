@@ -98,6 +98,6 @@ object WarPackageRunnerPlugin extends AutoPlugin {
       War / forkOptions := ForkOptions(),
       Global / onLoad := onLoadSetting.value,
       libraryDependencies +=
-        ("com.heroku" % "webapp-runner" % (War / webappRunnerVersion).value intransitive ()) % War
+        ("com.heroku" % "webapp-runner" % webappRunnerVersion.value intransitive ()) % War
     )
 }
