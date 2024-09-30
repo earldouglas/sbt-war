@@ -16,15 +16,17 @@ object WarPackageRunnerPlugin extends AutoPlugin {
 
   object autoImport {
     lazy val War = config("war").hide
+    lazy val warPort = settingKey[Int]("war container port")
+    lazy val warStart = taskKey[Unit]("start war container")
+    lazy val warJoin = taskKey[Unit]("join war container")
+    lazy val warStop = taskKey[Unit]("stop war container")
     lazy val webappRunnerVersion =
       settingKey[String]("webapp-runner version")
   }
 
   import autoImport._
-  import RunnerKeysPlugin.autoImport._
 
-  override val requires: Plugins =
-    WarPackagePlugin && RunnerKeysPlugin
+  override val requires: Plugins = WarPackagePlugin
 
   override val projectConfigurations: Seq[Configuration] = Seq(War)
 
@@ -51,7 +53,7 @@ object WarPackageRunnerPlugin extends AutoPlugin {
                 "-jar",
                 runner.file.getPath(),
                 "--port",
-                (War / port).value.toString(),
+                warPort.value.toString(),
                 pkg.value.getPath()
               )
             )
@@ -89,10 +91,10 @@ object WarPackageRunnerPlugin extends AutoPlugin {
 
   override lazy val projectSettings =
     Seq(
-      War / port := 8080,
-      War / start := startWar.value,
-      War / join := joinWar.value,
-      War / stop := stopWar.value,
+      warPort := 8080,
+      warStart := startWar.value,
+      warJoin := joinWar.value,
+      warStop := stopWar.value,
       War / forkOptions := ForkOptions(),
       War / webappRunnerVersion := BuildInfo.webappRunnerVersion,
       Global / onLoad := onLoadSetting.value,

@@ -1,6 +1,6 @@
 enablePlugins(WarPackageRunnerPlugin)
 
-War / port := 8081
+warPort := 8081
 
 TaskKey[Unit]("await-open") := {
 
@@ -26,7 +26,7 @@ TaskKey[Unit]("await-open") := {
       }
     }
 
-  awaitOpen((War / port).value)
+  awaitOpen(warPort.value)
 }
 
 TaskKey[Unit]("await-closed") := {
@@ -53,7 +53,7 @@ TaskKey[Unit]("await-closed") := {
       }
     }
 
-  awaitClosed((War / port).value)
+  awaitClosed(warPort.value)
 }
 
 TaskKey[Unit]("check") := {
@@ -131,14 +131,14 @@ TaskKey[Unit]("check") := {
   }
 
   assertEquals(
-    url = s"http://localhost:${(War / port).value}/",
+    url = s"http://localhost:${warPort.value}/",
     expectedBody = Source
       .fromFile((Compile / sourceDirectory).value / "webapp" / "index.html")
       .mkString
   )
 
   assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
+    url = s"http://localhost:${warPort.value}/count",
     expectedBody = """|{
                       |  "count": 1
                       |}
@@ -146,7 +146,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
+    url = s"http://localhost:${warPort.value}/count",
     expectedBody = """|{
                       |  "count": 2
                       |}
@@ -154,7 +154,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
+    url = s"http://localhost:${warPort.value}/count",
     expectedBody = """|{
                       |  "count": 3
                       |}
@@ -162,7 +162,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${(War / port).value}/count",
+    url = s"http://localhost:${warPort.value}/count",
     expectedBody = """|{
                       |  "count": 4
                       |}
@@ -170,7 +170,7 @@ TaskKey[Unit]("check") := {
   )
 
   assertEquals(
-    url = s"http://localhost:${(War / port).value}/hello",
+    url = s"http://localhost:${warPort.value}/hello",
     expectedBody = """<h1>Hello, world!</h1>"""
   )
 }

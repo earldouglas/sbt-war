@@ -1,8 +1,8 @@
 > setup
 > reload
 
-> War / start
+> warStart
 > awaitOpen
 > check
-> War / stop
+> warStop
 > awaitClosed
