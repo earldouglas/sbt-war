@@ -1,6 +1,6 @@
 // General
 enablePlugins(SbtPlugin)
-name := "xsbt-web-plugin"
+name := "sbt-war"
 organization := "com.earldouglas"
 sbtPlugin := true
 scalacOptions ++= Seq("-feature", "-deprecation")

@@ -1,75 +1,47 @@
 [![Build status](https://github.com/earldouglas/xsbt-web-plugin/workflows/build/badge.svg)](https://github.com/earldouglas/xsbt-web-plugin/actions)
 [![Latest version](https://img.shields.io/github/tag/earldouglas/xsbt-web-plugin.svg)](https://index.scala-lang.org/earldouglas/xsbt-web-plugin)
 
-# xsbt-web-plugin
+# sbt-war
 
-xsbt-web-plugin is an [sbt](https://www.scala-sbt.org/) plugin for
-building web applications with [Java
-servlets](https://en.wikipedia.org/wiki/Java_servlet).
+sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for building Web
+apps with [servlets](https://en.wikipedia.org/wiki/Java_servlet).
+
+sbt-war is formerly known as xsbt-web-plugin.  For documentation and
+source code of prior versions, browse this repository from the desired
+git tag.  The most recent prior version is [xsbt-web-plugin
+v4.2.4](https://github.com/earldouglas/xsbt-web-plugin/tree/4.2.4).
 
 ## Features
 
-* Package a project as a *.war* file
-* Test and run under Jetty or Tomcat
-* Deploy directly to Heroku or AWS
-* Supports sbt 0.13.6 and up
-* Supports Scala 2.10.2 and up
+* Package your project as a *.war* file
+* Run your project in a Tomcat container
+
+## Requirements
+
+* sbt 1.x and up
+* Scala 2.12.x and up
 
 ## Getting help
 
-* Look for *earldouglas* in the `#sbt` channel on the [Scala](https://discord.com/invite/scala) Discord server
-* Use the [*xsbt-web-plugin* tag](https://stackoverflow.com/questions/tagged/xsbt-web-plugin) on Stack Overflow
-* Submit a bug report or feature request as a [new GitHub issue](https://github.com/earldouglas/xsbt-web-plugin/issues/new)
-* See examples in the [examples/](examples/) directory
+* Submit a question, bug report, or feature request as a [new GitHub
+  issue](https://github.com/earldouglas/xsbt-web-plugin/issues/new)
+* Look for *earldouglas* in the `#sbt` channel on the [Scala Discord
+  server](https://discord.com/invite/scala)
 
-## Quick reference
-
-Add xsbt-web-plugin to *project/plugins.sbt*:
-
-```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.5")
-```
-
-Enable the Jetty plugin:
-
-*build.sbt*:
-
-```scala
-enablePlugins(JettyPlugin)
-```
-
-From the sbt console:
-
-* Start (or restart) the container with `jetty:start`
-* Stop the container with `jetty:stop`
-* Build a *.war* file with `package`
-
-To use Tomcat instead of Jetty:
-
-* Substitute `TomcatPlugin` for `JettyPlugin`
-* Substitute `tomcat:start` for `jetty:start`
-* Substitute `tomcat:stop` for `jetty:stop`
-
-## Starting with Giter8
-
-```
-sbt new earldouglas/xsbt-web-plugin.g8
-```
-
-## Starting from scratch
+## Usage
 
 Create a new empty project:
 
 ```
-mkdir myproject
-cd myproject
+$ mkdir myproject
+$ cd myproject
 ```
 
 Set up the project structure:
 
 ```
-mkdir project
-mkdir -p src/main/scala/mypackage
+$ mkdir project
+$ mkdir -p src/main/scala/mypackage
 ```
 
 Configure sbt:
@@ -77,21 +49,21 @@ Configure sbt:
 *project/build.properties:*
 
 ```
-sbt.version=1.6.2
+sbt.version=1.10.2
 ```
 
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "4.2.5")
+addSbtPlugin("com.earldouglas" % "sbt-war" % "5.0.0-M1")
 ```
 
 *build.sbt:*
 
 ```scala
-scalaVersion := "3.0.1"
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided"
-enablePlugins(TomcatPlugin)
+scalaVersion := "3.5.1"
+libraryDependencies += "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0" % Provided
+enablePlugins(SbtWar)
 ```
 
 Add a servlet:
@@ -101,24 +73,27 @@ Add a servlet:
 ```scala
 package mypackage
 
-import javax.servlet.annotation.WebServlet
-import javax.servlet.http.HttpServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.annotation.WebServlet
+import jakarta.servlet.http.HttpServlet
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 @WebServlet(urlPatterns = Array("/hello"))
 class MyServlet extends HttpServlet:
-  override def doGet(req: HttpServletRequest, res: HttpServletResponse): Unit =
+  override def doGet(
+      req: HttpServletRequest,
+      res: HttpServletResponse
+  ): Unit =
     res.setContentType("text/html")
     res.setCharacterEncoding("UTF-8")
     res.getWriter.write("""<h1>Hello, world!</h1>""")
 ```
 
-Run it with `tomcat:start`:
+Run it from sbt with `warStart`:
 
 ```
 $ sbt
-> tomcat:start
+> warStart
 ```
 
 ```
@@ -126,549 +101,209 @@ $ curl localhost:8080/hello
 <h1>Hello, world!</h1>
 ```
 
-## Configuration and use
-
-### Triggered execution
-
-xsbt-web-plugin supports sbt's [triggered
-execution](http://www.scala-sbt.org/1.0/docs/Triggered-Execution.html)
-by prefixing commands with `~`.
-
-*sbt console:*
+Stop it with `warStop`:
 
 ```
-> ~jetty:start
+> warStop
 ```
 
-This starts the Jetty container, then monitors the sources, resources,
-and webapp directories for changes, which triggers a container restart.
-
-### Testing
-
-To run a projects tests against a running instance of the webapp, use
-`<container>:quicktest` or `<container>:test`:
+Create a .war file with `package`:
 
 ```
-> ~jetty:quicktest
+> package
 ```
 
-### Container arguments
+## Settings and commands
 
-To pass extra arguments to the Jetty or Tomcat container, set
-`containerArgs`:
+| Setting Key           | Type               | Default           | Notes                                                                   |
+| --------------------- | ------------------ | ----------------- | ----------------------------------------------------------------------- |
+| `webappResources`     | `Map[String,File]` | *src/main/webapp* | Static files (HTML, CSS, JS, images, etc.) to serve directly            |
+| `webappClasses`       | `Map[String,File]` | project classes   | .class files to copy into the *WEB-INF/classes* directory               |
+| `webappLib`           | `Map[String,File]` | project libs      | .jar files to copy into the *WEB-INF/lib* directory                     |
+| `webappRunnerVersion` | `String`           | `"10.1.28.0"`     | The version of `com.heroku:webapp-runner` to use for running the webapp |
+| `webappPort`          | `Int`              | `8080`            | The local container port to use when running with `webappStart`         |
+| `warPort`             | `Int`              | `8080`            | The local container port to use when running with `warStart`            |
+| `warForkOptions`      | `ForkOptions`      | `ForkOptions()`   | Options for the forked JVM used when running with `warStart`            |
+
+| Task Key      | Notes                                                                   |
+| ------------- | ----------------------------------------------------------------------- |
+| `warStart`    | Starts a local container, serving content from the packaged .war file   |
+| `warJoin`     | Blocks until the container shuts down                                   |
+| `warStop`     | Shuts down the container                                                |
+| `webappStart` | Starts a local container, serving content directly from project sources |
+| `webappJoin`  | Blocks until the container shuts down                                   |
+| `webappStop`  | Shuts down the container                                                |
+
+### `war` vs. `webapp`
+
+Settings and commands that begin with `war` apply to the packaged .war
+file, which includes resources, classes, and libraries. The development
+cycle can be sped up by serving resources, classes, and libraries
+directly from source, avoiding the overhead of packaging a
+*.war* file.
+
+Use the `webapp` prefix in place of `war` to skip packaging, and run the
+container directly from source:
+
+```
+> webappStart
+```
+
+### `webappResources`
+
+Webapp resources are the various static files, deployment descriptors,
+etc. that go into a .war file.
+
+The `webappResources` setting is a mapping from destination to source of
+these files.  The destination is a path relative to the contents of the
+.war file.  The source is a path on the local filesystem.
+
+By default, everything in *src/main/webapp* is included.
+
+For example, given the following .war file:
+
+```
+myproject.war
+├── index.html
+├── styles/
+│   └── theme.css
+├── WEB-INF/
+│   └── web.xml
+└── META-INF/
+    └── MANIFEST.MF
+```
+
+The `webappResources` mapping would look like this:
+
+```
+"index.html" -> File(".../src/main/webapp/index.html")
+"styles/theme.css" -> File(".../src/main/webapp/styles/theme.css")
+"WEB-INF/web.xml" -> File(".../src/main/webapp/WEB-INF/web.xml")
+```
+
+To use a different directory, e.g. *src/main/WebContent*:
 
 ```scala
-containerArgs := Seq("--path", "/myservice")
+webappResources :=
+  (Compile / sourceDirectory)
+    .map(_ / "WebContent")
+    .map(WebappComponents.getResources)
 ```
 
-* For available Jetty arguments, see the [Jetty Runner
-  docs](https://www.eclipse.org/jetty/documentation/current/runner.html#_full_configuration_reference)
-* For available Tomcat arguments, see [webapp-runner#options](https://github.com/heroku/webapp-runner#options)
-
-### Custom container
-
-To use a custom J2EE container, e.g. a main class named `runner.Run`,
-enable `ContainerPlugin` and set `containerLibs` and
-`containerLaunchCmd`:
+Manifest attributes of the *.war* file can be configured via
+`packageOptions`:
 
 ```scala
-enablePlugins(ContainerPlugin)
-
-containerLibs in Container := Seq(
-    "org.eclipse.jetty" %  "jetty-webapp" % "9.1.0.v20131115"
-  , "org.eclipse.jetty" %  "jetty-plus"   % "9.1.0.v20131115"
-  , "test"              %% "runner"       % "0.1.0-SNAPSHOT"
-)
-
-containerLaunchCmd in Container :=
-  { (port, path) => Seq("runner.Run", port.toString, path) }
+sbt.Keys.`package` / packageOptions +=
+  Package.ManifestAttributes(
+    java.util.jar.Attributes.Name.SEALED -> "true"
+  )
 ```
 
-*sbt:*
+### `webappClasses`
 
-```
-> container:start
-> container:stop
-```
-
-### Forked JVM options
-
-To set system properties for the forked container JVM, set
-`containerForkOptions`:
+By default, project classes are copied into the *WEB-INF/classes*
+directory of the *.war* file.  To package them in a *.jar* file in the
+*WEB-INF/lib* directory instead, set `exportJars`:
 
 ```scala
-containerForkOptions := new ForkOptions(runJVMOptions = Seq("-Dh2g2=42"))
+exportJars := true
 ```
 
-Alternatively, set `javaOptions` in the `Jetty` (or `Tomcat`)
-configuration:
+See ["Configure
+packaging"](https://www.scala-sbt.org/1.x/docs/Howto-Package.html) in
+the sbt documentation for additional information.
+
+### `webappLib`
+
+By default, all runtime dependencies are copied into the *WEB-INF/lib*
+directory.
+
+To use a dependency at compile time but exclude it from the .war file,
+set its scope to `Provided`:
 
 ```scala
-javaOptions in Jetty += "-Dh2g2=42"
+libraryDependencies += "foo" % "bar" % "1.0.0" % Provided
 ```
 
-To attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
+### `webappRunnerVersion`
+
+By default, [Webapp Runner](https://github.com/heroku/webapp-runner)
+10.1.x is used.  To use a different version, set `War /
+webappRunnerVersion`:
+
+```scala
+webappRunnerVersion := "9.0.93.0"
+```
+
+### `warPort` and `webappPort`
+
+By default, the container runs on port *8080*.  To use a different port,
+set `warPort`/`webappPort`:
+
+```scala
+warPort := 9090
+```
+
+```scala
+webappPort := 9090
+```
+
+### `warForkOptions`
+
+To set environment variables, system properties, and more for the
+forked container JVM, set a
+[ForkOptions](https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html)
+instance via `warForkOptions`.
+
+For example: to attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
 
 *build.sbt:*
 
 ```scala
-javaOptions in Jetty ++= Seq(
-  "-Xdebug",
-  "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
-)
+warForkOptions :=
+  ForkOptions()
+    .withRunJVMOptions(
+      Seq(
+        "-Xdebug",
+        "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
+      )
+    )
 ```
 
-In Eclipse:
-
-* Create and run a new *Remote Java Application* launch configuration
-* Set *Connection Type* to *Scala debugger (Socket Attach)*
-* Configure to connect to *localhost* on port *8000*
-
-In IntelliJ IDEA:
-
-* Add a Remote run configuration: *Run* -> *Edit Configurations...*
-* Under *Defaults* select *Remote* and push `+` to add a new
-  configuration
-* By default the configuration uses port 5005; update it to 8000 as
-  above
-* Name this configuration, and run it in debug mode
-
-### Debug mode
-
-To enable debugging through
-[JDWP](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/introclientissues005.html),
-use `jetty:debug` or `tomcat:debug`.  Optionally set `debugAddress`,
-which defaults to `"debug"` under Windows and `"8888"` otherwise, and
-`debugOptions`, which defaults to:
-
-```scala
-port =>
-  Seq( "-Xdebug"
-     , Seq( "-Xrunjdwp:transport=dt_socket"
-          , "address=" + port
-          , "server=y"
-          , "suspend=n"
-          ).mkString(",")
-     )
-```
-
-### Jetty version
-
-By default, [Jetty
-Runner](https://www.eclipse.org/jetty/documentation/current/runner.html)
-9.4.42 is used.  To use a different version, set
-`containerLibs`:
-
-```scala
-containerLibs in Jetty := Seq("org.mortbay.jetty" % "jetty-runner" % "7.0.0.v20091005" intransitive())
-```
-
-Depending on the version, it may also be necessary to specify the name
-of Jetty's runner:
-
-```scala
-containerMain := "org.mortbay.jetty.runner.Runner"
-```
-
-### Container port
-
-By default, the container runs on port *8080*.  To use a different port,
-set `containerPort`:
-
-```scala
-containerPort := 9090
-```
-
-### *jetty.xml*
-
-To use a *jetty.xml* configuration file, set `--config` in
-`containerArgs`:
-
-```scala
-containerArgs := Seq("--config", "/path/to/jetty.xml")
-```
-
-This option can be used to enable SSL and HTTPS.
-
-### Tomcat version
-
-By default, [Webapp Runner](https://github.com/heroku/webapp-runner)
-9.0.41.0 is used.  To use a different version, set `containerLibs`:
-41
-```scala
-containerLibs in Tomcat := Seq("com.heroku" % "webapp-runner" % "8.5.61.0" intransitive())
-```
-
-Depending on the version, it may also be necessary to specify the name
-of Tomcat's runner:
-
-```scala
-containerMain in Tomcat := "webapp.runner.launch.Main"
-```
-
-### Extra container libraries
-
-Tomcat's webapp-runner does not ship with all of the libraries that can
-be found in a complete Tomcat installation.  To include extras, use
-`containerLibs in Tomcat`:
-
-```scala
-containerLibs in Tomcat += "org.apache.tomcat" % "tomcat-jdbc" % "8.5.15"
-```
-
-### Renaming the *.war* file
-
-This can be useful for keeping the version number out of the *.war* file
-name, using a non-conventional file name or path, adding additional
-information to the file name, etc.
-
-```scala
-artifactName := { (v: ScalaVersion, m: ModuleID, a: Artifact) =>
-  a.name + "." + a.extension
-}
-```
-See ["Modifying default
-artifacts"](http://www.scala-sbt.org/1.0/docs/Artifacts.html#Modifying+default+artifacts)
-in the sbt documentation for additional information.
-
-### Massaging the *.war* file
-
-After the *<project>/target/webapp* directory is prepared, it can be
-modified with an arbitrary `File => Unit` function by setting
-`webappPostProcess`.
-
-To list the contents of the *webapp* directory after it is prepared:
-
-```scala
-webappPostProcess := {
-  val log = streams.value.log
-  webappDir: File =>
-    def listFiles(level: Int)(f: File): Unit = {
-      val indent = ((1 until level) map { _ => "  " }).mkString
-      if (f.isDirectory) {
-        log.info(indent + f.getName + "/")
-        f.listFiles foreach { listFiles(level + 1) }
-      } else log.info(indent + f.getName)
-    }
-    listFiles(1)(webappDir)
-}
-```
-
-To include webapp resources from multiple directories in the prepared
-*webapp* directory:
-
-```scala
-webappPostProcess := {
-  webappDir: File =>
-    val baseDir = baseDirectory.value / "src" / "main"
-    IO.copyDirectory(baseDir / "webapp1", webappDir)
-    IO.copyDirectory(baseDir / "webapp2", webappDir)
-    IO.copyDirectory(baseDir / "webapp3", webappDir)
-}
-```
-
-### Custom resources directory
-
-Files in the extra resource directory are not compiled, and are bundled
-directly in the project artifact *.jar* file.
-
-To add a custom resources directory, set `unmanagedResourceDirectories`:
-
-```scala
-unmanagedResourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"
-```
-
-### Custom sources directory
-
-Scala files in the extra source directory are compiled, and bundled in
-the project artifact *.jar* file.
-
-To add a custom sources directory, set `unmanagedSourceDirectories`:
-
-```scala
-unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / "extra"
-```
-
-### Utilizing *WEB-INF/classes*
-
-By default, project classes are packaged into a *.jar* file, shipped in
-the *WEB-INF/lib* directory of the *.war* file.  To instead keep them
-extracted in *WEB-INF/classes*, set `webappWebInfClasses`:
-
-```scala
-webappWebInfClasses := true
-```
-
-### Web application destination
-
-The web application destination directory is where the static Web
-content, compiled Scala classes, library *.jar* files, etc. are placed.
-By default, they go to *<project>/target/webapp*.
-
-To specify a different directory, set `target` in the `webappPrepare`
-configuration:
-
-```scala
-target in webappPrepare := target.value / "WebContent"
-```
-
-### Web application resources
-
-The web application resources directory is where static Web content
-(including *.html*, *.css*, and *.js* files, the *web.xml* container
-configuration file, etc.  By default, this is kept in
-*<project>/src/main/webapp*.
-
-To specify a different directory, set `sourceDirectory` in the
-`webappPrepare` configuration:
-
-```scala
-sourceDirectory in webappPrepare := (sourceDirectory in Compile).value / "WebContent"
-```
-
-### Prepare the web application for execution and deployment
-
-For situations when the prepared *<project>/target/webapp* directory is
-needed, but the packaged *.war* file isn't.
-
-*sbt console:*
+### `warStart` and `webappStart`
 
 ```
-webappPrepare
+> warStart
 ```
 
-### Add manifest attributes
-
-Manifest attributes of the *.war* file can be configured via
-`packageOptions in sbt.Keys.package` in *build.sbt*:
-
-```scala
-packageOptions in sbt.Keys.`package` +=
-  Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )
+```
+> webappStart
 ```
 
-### Inherit manifest attributes
+### `warJoin` and `webappJoin`
 
-To configure the *.war* file to inherit the manifest attributes of the
-*.jar* file, typically set via `packageOptions in (Compile,
-packageBin)`, set `inheritJarManifest` to `true`:
-
-```scala
-inheritJarManifest := true
-```
-
-### Container shutdown and sbt
-
-By default, sbt will shutdown the running container when exiting sbt.
-
-To allow the container to continue running after sbt exits, set
-`containerShutdownOnExit`:
-
-```scala
-containerShutdownOnExit := false
-```
-
-### Deploying to Heroku
-
-Enable the `HerokuDeploy` plugin and configure your app name:
-
-```scala
-enablePlugins(HerokuDeploy)
-
-herokuAppName := "my-heroku-app"
-```
-
-Either install the [Heroku Toolbelt](https://toolbelt.heroku.com/), or
-set your Heroku API key as an environment variable, launch sbt, and
-deploy with `herokuDeploy`:
+To block sbt while the container is running, use `warJoin`/`webappJoin`:
 
 ```
-$ HEROKU_API_KEY="xxx-xxx-xxxx" sbt
-> herokuDeploy
+$ sbt warStart warJoin
 ```
 
-Check out your deployed application at
-`https://my-heroku-app.herokuapp.com`.
-
-### Deploying to Elastic Beanstalk
-
-Before trying to deploy anything, create an application and a
-Tomcat-based environment for it in Elastic Beanstalk.
-
-Enable the `ElasticBeanstalkDeployPlugin` plugin, and configure your
-application's name, environment, and region:
-
-```scala
-enablePlugins(ElasticBeanstalkDeployPlugin)
-
-elasticBeanstalkAppName := "my-elastic-beanstalk-app"
-
-elasticBeanstalkEnvName := "production"
-
-elasticBeanstalkRegion  := "us-west-1"
 ```
-
-Add AWS credentials to your environment, launch sbt, and deploy with
-`elasticBeanstalkDeploy`:
-
-```
-$ AWS_ACCESS_KEY="xxx" AWS_SECRET_KEY="xxx" sbt
-> elasticBeanstalkDeploy
-```
-
-Check out your deployed application at
-`http://my-elastic-beanstalk-app.us-west-1.elasticbeanstalk.com`.
-
-### Block sbt on running container
-
-To start the container from the command line and block sbt from exiting
-prematurely, use `jetty:join`:
-
-```
-$ sbt jetty:start jetty:join
+$ sbt webappStart webappJoin
 ```
 
 This is useful for running sbt in production (e.g. in a Docker
-container).
+container), if you're into that kind of thing.
 
-### Build and run from Docker
+### `warStop` and `webappStop`
 
-Choose a Docker image that has sbt installed, and use `sbt
-<container>:start <container>:join`:
-
-Using [hseeberger/scala-sbt](https://hub.docker.com/r/hseeberger/scala-sbt/);
+Stop the running container with `warStop`/`webappStop`:
 
 ```
-$ docker run -p 8080:8080 -v $PWD:/root hseeberger/scala-sbt sbt tomcat:start tomcat:join
+> warStop
 ```
 
-Using [bigtruedata/sbt](https://hub.docker.com/r/bigtruedata/sbt/):
-
 ```
-$ docker run -p 8080:8080 -v $PWD:/app bigtruedata/sbt sbt tomcat:start tomcat:join
-```
-
-Test it out:
-
-```
-$ curl localhost:8080/hello
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-  </body>
-</html>
-```
-
-### Run a packaged *.war* file from Docker
-
-First, package a *.war* file:
-
-```
-$ sbt package
-[info] Packaging .../target/scala-2.10/getting-started_2.10-0.1-SNAPSHOT.war .
-```
-
-Run it using [Jetty](https://hub.docker.com/_/jetty/):
-
-```
-$ docker run -p 8080:8080 -v /path/to/myproject/target/scala-2.10:/var/lib/jetty/webapps jetty
-```
-
-Run it using [Tomcat](https://hub.docker.com/_/tomcat/):
-
-```
-$ docker run -p 8080:8080 -v /path/to/myproject/target/scala-2.10:/usr/local/tomcat/webapps tomcat
-```
-
-Test it out:
-
-```
-$ curl localhost:8080/myproject_2.10-0.1-SNAPSHOT/hello
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-  </body>
-</html>
-```
-
-### Build a Docker image
-
-Configure a Docker build with `sbt-native-packager`:
-
-*project/plugins.sbt:*
-
-```scala
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.9.11")
-```
-
-*build.sbt:*
-
-```scala
-enablePlugins(DockerPlugin)
-
-dockerBaseImage := "tomcat:9.0"
-
-Docker / defaultLinuxInstallLocation := "/usr/local/tomcat/webapps"
-
-dockerExposedVolumes := Seq((Docker / defaultLinuxInstallLocation).value)
-
-Docker / mappings += sbt.Keys.`package`.value -> "/usr/local/tomcat/webapps/ROOT.war"
-
-dockerEntrypoint := Seq("catalina.sh", "run")
-```
-
-Build the project from sbt as a Docker image:
-
-```
-> docker:publishLocal
-```
-
-Run it:
-
-```
-$ docker run -it --rm -p 8080:8080 my-web-project:0.1.0-SNAPSHOT
-```
-
-### Quickstart mode
-
-The development cycle can be sped up by serving static resources
-directly from source, and avoiding packaging of compiled artifacts.
-
-Use `<container>:quickstart` in place of `<container>:start` to run the
-container in quickstart mode:
-
-```
-> jetty:quickstart
-```
-
-### Running multiple containers
-
-To launch using more than a single container, set `containerScale`:
-
-```scala
-containerScale := 5
-```
-
-This will configure the container to launch in five forked JVMs, using
-five sequential ports starting from `containerPort`.
-
-In debug mode, five additional sequential debug ports starting from
-`debugPort` will be opened.
-
-### JRebel integration
-
-The development cycle can be further sped up by skipping server restarts
-between code recompilation.
-
-Add `-agentpath` to the container's JVM options:
-
-```
-javaOptions in Jetty += "-agentpath:/path/to/jrebel/lib/libjrebel64.so"
-```
-
-Launch the container with `quickstart`, and run triggered compilation:
-
-```
-> jetty:quickstart
-> ~compile
+> webappStop
 ```
