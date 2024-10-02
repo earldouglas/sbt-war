@@ -1,5 +1,6 @@
 package runners
 
+import com.typesafe.scalalogging.LazyLogging
 import jakarta.servlet.annotation.WebServlet
 import jakarta.servlet.http.HttpServlet
 import jakarta.servlet.http.HttpServletRequest
@@ -31,12 +32,13 @@ class CountServlet extends HttpServlet with Main:
     res.getWriter().write(unsafeIncrementAndGetAsJson())
 
 @WebServlet(urlPatterns = Array("/hello"))
-class HelloServlet extends HttpServlet:
+class HelloServlet extends HttpServlet with LazyLogging:
 
   override def doGet(
       request: HttpServletRequest,
       response: HttpServletResponse
   ): Unit =
+    logger.info("doGet")
     response.setCharacterEncoding("UTF-8")
     response.setContentType("text/html")
     response.getWriter.write("""<h1>Hello, world!</h1>""")

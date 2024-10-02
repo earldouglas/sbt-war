@@ -67,6 +67,7 @@ lazy val checkWar: Def.Initialize[Task[Unit]] =
         "WEB-INF/classes/drivers/mem/mem$package$.class",
         "WEB-INF/classes/drivers/mem/mem$package.class",
         "WEB-INF/classes/drivers/mem/mem$package.tasty",
+        "WEB-INF/classes/logback.xml",
         "WEB-INF/classes/runners/",
         "WEB-INF/classes/runners/CountServlet.class",
         "WEB-INF/classes/runners/CountServlet.tasty",
@@ -86,13 +87,17 @@ lazy val checkWar: Def.Initialize[Task[Unit]] =
         "WEB-INF/lib/cats-effect_3-3.5.4.jar",
         "WEB-INF/lib/cats-kernel_3-2.9.0.jar",
         "WEB-INF/lib/h2-2.2.224.jar",
+        "WEB-INF/lib/logback-classic-1.5.8.jar",
+        "WEB-INF/lib/logback-core-1.5.8.jar",
         "WEB-INF/lib/scala-library-2.13.14.jar",
+        "WEB-INF/lib/scala-logging_3-3.9.5.jar",
         "WEB-INF/lib/scala3-library_3-3.5.0.jar",
+        "WEB-INF/lib/slf4j-api-2.0.15.jar",
         "WEB-INF/web.xml",
         "favicon.ico",
         "index.html",
         "styles/",
-        "styles/theme.css"
+        "styles/theme.css",
       )
 
     val warFile: File = pkg.value

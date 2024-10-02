@@ -21,51 +21,53 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
 
   import autoImport._
 
-  override val requires: Plugins = WebappComponentsPlugin
+  override val requires: Plugins =
+    WebappComponentsPlugin
 
   private lazy val containerInstance =
     new AtomicReference[Option[WebappComponentsRunner]](None)
 
-  private val startWebapp: Initialize[Task[Unit]] =
-    Def.task {
-      stopContainerInstance()
+  override val projectSettings: Seq[Setting[_]] = {
 
-      val emptyDir: File =
-        WebappComponentsRunner.mkdir(
-          (Compile / target).value / "empty"
-        )
+    def stopContainerInstance(): Unit =
+      containerInstance.getAndSet(None).foreach(_.stop())
 
-      val runner: WebappComponentsRunner =
-        WebappComponentsRunner(
-          hostname = "localhost", // TODO this could be a settingKey
-          port = webappPort.value,
-          contextPath = "", // TODO this could be a settingKey
-          emptyWebappDir = emptyDir,
-          emptyClassesDir = emptyDir,
-          resourceMap = WebappComponentsPlugin.webappContents.value
-        )
-      runner.start()
+    val startWebapp: Initialize[Task[Unit]] =
+      Def.task {
+        stopContainerInstance()
 
-      containerInstance.set(Some(runner))
-    }
+        val emptyDir: File =
+          WebappComponentsRunner.mkdir(
+            (Compile / target).value / "empty"
+          )
 
-  private val joinWebapp: Initialize[Task[Unit]] =
-    Def.task(containerInstance.get.foreach(_.join()))
+        val runner: WebappComponentsRunner =
+          WebappComponentsRunner(
+            hostname = "localhost", // TODO this could be a settingKey
+            port = webappPort.value,
+            contextPath = "", // TODO this could be a settingKey
+            emptyWebappDir = emptyDir,
+            emptyClassesDir = emptyDir,
+            resourceMap = WebappComponentsPlugin.webappContents.value
+          )
+        runner.start()
 
-  private def stopContainerInstance(): Unit =
-    containerInstance.getAndSet(None).foreach(_.stop())
-
-  private val stopWebapp: Initialize[Task[Unit]] =
-    Def.task(stopContainerInstance())
-
-  private val onLoadSetting: Initialize[State => State] =
-    Def.setting {
-      (Global / onLoad).value compose { state: State =>
-        state.addExitHook(stopContainerInstance())
+        containerInstance.set(Some(runner))
       }
-    }
 
-  override lazy val projectSettings: Seq[Setting[_]] =
+    val joinWebapp: Initialize[Task[Unit]] =
+      Def.task(containerInstance.get.foreach(_.join()))
+
+    val stopWebapp: Initialize[Task[Unit]] =
+      Def.task(stopContainerInstance())
+
+    val onLoadSetting: Initialize[State => State] =
+      Def.setting {
+        (Global / onLoad).value compose { state: State =>
+          state.addExitHook(stopContainerInstance())
+        }
+      }
+
     Seq(
       webappPort := 8080,
       webappStart := startWebapp.value,
@@ -73,4 +75,5 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       webappStop := stopWebapp.value,
       Global / onLoad := onLoadSetting.value
     )
+  }
 }

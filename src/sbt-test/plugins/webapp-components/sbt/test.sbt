@@ -54,6 +54,7 @@ val checkClasses: Def.Initialize[Task[Unit]] =
         "drivers/mem/mem$package$.class",
         "drivers/mem/mem$package.class",
         "drivers/mem/mem$package.tasty",
+        "logback.xml",
         "runners/CountServlet.class",
         "runners/CountServlet.tasty",
         "runners/HelloServlet.class",
@@ -116,8 +117,12 @@ val checkLib: Def.Initialize[Task[Unit]] =
         "cats-effect_3-3.5.4.jar",
         "cats-kernel_3-2.9.0.jar",
         "h2-2.2.224.jar",
+        "logback-classic-1.5.8.jar",
+        "logback-core-1.5.8.jar",
         "scala-library-2.13.14.jar",
-        "scala3-library_3-3.5.0.jar"
+        "scala-logging_3-3.9.5.jar",
+        "scala3-library_3-3.5.0.jar",
+        "slf4j-api-2.0.15.jar",
       )
 
     assertContains(
