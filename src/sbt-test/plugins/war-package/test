@@ -2,3 +2,8 @@
 > reload
 
 > check
+
+> set name := "war-package"
+$ absent target/scala-3.5.0/war-package_3-0.1.0-SNAPSHOT.war
+> package
+$ exists target/scala-3.5.0/war-package_3-0.1.0-SNAPSHOT.war
