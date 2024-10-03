@@ -1,10 +1,6 @@
 name: build
 
-on:
-  push:
-    paths-ignore:
-      - '.github/workflows/examples-**'
-      - 'examples/**'
+on: [push, pull_request]
 
 jobs:
   build:
