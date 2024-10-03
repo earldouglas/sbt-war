@@ -9,7 +9,7 @@ apps with [servlets](https://en.wikipedia.org/wiki/Java_servlet).
 sbt-war is formerly known as xsbt-web-plugin.  For documentation and
 source code of prior versions, browse this repository from the desired
 git tag.  The most recent prior version is [xsbt-web-plugin
-v4.2.4](https://github.com/earldouglas/xsbt-web-plugin/tree/4.2.4).
+v4.2.5](https://github.com/earldouglas/xsbt-web-plugin/tree/4.2.5).
 
 ## Features
 
