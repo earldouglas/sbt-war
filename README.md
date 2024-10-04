@@ -1,5 +1,5 @@
-[![Build status](https://github.com/earldouglas/xsbt-web-plugin/workflows/build/badge.svg)](https://github.com/earldouglas/xsbt-web-plugin/actions)
-[![Latest version](https://img.shields.io/github/tag/earldouglas/xsbt-web-plugin.svg)](https://index.scala-lang.org/earldouglas/xsbt-web-plugin)
+[![Build status](https://github.com/earldouglas/sbt-war/workflows/build/badge.svg)](https://github.com/earldouglas/sbt-war/actions)
+[![Latest version](https://img.shields.io/github/tag/earldouglas/sbt-war.svg)](https://index.scala-lang.org/earldouglas/sbt-war)
 
 # sbt-war
 
@@ -8,8 +8,8 @@ apps with [servlets](https://en.wikipedia.org/wiki/Java_servlet).
 
 sbt-war is formerly known as xsbt-web-plugin.  For documentation and
 source code of prior versions, browse this repository from the desired
-git tag.  The most recent prior version is [xsbt-web-plugin
-v4.2.5](https://github.com/earldouglas/xsbt-web-plugin/tree/4.2.5).
+git tag.  The most recent prior version is
+[4.2.5](https://github.com/earldouglas/sbt-war/tree/4.2.5).
 
 ## Features
 
@@ -24,7 +24,7 @@ v4.2.5](https://github.com/earldouglas/xsbt-web-plugin/tree/4.2.5).
 ## Getting help
 
 * Submit a question, bug report, or feature request as a [new GitHub
-  issue](https://github.com/earldouglas/xsbt-web-plugin/issues/new)
+  issue](https://github.com/earldouglas/sbt-war/issues/new)
 * Look for *earldouglas* in the `#sbt` channel on the [Scala Discord
   server](https://discord.com/invite/scala)
 

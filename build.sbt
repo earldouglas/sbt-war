@@ -48,7 +48,7 @@ developers := List(
     url = url("https://earldouglas.com/")
   )
 )
-homepage := Some(url("https://github.com/earldouglas/xsbt-web-plugin"))
+homepage := Some(url("https://github.com/earldouglas/sbt-war"))
 licenses := List(
   "BSD New" -> url("https://opensource.org/licenses/BSD-3-Clause")
 )
@@ -61,8 +61,8 @@ publishTo := Some(
 )
 scmInfo := Some(
   ScmInfo(
-    url("https://github.com/earldouglas/xsbt-web-plugin"),
-    "scm:git@github.com:earldouglas/xsbt-web-plugin.git"
+    url("https://github.com/earldouglas/sbt-war"),
+    "scm:git@github.com:earldouglas/sbt-war.git"
   )
 )
 ThisBuild / versionScheme := Some("semver-spec")

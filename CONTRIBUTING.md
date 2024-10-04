@@ -98,5 +98,5 @@ $ git tag 4.2.5
 $ git push --tags origin
 ```
 
-Update the [Giter8 template](https://github.com/earldouglas/xsbt-web-plugin.g8)
+Update the [Giter8 template](https://github.com/earldouglas/sbt-war.g8)
 to use the new version.
