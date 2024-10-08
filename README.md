@@ -55,7 +55,7 @@ sbt.version=1.10.2
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "sbt-war" % "5.0.0-M1")
+addSbtPlugin("com.earldouglas" % "sbt-war" % "5.0.0-M2")
 ```
 
 *build.sbt:*
