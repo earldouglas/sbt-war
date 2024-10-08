@@ -10,8 +10,8 @@ import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicReference
 import scala.sys.process.{Process => ScalaProcess}
 
-/** Launches the webapp file managed by WebappComponentsPlugin. Uses a
-  * forked JVM to run Tomcat via
+/** Launches the webapp components managed by WebappComponentsPlugin.
+  * Uses a forked JVM to run Tomcat via
   * com.earldouglas:webapp-components-runner.
   */
 object WebappComponentsRunnerPlugin extends AutoPlugin {
@@ -66,12 +66,12 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
           .writeString(
             Paths.get(configurationFile.getPath()),
             s"""|hostname=localhost
-              |port=${webappPort.value}
-              |contextPath=
-              |emptyWebappDir=${emptyDir}
-              |emptyClassesDir=${emptyDir}
-              |resourceMap=${resourceMapString}
-              |""".stripMargin
+                |port=${webappPort.value}
+                |contextPath=
+                |emptyWebappDir=${emptyDir}
+                |emptyClassesDir=${emptyDir}
+                |resourceMap=${resourceMapString}
+                |""".stripMargin
           )
           .toFile()
       }
@@ -114,6 +114,14 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
           }
       }
 
+    val runnerLibraries: Initialize[Seq[ModuleID]] =
+      Def.setting {
+        Seq(
+          "com.earldouglas" % "webapp-components-runner" % webappComponentsRunnerVersion.value % Webapp,
+          "com.heroku" % "webapp-runner" % webappRunnerVersion.value % Webapp
+        )
+      }
+
     Seq(
       webappPort := 8080,
       webappStart := startWebapp.value,
@@ -122,11 +130,7 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       webappForkOptions := ForkOptions(),
       Global / onLoad := onLoadSetting.value,
       webappComponentsRunnerVersion := BuildInfo.webappComponentsRunnerVersion,
-      libraryDependencies ++=
-        Seq(
-          "com.earldouglas" % "webapp-components-runner" % webappComponentsRunnerVersion.value % Webapp,
-          "com.heroku" % "webapp-runner" % webappRunnerVersion.value % Webapp
-        )
+      libraryDependencies ++= runnerLibraries.value
     )
   }
 }

@@ -29,7 +29,6 @@ libraryDependencies += "com.heroku" % "webapp-runner" % webappRunnerVersion.valu
 // webapp-components-runner
 lazy val webappComponentsRunnerVersion =
   settingKey[String]("webapp-components-runner version")
-resolvers += "Sonatype OSS Staging" at "https://oss.sonatype.org/content/repositories/staging"
 webappComponentsRunnerVersion := "10.1.28.0.0-M1"
 libraryDependencies += "com.earldouglas" % "webapp-components-runner" % webappComponentsRunnerVersion.value % Provided
 

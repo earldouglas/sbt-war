@@ -12,5 +12,3 @@ semanticdbEnabled := true
 semanticdbVersion := scalafixSemanticdb.revision
 
 scalacOptions += "-Wunused:all"
-
-resolvers += "Sonatype OSS Staging" at "https://oss.sonatype.org/content/repositories/staging"
