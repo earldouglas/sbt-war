@@ -115,15 +115,17 @@ Create a .war file with `package`:
 
 ## Settings and commands
 
-| Setting Key           | Type               | Default           | Notes                                                                   |
-| --------------------- | ------------------ | ----------------- | ----------------------------------------------------------------------- |
-| `webappResources`     | `Map[String,File]` | *src/main/webapp* | Static files (HTML, CSS, JS, images, etc.) to serve directly            |
-| `webappClasses`       | `Map[String,File]` | project classes   | .class files to copy into the *WEB-INF/classes* directory               |
-| `webappLib`           | `Map[String,File]` | project libs      | .jar files to copy into the *WEB-INF/lib* directory                     |
-| `webappRunnerVersion` | `String`           | `"10.1.28.0"`     | The version of `com.heroku:webapp-runner` to use for running the webapp |
-| `webappPort`          | `Int`              | `8080`            | The local container port to use when running with `webappStart`         |
-| `warPort`             | `Int`              | `8080`            | The local container port to use when running with `warStart`            |
-| `warForkOptions`      | `ForkOptions`      | `ForkOptions()`   | Options for the forked JVM used when running with `warStart`            |
+| Setting Key                     | Type               | Default           | Notes                                                                                   |
+| ------------------------------- | ------------------ | ----------------- | --------------------------------------------------------------------------------------- |
+| `webappResources`               | `Map[String,File]` | *src/main/webapp* | Static files (HTML, CSS, JS, images, etc.) to serve directly                            |
+| `webappClasses`                 | `Map[String,File]` | project classes   | .class files to copy into the *WEB-INF/classes* directory                               |
+| `webappLib`                     | `Map[String,File]` | project libs      | .jar files to copy into the *WEB-INF/lib* directory                                     |
+| `webappRunnerVersion`           | `String`           | `"10.1.28.0"`     | The version of `com.heroku:webapp-runner` to use for running the webapp                 |
+| `webappComponentsRunnerVersion` | `String`           | `"10.1.28.0-M1"`  | The version of `com.earldouglas:webapp-components-runner` to use for running the webapp |
+| `webappPort`                    | `Int`              | `8080`            | The local container port to use when running with `webappStart`                         |
+| `warPort`                       | `Int`              | `8080`            | The local container port to use when running with `warStart`                            |
+| `webappForkOptions`             | `ForkOptions`      | `ForkOptions()`   | Options for the forked JVM used when running with `webappStart`                         |
+| `warForkOptions`                | `ForkOptions`      | `ForkOptions()`   | Options for the forked JVM used when running with `warStart`                            |
 
 | Task Key      | Notes                                                                   |
 | ------------- | ----------------------------------------------------------------------- |
@@ -229,11 +231,22 @@ libraryDependencies += "foo" % "bar" % "1.0.0" % Provided
 ### `webappRunnerVersion`
 
 By default, [Webapp Runner](https://github.com/heroku/webapp-runner)
-10.1.x is used.  To use a different version, set `War /
-webappRunnerVersion`:
+10.1.x is used to run the .war file in a forked JVM.  To use a different
+version, set `webappRunnerVersion`:
 
 ```scala
 webappRunnerVersion := "9.0.93.0"
+```
+
+### `webappComponentsRunnerVersion`
+
+By default, [Webapp Components
+Runner](https://github.com/earldouglas/webapp-components-runner) 10.1.x
+is used to run the webapp in a forked JVM.  To use a different version,
+set `webappComponentsRunnerVersion`:
+
+```scala
+webappComponentsRunnerVersion := "9.0.93.0.0"
 ```
 
 ### `warPort` and `webappPort`
@@ -262,6 +275,28 @@ For example: to attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
 
 ```scala
 warForkOptions :=
+  ForkOptions()
+    .withRunJVMOptions(
+      Seq(
+        "-Xdebug",
+        "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
+      )
+    )
+```
+
+### `webappForkOptions`
+
+To set environment variables, system properties, and more for the
+forked container JVM, set a
+[ForkOptions](https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html)
+instance via `webappForkOptions`.
+
+For example: to attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
+
+*build.sbt:*
+
+```scala
+webappForkOptions :=
   ForkOptions()
     .withRunJVMOptions(
       Seq(
