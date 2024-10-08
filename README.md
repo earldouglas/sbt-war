@@ -231,7 +231,8 @@ libraryDependencies += "foo" % "bar" % "1.0.0" % Provided
 ### `webappRunnerVersion`
 
 By default, [Webapp Runner](https://github.com/heroku/webapp-runner)
-10.1.x is used.  To use a different version, set `webappRunnerVersion`:
+10.1.x is used to run the .war file in a forked JVM.  To use a different
+version, set `webappRunnerVersion`:
 
 ```scala
 webappRunnerVersion := "9.0.93.0"
@@ -241,7 +242,8 @@ webappRunnerVersion := "9.0.93.0"
 
 By default, [Webapp Components
 Runner](https://github.com/earldouglas/webapp-components-runner) 10.1.x
-is used.  To use a different version, set `webappComponentsRunnerVersion`:
+is used to run the webapp in a forked JVM.  To use a different version,
+set `webappComponentsRunnerVersion`:
 
 ```scala
 webappComponentsRunnerVersion := "9.0.93.0.0"
