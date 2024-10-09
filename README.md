@@ -114,9 +114,9 @@ Create a .war file with `package`:
 > package
 ```
 
-## Settings and commands
+## Settings
 
-| Setting Key                     | Type               | Default           | Notes                                                                                   |
+| Key                             | Type               | Default           | Notes                                                                                   |
 | ------------------------------- | ------------------ | ----------------- | --------------------------------------------------------------------------------------- |
 | `webappResources`               | `Map[String,File]` | *src/main/webapp* | Static files (HTML, CSS, JS, images, etc.) to serve directly                            |
 | `webappClasses`                 | `Map[String,File]` | project classes   | .class files to copy into the *WEB-INF/classes* directory                               |
@@ -125,10 +125,12 @@ Create a .war file with `package`:
 | `webappComponentsRunnerVersion` | `String`           | `"10.1.28.0-M1"`  | The version of `com.earldouglas:webapp-components-runner` to use for running the webapp |
 | `webappPort`                    | `Int`              | `8080`            | The local container port to use when running with `webappStart`                         |
 | `warPort`                       | `Int`              | `8080`            | The local container port to use when running with `warStart`                            |
-| `webappForkOptions`             | `ForkOptions`      | `ForkOptions()`   | Options for the forked JVM used when running with `webappStart`                         |
-| `warForkOptions`                | `ForkOptions`      | `ForkOptions()`   | Options for the forked JVM used when running with `warStart`                            |
+| `webappForkOptions`             | `ForkOptions`      | Buffered output   | Options for the forked JVM used when running with `webappStart`                         |
+| `warForkOptions`                | `ForkOptions`      | Buffered output   | Options for the forked JVM used when running with `warStart`                            |
 
-| Task Key      | Notes                                                                   |
+## Commands
+
+| Key           | Notes                                                                   |
 | ------------- | ----------------------------------------------------------------------- |
 | `warStart`    | Starts a local container, serving content from the packaged .war file   |
 | `warJoin`     | Blocks until the container shuts down                                   |
