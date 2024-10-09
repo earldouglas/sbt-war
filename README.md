@@ -4,18 +4,15 @@
 
 # sbt-war
 
-sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for building Web
-apps with [servlets](https://en.wikipedia.org/wiki/Java_servlet).
+sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for building
+webapps with [servlets](https://en.wikipedia.org/wiki/Java_servlet).
+sbt-war can package your project as a .war file, and run it in Tomcat.
 
 sbt-war is formerly known as xsbt-web-plugin.  For documentation and
 source code of prior versions, browse this repository from the desired
 git tag.  The most recent prior version is
 [4.2.5](https://github.com/earldouglas/sbt-war/tree/4.2.5).
 
-## Features
-
-* Package your project as a *.war* file
-* Run your project in a Tomcat container
 
 ## Requirements
 
