@@ -1,5 +1,6 @@
 [![Build status](https://github.com/earldouglas/sbt-war/workflows/build/badge.svg)](https://github.com/earldouglas/sbt-war/actions)
 [![Latest version](https://img.shields.io/github/tag/earldouglas/sbt-war.svg)](https://index.scala-lang.org/earldouglas/sbt-war)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.earldouglas/sbt-war/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.earldouglas/sbt-war)
 
 # sbt-war
 
