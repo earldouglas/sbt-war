@@ -101,7 +101,7 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       }
 
     val joinWebapp: Initialize[Task[Unit]] =
-      Def.task(containerInstance.get.map(_.exitValue))
+      Def.task(containerInstance.get.map(_.exitValue()))
 
     val stopWebapp: Initialize[Task[Unit]] =
       Def.task(stopContainerInstance())

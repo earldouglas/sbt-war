@@ -81,7 +81,7 @@ object WarPackageRunnerPlugin extends AutoPlugin {
       }
 
     val joinWar: Initialize[Task[Unit]] =
-      Def.task(containerInstance.get.map(_.exitValue))
+      Def.task(containerInstance.get.map(_.exitValue()))
 
     val stopWar: Initialize[Task[Unit]] =
       Def.task(stopContainerInstance())
