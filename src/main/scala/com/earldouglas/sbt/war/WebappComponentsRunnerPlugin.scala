@@ -23,7 +23,7 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
     lazy val webappJoin = taskKey[Unit]("join webapp container")
     lazy val webappStop = taskKey[Unit]("stop webapp container")
     lazy val webappForkOptions =
-      settingKey[ForkOptions]("webapp container fork options")
+      taskKey[ForkOptions]("webapp container fork options")
     lazy val webappComponentsRunnerVersion =
       settingKey[String]("webapp-components-runner version")
   }
@@ -106,6 +106,12 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
     val stopWebapp: Initialize[Task[Unit]] =
       Def.task(stopContainerInstance())
 
+    val forkOptions: Initialize[Task[ForkOptions]] =
+      Def.task {
+        ForkOptions()
+          .withOutputStrategy(Some(BufferedOutput(streams.value.log)))
+      }
+
     val onLoadSetting: Initialize[State => State] =
       Def.setting {
         (Global / onLoad).value
@@ -127,7 +133,7 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       webappStart := startWebapp.value,
       webappJoin := joinWebapp.value,
       webappStop := stopWebapp.value,
-      webappForkOptions := ForkOptions(),
+      webappForkOptions := forkOptions.value,
       Global / onLoad := onLoadSetting.value,
       webappComponentsRunnerVersion := BuildInfo.webappComponentsRunnerVersion,
       libraryDependencies ++= runnerLibraries.value

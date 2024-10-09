@@ -21,7 +21,7 @@ object WarPackageRunnerPlugin extends AutoPlugin {
     lazy val warJoin = taskKey[Unit]("join war container")
     lazy val warStop = taskKey[Unit]("stop war container")
     lazy val warForkOptions =
-      settingKey[ForkOptions]("war container fork options")
+      taskKey[ForkOptions]("war container fork options")
   }
 
   import autoImport._
@@ -94,15 +94,25 @@ object WarPackageRunnerPlugin extends AutoPlugin {
           }
       }
 
+    val forkOptions: Initialize[Task[ForkOptions]] =
+      Def.task {
+        ForkOptions()
+          .withOutputStrategy(Some(BufferedOutput(streams.value.log)))
+      }
+
+    val runnerLibrary: Initialize[ModuleID] =
+      Def.setting {
+        ("com.heroku" % "webapp-runner" % webappRunnerVersion.value intransitive ()) % War
+      }
+
     Seq(
       warPort := 8080,
       warStart := startWar.value,
       warJoin := joinWar.value,
       warStop := stopWar.value,
-      warForkOptions := ForkOptions(),
+      warForkOptions := forkOptions.value,
       Global / onLoad := onLoadSetting.value,
-      libraryDependencies +=
-        ("com.heroku" % "webapp-runner" % webappRunnerVersion.value intransitive ()) % War
+      libraryDependencies += runnerLibrary.value
     )
   }
 }
