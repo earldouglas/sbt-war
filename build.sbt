@@ -48,7 +48,7 @@ Test / fork := true
 credentials := List(
   Credentials(Path.userHome / ".sbt" / "sonatype_credentials")
 )
-description := "Servlet support for sbt"
+description := "Package and run .war files with sbt"
 developers := List(
   Developer(
     id = "earldouglas",
