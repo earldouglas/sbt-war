@@ -35,7 +35,6 @@ name [My Web Project]: hello sbt-war
 Template applied in ./hello-sbt-war
 
 $ cd hello-sbt-war/
-
 $ sbt
 > webappStart
 ```
@@ -110,11 +109,11 @@ class MyServlet extends HttpServlet:
     res.getWriter.write("""<h1>Hello, world!</h1>""")
 ```
 
-Run it from sbt with `warStart`:
+Run it from sbt with `webappStart`:
 
 ```
 $ sbt
-> warStart
+> webappStart
 ```
 
 ```
@@ -122,10 +121,10 @@ $ curl localhost:8080/hello
 <h1>Hello, world!</h1>
 ```
 
-Stop it with `warStop`:
+Stop it with `webappStop`:
 
 ```
-> warStop
+> webappStop
 ```
 
 Create a .war file with `package`:
@@ -152,12 +151,12 @@ Create a .war file with `package`:
 
 | Key           | Notes                                                                   |
 | ------------- | ----------------------------------------------------------------------- |
-| `warStart`    | Starts a local container, serving content from the packaged .war file   |
-| `warJoin`     | Blocks until the container shuts down                                   |
-| `warStop`     | Shuts down the container                                                |
 | `webappStart` | Starts a local container, serving content directly from project sources |
 | `webappJoin`  | Blocks until the container shuts down                                   |
 | `webappStop`  | Shuts down the container                                                |
+| `warStart`    | Starts a local container, serving content from the packaged .war file   |
+| `warJoin`     | Blocks until the container shuts down                                   |
+| `warStop`     | Shuts down the container                                                |
 
 ### `war` vs. `webapp`
 
@@ -329,39 +328,39 @@ webappForkOptions :=
     )
 ```
 
-### `warStart` and `webappStart`
-
-```
-> warStart
-```
+### `webappStart` and `warStart`
 
 ```
 > webappStart
 ```
 
-### `warJoin` and `webappJoin`
-
-To block sbt while the container is running, use `warJoin`/`webappJoin`:
-
 ```
-$ sbt warStart warJoin
+> warStart
 ```
+
+### `webappJoin` and `warJoin`
+
+These can be used to block sbt while the container is running:
 
 ```
 $ sbt webappStart webappJoin
 ```
 
+```
+$ sbt warStart warJoin
+```
+
 This is useful for running sbt in production (e.g. in a Docker
 container), if you're into that kind of thing.
 
-### `warStop` and `webappStop`
+### `webappStop` and `warStop`
 
-Stop the running container with `warStop`/`webappStop`:
-
-```
-> warStop
-```
+These can be used to stop the running container:
 
 ```
 > webappStop
+```
+
+```
+> warStop
 ```
