@@ -1,6 +1,6 @@
 [![Build status](https://github.com/earldouglas/sbt-war/workflows/build/badge.svg)](https://github.com/earldouglas/sbt-war/actions)
-[![Latest version](https://img.shields.io/github/tag/earldouglas/sbt-war.svg)](https://index.scala-lang.org/earldouglas/sbt-war)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.earldouglas/sbt-war/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.earldouglas/sbt-war)
+[![Latest version](https://img.shields.io/github/v/tag/earldouglas/sbt-war)](https://github.com/earldouglas/sbt-war/tags)
+[![Maven Central](https://img.shields.io/maven-central/v/com.earldouglas/sbt-war_2.12_1.0)](https://repo1.maven.org/maven2/com/earldouglas/sbt-war_2.12_1.0/)
 
 # sbt-war
 
