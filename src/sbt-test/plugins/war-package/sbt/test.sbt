@@ -116,13 +116,14 @@ InputKey[Unit]("checkManifest") := {
 
   import java.io.InputStream
   import java.util.zip.ZipFile
-  import sbt.Keys.{`package` => pkg}
   import scala.io.Source
 
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
-  val manifestAttribute: String = args(0)
 
-  val zipFile: ZipFile = new ZipFile(pkg.value)
+  val zipFile: ZipFile = new ZipFile(args(0))
+  val rule: String = args(1)
+  val manifestAttribute: String = args(2)
+
   val manifestFilename: String = "META-INF/MANIFEST.MF"
 
   Option(zipFile.getEntry(manifestFilename)) match {
@@ -131,15 +132,30 @@ InputKey[Unit]("checkManifest") := {
       val manifestLines: Seq[String] =
         Source.fromInputStream(is).getLines().toSeq
 
-      if (manifestLines.contains(manifestAttribute)) {
-        ()
-      } else {
-        sys.error(
-          "Manifest " +
-          manifestFilename +
-          " is missing expected attribute " +
-          manifestAttribute
-        )
+      (rule, manifestLines.contains(manifestAttribute)) match {
+        case ("includes", true) =>
+          ()
+        case ("includes", false) =>
+          sys.error(
+            "Manifest " +
+            manifestFilename +
+            " is missing expected attribute " +
+            manifestAttribute
+          )
+        case ("excludes", true) =>
+          sys.error(
+            "Manifest " +
+            manifestFilename +
+            " contains unexpected attribute " +
+            manifestAttribute
+          )
+        case ("excludes", false) =>
+          ()
+        case _ =>
+          sys.error(
+            "Invalid rule " +
+            rule
+          )
       }
     case None =>
       sys.error(

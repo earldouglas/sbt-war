@@ -8,9 +8,9 @@ $ absent target/scala-3.5.0/war-package_3-0.1.0-SNAPSHOT.war
 > package
 $ exists target/scala-3.5.0/war-package_3-0.1.0-SNAPSHOT.war
 
-> checkManifest "Manifest-Version: 1.0"
+> checkManifest target/scala-3.5.0/war-package_3-0.1.0-SNAPSHOT.war includes "Manifest-Version: 1.0"
 
--> checkManifest "Sealed: true"
+> checkManifest target/scala-3.5.0/war-package_3-0.1.0-SNAPSHOT.war excludes "Sealed: true"
 > 'set sbt.Keys.`package` / packageOptions += Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )'
 > package
-> checkManifest "Sealed: true"
+> checkManifest target/scala-3.5.0/war-package_3-0.1.0-SNAPSHOT.war includes "Sealed: true"
