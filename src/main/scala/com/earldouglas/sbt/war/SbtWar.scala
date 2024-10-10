@@ -53,12 +53,7 @@ object SbtWar extends AutoPlugin {
         }
 
     val runnerJars: Initialize[Task[Seq[File]]] =
-      Def.task {
-        Classpaths
-          .managedJars(War, classpathTypes.value, update.value)
-          .map(_.data)
-          .toList
-      }
+      Compat.managedJars(War)
 
     val startWar: Initialize[Task[Unit]] =
       Def.task {
@@ -74,7 +69,10 @@ object SbtWar extends AutoPlugin {
               "webapp.runner.launch.Main",
               "--port",
               warPort.value.toString(),
-              pkg.value.getPath()
+              Compat
+                .toFile(pkg)
+                .value
+                .getPath()
             )
           )
         containerInstance.set(Some(process))
@@ -88,10 +86,8 @@ object SbtWar extends AutoPlugin {
 
     val onLoadSetting: Initialize[State => State] =
       Def.setting {
-        (Global / onLoad).value
-          .compose { state: State =>
-            state.addExitHook(stopContainerInstance(println(_)))
-          }
+        Compat.Global_onLoad.value
+          .compose(_.addExitHook(stopContainerInstance(println(_))))
       }
 
     val forkOptions: Initialize[Task[ForkOptions]] =
@@ -112,17 +108,17 @@ object SbtWar extends AutoPlugin {
 
         val runnerConfigFile: File = {
 
-          val emptyDir: File = (Compile / target).value / "empty"
+          val emptyDir: File = (Compat.Compile_target).value / "empty"
 
           val resourceMapString =
-            WebappComponentsPlugin.warContents.value
+            Compat.warContents.value
               .map { case (k, v) =>
                 s"${k}->${v}"
               }
               .mkString(",")
 
           val configurationFile: File =
-            (Compile / target).value / "webapp-components.properties"
+            (Compat.Compile_target).value / "webapp-components.properties"
 
           Files
             .writeString(
@@ -155,7 +151,7 @@ object SbtWar extends AutoPlugin {
       }
 
     Seq(
-      Global / onLoad := onLoadSetting.value,
+      Compat.Global_onLoad := onLoadSetting.value,
       libraryDependencies ++= runnerLibraries.value,
       warForkOptions := forkOptions.value,
       warJoin := joinWar.value,

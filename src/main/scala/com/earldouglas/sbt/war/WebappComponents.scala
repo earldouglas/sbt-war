@@ -20,7 +20,8 @@ object WebappComponents {
     *   a mapping from destination to source of webapp resources
     */
   def getResources(resourcesDir: File): Map[String, File] = {
-    (resourcesDir ** "*").get
+    (resourcesDir ** "*")
+      .get()
       .filter(_.exists())
       .filter(_.isFile())
       .flatMap(file =>
@@ -47,7 +48,7 @@ object WebappComponents {
     val classesMappings: Seq[(String, File)] =
       for {
         classpathDir <- classpathDirs
-        classFile <- (classpathDir ** "*").get
+        classFile <- (classpathDir ** "*").get()
         if classFile.exists()
         if classFile.isFile()
         relativeFile <- IO.relativizeFile(classpathDir, classFile)
