@@ -111,3 +111,42 @@ lazy val checkWar: Def.Initialize[Task[Unit]] =
       obtained = contents
     )
   }
+
+InputKey[Unit]("checkManifest") := {
+
+  import java.io.InputStream
+  import java.util.zip.ZipFile
+  import sbt.Keys.{`package` => pkg}
+  import scala.io.Source
+
+  val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
+  val manifestAttribute: String = args(0)
+
+  val zipFile: ZipFile = new ZipFile(pkg.value)
+  val manifestFilename: String = "META-INF/MANIFEST.MF"
+
+  Option(zipFile.getEntry(manifestFilename)) match {
+    case Some(e) =>
+      val is: InputStream = zipFile.getInputStream(e)
+      val manifestLines: Seq[String] =
+        Source.fromInputStream(is).getLines().toSeq
+
+      if (manifestLines.contains(manifestAttribute)) {
+        ()
+      } else {
+        sys.error(
+          "Manifest " +
+          manifestFilename +
+          " is missing expected attribute " +
+          manifestAttribute
+        )
+      }
+    case None =>
+      sys.error(
+        "File " +
+        manifestFilename +
+        " not found in zip " +
+        zipFile
+      )
+  }
+}
