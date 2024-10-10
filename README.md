@@ -4,9 +4,8 @@
 
 # sbt-war
 
-sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for building
-webapps with [servlets](https://en.wikipedia.org/wiki/Java_servlet).
-sbt-war can package your project as a .war file, and run it in Tomcat.
+sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for packaging and
+running .war files.
 
 sbt-war is formerly known as xsbt-web-plugin.  For documentation and
 source code of prior versions, browse this repository from the desired
@@ -26,7 +25,31 @@ git tag.  The most recent prior version is
 * Look for *earldouglas* in the `#sbt` channel on the [Scala Discord
   server](https://discord.com/invite/scala)
 
-## Usage
+## Getting started from a template
+
+```
+$ sbt new earldouglas/sbt-war.g8
+
+name [My Web Project]: hello sbt-war
+
+Template applied in ./hello-sbt-war
+
+$ cd hello-sbt-war/
+
+$ sbt
+> webappStart
+```
+
+```
+$ curl localhost:8080/hello
+<h1>Hello, world!</h1>
+```
+
+```
+> webappStop
+```
+
+## Getting started from scratch
 
 Create a new empty project:
 
