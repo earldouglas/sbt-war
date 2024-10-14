@@ -26,6 +26,8 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       taskKey[ForkOptions]("webapp container fork options")
     lazy val webappComponentsRunnerVersion =
       settingKey[String]("webapp-components-runner version")
+    lazy val webappComponentsRunnerMainClass =
+      settingKey[String]("webapp-components-runner main class")
   }
 
   import autoImport._
@@ -93,7 +95,7 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
             Seq(
               "-cp",
               Path.makeString(runnerJars),
-              "com.earldouglas.WebappComponentsRunner",
+              webappComponentsRunnerMainClass.value,
               runnerConfigFile.value.getPath()
             )
           )
@@ -136,7 +138,8 @@ object WebappComponentsRunnerPlugin extends AutoPlugin {
       webappForkOptions := forkOptions.value,
       Global / onLoad := onLoadSetting.value,
       webappComponentsRunnerVersion := BuildInfo.webappComponentsRunnerVersion,
-      libraryDependencies ++= runnerLibraries.value
+      libraryDependencies ++= runnerLibraries.value,
+      webappComponentsRunnerMainClass := "com.earldouglas.WebappComponentsRunner"
     )
   }
 }

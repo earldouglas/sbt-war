@@ -22,6 +22,8 @@ object WarPackageRunnerPlugin extends AutoPlugin {
     lazy val warStop = taskKey[Unit]("stop war container")
     lazy val warForkOptions =
       taskKey[ForkOptions]("war container fork options")
+    lazy val warMainClass =
+      settingKey[String]("war container main class")
   }
 
   import autoImport._
@@ -47,37 +49,26 @@ object WarPackageRunnerPlugin extends AutoPlugin {
       Def.task {
         stopContainerInstance()
 
-        val runners: Seq[File] =
+        val runnerJars: Seq[File] =
           Classpaths
             .managedJars(War, classpathTypes.value, update.value)
             .map(_.data)
             .toList
 
-        runners match {
-          case runner :: Nil =>
-            streams.value.log.info("[sbt-war] Starting server")
-            val process: ScalaProcess =
-              Fork.java.fork(
-                warForkOptions.value,
-                Seq(
-                  "-jar",
-                  runner.file.getPath(),
-                  "--port",
-                  warPort.value.toString(),
-                  pkg.value.getPath()
-                )
-              )
-            containerInstance.set(Some(process))
-          case _ :: _ =>
-            streams.value.log.error(
-              s"""[sbt-war] Expected one runner, but found ${runners.length}: ${runners
-                  .mkString("\n  * ", "  * ", "")}"""
+        streams.value.log.info("[sbt-war] Starting server")
+        val process: ScalaProcess =
+          Fork.java.fork(
+            warForkOptions.value,
+            Seq(
+              "-cp",
+              Path.makeString(runnerJars),
+              warMainClass.value,
+              "--port",
+              warPort.value.toString(),
+              pkg.value.getPath()
             )
-          case _ =>
-            streams.value.log.error(
-              """[sbt-war] Expected a runner, but found none"""
-            )
-        }
+          )
+        containerInstance.set(Some(process))
       }
 
     val joinWar: Initialize[Task[Unit]] =
@@ -112,7 +103,8 @@ object WarPackageRunnerPlugin extends AutoPlugin {
       warStop := stopWar.value,
       warForkOptions := forkOptions.value,
       Global / onLoad := onLoadSetting.value,
-      libraryDependencies += runnerLibrary.value
+      libraryDependencies += runnerLibrary.value,
+      warMainClass := "webapp.runner.launch.Main"
     )
   }
 }
