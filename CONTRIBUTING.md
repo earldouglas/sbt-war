@@ -61,7 +61,7 @@ Create a staging release in Sonatype:
 $ nix-shell
 $ sbt
 > set version := "4.2.5"
-> publishSigned
+> +publishSigned
 ```
 
 Review it:

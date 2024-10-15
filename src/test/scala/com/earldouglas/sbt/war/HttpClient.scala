@@ -42,12 +42,14 @@ object HttpClient {
     val response =
       Response(
         status = c.getResponseCode(),
-        headers = c
-          .getHeaderFields()
-          .asScala
-          .filter({ case (k, _) => k != null })
-          .map({ case (k, v) => (k, v.asScala.mkString(",")) })
-          .toMap - "Date" - "Content-Length" - "Server",
+        headers =
+          TestCompat
+            .asScala(c.getHeaderFields())
+            .filter({ case (k, _) => k != null })
+            .map({ case (k, v) =>
+              (k, TestCompat.asScala(v).mkString(","))
+            })
+            .toMap - "Date" - "Content-Length" - "Server",
         body = Source.fromInputStream {
           if (c.getResponseCode() < 400) {
             c.getInputStream
