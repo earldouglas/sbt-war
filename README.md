@@ -135,14 +135,14 @@ Create a .war file with `package`:
 
 ## Settings
 
-| Key                | Type               | Default           | Notes                                                                       |
-| ------------------ | ------------------ | ----------------- | --------------------------------------------------------------------------- |
-| `warResources`     | `Map[String,File]` | *src/main/webapp* | Static files (HTML, CSS, JS, images, etc.) to serve directly                |
-| `warClasses`       | `Map[String,File]` | project classes   | .class files to copy into the *WEB-INF/classes* directory                   |
-| `warLib`           | `Map[String,File]` | project libs      | .jar files to copy into the *WEB-INF/lib* directory                         |
-| `warRunnerVersion` | `String`           | `"10.1.28.0-M1"`  | The version of `com.earldouglas:webapp-components-runner` to run the webapp |
-| `warPort`          | `Int`              | `8080`            | The local container port to use when running with `warStart`                |
-| `warForkOptions`   | [`ForkOptions`]    | Buffered output   | Options for the forked JVM used when running with `warStart`                |
+| Key                | Type               | Default            | Notes                                                                       |
+| ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------- |
+| `warResources`     | `Map[String,File]` | *src/main/webapp*  | Static files (HTML, CSS, JS, images, etc.) to serve directly                |
+| `warClasses`       | `Map[String,File]` | project classes    | .class files to copy into the *WEB-INF/classes* directory                   |
+| `warLib`           | `Map[String,File]` | project libs       | .jar files to copy into the *WEB-INF/lib* directory                         |
+| `warRunnerVersion` | `String`           | `"10.1.28.0-M1"`   | The version of `com.earldouglas:webapp-components-runner` to run the webapp |
+| `warPort`          | `Int`              | `8080`             | The local container port to use when running with `warStart`                |
+| `warForkOptions`   | [`ForkOptions`]    | [`BufferedOutput`] | Options for the forked JVM used when running with `warStart`                |
 
 ## Commands
 
@@ -305,3 +305,4 @@ This can be used to stop the running container:
 ```
 
 [`ForkOptions`]: https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html
+[`BufferedOutput`]: https://www.scala-sbt.org/1.x/api/sbt/OutputStrategy$$BufferedOutput.html
