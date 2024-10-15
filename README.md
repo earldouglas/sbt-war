@@ -257,7 +257,8 @@ forked container JVM, set a
 [ForkOptions](https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html)
 instance via `warForkOptions`.
 
-For example: to attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
+For example: to be able to attach a debugger, set `-Xdebug` and
+`-Xrunjdwp`:
 
 *build.sbt:*
 
