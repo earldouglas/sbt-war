@@ -274,6 +274,8 @@ warForkOptions :=
 
 ### `warStart` and `warQuickstart`
 
+To run the webapp, use `warStart`:
+
 ```
 > warStart
 ```
@@ -287,7 +289,7 @@ To skip packaging the .war file before launching the container, use
 
 ### `warJoin`
 
-This can be used to block sbt while the container is running:
+To block sbt while the container is running, use `warJoin`:
 
 ```
 $ sbt warStart warJoin
@@ -298,7 +300,7 @@ container), if you're into that kind of thing.
 
 ### `warStop`
 
-This can be used to stop the running container:
+To stop the running container, use `warStop`:
 
 ```
 > warStop
