@@ -36,7 +36,7 @@ Template applied in ./hello-sbt-war
 
 $ cd hello-sbt-war/
 $ sbt
-> webappStart
+> warStart
 ```
 
 ```
@@ -45,7 +45,7 @@ $ curl localhost:8080/hello
 ```
 
 ```
-> webappStop
+> warStop
 ```
 
 ## Getting started from scratch
@@ -109,11 +109,11 @@ class MyServlet extends HttpServlet:
     res.getWriter.write("""<h1>Hello, world!</h1>""")
 ```
 
-Run it from sbt with `webappStart`:
+Run it from sbt with `warStart`:
 
 ```
 $ sbt
-> webappStart
+> warStart
 ```
 
 ```
@@ -121,10 +121,10 @@ $ curl localhost:8080/hello
 <h1>Hello, world!</h1>
 ```
 
-Stop it with `webappStop`:
+Stop it with `warStop`:
 
 ```
-> webappStop
+> warStop
 ```
 
 Create a .war file with `package`:
@@ -135,50 +135,30 @@ Create a .war file with `package`:
 
 ## Settings
 
-| Key                             | Type               | Default           | Notes                                                                                   |
-| ------------------------------- | ------------------ | ----------------- | --------------------------------------------------------------------------------------- |
-| `webappResources`               | `Map[String,File]` | *src/main/webapp* | Static files (HTML, CSS, JS, images, etc.) to serve directly                            |
-| `webappClasses`                 | `Map[String,File]` | project classes   | .class files to copy into the *WEB-INF/classes* directory                               |
-| `webappLib`                     | `Map[String,File]` | project libs      | .jar files to copy into the *WEB-INF/lib* directory                                     |
-| `webappRunnerVersion`           | `String`           | `"10.1.28.0"`     | The version of `com.heroku:webapp-runner` to use for running the webapp                 |
-| `webappComponentsRunnerVersion` | `String`           | `"10.1.28.0-M1"`  | The version of `com.earldouglas:webapp-components-runner` to use for running the webapp |
-| `webappPort`                    | `Int`              | `8080`            | The local container port to use when running with `webappStart`                         |
-| `warPort`                       | `Int`              | `8080`            | The local container port to use when running with `warStart`                            |
-| `webappForkOptions`             | `ForkOptions`      | Buffered output   | Options for the forked JVM used when running with `webappStart`                         |
-| `warForkOptions`                | `ForkOptions`      | Buffered output   | Options for the forked JVM used when running with `warStart`                            |
+| Key                | Type               | Default            | Notes                                                                       |
+| ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------- |
+| `warResources`     | `Map[String,File]` | *src/main/webapp*  | Static files (HTML, CSS, JS, images, etc.) to serve directly                |
+| `warClasses`       | `Map[String,File]` | project classes    | .class files to copy into the *WEB-INF/classes* directory                   |
+| `warLib`           | `Map[String,File]` | project libs       | .jar files to copy into the *WEB-INF/lib* directory                         |
+| `warRunnerVersion` | `String`           | `"10.1.28.0-M1"`   | The version of `com.earldouglas:webapp-components-runner` to run the webapp |
+| `warPort`          | `Int`              | `8080`             | The local container port to use when running with `warStart`                |
+| `warForkOptions`   | [`ForkOptions`]    | [`BufferedOutput`] | Options for the forked JVM used when running with `warStart`                |
 
 ## Commands
 
-| Key           | Notes                                                                   |
-| ------------- | ----------------------------------------------------------------------- |
-| `webappStart` | Starts a local container, serving content directly from project sources |
-| `webappJoin`  | Blocks until the container shuts down                                   |
-| `webappStop`  | Shuts down the container                                                |
-| `warStart`    | Starts a local container, serving content from the packaged .war file   |
-| `warJoin`     | Blocks until the container shuts down                                   |
-| `warStop`     | Shuts down the container                                                |
+| Key             | Notes                                                                   |
+| --------------- | ----------------------------------------------------------------------- |
+| `warStart`      | Starts a local container, serving content from the packaged .war file   |
+| `warQuickstart` | Starts a local container, serving content directly from project sources |
+| `warJoin`       | Blocks until the container shuts down                                   |
+| `warStop`       | Shuts down the container                                                |
 
-### `war` vs. `webapp`
+### `warResources`
 
-Settings and commands that begin with `war` apply to the packaged .war
-file, which includes resources, classes, and libraries. The development
-cycle can be sped up by serving resources, classes, and libraries
-directly from source, avoiding the overhead of packaging a
-*.war* file.
+Resources are the various static files, deployment descriptors, etc.
+that go into a .war file.
 
-Use the `webapp` prefix in place of `war` to skip packaging, and run the
-container directly from source:
-
-```
-> webappStart
-```
-
-### `webappResources`
-
-Webapp resources are the various static files, deployment descriptors,
-etc. that go into a .war file.
-
-The `webappResources` setting is a mapping from destination to source of
+The `warResources` setting is a mapping from destination to source of
 these files.  The destination is a path relative to the contents of the
 .war file.  The source is a path on the local filesystem.
 
@@ -197,7 +177,7 @@ myproject.war
     └── MANIFEST.MF
 ```
 
-The `webappResources` mapping would look like this:
+The `warResources` mapping would look like this:
 
 ```
 "index.html" -> File(".../src/main/webapp/index.html")
@@ -208,7 +188,7 @@ The `webappResources` mapping would look like this:
 To use a different directory, e.g. *src/main/WebContent*:
 
 ```scala
-webappResources :=
+warResources :=
   (Compile / sourceDirectory)
     .map(_ / "WebContent")
     .map(WebappComponents.getResources)
@@ -224,7 +204,7 @@ sbt.Keys.`package` / packageOptions +=
   )
 ```
 
-### `webappClasses`
+### `warClasses`
 
 By default, project classes are copied into the *WEB-INF/classes*
 directory of the *.war* file.  To package them in a *.jar* file in the
@@ -238,7 +218,7 @@ See ["Configure
 packaging"](https://www.scala-sbt.org/1.x/docs/Howto-Package.html) in
 the sbt documentation for additional information.
 
-### `webappLib`
+### `warLib`
 
 By default, all runtime dependencies are copied into the *WEB-INF/lib*
 directory.
@@ -250,38 +230,24 @@ set its scope to `Provided`:
 libraryDependencies += "foo" % "bar" % "1.0.0" % Provided
 ```
 
-### `webappRunnerVersion`
-
-By default, [Webapp Runner](https://github.com/heroku/webapp-runner)
-10.1.x is used to run the .war file in a forked JVM.  To use a different
-version, set `webappRunnerVersion`:
-
-```scala
-webappRunnerVersion := "9.0.93.0"
-```
-
-### `webappComponentsRunnerVersion`
+### `warRunnerVersion`
 
 By default, [Webapp Components
 Runner](https://github.com/earldouglas/webapp-components-runner) 10.1.x
 is used to run the webapp in a forked JVM.  To use a different version,
-set `webappComponentsRunnerVersion`:
+set `warRunnerVersion`:
 
 ```scala
-webappComponentsRunnerVersion := "9.0.93.0.0"
+warRunnerVersion := "9.0.93.0.0"
 ```
 
-### `warPort` and `webappPort`
+### `warPort`
 
 By default, the container runs on port *8080*.  To use a different port,
-set `warPort`/`webappPort`:
+set `warPort`:
 
 ```scala
 warPort := 9090
-```
-
-```scala
-webappPort := 9090
 ```
 
 ### `warForkOptions`
@@ -291,7 +257,8 @@ forked container JVM, set a
 [ForkOptions](https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html)
 instance via `warForkOptions`.
 
-For example: to attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
+For example: to be able to attach a debugger, set `-Xdebug` and
+`-Xrunjdwp`:
 
 *build.sbt:*
 
@@ -306,45 +273,24 @@ warForkOptions :=
     )
 ```
 
-### `webappForkOptions`
+### `warStart` and `warQuickstart`
 
-To set environment variables, system properties, and more for the
-forked container JVM, set a
-[ForkOptions](https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html)
-instance via `webappForkOptions`.
-
-For example: to attach a debugger, set `-Xdebug` and `-Xrunjdwp`:
-
-*build.sbt:*
-
-```scala
-webappForkOptions :=
-  ForkOptions()
-    .withRunJVMOptions(
-      Seq(
-        "-Xdebug",
-        "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
-      )
-    )
-```
-
-### `webappStart` and `warStart`
-
-```
-> webappStart
-```
+To run the webapp, use `warStart`:
 
 ```
 > warStart
 ```
 
-### `webappJoin` and `warJoin`
-
-These can be used to block sbt while the container is running:
+To skip packaging the .war file before launching the container, use
+`warQuickstart`:
 
 ```
-$ sbt webappStart webappJoin
+> warQuickstart
 ```
+
+### `warJoin`
+
+To block sbt while the container is running, use `warJoin`:
 
 ```
 $ sbt warStart warJoin
@@ -353,14 +299,13 @@ $ sbt warStart warJoin
 This is useful for running sbt in production (e.g. in a Docker
 container), if you're into that kind of thing.
 
-### `webappStop` and `warStop`
+### `warStop`
 
-These can be used to stop the running container:
-
-```
-> webappStop
-```
+To stop the running container, use `warStop`:
 
 ```
 > warStop
 ```
+
+[`ForkOptions`]: https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html
+[`BufferedOutput`]: https://www.scala-sbt.org/1.x/api/sbt/OutputStrategy$$BufferedOutput.html

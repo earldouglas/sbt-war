@@ -11,13 +11,13 @@ import sbt._
   *
   * Webapp components are managed as three sets of mappings:
   *
-  *   - webappResources: All the static HTML, CSS, JS, images, etc.
-  *     files to be served by the application. Also, optionally, the
+  *   - warResources: All the static HTML, CSS, JS, images, etc. files
+  *     to be served by the application. Also, optionally, the
   *     WEB-INF/web.xml deployment descriptor.
-  *   - webappClasses: All of the classes, etc. on the classpath to be
+  *   - warClasses: All of the classes, etc. on the classpath to be
   *     copied into the WEB-INF/classes directory.
-  *   - webappLib: All of the .jar files to be copied into the
-  *     WEB-INF/lib directory.
+  *   - warLib: All of the .jar files to be copied into the WEB-INF/lib
+  *     directory.
   *
   * These mappings each have the type Map[String, File], where the key
   * is the relative path within the .war file (e.g.
@@ -28,13 +28,13 @@ object WebappComponentsPlugin extends AutoPlugin {
 
   object autoImport {
 
-    lazy val webappResources: TaskKey[Map[String, File]] =
+    lazy val warResources: TaskKey[Map[String, File]] =
       taskKey[Map[String, File]]("webapp resources")
 
-    lazy val webappClasses: TaskKey[Map[String, File]] =
+    lazy val warClasses: TaskKey[Map[String, File]] =
       taskKey[Map[String, File]]("webapp classes")
 
-    lazy val webappLib: TaskKey[Map[String, File]] =
+    lazy val warLib: TaskKey[Map[String, File]] =
       taskKey[Map[String, File]]("webapp lib")
   }
 
@@ -42,34 +42,34 @@ object WebappComponentsPlugin extends AutoPlugin {
 
   override def requires = plugins.JvmPlugin
 
-  lazy val webappContents: Initialize[Task[Map[String, File]]] =
+  lazy val warContents: Initialize[Task[Map[String, File]]] =
     Def.task {
-      webappResources.value ++
-        webappClasses.value ++
-        webappLib.value
+      warResources.value ++
+        warClasses.value ++
+        warLib.value
     }
 
   override val projectSettings: Seq[Setting[_]] = {
 
-    val webappResourcesTask: Initialize[Task[Map[String, File]]] =
+    val warResourcesTask: Initialize[Task[Map[String, File]]] =
       (Compile / sourceDirectory)
         .map(_ / "webapp")
         .map(WebappComponents.getResources)
 
-    val webappClassesTask: Initialize[Task[Map[String, File]]] =
+    val warClassesTask: Initialize[Task[Map[String, File]]] =
       (Runtime / fullClasspath)
         .map(_.files)
         .map(WebappComponents.getClasses)
 
-    val webappLibTask: Initialize[Task[Map[String, File]]] =
+    val warLibTask: Initialize[Task[Map[String, File]]] =
       (Runtime / fullClasspath)
         .map(_.files)
         .map(WebappComponents.getLib)
 
     Seq(
-      webappResources := webappResourcesTask.value,
-      webappClasses := webappClassesTask.value,
-      webappLib := webappLibTask.value
+      warResources := warResourcesTask.value,
+      warClasses := warClassesTask.value,
+      warLib := warLibTask.value
     )
   }
 }

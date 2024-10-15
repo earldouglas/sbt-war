@@ -20,24 +20,15 @@ semanticdbVersion := scalafixSemanticdb.revision
 scalacOptions += "-Ywarn-unused-import"
 scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
 
-// webapp-runner
-lazy val webappRunnerVersion =
-  settingKey[String]("webapp-runner version")
-webappRunnerVersion := "10.1.28.0"
-libraryDependencies += "com.heroku" % "webapp-runner" % webappRunnerVersion.value % Provided
-
 // webapp-components-runner
-lazy val webappComponentsRunnerVersion =
+lazy val warRunnerVersion =
   settingKey[String]("webapp-components-runner version")
-webappComponentsRunnerVersion := "10.1.28.0.0-M1"
-libraryDependencies += "com.earldouglas" % "webapp-components-runner" % webappComponentsRunnerVersion.value % Provided
+warRunnerVersion := "10.1.28.0.0-M1"
+libraryDependencies += "com.earldouglas" % "webapp-components-runner" % warRunnerVersion.value % Provided
 
 // sbt-buildinfo
 enablePlugins(BuildInfoPlugin)
-buildInfoKeys := Seq[BuildInfoKey](
-  webappRunnerVersion,
-  webappComponentsRunnerVersion
-)
+buildInfoKeys := Seq[BuildInfoKey](warRunnerVersion)
 buildInfoPackage := "com.earldouglas.sbt.war"
 
 // Testing
