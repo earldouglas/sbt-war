@@ -4,10 +4,8 @@ import sbt.AutoPlugin
 import sbt.Def.Initialize
 import sbt.Def.settingKey
 import sbt.Keys._
-import sbt.Keys._
 import sbt.Keys.{`package` => pkg}
 import sbt.Plugins
-import sbt._
 import sbt._
 
 import java.nio.file.Files
