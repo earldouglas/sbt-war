@@ -20,9 +20,9 @@ object WarPackagePlugin extends AutoPlugin {
 
   override lazy val projectSettings: Seq[Setting[_]] = {
 
-    // Flip webappContents around from (dst -> src) to (src -> dst)
+    // Flip warContents around from (dst -> src) to (src -> dst)
     val packageContents: Initialize[Task[Seq[(java.io.File, String)]]] =
-      WebappComponentsPlugin.webappContents
+      WebappComponentsPlugin.warContents
         .map(_.map(_.swap).toSeq)
 
     val packageTaskSettings: Seq[Setting[_]] =
