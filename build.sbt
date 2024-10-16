@@ -20,11 +20,11 @@ semanticdbVersion := scalafixSemanticdb.revision
 scalacOptions += "-Ywarn-unused-import"
 scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
 
-// webapp-components-runner
+// war-runner
 lazy val warRunnerVersion =
-  settingKey[String]("webapp-components-runner version")
-warRunnerVersion := "10.1.28.0.0-M1"
-libraryDependencies += "com.earldouglas" % "webapp-components-runner" % warRunnerVersion.value % Provided
+  settingKey[String]("war-runner version")
+warRunnerVersion := "10.1.28.0.0-M2"
+libraryDependencies += "com.earldouglas" % "war-runner" % warRunnerVersion.value % Provided
 
 // sbt-buildinfo
 enablePlugins(BuildInfoPlugin)

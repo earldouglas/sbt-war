@@ -62,6 +62,22 @@ object SbtWar extends AutoPlugin {
 
     val startWar: Initialize[Task[Unit]] =
       Def.task {
+
+        val runnerConfigFile: File = {
+
+          val configurationFile: File =
+            (Compile / target).value / "war.properties"
+
+          Files
+            .writeString(
+              Paths.get(configurationFile.getPath()),
+              s"""|port=${warPort.value}
+                  |warFile=${pkg.value.getPath()}
+                  |""".stripMargin
+            )
+            .toFile()
+        }
+
         stopContainerInstance(streams.value.log.info(_))
 
         streams.value.log.info("[sbt-war] Starting server")
@@ -71,10 +87,8 @@ object SbtWar extends AutoPlugin {
             Seq(
               "-cp",
               Path.makeString(runnerJars.value),
-              "webapp.runner.launch.Main",
-              "--port",
-              warPort.value.toString(),
-              pkg.value.getPath()
+              "com.earldouglas.WarRunner",
+              runnerConfigFile.getPath()
             )
           )
         containerInstance.set(Some(process))
@@ -103,7 +117,7 @@ object SbtWar extends AutoPlugin {
     val runnerLibraries: Initialize[Seq[ModuleID]] =
       Def.setting {
         Seq(
-          "com.earldouglas" % "webapp-components-runner" % BuildInfo.warRunnerVersion % War
+          "com.earldouglas" % "war-runner" % BuildInfo.warRunnerVersion % War
         )
       }
 
@@ -128,12 +142,12 @@ object SbtWar extends AutoPlugin {
             .writeString(
               Paths.get(configurationFile.getPath()),
               s"""|hostname=localhost
-                    |port=${warPort.value}
-                    |contextPath=
-                    |emptyWebappDir=${emptyDir}
-                    |emptyClassesDir=${emptyDir}
-                    |resourceMap=${resourceMapString}
-                    |""".stripMargin
+                  |port=${warPort.value}
+                  |contextPath=
+                  |emptyWebappDir=${emptyDir}
+                  |emptyClassesDir=${emptyDir}
+                  |resourceMap=${resourceMapString}
+                  |""".stripMargin
             )
             .toFile()
         }
