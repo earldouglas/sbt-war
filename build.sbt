@@ -15,9 +15,7 @@ lazy val warRunner =
   project
     .in(file("runner"))
     .settings(
-      //
       name := "war-runner",
-      //
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -28,20 +26,16 @@ lazy val warRunner =
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      //
-      // webapp-runner
       libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.28.0"
     )
 
-lazy val root =
+lazy val sbtWar =
   project
     .in(file("."))
     .enablePlugins(SbtPlugin)
     .enablePlugins(BuildInfoPlugin)
     .settings(
-      //
       name := "sbt-war",
-      //
       sbtPlugin := true,
       scalacOptions ++= Seq("-feature", "-deprecation"),
       scalaVersion := "2.12.18",
@@ -56,7 +50,6 @@ lazy val root =
       // sbt-buildinfo
       buildInfoPackage := "com.earldouglas.sbt.war",
       buildInfoKeys := Seq[BuildInfoKey](version)
-      //
     )
     .dependsOn(warRunner)
     .aggregate(warRunner)
