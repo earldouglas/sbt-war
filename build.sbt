@@ -15,8 +15,9 @@ lazy val warRunner =
   project
     .in(file("runner"))
     .settings(
-      // Java-only
+      //
       name := "war-runner",
+      //
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -38,6 +39,7 @@ lazy val root =
     .enablePlugins(SbtPlugin)
     .enablePlugins(BuildInfoPlugin)
     .settings(
+      //
       name := "sbt-war",
       //
       sbtPlugin := true,
