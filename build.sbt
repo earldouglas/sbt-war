@@ -1,46 +1,72 @@
 // General
-enablePlugins(SbtPlugin)
-name := "sbt-war"
-organization := "com.earldouglas"
-sbtPlugin := true
-scalacOptions ++= Seq("-feature", "-deprecation")
-scalaVersion := "2.12.18" // https://scalameta.org/metals/blog/2023/07/19/silver#support-for-scala-21218
-
-// scripted-plugin
-scriptedBufferLog := false
-watchSources ++= { (sourceDirectory.value ** "*").get }
-scriptedLaunchOpts +=
-  "-DtemplateDirectory=" + (sourceDirectory.value / "template")
-scriptedBatchExecution := true
-scriptedParallelInstances := 8
+ThisBuild / organization := "com.earldouglas"
 
 // Scalafix
-semanticdbEnabled := true
-semanticdbVersion := scalafixSemanticdb.revision
-scalacOptions += "-Ywarn-unused-import"
-scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
-
-// war-runner
-lazy val warRunnerVersion =
-  settingKey[String]("war-runner version")
-warRunnerVersion := "10.1.28.0.0-M2"
-libraryDependencies += "com.earldouglas" % "war-runner" % warRunnerVersion.value % Provided
-
-// sbt-buildinfo
-enablePlugins(BuildInfoPlugin)
-buildInfoKeys := Seq[BuildInfoKey](warRunnerVersion)
-buildInfoPackage := "com.earldouglas.sbt.war"
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+ThisBuild / scalacOptions += "-Ywarn-unused-import"
+ThisBuild / scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
 
 // Testing
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
-Test / fork := true
+ThisBuild / libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+ThisBuild / Test / fork := true
+
+lazy val warRunner =
+  project
+    .in(file("runner"))
+    .settings(
+      //
+      name := "war-runner",
+      //
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "11",
+          "-target",
+          "11",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      //
+      // webapp-runner
+      libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.28.0"
+    )
+
+lazy val root =
+  project
+    .in(file("."))
+    .enablePlugins(SbtPlugin)
+    .enablePlugins(BuildInfoPlugin)
+    .settings(
+      //
+      name := "sbt-war",
+      //
+      sbtPlugin := true,
+      scalacOptions ++= Seq("-feature", "-deprecation"),
+      scalaVersion := "2.12.18",
+      //
+      // scripted-plugin
+      scriptedBufferLog := false,
+      watchSources ++= { (sourceDirectory.value ** "*").get },
+      scriptedLaunchOpts += "-DtemplateDirectory=" + (sourceDirectory.value / "template"),
+      scriptedBatchExecution := true,
+      scriptedParallelInstances := 8,
+      //
+      // sbt-buildinfo
+      buildInfoPackage := "com.earldouglas.sbt.war",
+      buildInfoKeys := Seq[BuildInfoKey](version)
+      //
+    )
+    .dependsOn(warRunner)
+    .aggregate(warRunner)
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
-credentials := List(
+ThisBuild / credentials := List(
   Credentials(Path.userHome / ".sbt" / "sonatype_credentials")
 )
-description := "Package and run .war files with sbt"
-developers := List(
+ThisBuild / description := "Package and run .war files with sbt"
+ThisBuild / developers := List(
   Developer(
     id = "earldouglas",
     name = "James Earl Douglas",
@@ -48,18 +74,22 @@ developers := List(
     url = url("https://earldouglas.com/")
   )
 )
-homepage := Some(url("https://github.com/earldouglas/sbt-war"))
-licenses := List(
+ThisBuild / homepage := Some(
+  url("https://github.com/earldouglas/sbt-war")
+)
+ThisBuild / licenses := List(
   "BSD New" -> url("https://opensource.org/licenses/BSD-3-Clause")
 )
-organizationHomepage := Some(url("https://earldouglas.com/"))
-organizationName := "James Earl Douglas"
-pomIncludeRepository := { _ => false }
-publishMavenStyle := true
-publishTo := Some(
+ThisBuild / organizationHomepage := Some(
+  url("https://earldouglas.com/")
+)
+ThisBuild / organizationName := "James Earl Douglas"
+ThisBuild / pomIncludeRepository := { _ => false }
+ThisBuild / publishMavenStyle := true
+ThisBuild / publishTo := Some(
   "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 )
-scmInfo := Some(
+ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/earldouglas/sbt-war"),
     "scm:git@github.com:earldouglas/sbt-war.git"
