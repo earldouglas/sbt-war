@@ -140,7 +140,6 @@ Create a .war file with `package`:
 | `warResources`     | `Map[String,File]` | *src/main/webapp*  | Static files (HTML, CSS, JS, images, etc.) to serve directly                |
 | `warClasses`       | `Map[String,File]` | project classes    | .class files to copy into the *WEB-INF/classes* directory                   |
 | `warLib`           | `Map[String,File]` | project libs       | .jar files to copy into the *WEB-INF/lib* directory                         |
-| `warRunnerVersion` | `String`           | `"10.1.28.0-M1"`   | The version of `com.earldouglas:webapp-components-runner` to run the webapp |
 | `warPort`          | `Int`              | `8080`             | The local container port to use when running with `warStart`                |
 | `warForkOptions`   | [`ForkOptions`]    | [`BufferedOutput`] | Options for the forked JVM used when running with `warStart`                |
 
@@ -228,17 +227,6 @@ set its scope to `Provided`:
 
 ```scala
 libraryDependencies += "foo" % "bar" % "1.0.0" % Provided
-```
-
-### `warRunnerVersion`
-
-By default, [Webapp Components
-Runner](https://github.com/earldouglas/webapp-components-runner) 10.1.x
-is used to run the webapp in a forked JVM.  To use a different version,
-set `warRunnerVersion`:
-
-```scala
-warRunnerVersion := "9.0.93.0.0"
 ```
 
 ### `warPort`
