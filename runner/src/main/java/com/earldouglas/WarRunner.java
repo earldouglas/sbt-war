@@ -12,11 +12,11 @@ public class WarRunner {
 
     final WarConfiguration warConfiguration = WarConfiguration.load(args[0]);
 
-    final String[] webappRunnerArgs =
+    final String[] warRunnerArgs =
         new String[] {
           "--port", Integer.toString(warConfiguration.port), warConfiguration.warFile.getPath(),
         };
 
-    webapp.runner.launch.Main.main(webappRunnerArgs);
+    webapp.runner.launch.Main.main(warRunnerArgs);
   }
 }
