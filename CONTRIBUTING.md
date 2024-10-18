@@ -60,7 +60,7 @@ Create a staging release in Sonatype:
 ```
 $ nix-shell
 $ sbt
-> set version := "4.2.5"
+> set ThisBuild / version := "5.0.0-M4"
 > publishSigned
 ```
 
@@ -84,17 +84,17 @@ Wait for it to be synced to Maven Central:
 Update the documentation:
 
 ```
-$ git checkout -b v4.2.5
-$ sed -i 's/4\.2\.2/4.2.5/g' README.md
+$ git checkout -b v5.0.0-M4
+$ sed -i 's/4\.2\.2/5.0.0-M4/g' README.md
 $ git add README.md
-$ git commit -m "Update version to 4.2.5"
-$ git push origin v4.2.5
+$ git commit -m "Update version to 5.0.0-M4"
+$ git push origin v5.0.0-M4
 ```
 
 Tag the release:
 
 ```
-$ git tag 4.2.5
+$ git tag 5.0.0-M4
 $ git push --tags origin
 ```
 

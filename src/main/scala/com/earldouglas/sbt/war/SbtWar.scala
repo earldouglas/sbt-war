@@ -117,7 +117,7 @@ object SbtWar extends AutoPlugin {
     val runnerLibraries: Initialize[Seq[ModuleID]] =
       Def.setting {
         Seq(
-          "com.earldouglas" % "war-runner" % BuildInfo.warRunnerVersion % War
+          "com.earldouglas" % "war-runner" % BuildInfo.version % War
         )
       }
 
