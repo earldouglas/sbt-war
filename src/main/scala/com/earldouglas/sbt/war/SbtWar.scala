@@ -22,7 +22,6 @@ object SbtWar extends AutoPlugin {
 
   object autoImport {
     lazy val War = config("war").hide
-    lazy val servletSpec = settingKey[String]("servlet spec version")
     lazy val warPort = settingKey[Int]("container port")
     lazy val warStart = taskKey[Unit]("start container")
     lazy val warJoin = taskKey[Unit]("join container")
@@ -33,6 +32,7 @@ object SbtWar extends AutoPlugin {
   }
 
   import autoImport._
+  import WebappComponentsPlugin.autoImport.servletSpec
 
   override val requires: Plugins =
     WarPackagePlugin
@@ -115,28 +115,11 @@ object SbtWar extends AutoPlugin {
           .withOutputStrategy(Some(BufferedOutput(streams.value.log)))
       }
 
-    val runnerLibraries: Initialize[Seq[ModuleID]] =
+    val runnerLibrary: Initialize[ModuleID] =
       Def.setting {
-
-        val servletApi: ModuleID =
-          servletSpec.value match {
-            case "3.0" =>
-              "javax.servlet" % "javax.servlet-api" % "3.0.1"
-            case "3.1" =>
-              "javax.servlet" % "javax.servlet-api" % "3.1.0"
-            case "4.0" =>
-              "jakarta.servlet" % "jakarta.servlet-api" % "4.0.4"
-            case "6.0" =>
-              "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0"
-          }
-
         val warRunnerVersion: String =
           s"${servletSpec.value}_${BuildInfo.version}"
-
-        Seq(
-          "com.earldouglas" % s"war-runner" % warRunnerVersion % War,
-          servletApi % Provided
-        )
+        "com.earldouglas" % s"war-runner" % warRunnerVersion % War
       }
 
     val quickstartWar: Initialize[Task[Unit]] =
@@ -188,8 +171,7 @@ object SbtWar extends AutoPlugin {
 
     Seq(
       Global / onLoad := onLoadSetting.value,
-      libraryDependencies ++= runnerLibraries.value,
-      servletSpec := "6.0",
+      libraryDependencies += runnerLibrary.value,
       warForkOptions := forkOptions.value,
       warJoin := joinWar.value,
       warPort := 8080,

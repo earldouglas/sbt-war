@@ -16,7 +16,8 @@ import sbt._
   */
 object WarPackagePlugin extends AutoPlugin {
 
-  override def requires = WebappComponentsPlugin
+  override val requires: Plugins =
+    WebappComponentsPlugin
 
   override lazy val projectSettings: Seq[Setting[_]] = {
 
