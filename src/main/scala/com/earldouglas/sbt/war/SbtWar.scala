@@ -22,6 +22,7 @@ object SbtWar extends AutoPlugin {
 
   object autoImport {
     lazy val War = config("war").hide
+    lazy val servletSpec = settingKey[String]("servlet spec version")
     lazy val warPort = settingKey[Int]("container port")
     lazy val warStart = taskKey[Unit]("start container")
     lazy val warJoin = taskKey[Unit]("join container")
@@ -116,9 +117,9 @@ object SbtWar extends AutoPlugin {
 
     val runnerLibraries: Initialize[Seq[ModuleID]] =
       Def.setting {
-        Seq(
-          "com.earldouglas" % "war-runner" % BuildInfo.version % War
-        )
+        val warRunnerVersion: String =
+          s"${servletSpec.value}_${BuildInfo.version}"
+        Seq("com.earldouglas" % s"war-runner" % warRunnerVersion % War)
       }
 
     val quickstartWar: Initialize[Task[Unit]] =
@@ -171,6 +172,7 @@ object SbtWar extends AutoPlugin {
     Seq(
       Global / onLoad := onLoadSetting.value,
       libraryDependencies ++= runnerLibraries.value,
+      servletSpec := "6.0",
       warForkOptions := forkOptions.value,
       warJoin := joinWar.value,
       warPort := 8080,

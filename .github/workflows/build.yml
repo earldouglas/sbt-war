@@ -12,4 +12,4 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 11
-    - run: sbt javafmtCheckAll scalafmtCheckAll "scalafixAll --check" test scripted
+    - run: sbt javafmtCheckAll scalafmtCheckAll "scalafixAll --check" test publishLocal scripted
