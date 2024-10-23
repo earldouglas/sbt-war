@@ -117,9 +117,26 @@ object SbtWar extends AutoPlugin {
 
     val runnerLibraries: Initialize[Seq[ModuleID]] =
       Def.setting {
+
+        val servletApi: ModuleID =
+          servletSpec.value match {
+            case "3.0" =>
+              "javax.servlet" % "javax.servlet-api" % "3.0.1"
+            case "3.1" =>
+              "javax.servlet" % "javax.servlet-api" % "3.1.0"
+            case "4.0" =>
+              "jakarta.servlet" % "jakarta.servlet-api" % "4.0.4"
+            case "6.0" =>
+              "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0"
+          }
+
         val warRunnerVersion: String =
           s"${servletSpec.value}_${BuildInfo.version}"
-        Seq("com.earldouglas" % s"war-runner" % warRunnerVersion % War)
+
+        Seq(
+          "com.earldouglas" % s"war-runner" % warRunnerVersion % War,
+          servletApi % Provided
+        )
       }
 
     val quickstartWar: Initialize[Task[Unit]] =
