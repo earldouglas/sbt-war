@@ -16,7 +16,7 @@ lazy val warRunner_3_0 =
     .in(file("runners/3.0"))
     .settings(
       name := "war-runner",
-      version := "3.0_" + version.value,
+      version := version.value + "_3.0",
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -35,7 +35,7 @@ lazy val warRunner_3_1 =
     .in(file("runners/3.1"))
     .settings(
       name := "war-runner",
-      version := "3.1_" + version.value,
+      version := version.value + "_3.1",
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -54,7 +54,7 @@ lazy val warRunner_4_0 =
     .in(file("runners/4.0"))
     .settings(
       name := "war-runner",
-      version := "4.0_" + version.value,
+      version := version.value + "_4.0",
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -73,7 +73,7 @@ lazy val warRunner_6_0 =
     .in(file("runners/6.0"))
     .settings(
       name := "war-runner",
-      version := "6.0_" + version.value,
+      version := version.value + "_6.0",
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
