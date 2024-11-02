@@ -32,6 +32,7 @@ object SbtWar extends AutoPlugin {
   }
 
   import autoImport._
+  import WebappComponentsPlugin.autoImport.servletSpec
 
   override val requires: Plugins =
     WarPackagePlugin
@@ -114,11 +115,11 @@ object SbtWar extends AutoPlugin {
           .withOutputStrategy(Some(BufferedOutput(streams.value.log)))
       }
 
-    val runnerLibraries: Initialize[Seq[ModuleID]] =
+    val runnerLibrary: Initialize[ModuleID] =
       Def.setting {
-        Seq(
-          "com.earldouglas" % "war-runner" % BuildInfo.version % War
-        )
+        val warRunnerVersion: String =
+          s"${BuildInfo.version}_${servletSpec.value}"
+        "com.earldouglas" % s"war-runner" % warRunnerVersion % War
       }
 
     val quickstartWar: Initialize[Task[Unit]] =
@@ -170,7 +171,7 @@ object SbtWar extends AutoPlugin {
 
     Seq(
       Global / onLoad := onLoadSetting.value,
-      libraryDependencies ++= runnerLibraries.value,
+      libraryDependencies += runnerLibrary.value,
       warForkOptions := forkOptions.value,
       warJoin := joinWar.value,
       warPort := 8080,

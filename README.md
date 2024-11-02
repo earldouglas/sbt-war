@@ -82,7 +82,6 @@ addSbtPlugin("com.earldouglas" % "sbt-war" % "5.0.0-M4")
 
 ```scala
 scalaVersion := "3.5.1"
-libraryDependencies += "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0" % Provided
 enablePlugins(SbtWar)
 ```
 

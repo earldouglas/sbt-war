@@ -11,11 +11,69 @@ ThisBuild / scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
 ThisBuild / libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 ThisBuild / Test / fork := true
 
-lazy val warRunner =
+lazy val warRunner_3_0 =
   project
-    .in(file("runner"))
+    .in(file("runners/3.0"))
     .settings(
       name := "war-runner",
+      version := version.value + "_3.0",
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "11",
+          "-target",
+          "11",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.91.0"
+    )
+
+lazy val warRunner_3_1 =
+  project
+    .in(file("runners/3.1"))
+    .settings(
+      name := "war-runner",
+      version := version.value + "_3.1",
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "11",
+          "-target",
+          "11",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1"
+    )
+
+lazy val warRunner_4_0 =
+  project
+    .in(file("runners/4.0"))
+    .settings(
+      name := "war-runner",
+      version := version.value + "_4.0",
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "11",
+          "-target",
+          "11",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.96.0"
+    )
+
+lazy val warRunner_6_0 =
+  project
+    .in(file("runners/6.0"))
+    .settings(
+      name := "war-runner",
+      version := version.value + "_6.0",
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -51,8 +109,12 @@ lazy val sbtWar =
       buildInfoPackage := "com.earldouglas.sbt.war",
       buildInfoKeys := Seq[BuildInfoKey](version)
     )
-    .dependsOn(warRunner)
-    .aggregate(warRunner)
+    .aggregate(
+      warRunner_3_0,
+      warRunner_3_1,
+      warRunner_4_0,
+      warRunner_6_0
+    )
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
 ThisBuild / credentials := List(
