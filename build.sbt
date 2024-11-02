@@ -27,7 +27,7 @@ lazy val warRunner_3_0 =
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.91.0"
+      libraryDependencies += "com.github.jsimone" % "webapp-runner" % "9.0.27.1"
     )
 
 lazy val warRunner_3_1 =
