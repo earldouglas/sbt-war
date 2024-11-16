@@ -137,7 +137,7 @@ lazy val sbtWar =
       warRunner_3_1,
       warRunner_4_0,
       warRunner_5_0,
-      warRunner_6_0,
+      warRunner_6_0
     )
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html

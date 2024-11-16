@@ -1,11 +1,9 @@
 package com.earldouglas;
 
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.server.Server;
-
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 public class WarRunner {
 
@@ -19,11 +17,7 @@ public class WarRunner {
 
     final WarConfiguration warConfiguration = WarConfiguration.load(args[0]);
 
-    final Path warPath =
-      Paths
-        .get(warConfiguration.warFile.getPath())
-        .toAbsolutePath()
-        .normalize();
+    final Path warPath = Paths.get(warConfiguration.warFile.getPath()).toAbsolutePath().normalize();
 
     final Server server = new Server(warConfiguration.port);
 

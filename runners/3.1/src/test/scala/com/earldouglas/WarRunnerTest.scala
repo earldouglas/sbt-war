@@ -148,15 +148,13 @@ class WarRunnerTest
       )
 
     obtained.copy(
-      headers =
-        obtained
-          .headers
-          .filter { case (k, _) =>
-            k == "Content-Type"
-          }
-          .map { case (k, v) =>
-            (k, v.replaceAll(";charset=.*", ""))
-          }
+      headers = obtained.headers
+        .filter { case (k, _) =>
+          k == "Content-Type"
+        }
+        .map { case (k, v) =>
+          (k, v.replaceAll(";charset=.*", ""))
+        }
     ) shouldBe expected
   }
 }
