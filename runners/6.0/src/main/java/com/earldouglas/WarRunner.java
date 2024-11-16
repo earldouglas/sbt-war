@@ -1,5 +1,12 @@
 package com.earldouglas;
 
+import org.eclipse.jetty.ee10.webapp.WebAppContext;
+import org.eclipse.jetty.server.Server;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class WarRunner {
 
   /**
@@ -12,11 +19,21 @@ public class WarRunner {
 
     final WarConfiguration warConfiguration = WarConfiguration.load(args[0]);
 
-    final String[] warRunnerArgs =
-        new String[] {
-          "--port", Integer.toString(warConfiguration.port), warConfiguration.warFile.getPath(),
-        };
+    final Path warPath =
+      Paths
+        .get(warConfiguration.warFile.getPath())
+        .toAbsolutePath()
+        .normalize();
 
-    webapp.runner.launch.Main.main(warRunnerArgs);
+    final Server server = new Server(warConfiguration.port);
+
+    final WebAppContext webapp = new WebAppContext();
+    webapp.setContextPath("/");
+    webapp.setWar(warPath.toUri().toASCIIString());
+
+    server.setHandler(webapp);
+
+    server.start();
+    server.join();
   }
 }

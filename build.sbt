@@ -20,14 +20,14 @@ lazy val warRunner_3_0 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.91.0"
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "8.1.22.v20160922"
     )
 
 lazy val warRunner_3_1 =
@@ -39,14 +39,15 @@ lazy val warRunner_3_1 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1"
+      libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1",
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "9.4.56.v20240826"
     )
 
 lazy val warRunner_4_0 =
@@ -58,14 +59,35 @@ lazy val warRunner_4_0 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.96.0"
+      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.96.0",
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "10.0.24"
+    )
+
+lazy val warRunner_5_0 =
+  project
+    .in(file("runners/5.0"))
+    .settings(
+      name := "war-runner",
+      version := version.value + "_5.0",
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "17",
+          "-target",
+          "17",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.31.0",
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "11.0.24"
     )
 
 lazy val warRunner_6_0 =
@@ -77,14 +99,15 @@ lazy val warRunner_6_0 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.31.0"
+      libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.31.0",
+      libraryDependencies += "org.eclipse.jetty.ee10" % "jetty-ee10-webapp" % "12.0.15"
     )
 
 lazy val sbtWar =
@@ -113,7 +136,8 @@ lazy val sbtWar =
       warRunner_3_0,
       warRunner_3_1,
       warRunner_4_0,
-      warRunner_6_0
+      warRunner_5_0,
+      warRunner_6_0,
     )
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html

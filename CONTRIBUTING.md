@@ -100,3 +100,13 @@ $ git push --tags origin
 
 Update the [Giter8 template](https://github.com/earldouglas/sbt-war.g8)
 to use the new version.
+
+## Reference
+
+* Servlet version history:
+  <https://en.wikipedia.org/wiki/Jakarta_Servlet#History>
+* Jetty version history:
+  <https://en.wikipedia.org/wiki/Jetty_(web_server)#History>
+* Tomcat version history:
+  <https://en.wikipedia.org/wiki/Apache_Tomcat#Releases>
+  <https://tomcat.apache.org/whichversion.html>

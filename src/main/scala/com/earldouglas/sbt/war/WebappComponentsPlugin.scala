@@ -64,6 +64,8 @@ object WebappComponentsPlugin extends AutoPlugin {
               "javax.servlet" % "javax.servlet-api" % "3.1.0"
             case "4.0" =>
               "jakarta.servlet" % "jakarta.servlet-api" % "4.0.4"
+            case "5.0" =>
+              "jakarta.servlet" % "jakarta.servlet-api" % "5.0.0"
             case "6.0" =>
               "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0"
           }

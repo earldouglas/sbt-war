@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> {} }:
 let
-  jdk = pkgs.jdk11;
+  jdk = pkgs.jdk17;
 in
   pkgs.mkShell {
     nativeBuildInputs = [

@@ -1,0 +1,23 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_5_0.xsd"
+         version="5.0">
+
+  <display-name>Hello, Servlet 5.0</display-name>
+
+  <servlet>
+    <servlet-name>HelloServlet</servlet-name>
+    <servlet-class>com.earldouglas.HelloServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>HelloServlet</servlet-name>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+</web-app>
