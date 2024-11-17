@@ -27,7 +27,8 @@ lazy val warRunner_3_0 =
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "8.1.22.v20160922"
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "8.1.22.v20160922",
+      libraryDependencies += "org.eclipse.jetty" % "jetty-annotations" % "8.1.22.v20160922"
     )
 
 lazy val warRunner_3_1 =
@@ -47,7 +48,8 @@ lazy val warRunner_3_1 =
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1",
-      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "9.4.56.v20240826"
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "9.4.56.v20240826",
+      libraryDependencies += "org.eclipse.jetty" % "jetty-annotations" % "9.4.56.v20240826"
     )
 
 lazy val warRunner_4_0 =
@@ -67,7 +69,8 @@ lazy val warRunner_4_0 =
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.96.0",
-      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "10.0.24"
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "10.0.24",
+      libraryDependencies += "org.eclipse.jetty" % "jetty-annotations" % "10.0.24"
     )
 
 lazy val warRunner_5_0 =
@@ -87,7 +90,8 @@ lazy val warRunner_5_0 =
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.31.0",
-      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "11.0.24"
+      libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "11.0.24",
+      libraryDependencies += "org.eclipse.jetty" % "jetty-annotations" % "11.0.24"
     )
 
 lazy val warRunner_6_0 =
@@ -107,7 +111,8 @@ lazy val warRunner_6_0 =
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.31.0",
-      libraryDependencies += "org.eclipse.jetty.ee10" % "jetty-ee10-webapp" % "12.0.15"
+      libraryDependencies += "org.eclipse.jetty.ee10" % "jetty-ee10-webapp" % "12.0.15",
+      libraryDependencies += "org.eclipse.jetty.ee10" % "jetty-ee10-annotations" % "12.0.15"
     )
 
 lazy val sbtWar =

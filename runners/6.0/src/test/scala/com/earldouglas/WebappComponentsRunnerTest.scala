@@ -24,7 +24,7 @@ class WebappComponentsRunnerTest
     runner.stop.run()
   }
 
-  test("/foo.html") {
+  test("GET /foo.html") {
 
     val expected: HttpClient.Response =
       HttpClient.Response(
@@ -51,7 +51,7 @@ class WebappComponentsRunnerTest
     ) shouldBe expected
   }
 
-  test("/bar.html") {
+  test("GET /bar.html") {
 
     val expected: HttpClient.Response =
       HttpClient.Response(
@@ -78,7 +78,7 @@ class WebappComponentsRunnerTest
     ) shouldBe expected
   }
 
-  test("/baz/raz.css") {
+  test("GET /baz/raz.css") {
 
     val expected: HttpClient.Response =
       HttpClient.Response(
@@ -102,6 +102,68 @@ class WebappComponentsRunnerTest
       headers = obtained.headers.filter { case (k, _) =>
         k == "Content-Type"
       }
+    ) shouldBe expected
+  }
+
+  test("GET /hello") {
+
+    val expected: HttpClient.Response =
+      HttpClient.Response(
+        status = 200,
+        headers = Map(
+          "Content-Type" -> "text/plain"
+        ),
+        body = """|Hello, world!
+                  |""".stripMargin
+      )
+
+    val obtained: HttpClient.Response =
+      HttpClient.request(
+        method = "GET",
+        url = "http://localhost:8989/hello",
+        headers = Map.empty,
+        body = None
+      )
+
+    obtained.copy(
+      headers = obtained.headers
+        .filter { case (k, _) =>
+          k == "Content-Type"
+        }
+        .map { case (k, v) =>
+          (k, v.replaceAll(";charset=.*", ""))
+        }
+    ) shouldBe expected
+  }
+
+  test("GET /annotation") {
+
+    val expected: HttpClient.Response =
+      HttpClient.Response(
+        status = 200,
+        headers = Map(
+          "Content-Type" -> "text/plain"
+        ),
+        body = """|Hello, annotation!
+                  |""".stripMargin
+      )
+
+    val obtained: HttpClient.Response =
+      HttpClient.request(
+        method = "GET",
+        url = "http://localhost:8989/annotation",
+        headers = Map.empty,
+        body = None
+      )
+
+    obtained.copy(
+      headers = obtained.headers
+        .filter { case (k, _) =>
+          k == "Content-Type"
+        }
+        .map { case (k, v) =>
+          (k, v.replaceAll(";charset=.*", ""))
+        }
     ) shouldBe expected
   }
 }

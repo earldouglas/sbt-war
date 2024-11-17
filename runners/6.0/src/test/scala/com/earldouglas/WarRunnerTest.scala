@@ -157,4 +157,35 @@ class WarRunnerTest
         }
     ) shouldBe expected
   }
+
+  test("GET /annotation") {
+
+    val expected: HttpClient.Response =
+      HttpClient.Response(
+        status = 200,
+        headers = Map(
+          "Content-Type" -> "text/plain"
+        ),
+        body = """|Hello, annotation!
+                  |""".stripMargin
+      )
+
+    val obtained: HttpClient.Response =
+      HttpClient.request(
+        method = "GET",
+        url = "http://localhost:8988/annotation",
+        headers = Map.empty,
+        body = None
+      )
+
+    obtained.copy(
+      headers = obtained.headers
+        .filter { case (k, _) =>
+          k == "Content-Type"
+        }
+        .map { case (k, v) =>
+          (k, v.replaceAll(";charset=.*", ""))
+        }
+    ) shouldBe expected
+  }
 }

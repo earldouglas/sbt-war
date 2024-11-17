@@ -2,6 +2,8 @@ package com.earldouglas;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.eclipse.jetty.ee10.annotations.AnnotationConfiguration;
+import org.eclipse.jetty.ee10.webapp.MetaInfConfiguration;
 import org.eclipse.jetty.ee10.webapp.WebAppContext;
 import org.eclipse.jetty.server.Server;
 
@@ -22,8 +24,35 @@ public class WarRunner {
     final Server server = new Server(warConfiguration.port);
 
     final WebAppContext webapp = new WebAppContext();
+
+    webapp.getConfigurations().add(new AnnotationConfiguration());
+
+    webapp.setParentLoaderPriority(false);
+
+    webapp.setAttribute(
+      MetaInfConfiguration.CONTAINER_JAR_PATTERN,
+      ".*/lib/[^/]*\\.jar$|.*/classes/.*|.*/test-classes/.*"
+    );
+
+    webapp.setAttribute(
+      MetaInfConfiguration.WEBINF_JAR_PATTERN ,
+      ".*\\.jar$|.*/lib/[^/]*\\.jar$|.*/classes/.*|.*/test-classes/.*"
+    );
+    // context.getMetaData().addContainerResource(resource);
+
     webapp.setContextPath("/");
-    webapp.setWar(warPath.toUri().toASCIIString());
+
+    System.err.println();
+    System.err.println();
+    System.err.println();
+    System.err.println(warPath.toFile().getPath());
+    System.err.println();
+    System.err.println();
+    System.err.println();
+    Thread.sleep(2000);
+
+    //webapp.setWar(warPath.toUri().toASCIIString());
+    webapp.setWar("/home/james/tmp/sbt_ee4a361f_3-0.1.0-SNAPSHOT.war");
 
     server.setHandler(webapp);
 
