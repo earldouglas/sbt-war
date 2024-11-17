@@ -8,6 +8,7 @@ import sbt.Keys.{`package` => pkg}
 import sbt.Plugins
 import sbt._
 
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicReference
@@ -19,6 +20,15 @@ import scala.sys.process.{Process => ScalaProcess}
   * components and a packaged .war file.
   */
 object SbtWar extends AutoPlugin {
+
+  implicit class Exscape(val x: File) {
+    def getEscapedPath(): String =
+      if (File.separatorChar == '\\') {
+        x.getPath().replace("\\", "\\\\")
+      } else {
+        x.getPath()
+      }
+  }
 
   object autoImport {
     lazy val War = config("war").hide
@@ -73,7 +83,7 @@ object SbtWar extends AutoPlugin {
             .writeString(
               Paths.get(configurationFile.getPath()),
               s"""|port=${warPort.value}
-                  |warFile=${pkg.value.getPath()}
+                  |warFile=${pkg.value.getEscapedPath()}
                   |""".stripMargin
             )
             .toFile()
@@ -132,7 +142,7 @@ object SbtWar extends AutoPlugin {
           val resourceMapString =
             WebappComponentsPlugin.warContents.value
               .map { case (k, v) =>
-                s"${k}->${v}"
+                s"${k}->${v.getEscapedPath()}"
               }
               .mkString(",")
 
@@ -145,8 +155,8 @@ object SbtWar extends AutoPlugin {
               s"""|hostname=localhost
                   |port=${warPort.value}
                   |contextPath=
-                  |emptyWebappDir=${emptyDir}
-                  |emptyClassesDir=${emptyDir}
+                  |emptyWebappDir=${emptyDir.getEscapedPath()}
+                  |emptyClassesDir=${emptyDir.getEscapedPath()}
                   |resourceMap=${resourceMapString}
                   |""".stripMargin
             )
