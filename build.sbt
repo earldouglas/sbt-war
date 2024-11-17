@@ -11,12 +11,23 @@ ThisBuild / scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
 ThisBuild / libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 ThisBuild / Test / fork := true
 
+def warRunnerVersion(servletSpec: String) =
+  Def.setting {
+    version.value
+      .split("-")
+      .toList match {
+      case v :: Nil => s"""${v}_${servletSpec}"""
+      case v :: t   => s"""${v}_${servletSpec}-${t.mkString("-")}"""
+      case _        => throw new Exception("wat")
+    }
+  }
+
 lazy val warRunner_3_0 =
   project
     .in(file("runners/3.0"))
     .settings(
       name := "war-runner",
-      version := version.value + "_3.0",
+      version := warRunnerVersion("3.0").value,
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -35,7 +46,7 @@ lazy val warRunner_3_1 =
     .in(file("runners/3.1"))
     .settings(
       name := "war-runner",
-      version := version.value + "_3.1",
+      version := warRunnerVersion("3.1").value,
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -54,7 +65,7 @@ lazy val warRunner_4_0 =
     .in(file("runners/4.0"))
     .settings(
       name := "war-runner",
-      version := version.value + "_4.0",
+      version := warRunnerVersion("4.0").value,
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -73,7 +84,7 @@ lazy val warRunner_6_0 =
     .in(file("runners/6.0"))
     .settings(
       name := "war-runner",
-      version := version.value + "_6.0",
+      version := warRunnerVersion("6.0").value,
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
@@ -144,6 +155,14 @@ ThisBuild / publishMavenStyle := true
 ThisBuild / publishTo := Some(
   "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 )
+ThisBuild / publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value) {
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  } else {
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  }
+}
 ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/earldouglas/sbt-war"),
