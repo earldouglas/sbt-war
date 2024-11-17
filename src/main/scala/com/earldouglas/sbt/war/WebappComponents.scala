@@ -1,7 +1,8 @@
 package com.earldouglas.sbt.war
 
-import java.io.File
 import sbt._
+
+import java.io.File
 
 /** Identifies the files that compose the webapp:
   *
