@@ -127,8 +127,18 @@ object SbtWar extends AutoPlugin {
 
     val runnerLibrary: Initialize[ModuleID] =
       Def.setting {
+
         val warRunnerVersion: String =
-          s"${BuildInfo.version}_${servletSpec.value}"
+          BuildInfo.version
+            .split("-")
+            .toList match {
+            case v :: Nil =>
+              s"""${v}_${servletSpec.value}"""
+            case v :: t =>
+              s"""${v}_${servletSpec.value}-${t.mkString("-")}"""
+            case _ => throw new Exception("wat")
+          }
+
         "com.earldouglas" % s"war-runner" % warRunnerVersion % War
       }
 
