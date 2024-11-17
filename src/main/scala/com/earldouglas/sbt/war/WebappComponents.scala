@@ -1,5 +1,6 @@
 package com.earldouglas.sbt.war
 
+import java.io.File
 import sbt._
 
 /** Identifies the files that compose the webapp:
@@ -51,7 +52,13 @@ object WebappComponents {
         if classFile.exists()
         if classFile.isFile()
         relativeFile <- IO.relativizeFile(classpathDir, classFile)
-        relativePath = s"WEB-INF/classes/${relativeFile.getPath()}"
+        relativeFilePath =
+          if (File.separatorChar == '\\') {
+            relativeFile.getPath().replace("\\", "/")
+          } else {
+            relativeFile.getPath()
+          }
+        relativePath = s"WEB-INF/classes/${relativeFilePath}"
       } yield (relativePath, classFile)
 
     classesMappings.toMap
