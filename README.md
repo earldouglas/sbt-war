@@ -12,7 +12,6 @@ source code of prior versions, browse this repository from the desired
 git tag.  The most recent prior version is
 [4.2.5](https://github.com/earldouglas/sbt-war/tree/4.2.5).
 
-
 ## Requirements
 
 * sbt 1.x and up
@@ -24,6 +23,66 @@ git tag.  The most recent prior version is
   issue](https://github.com/earldouglas/sbt-war/issues/new)
 * Look for *earldouglas* in the `#sbt` channel on the [Scala Discord
   server](https://discord.com/invite/scala)
+
+## Project structure
+
+A project that uses sbt-war looks something like this:
+
+```
+$ tree my-web-project/
+my-web-project/
+├── build.sbt
+├── project
+│   ├── build.properties
+│   └── plugins.sbt
+└── src
+    ├── main
+    │   ├── scala
+    │   │   └── mypackage
+    │   │       └── MyServlet.scala
+    │   └── webapp
+    │       ├── images
+    │       │   └── logo.png
+    │       ├── index.html
+    │       └── styles
+    │           └── style.css
+    └── test
+        └── scala
+            ├── http.scala
+            └── mypackage
+                └── MyServletSuite.scala
+```
+
+A packaged .war file looks something like this:
+
+```
+$ sbt "show package"
+[info] /path/to/my-web-project/target/scala-3.1.0/my-web-project_3-0.1.0-SNAPSHOT.war
+
+$ jar -tf target/scala-3.1.0/my-web-project_3-0.1.0-SNAPSHOT.war | LC_COLLATE=C sort
+META-INF/MANIFEST.MF
+WEB-INF/
+WEB-INF/classes/
+WEB-INF/classes/mypackage/
+WEB-INF/classes/mypackage/Servlet.class
+WEB-INF/classes/mypackage/Servlet.tasty
+WEB-INF/lib/
+WEB-INF/lib/scala-library-2.13.6.jar
+WEB-INF/lib/scala3-library_3-3.1.0.jar
+images/
+images/logo.png
+index.html
+styles/
+styles/style.css
+```
+
+Classes under *src/main/scala* are compiled and included in the .war
+file under *WEB-INF/classes*.
+
+Dependencies are copied as .jar files into the *WEB-INF/lib/* directory.
+
+Static assets (such as .html files, stylesheets, images, etc.) are
+copied from *src/main/webapp* to to the root of the .war file.
 
 ## Getting started from a template
 
