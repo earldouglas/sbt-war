@@ -1,13 +1,13 @@
 > setup
 > reload
 
-> warQuickstart
+> warStart
 > awaitOpen
 > check
 > warStop
 > awaitClosed
 
-> warStart
+> warStartPackage
 > awaitOpen
 > check
 > warStop

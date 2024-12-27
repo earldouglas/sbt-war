@@ -203,12 +203,12 @@ Create a .war file with `package`:
 
 ## Commands
 
-| Key             | Notes                                                                   |
-| --------------- | ----------------------------------------------------------------------- |
-| `warStart`      | Starts a local container, serving content from the packaged .war file   |
-| `warQuickstart` | Starts a local container, serving content directly from project sources |
-| `warJoin`       | Blocks until the container shuts down                                   |
-| `warStop`       | Shuts down the container                                                |
+| Key               | Notes                                                                   |
+| ----------------- | ----------------------------------------------------------------------- |
+| `warStart`        | Starts a local container, serving content directly from project sources |
+| `warStartPackage` | Starts a local container, serving content from the packaged .war file   |
+| `warJoin`         | Blocks until the container shuts down                                   |
+| `warStop`         | Shuts down the container                                                |
 
 ### `warResources`
 
@@ -319,19 +319,18 @@ warForkOptions :=
     )
 ```
 
-### `warStart` and `warQuickstart`
+### `warStart` and `warStartPackage`
 
-To run the webapp, use `warStart`:
+To run the webapp directly from project sources, use `warStart`:
 
 ```
 > warStart
 ```
 
-To skip packaging the .war file before launching the container, use
-`warQuickstart`:
+To run the webapp from the packaged .war file, use `warStartPackage`:
 
 ```
-> warQuickstart
+> warStartPackage
 ```
 
 ### `warJoin`
