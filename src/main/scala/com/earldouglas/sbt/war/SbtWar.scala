@@ -33,10 +33,10 @@ object SbtWar extends AutoPlugin {
   object autoImport {
     lazy val War = config("war").hide
     lazy val warPort = settingKey[Int]("container port")
-    lazy val warStart = taskKey[Unit]("start container")
+    lazy val warStartPackage = taskKey[Unit]("start container")
     lazy val warJoin = taskKey[Unit]("join container")
     lazy val warStop = taskKey[Unit]("stop container")
-    lazy val warQuickstart = taskKey[Unit]("quickstart container")
+    lazy val warStart = taskKey[Unit]("quickstart container")
     lazy val warForkOptions =
       taskKey[ForkOptions]("container fork options")
   }
@@ -71,7 +71,7 @@ object SbtWar extends AutoPlugin {
           .toList
       }
 
-    val startWar: Initialize[Task[Unit]] =
+    val startWarFromPackage: Initialize[Task[Unit]] =
       Def.task {
 
         val runnerConfigFile: File = {
@@ -142,7 +142,7 @@ object SbtWar extends AutoPlugin {
         "com.earldouglas" % s"war-runner" % warRunnerVersion % War
       }
 
-    val quickstartWar: Initialize[Task[Unit]] =
+    val startWarFromSources: Initialize[Task[Unit]] =
       Def.task {
 
         val runnerConfigFile: File = {
@@ -195,8 +195,8 @@ object SbtWar extends AutoPlugin {
       warForkOptions := forkOptions.value,
       warJoin := joinWar.value,
       warPort := 8080,
-      warQuickstart := quickstartWar.value,
-      warStart := startWar.value,
+      warStart := startWarFromSources.value,
+      warStartPackage := startWarFromPackage.value,
       warStop := stopWar.value
     )
   }
