@@ -58,9 +58,11 @@ section of the sbt manual for publishing to Maven Central via Sonatype.
 Create a staging release in Sonatype:
 
 ```
+$ export OLD_VERSION=5.0.0-M6
+$ export NEW_VERSION=5.0.0-M7
 $ nix-shell
 $ sbt
-> set ThisBuild / version := "5.0.0-M4"
+> set ThisBuild / version := sys.env("NEW_VERSION")
 > publishSigned
 ```
 
@@ -84,17 +86,21 @@ Wait for it to be synced to Maven Central:
 Update the documentation:
 
 ```
-$ git checkout -b v5.0.0-M4
-$ sed -i 's/4\.2\.2/5.0.0-M4/g' README.md
+$ git checkout -b v$NEW_VERSION
+$ sed -i "s/$OLD_VERSION/$NEW_VERSION/g" README.md
 $ git add README.md
-$ git commit -m "Update version to 5.0.0-M4"
-$ git push origin v5.0.0-M4
+$ git commit -m "sbt-war: $OLD_VERSION -> $NEW_VERSION"
+$ git push origin v$NEW_VERSION
 ```
+
+Create and merge a pull request.
 
 Tag the release:
 
 ```
-$ git tag 5.0.0-M4
+$ git checkout main
+$ git pull
+$ git tag $NEW_VERSION
 $ git push --tags origin
 ```
 
