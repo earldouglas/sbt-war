@@ -76,7 +76,7 @@ lazy val warRunner_4_0 =
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.97.0"
+      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.98.0"
     )
 
 lazy val warRunner_6_0 =
