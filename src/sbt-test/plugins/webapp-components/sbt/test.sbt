@@ -122,7 +122,7 @@ val checkLib: Def.Initialize[Task[Unit]] =
         "scala-library-2.13.14.jar",
         "scala-logging_3-3.9.5.jar",
         "scala3-library_3-3.5.0.jar",
-        "slf4j-api-2.0.15.jar",
+        "slf4j-api-2.0.15.jar"
       )
 
     assertContains(
