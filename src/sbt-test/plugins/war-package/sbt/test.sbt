@@ -97,13 +97,14 @@ lazy val checkWar: Def.Initialize[Task[Unit]] =
         "favicon.ico",
         "index.html",
         "styles/",
-        "styles/theme.css",
+        "styles/theme.css"
       )
 
     val warFile: File = pkg.value
     val zipFile: ZipFile = new ZipFile(warFile)
     val zipEntries: JEnumeration[_ <: ZipEntry] = zipFile.entries()
-    val contents: Set[String] = zipEntries.asScala.map(_.getName()).toSet
+    val contents: Set[String] =
+      zipEntries.asScala.map(_.getName()).toSet
 
     assertEquals(
       name = "WarPackagePlugin: checkWar",
@@ -138,31 +139,31 @@ InputKey[Unit]("checkManifest") := {
         case ("includes", false) =>
           sys.error(
             "Manifest " +
-            manifestFilename +
-            " is missing expected attribute " +
-            manifestAttribute
+              manifestFilename +
+              " is missing expected attribute " +
+              manifestAttribute
           )
         case ("excludes", true) =>
           sys.error(
             "Manifest " +
-            manifestFilename +
-            " contains unexpected attribute " +
-            manifestAttribute
+              manifestFilename +
+              " contains unexpected attribute " +
+              manifestAttribute
           )
         case ("excludes", false) =>
           ()
         case _ =>
           sys.error(
             "Invalid rule " +
-            rule
+              rule
           )
       }
     case None =>
       sys.error(
         "File " +
-        manifestFilename +
-        " not found in zip " +
-        zipFile
+          manifestFilename +
+          " not found in zip " +
+          zipFile
       )
   }
 }

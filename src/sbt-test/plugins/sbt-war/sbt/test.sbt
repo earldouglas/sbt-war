@@ -133,7 +133,9 @@ TaskKey[Unit]("check") := {
   assertEquals(
     url = s"http://localhost:${warPort.value}/",
     expectedBody = Source
-      .fromFile((Compile / sourceDirectory).value / "webapp" / "index.html")
+      .fromFile(
+        (Compile / sourceDirectory).value / "webapp" / "index.html"
+      )
       .mkString
   )
 
