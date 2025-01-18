@@ -6,7 +6,7 @@ import sbt.Keys._
 import sbt._
 
 /** Identifies the files that compose the webapp (resources, .class
-  * files, and .jar files). This is used by user-facing plugins
+  * files, and JAR files). This is used by user-facing plugins
   * (WarPlugin and WebappRunnerPlugin).
   *
   * Webapp components are managed as three sets of mappings:
@@ -16,11 +16,11 @@ import sbt._
   *     WEB-INF/web.xml deployment descriptor.
   *   - warClasses: All of the classes, etc. on the classpath to be
   *     copied into the WEB-INF/classes directory.
-  *   - warLib: All of the .jar files to be copied into the WEB-INF/lib
+  *   - warLib: All of the JAR files to be copied into the WEB-INF/lib
   *     directory.
   *
   * These mappings each have the type Map[String, File], where the key
-  * is the relative path within the .war file (e.g.
+  * is the relative path within the WAR file (e.g.
   * WEB-INF/classes/Foo.class), and the value is the location of the
   * file to be copied there (e.g. target/classes/Foo.class).
   */

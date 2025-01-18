@@ -5,7 +5,7 @@
 # sbt-war
 
 sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for packaging and
-running .war files.
+running WAR files.
 
 sbt-war is formerly known as xsbt-web-plugin.  For documentation and
 source code of prior versions, browse this repository from the desired
@@ -53,7 +53,7 @@ my-web-project/
                 └── MyServletSuite.scala
 ```
 
-A packaged .war file looks something like this:
+A packaged WAR file looks something like this:
 
 ```
 $ sbt "show package"
@@ -76,13 +76,13 @@ styles/
 styles/style.css
 ```
 
-Classes under *src/main/scala* are compiled and included in the .war
+Classes under *src/main/scala* are compiled and included in the WAR
 file under *WEB-INF/classes*.
 
-Dependencies are copied as .jar files into the *WEB-INF/lib/* directory.
+Dependencies are copied as JAR files into the *WEB-INF/lib/* directory.
 
 Static assets (such as .html files, stylesheets, images, etc.) are
-copied from *src/main/webapp* to to the root of the .war file.
+copied from *src/main/webapp* to to the root of the WAR file.
 
 ## Getting started from a template
 
@@ -185,7 +185,7 @@ Stop it with `warStop`:
 > warStop
 ```
 
-Create a .war file with `package`:
+Create a WAR file with `package`:
 
 ```
 > package
@@ -197,7 +197,7 @@ Create a .war file with `package`:
 | ------------------ | ------------------ | ------------------ | --------------------------------------------------------------------------- |
 | `warResources`     | `Map[String,File]` | *src/main/webapp*  | Static files (HTML, CSS, JS, images, etc.) to serve directly                |
 | `warClasses`       | `Map[String,File]` | project classes    | .class files to copy into the *WEB-INF/classes* directory                   |
-| `warLib`           | `Map[String,File]` | project libs       | .jar files to copy into the *WEB-INF/lib* directory                         |
+| `warLib`           | `Map[String,File]` | project libs       | JAR files to copy into the *WEB-INF/lib* directory                          |
 | `warPort`          | `Int`              | `8080`             | The local container port to use when running with `warStart`                |
 | `warForkOptions`   | [`ForkOptions`]    | [`BufferedOutput`] | Options for the forked JVM used when running with `warStart`                |
 
@@ -206,22 +206,22 @@ Create a .war file with `package`:
 | Key               | Notes                                                                   |
 | ----------------- | ----------------------------------------------------------------------- |
 | `warStart`        | Starts a local container, serving content directly from project sources |
-| `warStartPackage` | Starts a local container, serving content from the packaged .war file   |
+| `warStartPackage` | Starts a local container, serving content from the packaged WAR file    |
 | `warJoin`         | Blocks until the container shuts down                                   |
 | `warStop`         | Shuts down the container                                                |
 
 ### `warResources`
 
 Resources are the various static files, deployment descriptors, etc.
-that go into a .war file.
+that go into a WAR file.
 
 The `warResources` setting is a mapping from destination to source of
 these files.  The destination is a path relative to the contents of the
-.war file.  The source is a path on the local filesystem.
+WAR file.  The source is a path on the local filesystem.
 
 By default, everything in *src/main/webapp* is included.
 
-For example, given the following .war file:
+For example, given the following WAR file:
 
 ```
 myproject.war
@@ -251,7 +251,7 @@ warResources :=
     .map(WebappComponents.getResources)
 ```
 
-Manifest attributes of the *.war* file can be configured via
+Manifest attributes of the WAR file can be configured via
 `packageOptions`:
 
 ```scala
@@ -264,7 +264,7 @@ sbt.Keys.`package` / packageOptions +=
 ### `warClasses`
 
 By default, project classes are copied into the *WEB-INF/classes*
-directory of the *.war* file.  To package them in a *.jar* file in the
+directory of the WAR file.  To package them in a JAR file in the
 *WEB-INF/lib* directory instead, set `exportJars`:
 
 ```scala
@@ -280,7 +280,7 @@ the sbt documentation for additional information.
 By default, all runtime dependencies are copied into the *WEB-INF/lib*
 directory.
 
-To use a dependency at compile time but exclude it from the .war file,
+To use a dependency at compile time but exclude it from the WAR file,
 set its scope to `Provided`:
 
 ```scala
@@ -327,7 +327,7 @@ To run the webapp directly from project sources, use `warStart`:
 > warStart
 ```
 
-To run the webapp from the packaged .war file, use `warStartPackage`:
+To run the webapp from the packaged WAR file, use `warStartPackage`:
 
 ```
 > warStartPackage

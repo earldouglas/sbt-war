@@ -15,9 +15,9 @@ import java.util.concurrent.atomic.AtomicReference
 import scala.sys.process.{Process => ScalaProcess}
 
 /** The top-level plugin to be used by default. From the required
-  * plugins, this brings in all of the webapp components mappings, .war
+  * plugins, this brings in all of the webapp components mappings, WAR
   * file packaging, and mechanisms for running both raw webapp
-  * components and a packaged .war file.
+  * components and a packaged WAR file.
   */
 object SbtWar extends AutoPlugin {
 

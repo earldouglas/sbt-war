@@ -9,9 +9,9 @@ import java.io.File
   *   - Resources
   *     - HTML/JS/CSS files, images, etc.
   *     - Optional WEB-INF/web.xml deployment descriptor
-  *     - Anything else that isn't a .class file or .jar file
+  *     - Anything else that isn't a .class file or JAR file
   *   - .class files
-  *   - .jar files
+  *   - JAR files
   */
 object WebappComponents {
 
@@ -33,7 +33,7 @@ object WebappComponents {
       .toMap
   }
 
-  /** Given a classpath (potentially with both .jar files and classes
+  /** Given a classpath (potentially with both JAR files and classes
     * directories), traverse to find all the .class files.
     *
     * @return
@@ -65,11 +65,11 @@ object WebappComponents {
     classesMappings.toMap
   }
 
-  /** Given a classpath (potentially with both .jar files and classes
-    * directories), traverse to find all the .jar files.
+  /** Given a classpath (potentially with both JAR files and classes
+    * directories), traverse to find all the JAR files.
     *
     * @return
-    *   a mapping from destination to source of .jar files
+    *   a mapping from destination to source of JAR files
     */
   def getLib(classpath: Seq[File]): Map[String, File] = {
     classpath
