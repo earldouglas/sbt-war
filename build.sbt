@@ -131,7 +131,7 @@ lazy val sbtWar =
 ThisBuild / credentials := List(
   Credentials(Path.userHome / ".sbt" / "sonatype_credentials")
 )
-ThisBuild / description := "Package and run .war files with sbt"
+ThisBuild / description := "Package and run WAR files with sbt"
 ThisBuild / developers := List(
   Developer(
     id = "earldouglas",

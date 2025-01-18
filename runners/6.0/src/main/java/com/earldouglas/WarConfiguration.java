@@ -11,7 +11,7 @@ public class WarConfiguration {
   /** The port to use for the server, e.g. 8080 */
   public final int port;
 
-  /** The .war file to serve. */
+  /** The WAR file to serve. */
   public final File warFile;
 
   /**
@@ -62,7 +62,7 @@ public class WarConfiguration {
    * Construct a new configuration from the given parameters.
    *
    * @param port the port to use for the server, e.g. 8080
-   * @param warFile the .war file to serve
+   * @param warFile the WAR file to serve
    */
   public WarConfiguration(final int port, final File warFile) {
     this.port = port;
