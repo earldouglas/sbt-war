@@ -333,6 +333,17 @@ To run the webapp from the packaged WAR file, use `warStartPackage`:
 > warStartPackage
 ```
 
+Both of these can be used with [triggered
+execution](https://www.scala-sbt.org/1.x/docs/Triggered-Execution.html)
+to automatically restart the container when source code is modified:
+
+```
+> ~ warStart
+```
+
+[Container logs](https://www.scala-sbt.org/1.x/docs/Howto-Logging.html)
+will appear both in the console and under the `target/streams/`.
+
 ### `warJoin`
 
 To block sbt while the container is running, use `warJoin`:
