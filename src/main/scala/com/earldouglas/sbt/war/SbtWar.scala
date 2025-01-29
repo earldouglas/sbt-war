@@ -119,12 +119,6 @@ object SbtWar extends AutoPlugin {
           }
       }
 
-    val forkOptions: Initialize[Task[ForkOptions]] =
-      Def.task {
-        ForkOptions()
-          .withOutputStrategy(Some(BufferedOutput(streams.value.log)))
-      }
-
     val runnerLibrary: Initialize[ModuleID] =
       Def.setting {
 
