@@ -199,7 +199,7 @@ Create a WAR file with `package`:
 | `warClasses`       | `Map[String,File]` | project classes    | .class files to copy into the *WEB-INF/classes* directory                   |
 | `warLib`           | `Map[String,File]` | project libs       | JAR files to copy into the *WEB-INF/lib* directory                          |
 | `warPort`          | `Int`              | `8080`             | The local container port to use when running with `warStart`                |
-| `warForkOptions`   | [`ForkOptions`]    | [`BufferedOutput`] | Options for the forked JVM used when running with `warStart`                |
+| `warForkOptions`   | [`ForkOptions`][1] | [`forkOptions`][2] | Options for the forked JVM used when running with `warStart`                |
 
 ## Commands
 
@@ -363,5 +363,5 @@ To stop the running container, use `warStop`:
 > warStop
 ```
 
-[`ForkOptions`]: https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html
-[`BufferedOutput`]: https://www.scala-sbt.org/1.x/api/sbt/OutputStrategy$$BufferedOutput.html
+[1]: https://www.scala-sbt.org/1.x/api/sbt/ForkOptions.html
+[2]: https://www.scala-sbt.org/1.x/api/sbt/Keys$.html#forkOptions:sbt.TaskKey[sbt.ForkOptions]
