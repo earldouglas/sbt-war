@@ -152,17 +152,7 @@ ThisBuild / organizationHomepage := Some(
 ThisBuild / organizationName := "James Earl Douglas"
 ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / publishMavenStyle := true
-ThisBuild / publishTo := Some(
-  "releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-)
-ThisBuild / publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value) {
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  } else {
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  }
-}
+ThisBuild / publishTo := sonatypePublishToBundle.value
 ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/earldouglas/sbt-war"),

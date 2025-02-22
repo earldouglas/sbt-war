@@ -63,21 +63,9 @@ $ export NEW_VERSION=5.0.0-M7
 $ nix-shell
 $ sbt
 > set ThisBuild / version := sys.env("NEW_VERSION")
-> publishSigned
+> +publishSigned
+> sonatypeBundleRelease
 ```
-
-Review it:
-
-* Go to [Staging
-  Repositories](https://oss.sonatype.org/#stagingRepositories) on Nexus
-  Repository Manager
-* Review the contents of the staging repository
-
-
-Release it:
-
-* Close the staging repository
-* Release the staging repository to promote to Maven Central
 
 Wait for it to be synced to Maven Central:
 
@@ -100,7 +88,7 @@ Tag the release:
 ```
 $ git checkout main
 $ git pull
-$ git tag $NEW_VERSION
+$ git tag $NEW_VERSION -m "Version $NEW_VERSION"
 $ git push --tags origin
 ```
 
