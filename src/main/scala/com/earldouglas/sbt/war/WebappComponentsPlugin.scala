@@ -45,12 +45,34 @@ object WebappComponentsPlugin extends AutoPlugin {
 
   override def requires = plugins.JvmPlugin
 
-  lazy val warContents: Initialize[Task[Map[String, File]]] =
+  def warContents(
+      c: Configuration
+  ): Initialize[Task[Map[String, File]]] =
     Def.task {
-      warResources.value ++
-        warClasses.value ++
-        warLib.value
+      List(
+        (c / warResources).value,
+        (c / warClasses).value,
+        (c / warLib).value
+      ).flatten.toMap
     }
+
+  def settingsFor(c: Configuration): Seq[Setting[_]] = {
+
+    val warClassesTask: Initialize[Task[Map[String, File]]] =
+      (c / fullClasspath)
+        .map(_.files)
+        .map(WebappComponents.getClasses)
+
+    val warLibTask: Initialize[Task[Map[String, File]]] =
+      (Runtime / fullClasspath)
+        .map(_.files)
+        .map(WebappComponents.getLib)
+
+    Seq(
+      c / warClasses := warClassesTask.value,
+      c / warLib := warLibTask.value
+    )
+  }
 
   override val projectSettings: Seq[Setting[_]] = {
 
@@ -76,22 +98,13 @@ object WebappComponentsPlugin extends AutoPlugin {
         .map(_ / "webapp")
         .map(WebappComponents.getResources)
 
-    val warClassesTask: Initialize[Task[Map[String, File]]] =
-      (Runtime / fullClasspath)
-        .map(_.files)
-        .map(WebappComponents.getClasses)
-
-    val warLibTask: Initialize[Task[Map[String, File]]] =
-      (Runtime / fullClasspath)
-        .map(_.files)
-        .map(WebappComponents.getLib)
-
     Seq(
-      servletSpec := "6.0",
-      libraryDependencies += servletApi.value,
-      warResources := warResourcesTask.value,
-      warClasses := warClassesTask.value,
-      warLib := warLibTask.value
-    )
+      Seq(
+        servletSpec := "6.0",
+        libraryDependencies += servletApi.value,
+        warResources := warResourcesTask.value
+      ),
+      settingsFor(Runtime)
+    ).flatten
   }
 }

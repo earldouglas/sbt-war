@@ -56,7 +56,13 @@ TaskKey[Unit]("await-closed") := {
   awaitClosed(warPort.value)
 }
 
-TaskKey[Unit]("check") := {
+def check(
+    log: sbt.internal.util.ManagedLogger,
+    warPort: Int,
+    path: String,
+    expectedStatus: Int,
+    expectedBody: Option[String]
+): Unit = {
 
   import java.net.HttpURLConnection
   import java.net.URI
@@ -65,8 +71,6 @@ TaskKey[Unit]("check") := {
   import javax.net.ssl.HttpsURLConnection
   import javax.net.ssl.SSLSession
   import scala.io.Source
-
-  val log: sbt.internal.util.ManagedLogger = streams.value.log
 
   HttpsURLConnection.setDefaultHostnameVerifier(
     new HostnameVerifier() {
@@ -79,100 +83,159 @@ TaskKey[Unit]("check") := {
     }
   )
 
-  def assertEquals(
-      url: String,
-      expectedBody: String
-  ): Unit = {
-    val c: HttpURLConnection =
-      (new URI(url)
-        .toURL())
-        .openConnection
-        .asInstanceOf[HttpURLConnection]
+  val url: String = s"http://localhost:${warPort}${path}"
 
-    val name: String = s"SbtWar: GET ${url}"
+  val c: HttpURLConnection =
+    (new URI(url)
+      .toURL())
+      .openConnection
+      .asInstanceOf[HttpURLConnection]
 
-    c.setInstanceFollowRedirects(false)
-    c.setRequestMethod("GET")
-    c.setDoOutput(false)
+  val name: String = s"SbtWar: GET ${url}"
 
-    val obtainedStatus: Int =
-      c.getResponseCode()
-    val obtainedBody: String =
+  c.setInstanceFollowRedirects(false)
+  c.setRequestMethod("GET")
+  c.setDoOutput(false)
+
+  val obtainedStatus: Int =
+    c.getResponseCode()
+  val obtainedBody: String =
+    try {
       Source.fromInputStream(c.getInputStream()).mkString
-
-    val expectedStatus: Int = 200
-
-    val statusMatch: Boolean =
-      expectedStatus == obtainedStatus
-    val bodyMatch: Boolean =
-      expectedBody == obtainedBody
-
-    if (!statusMatch || !bodyMatch) {
-      log.error(name)
-      sys.error(
-        s"""|${name}:
-            |  expected:
-            |    * status: ${expectedStatus}
-            |    * body:
-            |      > ${expectedBody
-             .toString()
-             .replaceAll("\n", "\n      > ")}
-            |  obtained:
-            |    * status: ${obtainedStatus}
-            |    * body:
-            |      > ${obtainedBody
-             .toString()
-             .replaceAll("\n", "\n      > ")}
-            |""".stripMargin
-      )
-    } else {
-      log.success(name)
+    } catch {
+      case e: Exception =>
+        Source.fromInputStream(c.getErrorStream()).mkString
     }
+
+  val statusMatch: Boolean =
+    expectedStatus == obtainedStatus
+  val bodyMatch: Boolean =
+    expectedBody
+      .map(_ == obtainedBody)
+      .getOrElse(true)
+
+  if (!statusMatch || !bodyMatch) {
+    log.error(name)
+    sys.error(
+      s"""|${name}:
+          |  expected:
+          |    * status: ${expectedStatus}
+          |    * body:
+          |      > ${expectedBody
+           .toString()
+           .replaceAll("\n", "\n      > ")}
+          |  obtained:
+          |    * status: ${obtainedStatus}
+          |    * body:
+          |      > ${obtainedBody
+           .toString()
+           .replaceAll("\n", "\n      > ")}
+          |""".stripMargin
+    )
+  } else {
+    log.success(name)
   }
 
-  assertEquals(
-    url = s"http://localhost:${warPort.value}/",
-    expectedBody = Source
-      .fromFile(
-        (Compile / sourceDirectory).value / "webapp" / "index.html"
-      )
-      .mkString
+}
+
+TaskKey[Unit]("check") := {
+
+  import scala.io.Source
+
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/",
+    expectedStatus = 200,
+    expectedBody = Some(
+      Source
+        .fromFile("src/main/webapp/index.html")
+        .mkString
+    )
   )
 
-  assertEquals(
-    url = s"http://localhost:${warPort.value}/count",
-    expectedBody = """|{
-                      |  "count": 1
-                      |}
-                      |""".stripMargin
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/count",
+    expectedStatus = 200,
+    expectedBody = Some(
+      """|{
+         |  "count": 1
+         |}
+         |""".stripMargin
+    )
   )
 
-  assertEquals(
-    url = s"http://localhost:${warPort.value}/count",
-    expectedBody = """|{
-                      |  "count": 2
-                      |}
-                      |""".stripMargin
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/count",
+    expectedStatus = 200,
+    expectedBody = Some(
+      """|{
+         |  "count": 2
+         |}
+         |""".stripMargin
+    )
   )
 
-  assertEquals(
-    url = s"http://localhost:${warPort.value}/count",
-    expectedBody = """|{
-                      |  "count": 3
-                      |}
-                      |""".stripMargin
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/count",
+    expectedStatus = 200,
+    expectedBody = Some(
+      """|{
+         |  "count": 3
+         |}
+         |""".stripMargin
+    )
   )
 
-  assertEquals(
-    url = s"http://localhost:${warPort.value}/count",
-    expectedBody = """|{
-                      |  "count": 4
-                      |}
-                      |""".stripMargin
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/count",
+    expectedStatus = 200,
+    expectedBody = Some(
+      """|{
+         |  "count": 4
+         |}
+         |""".stripMargin
+    )
   )
 
-  assertEquals(
-    url = s"http://localhost:${warPort.value}/hello",
-    expectedBody = """<h1>Hello, world!</h1>"""
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/hello",
+    expectedStatus = 200,
+    expectedBody = Some("""<h1>Hello, world!</h1>""")
   )
+
+}
+
+TaskKey[Unit]("check-test-200") := {
+
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/test",
+    expectedStatus = 200,
+    expectedBody = Some("""<h1>Testing!</h1>""")
+  )
+
+}
+
+TaskKey[Unit]("check-test-404") := {
+
+  check(
+    log = streams.value.log,
+    warPort = warPort.value,
+    path = "/test",
+    expectedStatus = 404,
+    expectedBody = None
+  )
+
 }
