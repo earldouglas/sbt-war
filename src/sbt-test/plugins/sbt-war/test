@@ -1,14 +1,38 @@
 > setup
 > reload
 
+-> check
+-> checkTest-200
+-> checkTest-404
+
 > warStart
 > awaitOpen
 > check
+-> checkTest-200
+> checkTest-404
 > warStop
 > awaitClosed
+
+-> check
+-> checkTest-200
+-> checkTest-404
+
+> Test / warStart
+> awaitOpen
+> check
+> checkTest-200
+-> checkTest-404
+> warStop
+> awaitClosed
+
+-> check
+-> checkTest-
+-> checkTest-404
 
 > warStartPackage
 > awaitOpen
 > check
+-> checkTest-200
+> checkTest-404
 > warStop
 > awaitClosed

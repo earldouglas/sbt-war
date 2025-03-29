@@ -75,7 +75,7 @@ val checkClasses: Def.Initialize[Task[Unit]] =
           .map(x => s"WEB-INF/classes/${x}" -> root / x)
           .toMap
       },
-      obtained = warClasses.value
+      obtained = (Runtime / warClasses).value
     )
   }
 
@@ -128,7 +128,7 @@ val checkLib: Def.Initialize[Task[Unit]] =
     assertContains(
       name = "WebappComponentsPlugin: checkLib",
       expected = expected.map(x => s"WEB-INF/lib/${x}"),
-      obtained = warLib.value
+      obtained = (Runtime / warLib).value
     )
   }
 
@@ -149,7 +149,7 @@ lazy val checkResources: Def.Initialize[Task[Unit]] =
       if (sizesDoNotMatch || mappingsDoNotMatch) {
         log.error(name)
         sys.error(
-          s"""|${name}:
+          s"""|${name}
               |  expected:
               |${expected.mkString("    - ", "\n    - ", "")}
               |  obtained:
@@ -178,6 +178,6 @@ lazy val checkResources: Def.Initialize[Task[Unit]] =
           .map(x => x -> root / "webapp" / x)
           .toMap
       },
-      obtained = warResources.value
+      obtained = (Runtime / warResources).value
     )
   }

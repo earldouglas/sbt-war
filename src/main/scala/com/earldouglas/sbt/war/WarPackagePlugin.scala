@@ -23,7 +23,8 @@ object WarPackagePlugin extends AutoPlugin {
 
     // Flip warContents around from (dst -> src) to (src -> dst)
     val packageContents: Initialize[Task[Seq[(java.io.File, String)]]] =
-      WebappComponentsPlugin.warContents
+      WebappComponentsPlugin
+        .warContents(Runtime)
         .map(_.map(_.swap).toSeq)
 
     val packageTaskSettings: Seq[Setting[_]] =

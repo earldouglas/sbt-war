@@ -53,145 +53,159 @@ object SbtWar extends AutoPlugin {
   private lazy val containerInstance =
     new AtomicReference[Option[ScalaProcess]](None)
 
-  override val projectSettings: Seq[Setting[_]] = {
-
-    def stopContainerInstance(log: String => Unit): Unit =
-      containerInstance
-        .getAndSet(None)
-        .foreach { p =>
-          log("[sbt-war] Starting server")
-          p.destroy()
-        }
-
-    val runnerJars: Initialize[Task[Seq[File]]] =
-      Def.task {
-        Classpaths
-          .managedJars(War, classpathTypes.value, update.value)
-          .map(_.data)
-          .toList
+  private def stopContainerInstance(log: String => Unit): Unit =
+    containerInstance
+      .getAndSet(None)
+      .foreach { p =>
+        log("[sbt-war] Starting server")
+        p.destroy()
       }
 
-    val startWarFromPackage: Initialize[Task[Unit]] =
-      Def.task {
+  private val runnerJars: Initialize[Task[Seq[File]]] =
+    Def.task {
+      Classpaths
+        .managedJars(War, classpathTypes.value, update.value)
+        .map(_.data)
+        .toList
+    }
 
-        val runnerConfigFile: File = {
+  private val startWarFromPackage: Initialize[Task[Unit]] =
+    Def.task {
 
-          val configurationFile: File =
-            (Compile / target).value / "war.properties"
+      val runnerConfigFile: File = {
 
-          Files
-            .writeString(
-              Paths.get(configurationFile.getPath()),
-              s"""|port=${warPort.value}
-                  |warFile=${pkg.value.getEscapedPath()}
-                  |""".stripMargin
-            )
-            .toFile()
-        }
+        val configurationFile: File =
+          (Compile / target).value / "war.properties"
 
-        stopContainerInstance(streams.value.log.info(_))
-
-        streams.value.log.info("[sbt-war] Starting server")
-        val process: ScalaProcess =
-          Fork.java.fork(
-            warForkOptions.value,
-            Seq(
-              "-cp",
-              Path.makeString(runnerJars.value),
-              "com.earldouglas.WarRunner",
-              runnerConfigFile.getPath()
-            )
+        Files
+          .writeString(
+            Paths.get(configurationFile.getPath()),
+            s"""|port=${warPort.value}
+                |warFile=${pkg.value.getEscapedPath()}
+                |""".stripMargin
           )
-        containerInstance.set(Some(process))
+          .toFile()
       }
 
-    val joinWar: Initialize[Task[Unit]] =
-      Def.task(containerInstance.get.map(_.exitValue()))
+      stopContainerInstance(streams.value.log.info(_))
 
-    val stopWar: Initialize[Task[Unit]] =
-      Def.task(stopContainerInstance(streams.value.log.info(_)))
+      streams.value.log.info("[sbt-war] Starting server")
+      val process: ScalaProcess =
+        Fork.java.fork(
+          warForkOptions.value,
+          Seq(
+            "-cp",
+            Path.makeString(runnerJars.value),
+            "com.earldouglas.WarRunner",
+            runnerConfigFile.getPath()
+          )
+        )
+      containerInstance.set(Some(process))
+    }
 
-    val onLoadSetting: Initialize[State => State] =
-      Def.setting {
-        (Global / onLoad).value
-          .compose { state: State =>
-            state.addExitHook(stopContainerInstance(println(_)))
-          }
-      }
+  private val joinWar: Initialize[Task[Unit]] =
+    Def.task(containerInstance.get.map(_.exitValue()))
 
-    val runnerLibrary: Initialize[ModuleID] =
-      Def.setting {
+  private val stopWar: Initialize[Task[Unit]] =
+    Def.task(stopContainerInstance(streams.value.log.info(_)))
 
-        val warRunnerVersion: String =
-          BuildInfo.version
-            .split("-")
-            .toList match {
-            case v :: Nil =>
-              s"""${v}_${servletSpec.value}"""
-            case v :: t =>
-              s"""${v}_${servletSpec.value}-${t.mkString("-")}"""
-            case _ => throw new Exception("wat")
-          }
+  private val onLoadSetting: Initialize[State => State] =
+    Def.setting {
+      (Global / onLoad).value
+        .compose { state: State =>
+          state.addExitHook(stopContainerInstance(println(_)))
+        }
+    }
 
-        "com.earldouglas" % s"war-runner" % warRunnerVersion % War
-      }
+  private val runnerLibrary: Initialize[ModuleID] =
+    Def.setting {
 
-    val startWarFromSources: Initialize[Task[Unit]] =
-      Def.task {
-
-        val runnerConfigFile: File = {
-
-          val emptyDir: File = (Compile / target).value / "empty"
-
-          val resourceMapString =
-            WebappComponentsPlugin.warContents.value
-              .map { case (k, v) =>
-                s"${k}->${v.getEscapedPath()}"
-              }
-              .mkString(",")
-
-          val configurationFile: File =
-            (Compile / target).value / "webapp-components.properties"
-
-          Files
-            .writeString(
-              Paths.get(configurationFile.getPath()),
-              s"""|hostname=localhost
-                  |port=${warPort.value}
-                  |contextPath=
-                  |emptyWebappDir=${emptyDir.getEscapedPath()}
-                  |emptyClassesDir=${emptyDir.getEscapedPath()}
-                  |resourceMap=${resourceMapString}
-                  |""".stripMargin
-            )
-            .toFile()
+      val warRunnerVersion: String =
+        BuildInfo.version
+          .split("-")
+          .toList match {
+          case v :: Nil =>
+            s"""${v}_${servletSpec.value}"""
+          case v :: t =>
+            s"""${v}_${servletSpec.value}-${t.mkString("-")}"""
+          case _ => throw new Exception("wat")
         }
 
-        stopContainerInstance(streams.value.log.info(_))
+      "com.earldouglas" % s"war-runner" % warRunnerVersion % War
+    }
 
-        streams.value.log.info("[sbt-war] Quickstarting server")
-        val process: ScalaProcess =
-          Fork.java.fork(
-            warForkOptions.value,
-            Seq(
-              "-cp",
-              Path.makeString(runnerJars.value),
-              "com.earldouglas.WebappComponentsRunner",
-              runnerConfigFile.getPath()
-            )
+  private def startWarFromSources(
+      c: Configuration
+  ): Initialize[Task[Unit]] =
+    Def.task {
+
+      val runnerConfigFile: File = {
+
+        val emptyDir: File = (Compile / target).value / "empty"
+
+        val resourceMapString =
+          WebappComponentsPlugin
+            .warContents(c)
+            .value
+            .map { case (k, v) =>
+              s"${k}->${v.getEscapedPath()}"
+            }
+            .mkString(",")
+
+        val configurationFile: File =
+          (Compile / target).value / "webapp-components.properties"
+
+        Files
+          .writeString(
+            Paths.get(configurationFile.getPath()),
+            s"""|hostname=localhost
+                |port=${warPort.value}
+                |contextPath=
+                |emptyWebappDir=${emptyDir.getEscapedPath()}
+                |emptyClassesDir=${emptyDir.getEscapedPath()}
+                |resourceMap=${resourceMapString}
+                |""".stripMargin
           )
-        containerInstance.set(Some(process))
+          .toFile()
       }
 
+      stopContainerInstance(streams.value.log.info(_))
+
+      streams.value.log.info("[sbt-war] Quickstarting server")
+      val process: ScalaProcess =
+        Fork.java.fork(
+          warForkOptions.value,
+          Seq(
+            "-cp",
+            Path.makeString(runnerJars.value),
+            "com.earldouglas.WebappComponentsRunner",
+            runnerConfigFile.getPath()
+          )
+        )
+      containerInstance.set(Some(process))
+    }
+
+  def settingsFor(c: Configuration): Seq[Setting[_]] =
     Seq(
-      Global / onLoad := onLoadSetting.value,
-      libraryDependencies += runnerLibrary.value,
-      warForkOptions := forkOptions.value,
-      warJoin := joinWar.value,
-      warPort := 8080,
-      warStart := startWarFromSources.value,
-      warStartPackage := startWarFromPackage.value,
-      warStop := stopWar.value
-    )
-  }
+      Seq(
+        c / warStart := startWarFromSources(c).value
+      ),
+      WebappComponentsPlugin.settingsFor(c)
+    ).flatten
+
+  override val projectSettings: Seq[Setting[_]] =
+    Seq(
+      Seq(
+        Global / onLoad := onLoadSetting.value,
+        libraryDependencies += runnerLibrary.value,
+        warForkOptions := forkOptions.value,
+        warJoin := joinWar.value,
+        warPort := 8080,
+        warStartPackage := startWarFromPackage.value,
+        warStop := stopWar.value
+      ),
+      settingsFor(Runtime),
+      settingsFor(Test)
+    ).flatten
+
 }
