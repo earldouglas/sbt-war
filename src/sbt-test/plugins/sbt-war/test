@@ -26,7 +26,7 @@
 > awaitClosed
 
 -> check
--> checkTest-
+-> checkTest-200
 -> checkTest-404
 
 > warStartPackage
