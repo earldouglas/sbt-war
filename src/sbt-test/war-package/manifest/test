@@ -1,0 +1,19 @@
+# copy files from the template project
+> setup
+
+# load configuration copied from the template project
+> reload
+
+########################################################################
+
+# verify that the package manifest includes a version
+> checkManifest includes "Manifest-Version: 1.0"
+
+# verify that the package manifest does not include the "Sealed" property
+> checkManifest excludes "Sealed: true"
+
+# configure the manifest to include the "Sealed" property
+> 'set sbt.Keys.`package` / packageOptions += Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )'
+
+# verify that the package manifest now includes the "Sealed" property
+> checkManifest includes "Sealed: true"

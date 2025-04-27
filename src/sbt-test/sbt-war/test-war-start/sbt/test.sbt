@@ -1,6 +1,8 @@
 enablePlugins(SbtWar)
 
-warPort := 8081
+warPort := 8082
+
+////////////////////////////////////////////////////////////////////////
 
 TaskKey[Unit]("await-open") := {
 
@@ -135,84 +137,6 @@ def check(
   } else {
     log.success(name)
   }
-
-}
-
-TaskKey[Unit]("check") := {
-
-  import scala.io.Source
-
-  check(
-    log = streams.value.log,
-    warPort = warPort.value,
-    path = "/",
-    expectedStatus = 200,
-    expectedBody = Some(
-      Source
-        .fromFile("src/main/webapp/index.html")
-        .mkString
-    )
-  )
-
-  check(
-    log = streams.value.log,
-    warPort = warPort.value,
-    path = "/count",
-    expectedStatus = 200,
-    expectedBody = Some(
-      """|{
-         |  "count": 1
-         |}
-         |""".stripMargin
-    )
-  )
-
-  check(
-    log = streams.value.log,
-    warPort = warPort.value,
-    path = "/count",
-    expectedStatus = 200,
-    expectedBody = Some(
-      """|{
-         |  "count": 2
-         |}
-         |""".stripMargin
-    )
-  )
-
-  check(
-    log = streams.value.log,
-    warPort = warPort.value,
-    path = "/count",
-    expectedStatus = 200,
-    expectedBody = Some(
-      """|{
-         |  "count": 3
-         |}
-         |""".stripMargin
-    )
-  )
-
-  check(
-    log = streams.value.log,
-    warPort = warPort.value,
-    path = "/count",
-    expectedStatus = 200,
-    expectedBody = Some(
-      """|{
-         |  "count": 4
-         |}
-         |""".stripMargin
-    )
-  )
-
-  check(
-    log = streams.value.log,
-    warPort = warPort.value,
-    path = "/hello",
-    expectedStatus = 200,
-    expectedBody = Some("""<h1>Hello, world!</h1>""")
-  )
 
 }
 

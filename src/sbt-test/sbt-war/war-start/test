@@ -1,0 +1,27 @@
+# copy files from the template project
+> setup
+
+# load configuration copied from the template project
+> reload
+
+########################################################################
+
+-> check
+
+# start the container
+> warStart
+> awaitOpen
+
+# verify that the endpoints are up
+> check
+> warStop
+> awaitClosed
+
+# start the container from the packaged WAR file
+> warStartPackage
+> awaitOpen
+
+# verify that the endpoints are up
+> check
+> warStop
+> awaitClosed
