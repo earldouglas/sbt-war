@@ -1,0 +1,10 @@
+# copy files from the template project
+> setup
+
+# load configuration copied from the template project
+> reload
+
+########################################################################
+
+# Verify the contents of warResources
+> check

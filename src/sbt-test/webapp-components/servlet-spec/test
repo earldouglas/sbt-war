@@ -1,0 +1,16 @@
+# copy files from the template project
+> setup
+
+# load configuration copied from the template project
+> reload
+
+########################################################################
+
+# incompatible code (jakarta) should not compile against Servlet 3.0
+-> compile
+
+# replace the incompatible code (jakarta) with compatible code (javax)
+$ copy-file servlet-3.0/servlet.scala src/main/scala/04-runners/servlet.scala
+
+# compatible code (javax) should compile against Servlet 3.0
+> compile
