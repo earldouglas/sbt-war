@@ -5,19 +5,17 @@
 ```mermaid
 flowchart TB
 
-    subgraph webapp
-        WebappComponentsPlugin
-        WebappComponentsRunnerPlugin
-        webappRunnerCA[components-aware webapp-runner]
-    end
+    webappRunner[webapp-runner]
 
     subgraph war
-        WarPackagePlugin
-        WarPackageRunnerPlugin
-        webappRunner[webapp-runner]
+      SbtWar
+      WarPackagePlugin
+      webappRunner
     end
 
-    SbtWar
+    subgraph webapp
+      WebappComponentsPlugin
+    end
 
     subgraph project
         resources
@@ -30,16 +28,11 @@ flowchart TB
     WebappComponentsPlugin-->classes
     WebappComponentsPlugin-->lib
 
-    WebappComponentsRunnerPlugin-->WebappComponentsPlugin
-    WebappComponentsRunnerPlugin-->webappRunnerCA
-
     WarPackagePlugin-->WebappComponentsPlugin
 
-    WarPackageRunnerPlugin-->WarPackagePlugin
-    WarPackageRunnerPlugin-->webappRunner
+    SbtWar-->WarPackagePlugin
+    SbtWar-->webappRunner
 
-    SbtWar-->WebappComponentsRunnerPlugin
-    SbtWar-->WarPackageRunnerPlugin
 ```
 
 
