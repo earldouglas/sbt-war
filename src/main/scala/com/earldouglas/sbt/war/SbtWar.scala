@@ -57,8 +57,9 @@ object SbtWar extends AutoPlugin {
     containerInstance
       .getAndSet(None)
       .foreach { p =>
-        log("[sbt-war] Starting server")
+        log("[sbt-war] Stopping server")
         p.destroy()
+        p.exitValue() // block until the process exits
       }
 
   private val runnerJars: Initialize[Task[Seq[File]]] =
