@@ -56,7 +56,7 @@ object WebappComponentsPlugin extends AutoPlugin {
       ).flatten.toMap
     }
 
-  def settingsFor(c: Configuration): Seq[Setting[_]] = {
+  def settingsFor(c: Configuration): Seq[Setting[?]] = {
 
     val warClassesTask: Initialize[Task[Map[String, File]]] =
       (c / fullClasspath)
@@ -74,7 +74,7 @@ object WebappComponentsPlugin extends AutoPlugin {
     )
   }
 
-  override val projectSettings: Seq[Setting[_]] = {
+  override val projectSettings: Seq[Setting[?]] = {
 
     val servletApi: Initialize[ModuleID] =
       Def.setting {

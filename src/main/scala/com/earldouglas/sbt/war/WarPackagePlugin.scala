@@ -19,7 +19,7 @@ object WarPackagePlugin extends AutoPlugin {
   override val requires: Plugins =
     WebappComponentsPlugin
 
-  override lazy val projectSettings: Seq[Setting[_]] = {
+  override lazy val projectSettings: Seq[Setting[?]] = {
 
     // Flip warContents around from (dst -> src) to (src -> dst)
     val packageContents: Initialize[Task[Seq[(java.io.File, String)]]] =
@@ -27,13 +27,13 @@ object WarPackagePlugin extends AutoPlugin {
         .warContents(Runtime)
         .map(_.map(_.swap).toSeq)
 
-    val packageTaskSettings: Seq[Setting[_]] =
+    val packageTaskSettings: Seq[Setting[?]] =
       Defaults.packageTaskSettings(pkg, packageContents)
 
-    val packageArtifactSetting: Setting[_] =
+    val packageArtifactSetting: Setting[?] =
       pkg / artifact := Artifact(moduleName.value, "war", "war")
 
-    val artifactSettings: Seq[Setting[_]] =
+    val artifactSettings: Seq[Setting[?]] =
       addArtifact(Compile / pkg / artifact, pkg)
 
     Seq(
