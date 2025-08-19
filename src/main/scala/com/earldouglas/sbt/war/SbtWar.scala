@@ -186,7 +186,7 @@ object SbtWar extends AutoPlugin {
       containerInstance.set(Some(process))
     }
 
-  def settingsFor(c: Configuration): Seq[Setting[_]] =
+  def settingsFor(c: Configuration): Seq[Setting[?]] =
     Seq(
       Seq(
         c / warStart := startWarFromSources(c).value
@@ -194,7 +194,7 @@ object SbtWar extends AutoPlugin {
       WebappComponentsPlugin.settingsFor(c)
     ).flatten
 
-  override val projectSettings: Seq[Setting[_]] =
+  override val projectSettings: Seq[Setting[?]] =
     Seq(
       Seq(
         Global / onLoad := onLoadSetting.value,
