@@ -6,6 +6,14 @@ ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 ThisBuild / scalacOptions += "-Ywarn-unused-import"
 ThisBuild / scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
+ThisBuild / scalacOptions ++= {
+  scalaBinaryVersion.value match {
+    case "2.12" =>
+      Seq("-Xsource:3")
+    case _ =>
+      Nil
+  }
+}
 
 // Testing
 ThisBuild / libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
