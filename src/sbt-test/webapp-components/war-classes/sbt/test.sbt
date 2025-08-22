@@ -63,7 +63,7 @@ TaskKey[Unit]("check-no-export-jars") := {
     )
 
   assertEquals(
-    name = "WebappComponentsPlugin: warClasses",
+    name = "WebappComponentsPlugin: warClasses (exportJars := false)",
     expected = {
       val root: File = (Compile / classDirectory).value
       expected
@@ -103,7 +103,7 @@ TaskKey[Unit]("check-export-jars") := {
   }
 
   assertEquals(
-    name = "WebappComponentsPlugin: warClasses",
+    name = "WebappComponentsPlugin: warClasses (exportJars := true)",
     expected = Map.empty[String, File],
     obtained = (Runtime / warClasses).value
   )
