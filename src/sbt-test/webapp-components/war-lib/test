@@ -6,5 +6,10 @@
 
 ########################################################################
 
-# Verify the contents of warLib
-> check
+# warLib should not include the project jar when exportJars is false
+> set exportJars := false
+> checkNoExportJars
+
+# warLib should include the project jar when exportJars is false
+> set exportJars := true
+> checkExportJars

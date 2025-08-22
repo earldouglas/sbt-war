@@ -2,7 +2,7 @@ enablePlugins(WebappComponentsPlugin)
 
 ////////////////////////////////////////////////////////////////////////
 
-TaskKey[Unit]("check") := {
+TaskKey[Unit]("check-no-export-jars") := {
 
   val log: sbt.internal.util.ManagedLogger = streams.value.log
 
@@ -70,6 +70,41 @@ TaskKey[Unit]("check") := {
         .map(x => s"WEB-INF/classes/${x}" -> root / x)
         .toMap
     },
+    obtained = (Runtime / warClasses).value
+  )
+}
+
+TaskKey[Unit]("check-export-jars") := {
+
+  val log: sbt.internal.util.ManagedLogger = streams.value.log
+
+  def assertEquals(
+      name: String,
+      expected: Map[String, File],
+      obtained: Map[String, File]
+  ): Unit = {
+
+    val sizesDoNotMatch = expected.size != obtained.size
+    val mappingsDoNotMatch = expected != obtained
+
+    if (sizesDoNotMatch || mappingsDoNotMatch) {
+      log.error(name)
+      sys.error(
+        s"""|${name}:
+            |  expected:
+            |${expected.mkString("    - ", "\n    - ", "")}
+            |  obtained:
+            |${obtained.mkString("    - ", "\n    - ", "")}
+            |""".stripMargin
+      )
+    } else {
+      log.success(name)
+    }
+  }
+
+  assertEquals(
+    name = "WebappComponentsPlugin: warClasses",
+    expected = Map.empty[String, File],
     obtained = (Runtime / warClasses).value
   )
 }

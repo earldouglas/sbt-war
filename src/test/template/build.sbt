@@ -1,3 +1,5 @@
+name := "test"
+
 libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.4"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
 

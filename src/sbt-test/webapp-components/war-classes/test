@@ -6,5 +6,10 @@
 
 ########################################################################
 
-# Verify the contents of warClasses
-> check
+# warClasses should not be empty when exportJars is false
+> set exportJars := false
+> checkNoExportJars
+
+# warClasses should be empty when exportJars is true
+> set exportJars := true
+> checkExportJars
