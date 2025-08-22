@@ -20,4 +20,6 @@ jobs:
 
     - uses: sbt/setup-sbt@v1
 
-    - run: sbt javafmtCheckAll scalafmtCheckAll "scalafixAll --check" test publishLocal scripted
+    - run: sbt javafmtCheckAll scalafmtCheckAll "scalafixAll --check"
+
+    - run: sbt +test +publishLocal +scripted
