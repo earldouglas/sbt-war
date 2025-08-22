@@ -1,11 +1,10 @@
 package com.earldouglas.sbt.war
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
+import munit.FunSuite
 
 import java.io.File
 
-class WebappComponentsTest extends AnyFunSuite with Matchers {
+class WebappComponentsTest extends FunSuite {
 
   val fakeproject: File =
     new File("src/test/fakeproject/src/main/webapp")
@@ -29,7 +28,10 @@ class WebappComponentsTest extends AnyFunSuite with Matchers {
     val obtained: Map[String, File] =
       WebappComponents.getResources(fakeproject)
 
-    obtained shouldBe expected
+    assertEquals(
+      obtained = obtained,
+      expected = expected
+    )
   }
 
   test("getClasses") {
@@ -43,7 +45,10 @@ class WebappComponentsTest extends AnyFunSuite with Matchers {
     val obtained: Map[String, File] =
       WebappComponents.getClasses(fakeClasspath)
 
-    obtained shouldBe expected
+    assertEquals(
+      obtained = obtained,
+      expected = expected
+    )
   }
 
   test("getLib") {
@@ -57,6 +62,9 @@ class WebappComponentsTest extends AnyFunSuite with Matchers {
     val obtained: Map[String, File] =
       WebappComponents.getLib(fakeClasspath)
 
-    obtained shouldBe expected
+    assertEquals(
+      obtained = obtained,
+      expected = expected
+    )
   }
 }

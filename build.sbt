@@ -16,7 +16,7 @@ ThisBuild / scalacOptions ++= {
 }
 
 // Testing
-ThisBuild / libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.0.4" % Test
 ThisBuild / Test / fork := true
 
 def warRunnerVersion(servletSpec: String) =
