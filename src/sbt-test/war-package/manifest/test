@@ -13,7 +13,7 @@
 > checkManifest excludes "Sealed: true"
 
 # configure the manifest to include the "Sealed" property
-> 'set sbt.Keys.`package` / packageOptions += Package.ManifestAttributes( java.util.jar.Attributes.Name.SEALED -> "true" )'
+> 'set sbt.Keys.`package` / packageOptions += extraPackageOptions.value'
 
 # verify that the package manifest now includes the "Sealed" property
 > checkManifest includes "Sealed: true"

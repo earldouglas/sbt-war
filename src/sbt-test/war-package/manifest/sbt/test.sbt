@@ -4,13 +4,11 @@ enablePlugins(WarPackagePlugin)
 
 InputKey[Unit]("checkManifest") := {
 
-  import sbt.Keys.{`package` => pkg}
   import java.io.InputStream
   import java.util.zip.ZipFile
   import scala.io.Source
 
-  val warFile: File = pkg.value
-  val zipFile: ZipFile = new ZipFile(warFile)
+  val zipFile: ZipFile = new ZipFile(warFile.value)
 
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
 

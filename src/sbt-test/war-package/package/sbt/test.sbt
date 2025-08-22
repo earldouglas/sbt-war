@@ -6,7 +6,6 @@ TaskKey[Unit]("check-no-export-jars") := {
 
   val log: sbt.internal.util.ManagedLogger = streams.value.log
 
-  import sbt.Keys.{`package` => pkg}
   import scala.collection.JavaConverters._
   import java.util.zip.ZipEntry
   import java.util.zip.ZipFile
@@ -97,8 +96,7 @@ TaskKey[Unit]("check-no-export-jars") := {
       "styles/theme.css"
     )
 
-  val warFile: File = pkg.value
-  val zipFile: ZipFile = new ZipFile(warFile)
+  val zipFile: ZipFile = new ZipFile(warFile.value)
   val zipEntries: JEnumeration[_ <: ZipEntry] = zipFile.entries()
   val contents: Set[String] =
     zipEntries.asScala.map(_.getName()).toSet
@@ -169,8 +167,7 @@ TaskKey[Unit]("check-export-jars") := {
       "styles/theme.css"
     )
 
-  val warFile: File = pkg.value
-  val zipFile: ZipFile = new ZipFile(warFile)
+  val zipFile: ZipFile = new ZipFile(warFile.value)
   val zipEntries: JEnumeration[_ <: ZipEntry] = zipFile.entries()
   val contents: Set[String] =
     zipEntries.asScala.map(_.getName()).toSet
