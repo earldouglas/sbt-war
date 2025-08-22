@@ -1,16 +1,11 @@
 package com.earldouglas
 
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
+import munit.FunSuite
 
 import java.io.File
 import scala.collection.JavaConverters._
 
-class WebappComponentsConfigurationTest
-    extends AnyFunSuite
-    with Matchers
-    with BeforeAndAfterAll {
+class WebappComponentsConfigurationTest extends FunSuite {
 
   test("load") {
 
@@ -18,15 +13,33 @@ class WebappComponentsConfigurationTest
       WebappComponentsConfiguration
         .load("src/test/resources/webapp-components.properties")
 
-    configuration.hostname shouldBe "localhost"
-    configuration.port shouldBe 8989
-    configuration.emptyWebappDir shouldBe (new File("target/empty"))
-    configuration.emptyClassesDir shouldBe (new File("target/empty"))
-    configuration.resourceMap.asScala shouldBe
-      List("bar.html", "foo.html", "baz/raz.css")
+    assertEquals(
+      obtained = configuration.hostname,
+      expected = "localhost"
+    )
+
+    assertEquals(
+      obtained = configuration.port,
+      expected = 8989
+    )
+
+    assertEquals(
+      obtained = configuration.emptyWebappDir,
+      expected = new File("target/empty")
+    )
+
+    assertEquals(
+      obtained = configuration.emptyClassesDir,
+      expected = new File("target/empty")
+    )
+
+    assertEquals(
+      obtained = configuration.resourceMap.asScala.toMap,
+      expected = List("bar.html", "foo.html", "baz/raz.css")
         .map(x =>
           (x -> new File(s"src/test/fakeproject/src/main/webapp/${x}"))
         )
         .toMap
+    )
   }
 }

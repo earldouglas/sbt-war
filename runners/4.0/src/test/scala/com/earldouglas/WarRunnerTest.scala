@@ -1,13 +1,8 @@
 package com.earldouglas
 
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
+import munit.FunSuite
 
-class WarRunnerTest
-    extends AnyFunSuite
-    with Matchers
-    with BeforeAndAfterAll {
+class WarRunnerTest extends FunSuite {
 
   override def beforeAll(): Unit = {
 
@@ -64,11 +59,14 @@ class WarRunnerTest
         body = None
       )
 
-    obtained.copy(
-      headers = obtained.headers.filter { case (k, _) =>
-        k == "Content-Type"
-      }
-    ) shouldBe expected
+    assertEquals(
+      obtained = obtained.copy(
+        headers = obtained.headers.filter { case (k, _) =>
+          k == "Content-Type"
+        }
+      ),
+      expected = expected
+    )
   }
 
   test("/bar.html") {
@@ -91,11 +89,14 @@ class WarRunnerTest
         body = None
       )
 
-    obtained.copy(
-      headers = obtained.headers.filter { case (k, _) =>
-        k == "Content-Type"
-      }
-    ) shouldBe expected
+    assertEquals(
+      obtained = obtained.copy(
+        headers = obtained.headers.filter { case (k, _) =>
+          k == "Content-Type"
+        }
+      ),
+      expected = expected
+    )
   }
 
   test("/baz/raz.css") {
@@ -118,10 +119,13 @@ class WarRunnerTest
         body = None
       )
 
-    obtained.copy(
-      headers = obtained.headers.filter { case (k, _) =>
-        k == "Content-Type"
-      }
-    ) shouldBe expected
+    assertEquals(
+      obtained = obtained.copy(
+        headers = obtained.headers.filter { case (k, _) =>
+          k == "Content-Type"
+        }
+      ),
+      expected = expected
+    )
   }
 }
