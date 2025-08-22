@@ -48,7 +48,7 @@ TaskKey[Unit]("check-no-export-jars") := {
     )
 
   assertContains(
-    name = "WebappComponentsPlugin: warLib",
+    name = "WebappComponentsPlugin: warLib (exportJars := false)",
     expected = expected.map(x => s"WEB-INF/lib/${x}"),
     obtained = (Runtime / warLib).value
   )
@@ -101,7 +101,7 @@ TaskKey[Unit]("check-export-jars") := {
     )
 
   assertContains(
-    name = "WebappComponentsPlugin: warLib",
+    name = "WebappComponentsPlugin: warLib (exportJars := true)",
     expected = expected.map(x => s"WEB-INF/lib/${x}"),
     obtained = (Runtime / warLib).value
   )
