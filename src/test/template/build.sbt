@@ -9,7 +9,3 @@ libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.8"
 
 scalaVersion := "3.5.0"
-semanticdbEnabled := true
-semanticdbVersion := scalafixSemanticdb.revision
-
-scalacOptions += "-Wunused:all"
