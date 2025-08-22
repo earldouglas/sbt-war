@@ -1,5 +1,6 @@
 package com.earldouglas.sbt.war
 
+import sbt.Def
 import sbt.Def.Initialize
 import sbt.Keys.artifact
 import sbt.Keys.moduleName
@@ -22,10 +23,18 @@ object WarPackagePlugin extends AutoPlugin {
   override lazy val projectSettings: Seq[Setting[?]] = {
 
     // Flip warContents around from (dst -> src) to (src -> dst)
-    val packageContents: Initialize[Task[Seq[(java.io.File, String)]]] =
-      WebappComponentsPlugin
-        .warContents(Runtime)
-        .map(_.map(_.swap).toSeq)
+    val packageContents
+        : Initialize[Task[Seq[(Compat.PackageFile, String)]]] =
+      Def.taskDyn {
+        val toPackageFile = Compat.toPackageFile.value
+        WebappComponentsPlugin
+          .warContents(Runtime)
+          .map(
+            _.map(_.swap)
+              .map({ case (f, n) => (toPackageFile(f), n) })
+              .toSeq
+          )
+      }
 
     val packageTaskSettings: Seq[Setting[?]] =
       Defaults.packageTaskSettings(pkg, packageContents)

@@ -34,9 +34,9 @@ in
       javafmtCheckAll \
       scalafmtCheckAll \
       "scalafixAll --check" \
-      test \
+      +test \
       publishLocal \
-      scripted
+      +scripted
   '';
 
   enterTest = ''
