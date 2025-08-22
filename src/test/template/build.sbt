@@ -1,7 +1,7 @@
 name := "test"
 
 libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.4"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.19" % "test"
+libraryDependencies += "org.scalameta" %% "munit" % "1.0.4" % Test
 
 libraryDependencies += "com.h2database" % "h2" % "2.2.224"
 

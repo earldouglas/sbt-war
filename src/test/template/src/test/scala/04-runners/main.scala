@@ -1,12 +1,11 @@
 package runners
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
+import munit.FunSuite
 
 import java.sql.Connection
 import java.sql.DriverManager
 
-class MainSute extends AnyFunSuite with Matchers:
+class MainSute extends FunSuite:
 
   test("unsafeIncrementAndGet()") {
 
@@ -19,10 +18,25 @@ class MainSute extends AnyFunSuite with Matchers:
           connection.setAutoCommit(false)
           connection
 
-    main.unsafeIncrementAndGet() shouldBe 1
-    main.unsafeIncrementAndGet() shouldBe 2
-    main.unsafeIncrementAndGet() shouldBe 3
-    main.unsafeIncrementAndGet() shouldBe 4
+    assertEquals(
+      obtained = main.unsafeIncrementAndGet(),
+      expected = 1
+    )
+
+    assertEquals(
+      obtained = main.unsafeIncrementAndGet(),
+      expected = 2
+    )
+
+    assertEquals(
+      obtained = main.unsafeIncrementAndGet(),
+      expected = 3
+    )
+
+    assertEquals(
+      obtained = main.unsafeIncrementAndGet(),
+      expected = 4
+    )
   }
 
   test("unsafeIncrementAndGetAsJson()") {
@@ -36,21 +50,31 @@ class MainSute extends AnyFunSuite with Matchers:
           connection.setAutoCommit(false)
           connection
 
-    main.unsafeIncrementAndGetAsJson() shouldBe
-      """|{
-         |  "count": 1
-         |}
-         |""".stripMargin
+    assertEquals(
+      obtained = main.unsafeIncrementAndGetAsJson(),
+      expected =
+          """|{
+             |  "count": 1
+             |}
+             |""".stripMargin
+    )
 
-    main.unsafeIncrementAndGetAsJson() shouldBe
-      """|{
-         |  "count": 2
-         |}
-         |""".stripMargin
+    assertEquals(
+      obtained = main.unsafeIncrementAndGetAsJson(),
+      expected =
+          """|{
+             |  "count": 2
+             |}
+             |""".stripMargin
+    )
 
-    main.unsafeIncrementAndGetAsJson() shouldBe
-      """|{
-         |  "count": 3
-         |}
-         |""".stripMargin
+    assertEquals(
+      obtained = main.unsafeIncrementAndGetAsJson(),
+      expected =
+          """|{
+             |  "count": 3
+             |}
+             |""".stripMargin
+    )
+
   }
