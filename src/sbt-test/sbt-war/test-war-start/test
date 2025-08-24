@@ -21,6 +21,7 @@
 > awaitClosed
 
 # start the container with test resources
+> set exportJars := false
 > Test / warStart
 > awaitOpen
 
