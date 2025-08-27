@@ -6,5 +6,10 @@
 
 ########################################################################
 
-# Verify the contents of the packaged WAR file
-> check
+# Verify the contents of the packaged WAR file without exportJars
+> set exportJars := false
+> checkNoExportJars
+
+# Verify the contents of the packaged WAR file with exportJars
+> set exportJars := true
+> checkExportJars
