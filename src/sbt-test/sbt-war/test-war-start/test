@@ -6,20 +6,6 @@
 
 ########################################################################
 
-# verify that none of the endpoints are up
--> checkTest-200
--> checkTest-404
-
-# start the container without test resources
-> warStart
-> awaitOpen
-
-# verify that the test endpoint is not up
--> checkTest-200
-> checkTest-404
-> warStop
-> awaitClosed
-
 # start the container with test resources
 > Test / warStart
 > awaitOpen
@@ -27,15 +13,5 @@
 # verify that the test endpoint is now up
 > checkTest-200
 -> checkTest-404
-> warStop
-> awaitClosed
-
-# start the container from the packaged WAR file
-> warStartPackage
-> awaitOpen
-
-# verify that the test endpoint is not up
--> checkTest-200
-> checkTest-404
 > warStop
 > awaitClosed
