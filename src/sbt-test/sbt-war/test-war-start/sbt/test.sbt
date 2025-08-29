@@ -1,6 +1,6 @@
 enablePlugins(SbtWar)
 
-warPort := 8082
+warPort := 8081
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +24,7 @@ TaskKey[Unit]("await-open") := {
         Thread.sleep(250)
         awaitOpen(port, retries - 1)
       } else {
-        throw new Exception(s"expected port $port to be open")
+        sys.error(s"expected port $port to be open")
       }
     }
 
@@ -51,7 +51,7 @@ TaskKey[Unit]("await-closed") := {
         Thread.sleep(250)
         awaitClosed(port, retries - 1)
       } else {
-        throw new Exception(s"expected port $port to be closed")
+        sys.error(s"expected port $port to be closed")
       }
     }
 
@@ -101,6 +101,7 @@ def check(
 
   val obtainedStatus: Int =
     c.getResponseCode()
+
   val obtainedBody: String =
     try {
       Source.fromInputStream(c.getInputStream()).mkString
@@ -111,13 +112,13 @@ def check(
 
   val statusMatch: Boolean =
     expectedStatus == obtainedStatus
+
   val bodyMatch: Boolean =
     expectedBody
       .map(_ == obtainedBody)
       .getOrElse(true)
 
-  if (!statusMatch || !bodyMatch) {
-    log.error(name)
+  if (!statusMatch && !bodyMatch) {
     sys.error(
       s"""|${name}:
           |  expected:
@@ -131,11 +132,42 @@ def check(
           |    * body:
           |      > ${obtainedBody
            .toString()
+           .replaceAll("\n", "\n      > ")}""".stripMargin
+    )
+  } else if (!statusMatch) {
+    sys.error(
+      s"""|${name}:
+          |  expected status: ${expectedStatus}
+          |  obtained status: ${obtainedStatus}""".stripMargin
+    )
+  } else if (!bodyMatch) {
+    sys.error(
+      s"""|${name}:
+          |  expected body:
+          |      > ${expectedBody
+           .toString()
            .replaceAll("\n", "\n      > ")}
-          |""".stripMargin
+          |  obtained body:
+          |      > ${obtainedBody
+           .toString()
+           .replaceAll("\n", "\n      > ")}""".stripMargin
     )
   } else {
-    log.success(name)
+    log.success(
+      s"""|${name}:
+          |  expected:
+          |    * status: ${expectedStatus}
+          |    * body:
+          |      > ${expectedBody
+           .toString()
+           .replaceAll("\n", "\n      > ")}
+          |  obtained:
+          |    * status: ${obtainedStatus}
+          |    * body:
+          |      > ${obtainedBody
+           .toString()
+           .replaceAll("\n", "\n      > ")}""".stripMargin
+    )
   }
 
 }

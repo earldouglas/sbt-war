@@ -6,8 +6,8 @@
 
 ########################################################################
 
-# start the container
-> warStart
+# start the container from the packaged WAR file
+> warStartPackage
 > awaitOpen
 
 # verify that the endpoints are up
