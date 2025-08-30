@@ -48,6 +48,14 @@ sbt-war uses the process outlined in the [Using
 Sonatype](https://www.scala-sbt.org/release/docs/Using-Sonatype.html)
 section of the sbt manual for publishing to Maven Central via Sonatype.
 
+Start the development environment:
+
+```
+$ devenv shell
+```
+
+Set the old and new versions:
+
 ```
 $ export OLD_VERSION=5.0.0-M6
 $ export NEW_VERSION=5.0.0-M7
@@ -73,7 +81,6 @@ $ git push --tags origin
 Create a release in Sonatype:
 
 ```
-$ nix-shell
 $ sbt
 > set ThisBuild / version := sys.env("NEW_VERSION")
 > +publishSigned
