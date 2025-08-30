@@ -31,12 +31,15 @@ object WebappComponentsPlugin extends AutoPlugin {
     lazy val servletSpec: SettingKey[String] =
       settingKey[String]("servlet spec version")
 
+    @transient
     lazy val warResources: TaskKey[Map[String, File]] =
       taskKey[Map[String, File]]("webapp resources")
 
+    @transient
     lazy val warClasses: TaskKey[Map[String, File]] =
       taskKey[Map[String, File]]("webapp classes")
 
+    @transient
     lazy val warLib: TaskKey[Map[String, File]] =
       taskKey[Map[String, File]]("webapp lib")
   }
@@ -59,13 +62,20 @@ object WebappComponentsPlugin extends AutoPlugin {
   def settingsFor(c: Configuration): Seq[Setting[?]] = {
 
     val warClassesTask: Initialize[Task[Map[String, File]]] =
-      (c / fullClasspath)
-        .map(_.files)
-        .map(WebappComponents.getClasses)
+      Def.task {
+        if (exportJars.value) {
+          Map.empty
+        } else {
+          Compat
+            .classpathFiles(c)
+            .map(WebappComponents.getClasses)
+            .value
+        }
+      }
 
     val warLibTask: Initialize[Task[Map[String, File]]] =
-      (Runtime / fullClasspath)
-        .map(_.files)
+      Compat
+        .classpathFiles(Runtime)
         .map(WebappComponents.getLib)
 
     Seq(
