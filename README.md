@@ -1,4 +1,4 @@
-[![Build status](https://github.com/earldouglas/sbt-war/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/earldouglas/sbt-war/actions/workflows/build.yml)
+[![Build status](https://github.com/earldouglas/sbt-war/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/earldouglas/sbt-war/actions/workflows/test.yml)
 [![Latest version](https://img.shields.io/github/v/tag/earldouglas/sbt-war)](https://github.com/earldouglas/sbt-war/tags)
 [![Maven Central](https://img.shields.io/maven-central/v/com.earldouglas/sbt-war_2.12_1.0)](https://repo1.maven.org/maven2/com/earldouglas/sbt-war_2.12_1.0/)
 
