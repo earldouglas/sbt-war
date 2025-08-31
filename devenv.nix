@@ -5,21 +5,15 @@
   inputs,
   ...
 }:
-let
-
-  jdk = pkgs.jdk11;
-
-  sbt = pkgs.sbt.override {
-    jre = jdk;
-  };
-
-in
 {
 
   packages = [
-    sbt
     pkgs.git
   ];
+
+  languages.java.jdk.package = pkgs.jdk11;
+  languages.scala.enable = true;
+  languages.scala.sbt.enable = true;
 
   scripts.sbt-fmt.exec = ''
     sbt \
