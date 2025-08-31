@@ -178,7 +178,9 @@ ThisBuild / organizationHomepage := Some(
 ThisBuild / organizationName := "James Earl Douglas"
 ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / publishMavenStyle := true
+ThisBuild / sbtPluginPublishLegacyMavenStyle := false
 ThisBuild / publishTo := sonatypePublishToBundle.value
+ThisBuild / sonatypeCredentialHost := Sonatype.sonatypeCentralHost
 ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/earldouglas/sbt-war"),

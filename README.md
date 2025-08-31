@@ -14,7 +14,7 @@ git tag.  The most recent prior version is
 
 ## Requirements
 
-* sbt 1.x and up
+* sbt 1.x or sbt 2.x
 * Scala 2.12.x and up
 
 ## Getting help
@@ -134,7 +134,7 @@ sbt.version=1.10.2
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "sbt-war" % "5.0.1")
+addSbtPlugin("com.earldouglas" % "sbt-war" % "5.1.0")
 ```
 
 *build.sbt:*
