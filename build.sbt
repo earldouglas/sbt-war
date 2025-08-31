@@ -1,19 +1,39 @@
 // General
 ThisBuild / organization := "com.earldouglas"
+ThisBuild / scalaVersion := "2.12.18"
+ThisBuild / scalacOptions ++=
+  Seq(
+    "-feature",
+    "-deprecation"
+  )
+ThisBuild / scalacOptions ++= {
+  scalaBinaryVersion.value match {
+    case "2.12" =>
+      Seq(
+        "-Xsource:3",
+        "-Ywarn-unused-import",
+        s"-P:semanticdb:sourceroot:${baseDirectory.value}"
+      )
+    case _ =>
+      Seq(
+        "-Wunused:imports"
+      )
+  }
+}
+
+ThisBuild / crossScalaVersions += "3.7.2"
+ThisBuild / pluginCrossBuild / sbtVersion := {
+  scalaBinaryVersion.value match {
+    case "2.12" =>
+      (pluginCrossBuild / sbtVersion).value
+    case _ =>
+      "2.0.0-RC4"
+  }
+}
 
 // Scalafix
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
-ThisBuild / scalacOptions += "-Ywarn-unused-import"
-ThisBuild / scalacOptions += s"-P:semanticdb:sourceroot:${baseDirectory.value}"
-ThisBuild / scalacOptions ++= {
-  scalaBinaryVersion.value match {
-    case "2.12" =>
-      Seq("-Xsource:3")
-    case _ =>
-      Nil
-  }
-}
 
 // Testing
 ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.1.1" % Test
@@ -114,8 +134,6 @@ lazy val sbtWar =
     .settings(
       name := "sbt-war",
       sbtPlugin := true,
-      scalacOptions ++= Seq("-feature", "-deprecation"),
-      scalaVersion := "2.12.18",
       //
       // scripted-plugin
       scriptedBufferLog := false,

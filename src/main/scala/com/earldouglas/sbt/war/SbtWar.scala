@@ -37,6 +37,7 @@ object SbtWar extends AutoPlugin {
     lazy val warJoin = taskKey[Unit]("join container")
     lazy val warStop = taskKey[Unit]("stop container")
     lazy val warStart = taskKey[Unit]("quickstart container")
+    @transient
     lazy val warForkOptions =
       taskKey[ForkOptions]("container fork options")
   }
@@ -63,12 +64,7 @@ object SbtWar extends AutoPlugin {
       }
 
   private val runnerJars: Initialize[Task[Seq[File]]] =
-    Def.task {
-      Classpaths
-        .managedJars(War, classpathTypes.value, update.value)
-        .map(_.data)
-        .toList
-    }
+    Compat.managedJars
 
   private val startWarFromPackage: Initialize[Task[Unit]] =
     Def.task {
@@ -82,7 +78,10 @@ object SbtWar extends AutoPlugin {
           .writeString(
             Paths.get(configurationFile.getPath()),
             s"""|port=${warPort.value}
-                |warFile=${pkg.value.getEscapedPath()}
+                |warFile=${Compat
+                 .fromPackageFile(pkg)
+                 .value
+                 .getEscapedPath()}
                 |""".stripMargin
           )
           .toFile()
@@ -113,9 +112,7 @@ object SbtWar extends AutoPlugin {
   private val onLoadSetting: Initialize[State => State] =
     Def.setting {
       (Global / onLoad).value
-        .compose { state: State =>
-          state.addExitHook(stopContainerInstance(println(_)))
-        }
+        .compose(_.addExitHook(stopContainerInstance(println(_))))
     }
 
   private val runnerLibrary: Initialize[ModuleID] =
@@ -142,7 +139,13 @@ object SbtWar extends AutoPlugin {
 
       val runnerConfigFile: File = {
 
-        val emptyDir: File = (Compile / target).value / "empty"
+        val emptyDir: File = {
+          val d = (Compile / target).value / "empty"
+          if (!d.exists()) {
+            d.mkdirs()
+          }
+          d
+        }
 
         val resourceMapString =
           WebappComponentsPlugin
