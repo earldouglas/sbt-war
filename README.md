@@ -5,7 +5,7 @@
 # sbt-war
 
 sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for packaging and
-running WAR files.
+running [WAR](https://en.wikipedia.org/wiki/WAR_(file_format)) files.
 
 sbt-war is formerly known as xsbt-web-plugin.  For documentation and
 source code of prior versions, browse this repository from the desired
