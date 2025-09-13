@@ -21,7 +21,7 @@ ThisBuild / scalacOptions ++= {
   }
 }
 
-ThisBuild / crossScalaVersions += "3.7.2"
+ThisBuild / crossScalaVersions += "3.7.3"
 ThisBuild / pluginCrossBuild / sbtVersion := {
   scalaBinaryVersion.value match {
     case "2.12" =>
