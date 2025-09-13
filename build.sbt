@@ -1,6 +1,5 @@
 // General
 ThisBuild / organization := "com.earldouglas"
-ThisBuild / scalaVersion := "2.12.18"
 ThisBuild / scalacOptions ++=
   Seq(
     "-feature",
@@ -21,22 +20,26 @@ ThisBuild / scalacOptions ++= {
   }
 }
 
-ThisBuild / crossScalaVersions += "3.7.2"
-ThisBuild / pluginCrossBuild / sbtVersion := {
-  scalaBinaryVersion.value match {
-    case "2.12" =>
-      (pluginCrossBuild / sbtVersion).value
-    case _ =>
-      "2.0.0-RC4"
-  }
-}
+ThisBuild / scalaVersion := "2.12.18"
+ThisBuild / crossScalaVersions := Seq("2.12.18", "3.7.3")
 
 // Scalafix
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 // Testing
-ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.1.2" % Test
+ThisBuild / libraryDependencies +=
+  ("org.scalameta" %% "munit" % "1.1.2" % Test)
+    .exclude("org.scala-lang", "scala3_library_3")
+    .exclude("org.scala-lang", "scala-library")
+ThisBuild / libraryDependencies += {
+  scalaBinaryVersion.value match {
+    case "2.12" =>
+      "org.scala-lang" % "scala-library" % scalaVersion.value % Test
+    case _ =>
+      "org.scala-lang" % "scala3-library_3" % scalaVersion.value % Test
+  }
+}
 ThisBuild / Test / fork := true
 
 def warRunnerVersion(servletSpec: String) =
@@ -134,6 +137,14 @@ lazy val sbtWar =
     .settings(
       name := "sbt-war",
       sbtPlugin := true,
+      pluginCrossBuild / sbtVersion := {
+        scalaBinaryVersion.value match {
+          case "2.12" =>
+            (pluginCrossBuild / sbtVersion).value
+          case _ =>
+            "2.0.0-RC4"
+        }
+      },
       //
       // scripted-plugin
       scriptedBufferLog := false,
