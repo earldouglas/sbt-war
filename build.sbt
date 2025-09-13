@@ -36,7 +36,7 @@ ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 // Testing
-ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.1.1" % Test
+ThisBuild / libraryDependencies += "org.scalameta" %% "munit" % "1.1.2" % Test
 ThisBuild / Test / fork := true
 
 def warRunnerVersion(servletSpec: String) =
