@@ -7,5 +7,5 @@ val extraPackageOptions =
 
 extraPackageOptions :=
   Package.ManifestAttributes(
-    java.util.jar.Attributes.Name.SEALED -> "true",
+    java.util.jar.Attributes.Name.SEALED -> "true"
   )
