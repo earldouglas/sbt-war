@@ -97,7 +97,7 @@ TaskKey[Unit]("check-export-jars") := {
       "scala-logging_3-3.9.5.jar",
       "scala3-library_3-3.7.3.jar",
       "slf4j-api-2.0.15.jar",
-      "test_3-0.1.0-SNAPSHOT.jar",
+      "test_3-0.1.0-SNAPSHOT.jar"
     )
 
   assertContains(
