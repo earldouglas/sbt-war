@@ -57,8 +57,8 @@ $ devenv shell
 Set the old and new versions:
 
 ```
-$ export OLD_VERSION=5.0.0-M6
-$ export NEW_VERSION=5.0.0-M7
+$ export OLD_VERSION=5.1.0
+$ export NEW_VERSION=5.1.1
 ```
 
 Update the documentation:
