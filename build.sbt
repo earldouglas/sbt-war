@@ -6,14 +6,14 @@ ThisBuild / scalacOptions ++=
     "-deprecation"
   )
 ThisBuild / scalacOptions ++= {
-  scalaBinaryVersion.value match {
-    case "2.12" =>
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, 12)) =>
       Seq(
         "-Xsource:3",
         "-Ywarn-unused-import",
         s"-P:semanticdb:sourceroot:${baseDirectory.value}"
       )
-    case _ =>
+    case Some((3, _)) =>
       Seq(
         "-Wunused:imports"
       )
@@ -33,10 +33,10 @@ ThisBuild / libraryDependencies +=
     .exclude("org.scala-lang", "scala3_library_3")
     .exclude("org.scala-lang", "scala-library")
 ThisBuild / libraryDependencies += {
-  scalaBinaryVersion.value match {
-    case "2.12" =>
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, 12)) =>
       "org.scala-lang" % "scala-library" % scalaVersion.value % Test
-    case _ =>
+    case Some((3, _)) =>
       "org.scala-lang" % "scala3-library_3" % scalaVersion.value % Test
   }
 }
@@ -138,10 +138,10 @@ lazy val sbtWar =
       name := "sbt-war",
       sbtPlugin := true,
       pluginCrossBuild / sbtVersion := {
-        scalaBinaryVersion.value match {
-          case "2.12" =>
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((2, 12)) =>
             (pluginCrossBuild / sbtVersion).value
-          case _ =>
+          case Some((3, _)) =>
             "2.0.0-RC6"
         }
       },
