@@ -43,7 +43,7 @@ TaskKey[Unit]("check-no-export-jars") := {
       "logback-core-1.5.8.jar",
       "scala-library-2.13.16.jar",
       "scala-logging_3-3.9.5.jar",
-      "scala3-library_3-3.7.3.jar",
+      "scala3-library_3-3.7.4.jar",
       "slf4j-api-2.0.15.jar"
     )
 
@@ -95,7 +95,7 @@ TaskKey[Unit]("check-export-jars") := {
       "logback-core-1.5.8.jar",
       "scala-library-2.13.16.jar",
       "scala-logging_3-3.9.5.jar",
-      "scala3-library_3-3.7.3.jar",
+      "scala3-library_3-3.7.4.jar",
       "slf4j-api-2.0.15.jar",
       "test_3-0.1.0-SNAPSHOT.jar"
     )
