@@ -30,46 +30,69 @@ TaskKey[Unit]("check-no-export-jars") := {
     }
   }
 
-  val expected: List[String] =
-    List(
-      "domain/entities/Count$.class",
-      "domain/entities/Count.class",
-      "domain/entities/Count.tasty",
-      "domain/operations/Counter.class",
-      "domain/operations/Counter.tasty",
-      "drivers/db/Transactor.class",
-      "drivers/db/Transactor.tasty",
-      "drivers/db/db$package$$anon$1$$anon$2.class",
-      "drivers/db/db$package$$anon$1.class",
-      "drivers/db/db$package$.class",
-      "drivers/db/db$package.class",
-      "drivers/db/db$package.tasty",
-      "drivers/mem/mem$package$$anon$1$$anon$2.class",
-      "drivers/mem/mem$package$$anon$1.class",
-      "drivers/mem/mem$package$.class",
-      "drivers/mem/mem$package.class",
-      "drivers/mem/mem$package.tasty",
-      "logback.xml",
-      "runners/CountServlet.class",
-      "runners/CountServlet.tasty",
-      "runners/HelloServlet.class",
-      "runners/HelloServlet.tasty",
-      "runners/Main$$anon$1.class",
-      "runners/Main$tx$.class",
-      "runners/Main.class",
-      "runners/Main.tasty",
-      "usecases/Counter.class",
-      "usecases/Counter.tasty"
-    )
+  val expected: Map[String, File] = {
 
+    val expectedClasses: Map[String, File] =
+      List(
+        "domain/entities/Count$.class",
+        "domain/entities/Count.class",
+        "domain/entities/Count.tasty",
+        "domain/operations/Counter.class",
+        "domain/operations/Counter.tasty",
+        "drivers/db/Transactor.class",
+        "drivers/db/Transactor.tasty",
+        "drivers/db/db$package$$anon$1$$anon$2.class",
+        "drivers/db/db$package$$anon$1.class",
+        "drivers/db/db$package$.class",
+        "drivers/db/db$package.class",
+        "drivers/db/db$package.tasty",
+        "drivers/mem/mem$package$$anon$1$$anon$2.class",
+        "drivers/mem/mem$package$$anon$1.class",
+        "drivers/mem/mem$package$.class",
+        "drivers/mem/mem$package.class",
+        "drivers/mem/mem$package.tasty",
+        "runners/CountServlet.class",
+        "runners/CountServlet.tasty",
+        "runners/HelloServlet.class",
+        "runners/HelloServlet.tasty",
+        "runners/Main$$anon$1.class",
+        "runners/Main$tx$.class",
+        "runners/Main.class",
+        "runners/Main.tasty",
+        "usecases/Counter.class",
+        "usecases/Counter.tasty"
+      )
+      .map({ x =>
+        val root: File = (Compile / classDirectory).value
+        s"WEB-INF/classes/${x}" -> root / x
+      })
+      .toMap
+
+    val expectedResources: Map[String, File] = {
+      List(
+        "logback.xml",
+      )
+      .map({ x =>
+        val root: File =
+          CrossVersion.partialVersion(sbtVersion.value) match {
+            case Some((1, _)) =>
+              (Compile / classDirectory).value
+            case Some((2, _)) =>
+              (Compile / resourceDirectory).value
+            case v =>
+              throw new Exception(s"Unsupported sbt version: ${v}")
+          }
+        s"WEB-INF/classes/${x}" -> root / x
+      })
+      .toMap
+    }
+
+    expectedClasses ++ expectedResources
+  }
+    
   assertEquals(
     name = "WebappComponentsPlugin: warClasses (exportJars := false)",
-    expected = {
-      val root: File = (Compile / classDirectory).value
-      expected
-        .map(x => s"WEB-INF/classes/${x}" -> root / x)
-        .toMap
-    },
+    expected = expected,
     obtained = (Runtime / warClasses).value
   )
 }
