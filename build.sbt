@@ -38,6 +38,8 @@ ThisBuild / libraryDependencies += {
       "org.scala-lang" % "scala-library" % scalaVersion.value % Test
     case Some((3, _)) =>
       "org.scala-lang" % "scala3-library_3" % scalaVersion.value % Test
+    case v =>
+      throw new Exception(s"Unsupported Scala version: ${v}")
   }
 }
 ThisBuild / Test / fork := true
@@ -49,7 +51,8 @@ def warRunnerVersion(servletSpec: String) =
       .toList match {
       case v :: Nil => s"""${v}_${servletSpec}"""
       case v :: t   => s"""${v}_${servletSpec}-${t.mkString("-")}"""
-      case _        => throw new Exception("wat")
+      case _        =>
+        throw new Exception(s"Unparseable version: ${version.value}")
     }
   }
 
@@ -142,7 +145,7 @@ lazy val sbtWar =
           case Some((2, 12)) =>
             (pluginCrossBuild / sbtVersion).value
           case Some((3, _)) =>
-            "2.0.0-RC6"
+            "2.0.0-RC7"
         }
       },
       //
