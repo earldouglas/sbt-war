@@ -62,34 +62,34 @@ TaskKey[Unit]("check-no-export-jars") := {
         "usecases/Counter.class",
         "usecases/Counter.tasty"
       )
-      .map({ x =>
-        val root: File = (Compile / classDirectory).value
-        s"WEB-INF/classes/${x}" -> root / x
-      })
-      .toMap
+        .map({ x =>
+          val root: File = (Compile / classDirectory).value
+          s"WEB-INF/classes/${x}" -> root / x
+        })
+        .toMap
 
     val expectedResources: Map[String, File] = {
       List(
-        "logback.xml",
+        "logback.xml"
       )
-      .map({ x =>
-        val root: File =
-          CrossVersion.partialVersion(sbtVersion.value) match {
-            case Some((1, _)) =>
-              (Compile / classDirectory).value
-            case Some((2, _)) =>
-              (Compile / resourceDirectory).value
-            case v =>
-              throw new Exception(s"Unsupported sbt version: ${v}")
-          }
-        s"WEB-INF/classes/${x}" -> root / x
-      })
-      .toMap
+        .map({ x =>
+          val root: File =
+            CrossVersion.partialVersion(sbtVersion.value) match {
+              case Some((1, _)) =>
+                (Compile / classDirectory).value
+              case Some((2, _)) =>
+                (Compile / resourceDirectory).value
+              case v =>
+                throw new Exception(s"Unsupported sbt version: ${v}")
+            }
+          s"WEB-INF/classes/${x}" -> root / x
+        })
+        .toMap
     }
 
     expectedClasses ++ expectedResources
   }
-    
+
   assertEquals(
     name = "WebappComponentsPlugin: warClasses (exportJars := false)",
     expected = expected,
