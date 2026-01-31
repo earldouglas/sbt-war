@@ -29,7 +29,7 @@ ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 
 // Testing
 ThisBuild / libraryDependencies +=
-  ("org.scalameta" %% "munit" % "1.2.1" % Test)
+  ("org.scalameta" %% "munit" % "1.2.2" % Test)
     .exclude("org.scala-lang", "scala3_library_3")
     .exclude("org.scala-lang", "scala-library")
 ThisBuild / libraryDependencies += {
