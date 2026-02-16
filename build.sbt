@@ -21,7 +21,7 @@ ThisBuild / scalacOptions ++= {
 }
 
 ThisBuild / scalaVersion := "2.12.21"
-ThisBuild / crossScalaVersions := Seq("2.12.21", "3.7.4")
+ThisBuild / crossScalaVersions := Seq("2.12.21", "3.8.1")
 
 // Scalafix
 ThisBuild / semanticdbEnabled := true
@@ -65,9 +65,9 @@ lazy val warRunner_3_0 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
@@ -84,9 +84,9 @@ lazy val warRunner_3_1 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
@@ -103,9 +103,9 @@ lazy val warRunner_4_0 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
@@ -122,9 +122,9 @@ lazy val warRunner_6_0 =
       Compile / compile / javacOptions ++=
         Seq(
           "-source",
-          "11",
+          "17",
           "-target",
-          "11",
+          "17",
           "-g:lines"
         ),
       crossPaths := false, // exclude Scala suffix from artifact names
