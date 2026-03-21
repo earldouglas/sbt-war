@@ -21,7 +21,7 @@ ThisBuild / scalacOptions ++= {
 }
 
 ThisBuild / scalaVersion := "2.12.21"
-ThisBuild / crossScalaVersions := Seq("2.12.21", "3.7.4")
+ThisBuild / crossScalaVersions := Seq("2.12.21", "3.8.2")
 
 // Scalafix
 ThisBuild / semanticdbEnabled := true
