@@ -1,9 +1,10 @@
 val warFile = taskKey[File]("warFile")
 
 warFile :=
-  fileConverter.value
-    .toPath(sbt.Keys.`package`.value)
-    .toFile()
+  Def.uncached:
+    fileConverter.value
+      .toPath(sbt.Keys.`package`.value)
+      .toFile()
 
 val extraPackageOptions =
   taskKey[PackageOption]("extraPackageOptions")

@@ -21,7 +21,7 @@ ThisBuild / scalacOptions ++= {
 }
 
 ThisBuild / scalaVersion := "2.12.21"
-ThisBuild / crossScalaVersions := Seq("2.12.21", "3.7.4")
+ThisBuild / crossScalaVersions := Seq("2.12.21", "3.8.2")
 
 // Scalafix
 ThisBuild / semanticdbEnabled := true
@@ -145,7 +145,7 @@ lazy val sbtWar =
           case Some((2, 12)) =>
             (pluginCrossBuild / sbtVersion).value
           case Some((3, _)) =>
-            "2.0.0-RC7"
+            "2.0.0-RC10"
         }
       },
       //
