@@ -2,19 +2,11 @@ package com.earldouglas;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
-import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.DirResourceSet;
-import org.apache.catalina.webresources.FileResourceSet;
-import org.apache.catalina.webresources.StandardRoot;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import org.apache.tomcat.util.scan.StandardJarScanner;
 
@@ -30,8 +22,7 @@ public class WarRunner {
 
     final WarConfiguration warConfiguration = WarConfiguration.load(args[0]);
 
-    final WarRunner warRunner =
-        new WarRunner(warConfiguration);
+    final WarRunner warRunner = new WarRunner(warConfiguration);
 
     warRunner.start.run();
     warRunner.join.run();
@@ -52,13 +43,13 @@ public class WarRunner {
    * @param configuration the configuration to run
    * @throws IOException if something goes wrong
    */
-  public WarRunner(final WarConfiguration configuration)
-      throws IOException {
+  public WarRunner(final WarConfiguration configuration) throws IOException {
 
     final Tomcat tomcat = new Tomcat();
     tomcat.setPort(configuration.port);
     tomcat.setHostname(configuration.hostname);
-    final File baseDir = new File(System.getProperty("user.dir") + "/target/tomcat." + configuration.port);
+    final File baseDir =
+        new File(System.getProperty("user.dir") + "/target/tomcat." + configuration.port);
     new File(baseDir, "webapps").mkdirs();
     tomcat.setBaseDir(baseDir.getCanonicalPath());
 
@@ -70,10 +61,8 @@ public class WarRunner {
         tomcat.addWebapp(configuration.contextPath, configuration.warFile.getAbsolutePath());
     ((StandardContext) context).setUnpackWAR(true);
 
-    ((StandardJarScanFilter)
-        ((StandardJarScanner) context.getJarScanner())
-            .getJarScanFilter()
-    ).setDefaultTldScan(false);
+    ((StandardJarScanFilter) ((StandardJarScanner) context.getJarScanner()).getJarScanFilter())
+        .setDefaultTldScan(false);
 
     start =
         new Runnable() {

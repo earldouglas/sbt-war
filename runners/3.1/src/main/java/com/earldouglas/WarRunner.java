@@ -14,8 +14,10 @@ public class WarRunner {
 
     final String[] warRunnerArgs =
         new String[] {
-          "--port", Integer.toString(warConfiguration.port), //
-          "--path", warConfiguration.contextPath, //
+          "--port",
+          Integer.toString(warConfiguration.port), //
+          "--path",
+          warConfiguration.contextPath, //
           warConfiguration.warFile.getPath(),
         };
 
