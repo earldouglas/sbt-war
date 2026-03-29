@@ -14,6 +14,8 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.FileResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
+import org.apache.tomcat.util.scan.StandardJarScanFilter;
+import org.apache.tomcat.util.scan.StandardJarScanner;
 
 /**
  * Launches a webapp composed of in-place resources, classes, and libraries.
@@ -92,6 +94,11 @@ public class WebappComponentsRunner {
 
     final Context context =
         tomcat.addWebapp(configuration.contextPath, configuration.emptyWebappDir.getAbsolutePath());
+
+    ((StandardJarScanFilter)
+        ((StandardJarScanner) context.getJarScanner())
+            .getJarScanFilter()
+    ).setDefaultTldScan(false);
 
     final WebResourceRoot webResourceRoot = new StandardRoot(context);
 
