@@ -18,12 +18,14 @@
   scripts.sbt-fmt.exec = ''
     sbt \
       scalafixAll \
+      javafmtAll \
       scalafmtAll \
       scalafmtSbt
   '';
 
   scripts.sbt-test.exec = ''
     sbt \
+      javafmtCheckAll \
       scalafmtCheckAll \
       "scalafixAll --check" \
       +test \
