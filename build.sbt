@@ -56,6 +56,44 @@ def warRunnerVersion(servletSpec: String) =
     }
   }
 
+lazy val warRunner_3_0 =
+  project
+    .in(file("runners/3.0"))
+    .settings(
+      name := "war-runner",
+      version := warRunnerVersion("3.0").value,
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "11",
+          "-target",
+          "11",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.91.0"
+    )
+
+lazy val warRunner_3_1 =
+  project
+    .in(file("runners/3.1"))
+    .settings(
+      name := "war-runner",
+      version := warRunnerVersion("3.1").value,
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "11",
+          "-target",
+          "11",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1"
+    )
+
 lazy val warRunner_4_0 =
   project
     .in(file("runners/4.0"))
@@ -123,6 +161,8 @@ lazy val sbtWar =
       buildInfoKeys := Seq[BuildInfoKey](version)
     )
     .aggregate(
+      warRunner_3_0,
+      warRunner_3_1,
       warRunner_4_0,
       warRunner_6_0
     )
