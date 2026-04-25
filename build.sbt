@@ -168,9 +168,6 @@ lazy val sbtWar =
     )
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
-ThisBuild / credentials := List(
-  Credentials(Path.userHome / ".sbt" / "sonatype_credentials")
-)
 ThisBuild / description := "Package and run WAR files with sbt"
 ThisBuild / developers := List(
   Developer(
@@ -193,8 +190,11 @@ ThisBuild / organizationName := "James Earl Douglas"
 ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / publishMavenStyle := true
 ThisBuild / sbtPluginPublishLegacyMavenStyle := false
-ThisBuild / publishTo := sonatypePublishToBundle.value
-ThisBuild / sonatypeCredentialHost := Sonatype.sonatypeCentralHost
+ThisBuild / publishTo := {
+  val centralSnapshots = "https://central.sonatype.com/repository/maven-snapshots/"
+  if (isSnapshot.value) Some("central-snapshots" at centralSnapshots)
+  else localStaging.value
+}
 ThisBuild / scmInfo := Some(
   ScmInfo(
     url("https://github.com/earldouglas/sbt-war"),
