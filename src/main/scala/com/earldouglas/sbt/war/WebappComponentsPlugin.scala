@@ -98,6 +98,8 @@ object WebappComponentsPlugin extends AutoPlugin {
               "jakarta.servlet" % "jakarta.servlet-api" % "4.0.4"
             case "6.0" =>
               "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0"
+            case "6.1" =>
+              "jakarta.servlet" % "jakarta.servlet-api" % "6.1.0"
           }
 
         servletApi % Provided
@@ -110,7 +112,7 @@ object WebappComponentsPlugin extends AutoPlugin {
 
     Seq(
       Seq(
-        servletSpec := "6.0",
+        servletSpec := "6.1",
         libraryDependencies += servletApi.value,
         warResources := warResourcesTask.value
       ),
