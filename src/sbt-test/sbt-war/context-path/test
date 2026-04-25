@@ -14,3 +14,12 @@
 > check
 > warStop
 > awaitClosed
+
+# start the container with the WAR package
+> warStartPackage
+> awaitOpen
+
+# verify that the endpoints are up
+> check
+> warStop
+> awaitClosed

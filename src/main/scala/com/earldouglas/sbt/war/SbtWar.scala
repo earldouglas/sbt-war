@@ -78,7 +78,9 @@ object SbtWar extends AutoPlugin {
         Files
           .writeString(
             Paths.get(configurationFile.getPath()),
-            s"""|port=${warPort.value}
+            s"""|hostname=localhost
+                |port=${warPort.value}
+                |contextPath=${warContextPath.value}
                 |warFile=${Compat
                  .fromPackageFile(pkg)
                  .value
