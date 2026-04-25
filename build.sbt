@@ -62,14 +62,7 @@ lazy val warRunner_3_0 =
     .settings(
       name := "war-runner",
       version := warRunnerVersion("3.0").value,
-      Compile / compile / javacOptions ++=
-        Seq(
-          "-source",
-          "11",
-          "-target",
-          "11",
-          "-g:lines"
-        ),
+      Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.91.0"
@@ -81,14 +74,7 @@ lazy val warRunner_3_1 =
     .settings(
       name := "war-runner",
       version := warRunnerVersion("3.1").value,
-      Compile / compile / javacOptions ++=
-        Seq(
-          "-source",
-          "11",
-          "-target",
-          "11",
-          "-g:lines"
-        ),
+      Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1"
@@ -100,14 +86,7 @@ lazy val warRunner_4_0 =
     .settings(
       name := "war-runner",
       version := warRunnerVersion("4.0").value,
-      Compile / compile / javacOptions ++=
-        Seq(
-          "-source",
-          "11",
-          "-target",
-          "11",
-          "-g:lines"
-        ),
+      Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.113.0"
@@ -119,14 +98,7 @@ lazy val warRunner_6_0 =
     .settings(
       name := "war-runner",
       version := warRunnerVersion("6.0").value,
-      Compile / compile / javacOptions ++=
-        Seq(
-          "-source",
-          "11",
-          "-target",
-          "11",
-          "-g:lines"
-        ),
+      Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.53.0"
@@ -138,14 +110,7 @@ lazy val warRunner_6_1 =
     .settings(
       name := "war-runner",
       version := warRunnerVersion("6.1").value,
-      Compile / compile / javacOptions ++=
-        Seq(
-          "-source",
-          "11",
-          "-target",
-          "11",
-          "-g:lines"
-        ),
+      Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "11.0.21",
