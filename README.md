@@ -199,6 +199,7 @@ Create a WAR file with `package`:
 | `warClasses`       | `Map[String,File]` | project classes    | .class files to copy into the *WEB-INF/classes* directory                   |
 | `warLib`           | `Map[String,File]` | project libs       | JAR files to copy into the *WEB-INF/lib* directory                          |
 | `warPort`          | `Int`              | `8080`             | The local container port to use when running with `warStart`                |
+| `warContextPath`   | `String`           | `""`               | The local container context path to use when running with `warStart`        |
 | `warForkOptions`   | [`ForkOptions`][1] | [`forkOptions`][2] | Options for the forked JVM used when running with `warStart`                |
 
 ## Commands
@@ -294,6 +295,15 @@ set `warPort`:
 
 ```scala
 warPort := 9090
+```
+
+### `warContextPath`
+
+By default, the container runs with an empty context path, which maps to
+`/`.  To use a different context path, set `warContextPath`:
+
+```scala
+warContextPath := "/my-context-path"
 ```
 
 ### `warForkOptions`

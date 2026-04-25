@@ -33,6 +33,7 @@ object SbtWar extends AutoPlugin {
   object autoImport {
     lazy val War = config("war").hide
     lazy val warPort = settingKey[Int]("container port")
+    lazy val warContextPath = settingKey[String]("context path")
     lazy val warStartPackage = taskKey[Unit]("start container")
     lazy val warJoin = taskKey[Unit]("join container")
     lazy val warStop = taskKey[Unit]("stop container")
@@ -164,7 +165,7 @@ object SbtWar extends AutoPlugin {
             Paths.get(configurationFile.getPath()),
             s"""|hostname=localhost
                 |port=${warPort.value}
-                |contextPath=
+                |contextPath=${warContextPath.value}
                 |emptyWebappDir=${emptyDir.getEscapedPath()}
                 |emptyClassesDir=${emptyDir.getEscapedPath()}
                 |resourceMap=${resourceMapString}
@@ -205,6 +206,7 @@ object SbtWar extends AutoPlugin {
         warForkOptions := forkOptions.value,
         warJoin := joinWar.value,
         warPort := 8080,
+        warContextPath := "",
         warStartPackage := startWarFromPackage.value,
         warStop := stopWar.value
       ),
