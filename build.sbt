@@ -132,6 +132,28 @@ lazy val warRunner_6_0 =
       libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.53.0"
     )
 
+lazy val warRunner_6_1 =
+  project
+    .in(file("runners/6.1"))
+    .settings(
+      name := "war-runner",
+      version := warRunnerVersion("6.1").value,
+      Compile / compile / javacOptions ++=
+        Seq(
+          "-source",
+          "11",
+          "-target",
+          "11",
+          "-g:lines"
+        ),
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "11.0.21",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % "11.0.21",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "11.0.21",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "11.0.21"
+    )
+
 lazy val sbtWar =
   project
     .in(file("."))
@@ -164,7 +186,8 @@ lazy val sbtWar =
       warRunner_3_0,
       warRunner_3_1,
       warRunner_4_0,
-      warRunner_6_0
+      warRunner_6_0,
+      warRunner_6_1
     )
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html
