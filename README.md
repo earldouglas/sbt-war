@@ -140,7 +140,7 @@ addSbtPlugin("com.earldouglas" % "sbt-war" % "5.1.2")
 *build.sbt:*
 
 ```scala
-scalaVersion := "3.5.1"
+scalaVersion := "3.8.3"
 enablePlugins(SbtWar)
 ```
 
