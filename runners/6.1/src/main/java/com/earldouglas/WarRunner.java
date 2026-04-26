@@ -66,17 +66,6 @@ public class WarRunner {
     connector.setPort(configuration.port);
     tomcat.setConnector(connector);
 
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println("warFile:");
-    System.out.println(configuration.warFile.getAbsolutePath());
-    System.out.println();
-    System.out.println();
-    System.out.println();
-    System.out.println();
-
     final Context context =
         tomcat.addWebapp(configuration.contextPath, configuration.warFile.getAbsolutePath());
     ((StandardContext) context).setUnpackWAR(true);
