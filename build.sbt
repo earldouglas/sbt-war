@@ -17,6 +17,8 @@ ThisBuild / scalacOptions ++= {
       Seq(
         "-Wunused:imports"
       )
+    case v =>
+      throw new Exception(s"Unsupported Scala version ${v}")
   }
 }
 
@@ -133,6 +135,8 @@ lazy val sbtWar =
             (pluginCrossBuild / sbtVersion).value
           case Some((3, _)) =>
             "2.0.0-RC10"
+          case v =>
+            throw new Exception(s"Unsupported Scala version ${v}")
         }
       },
       //
