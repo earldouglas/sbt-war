@@ -128,7 +128,7 @@ Configure sbt:
 *project/build.properties:*
 
 ```
-sbt.version=1.10.2
+sbt.version=1.12.9
 ```
 
 *project/plugins.sbt:*
