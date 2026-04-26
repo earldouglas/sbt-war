@@ -7,14 +7,14 @@
 sbt-war is an [sbt](https://www.scala-sbt.org/) plugin for packaging and
 running [WAR](https://en.wikipedia.org/wiki/WAR_(file_format)) files.
 
-sbt-war is formerly known as xsbt-web-plugin.  For documentation and
-source code of prior versions, browse this repository from the desired
-git tag.  The most recent prior version is
-[4.2.5](https://github.com/earldouglas/sbt-war/tree/4.2.5).
+sbt-war is formerly known as xsbt-web-plugin, the last version of which
+was [4.2.5](https://github.com/earldouglas/sbt-war/tree/4.2.5).  For
+documentation and source code of prior versions, browse this repository
+from the desired git tag.
 
 ## Requirements
 
-* sbt 1.x or sbt 2.x
+* sbt 1.x and up
 * Scala 2.12.x and up
 
 ## Getting help
