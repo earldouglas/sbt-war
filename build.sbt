@@ -91,7 +91,7 @@ lazy val warRunner_4_0 =
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.113.0"
+      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.117.0"
     )
 
 lazy val warRunner_6_0 =
@@ -183,7 +183,8 @@ ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / publishMavenStyle := true
 ThisBuild / sbtPluginPublishLegacyMavenStyle := false
 ThisBuild / publishTo := {
-  val centralSnapshots = "https://central.sonatype.com/repository/maven-snapshots/"
+  val centralSnapshots =
+    "https://central.sonatype.com/repository/maven-snapshots/"
   if (isSnapshot.value) Some("central-snapshots" at centralSnapshots)
   else localStaging.value
 }
