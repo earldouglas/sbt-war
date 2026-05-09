@@ -115,10 +115,10 @@ lazy val warRunner_6_1 =
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "11.0.21",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % "11.0.21",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "11.0.21",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "11.0.21"
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "11.0.22",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % "11.0.22",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "11.0.22",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "11.0.22"
     )
 
 lazy val sbtWar =
