@@ -10,7 +10,6 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.connector.Connector;
-import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.FileResourceSet;
@@ -89,7 +88,9 @@ public class WebappComponentsRunner {
     final Tomcat tomcat = new Tomcat();
     tomcat.setPort(configuration.port);
     tomcat.setHostname(configuration.hostname);
-    tomcat.setBaseDir(new File(System.getProperty("user.dir") + "/target/tomcat." + configuration.port).getCanonicalPath());
+    tomcat.setBaseDir(
+        new File(System.getProperty("user.dir") + "/target/tomcat." + configuration.port)
+            .getCanonicalPath());
 
     final Connector connector = new Connector();
     connector.setPort(configuration.port);
@@ -98,10 +99,8 @@ public class WebappComponentsRunner {
     final Context context =
         tomcat.addWebapp(configuration.contextPath, configuration.emptyWebappDir.getAbsolutePath());
 
-    ((StandardJarScanFilter)
-        ((StandardJarScanner) context.getJarScanner())
-            .getJarScanFilter()
-    ).setDefaultTldScan(false);
+    ((StandardJarScanFilter) ((StandardJarScanner) context.getJarScanner()).getJarScanFilter())
+        .setDefaultTldScan(false);
 
     final WebResourceRoot webResourceRoot = new StandardRoot(context);
 

@@ -83,10 +83,7 @@ public class WarConfiguration {
    * @param warFile the WAR file to serve
    */
   public WarConfiguration(
-      final String hostname,
-      final int port,
-      final String contextPath,
-      final File warFile) {
+      final String hostname, final int port, final String contextPath, final File warFile) {
     this.hostname = hostname;
     this.port = port;
     this.warFile = warFile;

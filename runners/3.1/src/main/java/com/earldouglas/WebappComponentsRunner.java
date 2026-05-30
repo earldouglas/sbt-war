@@ -97,10 +97,8 @@ public class WebappComponentsRunner {
 
     final WebResourceRoot webResourceRoot = new StandardRoot(context);
 
-    ((StandardJarScanFilter)
-        ((StandardJarScanner) context.getJarScanner())
-            .getJarScanFilter()
-    ).setDefaultTldScan(false);
+    ((StandardJarScanFilter) ((StandardJarScanner) context.getJarScanner()).getJarScanFilter())
+        .setDefaultTldScan(false);
 
     webResourceRoot.addJarResources(
         new DirResourceSet(
