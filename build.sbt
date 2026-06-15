@@ -135,7 +135,7 @@ lazy val sbtWar =
           case Some((2, 12)) =>
             (pluginCrossBuild / sbtVersion).value
           case Some((3, _)) =>
-            "2.0.0-RC10"
+            "2.0.0"
           case v =>
             throw new Exception(s"Unsupported Scala version ${v}")
         }
