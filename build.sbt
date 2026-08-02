@@ -47,72 +47,72 @@ ThisBuild / libraryDependencies += {
 }
 ThisBuild / Test / fork := true
 
-def warRunnerVersion(servletSpec: String) =
+def warRunnerVersion(warSpec: String) =
   Def.setting {
     version.value
       .split("-")
       .toList match {
-      case v :: Nil => s"""${v}_${servletSpec}"""
-      case v :: t   => s"""${v}_${servletSpec}-${t.mkString("-")}"""
+      case v :: Nil => s"""${v}_${warSpec}"""
+      case v :: t   => s"""${v}_${warSpec}-${t.mkString("-")}"""
       case _        =>
         throw new Exception(s"Unparseable version: ${version.value}")
     }
   }
 
-lazy val warRunner_3_0 =
+lazy val warRunner_6 =
   project
-    .in(file("runners/3.0"))
+    .in(file("runners/6"))
     .settings(
       name := "war-runner",
-      version := warRunnerVersion("3.0").value,
+      version := warRunnerVersion("6").value,
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.91.0"
     )
 
-lazy val warRunner_3_1 =
+lazy val warRunner_7 =
   project
-    .in(file("runners/3.1"))
+    .in(file("runners/7"))
     .settings(
       name := "war-runner",
-      version := warRunnerVersion("3.1").value,
+      version := warRunnerVersion("7").value,
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1"
     )
 
-lazy val warRunner_4_0 =
+lazy val warRunner_8 =
   project
-    .in(file("runners/4.0"))
+    .in(file("runners/8"))
     .settings(
       name := "war-runner",
-      version := warRunnerVersion("4.0").value,
+      version := warRunnerVersion("8").value,
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.113.0"
     )
 
-lazy val warRunner_6_0 =
+lazy val warRunner_10 =
   project
-    .in(file("runners/6.0"))
+    .in(file("runners/10"))
     .settings(
       name := "war-runner",
-      version := warRunnerVersion("6.0").value,
+      version := warRunnerVersion("10").value,
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.56.0"
     )
 
-lazy val warRunner_6_1 =
+lazy val warRunner_11 =
   project
-    .in(file("runners/6.1"))
+    .in(file("runners/11"))
     .settings(
       name := "war-runner",
-      version := warRunnerVersion("6.1").value,
+      version := warRunnerVersion("11").value,
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
@@ -153,11 +153,11 @@ lazy val sbtWar =
       buildInfoKeys := Seq[BuildInfoKey](version)
     )
     .aggregate(
-      warRunner_3_0,
-      warRunner_3_1,
-      warRunner_4_0,
-      warRunner_6_0,
-      warRunner_6_1
+      warRunner_6,
+      warRunner_7,
+      warRunner_8,
+      warRunner_10,
+      warRunner_11
     )
 
 // Publish to Sonatype, https://www.scala-sbt.org/release/docs/Using-Sonatype.html

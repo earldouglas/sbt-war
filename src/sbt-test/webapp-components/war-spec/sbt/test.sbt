@@ -1,2 +1,2 @@
 enablePlugins(WebappComponentsPlugin)
-servletSpec := "3.0"
+warSpec := "6"
