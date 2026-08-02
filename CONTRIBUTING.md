@@ -51,7 +51,7 @@ section of the sbt manual for publishing to Maven Central via Sonatype.
 Start the development environment:
 
 ```
-$ devenv shell
+$ nix-shell
 ```
 
 Set up Sonatype credentials:
