@@ -1,27 +1,19 @@
-name: "test"
-
+name: test
 on:
-  - pull_request
-  - push
-
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
-
   test:
-
     strategy:
       matrix:
         os:
           - ubuntu-24.04
-
     runs-on: '${{ matrix.os }}'
-
     steps:
     - uses: actions/checkout@v5
     - uses: cachix/install-nix-action@v31
-    - uses: cachix/cachix-action@v16
       with:
-        name: devenv
-
-    - run: nix profile install nixpkgs#devenv
-
-    - run: devenv test
+        nix_path: nixpkgs=channel:nixos-26.05
+    - run: CI=true nix-shell --run sbt-test
