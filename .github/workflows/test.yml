@@ -16,4 +16,4 @@ jobs:
     - uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-26.05
-    - run: nix-shell --run sbt-test
+    - run: CI=true nix-shell --run sbt-test

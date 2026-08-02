@@ -15,10 +15,9 @@ let
       hash = "sha256-Z2ygQzdIw3J2AhudNBPzS9Jx7qabEvwzLMiodioHOT4=";
     };
 
-  sbt =
-     pkgs.writeShellScriptBin "sbt" ''
-      ${jdk}/bin/java -jar ${sbt-launch-jar} "$@"
-    '';
+  sbt = pkgs.writeShellScriptBin "sbt" ''
+    ${jdk}/bin/java -jar ${sbt-launch-jar} "$@"
+  '';
 
   nvim =
     let
@@ -214,10 +213,17 @@ in
 pkgs.mkShell {
 
   nativeBuildInputs = [
-    jdk
     sbt
-    nvim
-  ];
+  ]
+  ++ (
+    if builtins.getEnv "CI" == "true" then
+      [ ]
+    else
+      [
+        jdk
+        nvim
+      ]
+  );
 
   shellHook = ''
     sbt-test() {
