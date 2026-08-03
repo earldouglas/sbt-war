@@ -26,28 +26,6 @@ import sbt._
   */
 object WebappComponentsPlugin extends AutoPlugin {
 
-  object WarSpec {
-    def servletApi(warSpec: String): ModuleID =
-      warSpec match {
-        case "6" =>
-          "javax.servlet" % "javax.servlet-api" % "3.0.1"
-        case "7" =>
-          "javax.servlet" % "javax.servlet-api" % "3.1.0"
-        case "8" =>
-          "jakarta.servlet" % "jakarta.servlet-api" % "4.0.4"
-        // case "9" =>
-        //   "jakarta.servlet" % "jakarta.servlet-api" % "5.0.0"
-        // case "9.1" =>
-        //   "jakarta.servlet" % "jakarta.servlet-api" % "5.0.0"
-        case "10" =>
-          "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0"
-        case "11" =>
-          "jakarta.servlet" % "jakarta.servlet-api" % "6.1.0"
-        case _ =>
-          throw new Exception(s"Unsupported warSpec: ${warSpec}")
-      }
-  }
-
   object autoImport {
 
     lazy val warSpec: SettingKey[String] =
@@ -116,9 +94,6 @@ object WebappComponentsPlugin extends AutoPlugin {
     Seq(
       Seq(
         warSpec := "11",
-        libraryDependencies ++= Seq(
-          WarSpec.servletApi(warSpec.value) % Provided
-        ),
         warResources := warResourcesTask.value
       ),
       settingsFor(Runtime)
