@@ -28,8 +28,8 @@ object WebappComponentsPlugin extends AutoPlugin {
 
   object autoImport {
 
-    lazy val servletSpec: SettingKey[String] =
-      settingKey[String]("servlet spec version")
+    lazy val warSpec: SettingKey[String] =
+      settingKey[String]("jakarta spec version")
 
     @transient
     lazy val warResources: TaskKey[Map[String, File]] =
@@ -86,25 +86,6 @@ object WebappComponentsPlugin extends AutoPlugin {
 
   override val projectSettings: Seq[Setting[?]] = {
 
-    val servletApi: Initialize[ModuleID] =
-      Def.setting {
-        val servletApi: ModuleID =
-          servletSpec.value match {
-            case "3.0" =>
-              "javax.servlet" % "javax.servlet-api" % "3.0.1"
-            case "3.1" =>
-              "javax.servlet" % "javax.servlet-api" % "3.1.0"
-            case "4.0" =>
-              "jakarta.servlet" % "jakarta.servlet-api" % "4.0.4"
-            case "6.0" =>
-              "jakarta.servlet" % "jakarta.servlet-api" % "6.0.0"
-            case "6.1" =>
-              "jakarta.servlet" % "jakarta.servlet-api" % "6.1.0"
-          }
-
-        servletApi % Provided
-      }
-
     val warResourcesTask: Initialize[Task[Map[String, File]]] =
       (Compile / sourceDirectory)
         .map(_ / "webapp")
@@ -112,8 +93,7 @@ object WebappComponentsPlugin extends AutoPlugin {
 
     Seq(
       Seq(
-        servletSpec := "6.1",
-        libraryDependencies += servletApi.value,
+        warSpec := "11",
         warResources := warResourcesTask.value
       ),
       settingsFor(Runtime)

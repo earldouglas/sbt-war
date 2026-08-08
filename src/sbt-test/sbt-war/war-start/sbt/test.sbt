@@ -1,5 +1,5 @@
 enablePlugins(SbtWar)
-
+libraryDependencies += "jakarta.servlet" % "jakarta.servlet-api" % "6.1.0" % Provided
 warPort := 8082
 
 ////////////////////////////////////////////////////////////////////////
