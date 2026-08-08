@@ -86,7 +86,11 @@ public class WebappComponentsRunner {
     mkdir(configuration.emptyClassesDir);
 
     final Tomcat tomcat = new Tomcat();
+    tomcat.setPort(configuration.port);
     tomcat.setHostname(configuration.hostname);
+    tomcat.setBaseDir(
+        new File(System.getProperty("user.dir") + "/target/tomcat." + configuration.port)
+            .getCanonicalPath());
 
     final Connector connector = new Connector();
     connector.setPort(configuration.port);
