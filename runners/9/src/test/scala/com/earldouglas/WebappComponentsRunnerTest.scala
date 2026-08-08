@@ -2,41 +2,21 @@ package com.earldouglas
 
 import munit.FunSuite
 
-class WarRunnerTest extends FunSuite {
+class WebappComponentsRunnerTest extends FunSuite {
+
+  lazy val configuration: WebappComponentsConfiguration =
+    WebappComponentsConfiguration
+      .load("src/test/resources/webapp-components.properties")
+
+  lazy val runner: WebappComponentsRunner =
+    new WebappComponentsRunner(configuration)
 
   override def beforeAll(): Unit = {
+    runner.start.run()
+  }
 
-    val thread: Thread =
-      new Thread {
-        override def run(): Unit = {
-          WarRunner.main(Array("src/test/resources/war.properties"))
-        }
-      }
-    thread.start()
-
-    def isOpen(port: Int): Boolean =
-      try {
-        import java.net.Socket
-        import java.net.InetSocketAddress
-        val socket: Socket = new Socket()
-        socket.connect(new InetSocketAddress("localhost", port))
-        socket.close()
-        true
-      } catch {
-        case e: Exception => false
-      }
-
-    def awaitOpen(port: Int, retries: Int = 40): Unit =
-      if (!isOpen(port)) {
-        if (retries > 0) {
-          Thread.sleep(250)
-          awaitOpen(port, retries - 1)
-        } else {
-          throw new Exception(s"expected port $port to be open")
-        }
-      }
-
-    awaitOpen(8807)
+  override def afterAll(): Unit = {
+    runner.stop.run()
   }
 
   test("/foo.html") {
@@ -54,7 +34,7 @@ class WarRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8807/foo.html",
+        url = "http://localhost:8903/foo.html",
         headers = Map.empty,
         body = None
       )
@@ -84,7 +64,7 @@ class WarRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8807/bar.html",
+        url = "http://localhost:8903/bar.html",
         headers = Map.empty,
         body = None
       )
@@ -114,7 +94,7 @@ class WarRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8807/baz/raz.css",
+        url = "http://localhost:8903/baz/raz.css",
         headers = Map.empty,
         body = None
       )

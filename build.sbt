@@ -104,6 +104,21 @@ lazy val warRunner_8 =
       libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "9.0.113"
     )
 
+lazy val warRunner_9 =
+  project
+    .in(file("runners/9"))
+    .settings(
+      name := "war-runner",
+      version := warRunnerVersion("9").value,
+      Compile / compile / javacOptions += "-g:lines",
+      crossPaths := false, // exclude Scala suffix from artifact names
+      autoScalaLibrary := false, // exclude scala-library from dependencies
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "10.0.27",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % "10.0.27",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "10.0.27",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "10.0.27"
+    )
+
 lazy val warRunner_10 =
   project
     .in(file("runners/10"))
@@ -168,6 +183,7 @@ lazy val sbtWar =
       warRunner_6,
       warRunner_7,
       warRunner_8,
+      warRunner_9,
       warRunner_10,
       warRunner_11
     )
