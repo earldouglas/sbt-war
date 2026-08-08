@@ -5,7 +5,7 @@
 ```mermaid
 flowchart TB
 
-    webappRunner[webapp-runner]
+    warRunner[war-runner]
 
     subgraph war
       SbtWar
