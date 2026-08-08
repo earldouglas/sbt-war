@@ -86,7 +86,11 @@ public class WebappComponentsRunner {
     mkdir(configuration.emptyClassesDir);
 
     final Tomcat tomcat = new Tomcat();
+    tomcat.setPort(configuration.port);
     tomcat.setHostname(configuration.hostname);
+    tomcat.setBaseDir(
+        new File(System.getProperty("user.dir") + "/target/tomcat." + configuration.port)
+            .getCanonicalPath());
 
     final Connector connector = new Connector();
     connector.setPort(configuration.port);
@@ -95,10 +99,10 @@ public class WebappComponentsRunner {
     final Context context =
         tomcat.addWebapp(configuration.contextPath, configuration.emptyWebappDir.getAbsolutePath());
 
-    final WebResourceRoot webResourceRoot = new StandardRoot(context);
-
     ((StandardJarScanFilter) ((StandardJarScanner) context.getJarScanner()).getJarScanFilter())
         .setDefaultTldScan(false);
+
+    final WebResourceRoot webResourceRoot = new StandardRoot(context);
 
     webResourceRoot.addJarResources(
         new DirResourceSet(
