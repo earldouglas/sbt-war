@@ -51,7 +51,7 @@ public class WarConfiguration {
    *
    * <pre>
    * hostname=localhost
-   * port=8985
+   * port=8911
    * warFile=path/to/warfile.war
    * contextPath=
    * </pre>
