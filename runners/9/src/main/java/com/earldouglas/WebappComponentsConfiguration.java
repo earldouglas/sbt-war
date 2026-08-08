@@ -95,7 +95,7 @@ public class WebappComponentsConfiguration {
    *
    * <pre>
    * hostname=localhost
-   * port=8984
+   * port=8909
    * contextPath=
    * emptyWebappDir=target/empty
    * emptyClassesDir=target/empty
