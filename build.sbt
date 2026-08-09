@@ -172,7 +172,7 @@ lazy val sbtWar =
       scriptedBufferLog := false,
       watchSources ++= { (sourceDirectory.value ** "*").get },
       scriptedLaunchOpts += "-DtemplateDirectory=" + (sourceDirectory.value / "test" / "template"),
-      scriptedBatchExecution := true,
+      scriptedBatchExecution := false,
       scriptedParallelInstances := 8,
       //
       // sbt-buildinfo
