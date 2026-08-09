@@ -232,7 +232,7 @@ pkgs.mkShell {
         scalafmtCheckAll \
         "scalafixAll --check" \
         +test \
-        publishLocal \
+        +publishLocal \
         +scripted
     }
 
