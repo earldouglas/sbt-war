@@ -64,8 +64,8 @@ $ export SONATYPE_PASSWORD=...
 Set the old and new versions:
 
 ```
-$ export OLD_VERSION=5.1.2
-$ export NEW_VERSION=5.2.0
+$ export OLD_VERSION=5.2.1
+$ export NEW_VERSION=6.0.0
 ```
 
 Update the documentation:
