@@ -1,7 +1,7 @@
 enablePlugins(SbtWar)
 warSpec := "7"
 libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0" % Provided
-warPort := 8807
+warPort := (new java.net.ServerSocket(0)).getLocalPort()
 
 ////////////////////////////////////////////////////////////////////////
 
