@@ -11,7 +11,7 @@ public class WarConfiguration {
   /** The hostname to use for the server, e.g. "localhost" */
   public final String hostname;
 
-  /** The port to use for the server, e.g. 8080 */
+  /** The port to use for the server, e.g. 8090 */
   public final int port;
 
   /**
@@ -51,7 +51,7 @@ public class WarConfiguration {
    *
    * <pre>
    * hostname=localhost
-   * port=8909
+   * port=8090
    * warFile=path/to/warfile.war
    * contextPath=
    * </pre>
@@ -78,7 +78,7 @@ public class WarConfiguration {
    * Construct a new configuration from the given parameters.
    *
    * @param hostname the hostname to use for the server, e.g. "localhost"
-   * @param port the port to use for the server, e.g. 8080
+   * @param port the port to use for the server, e.g. 8090
    * @param contextPath the context path to use for the webapp, e.g. ""
    * @param warFile the WAR file to serve
    */

@@ -14,7 +14,7 @@ public class WebappComponentsConfiguration {
   /** The hostname to use for the server, e.g. "localhost" */
   public final String hostname;
 
-  /** The port to use for the server, e.g. 8080 */
+  /** The port to use for the server, e.g. 9060 */
   public final int port;
 
   /**
@@ -95,7 +95,7 @@ public class WebappComponentsConfiguration {
    *
    * <pre>
    * hostname=localhost
-   * port=8906
+   * port=9060
    * contextPath=
    * emptyWebappDir=target/empty
    * emptyClassesDir=target/empty
@@ -131,7 +131,7 @@ public class WebappComponentsConfiguration {
    * Construct a new configuration from the given parameters.
    *
    * @param hostname the hostname to use for the server, e.g. "localhost"
-   * @param port the port to use for the server, e.g. 8080
+   * @param port the port to use for the server, e.g. 9060
    * @param contextPath the context path to use for the webapp, e.g. ""
    * @param emptyWebappDir an empty directory that Tomcat requires to run
    * @param emptyClassesDir an empty directory that Tomcat requires to run

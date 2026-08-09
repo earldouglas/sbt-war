@@ -13,7 +13,7 @@ class WarConfigurationTest extends FunSuite {
 
     assertEquals(
       obtained = configuration.port,
-      expected = 8807
+      expected = 8070
     )
 
     assertEquals(

@@ -20,7 +20,7 @@ class WebappComponentsConfigurationTest extends FunSuite {
 
     assertEquals(
       obtained = configuration.port,
-      expected = 8910
+      expected = 9100
     )
 
     assertEquals(

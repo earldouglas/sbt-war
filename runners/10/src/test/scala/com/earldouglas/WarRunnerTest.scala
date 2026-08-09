@@ -36,7 +36,7 @@ class WarRunnerTest extends FunSuite {
         }
       }
 
-    awaitOpen(8810)
+    awaitOpen(8100)
   }
 
   test("/foo.html") {
@@ -54,7 +54,7 @@ class WarRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8810/foo.html",
+        url = "http://localhost:8100/foo.html",
         headers = Map.empty,
         body = None
       )
@@ -84,7 +84,7 @@ class WarRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8810/bar.html",
+        url = "http://localhost:8100/bar.html",
         headers = Map.empty,
         body = None
       )
@@ -114,7 +114,7 @@ class WarRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8810/baz/raz.css",
+        url = "http://localhost:8100/baz/raz.css",
         headers = Map.empty,
         body = None
       )

@@ -34,7 +34,7 @@ class WebappComponentsRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8906/foo.html",
+        url = "http://localhost:9060/foo.html",
         headers = Map.empty,
         body = None
       )
@@ -64,7 +64,7 @@ class WebappComponentsRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8906/bar.html",
+        url = "http://localhost:9060/bar.html",
         headers = Map.empty,
         body = None
       )
@@ -94,7 +94,7 @@ class WebappComponentsRunnerTest extends FunSuite {
     val obtained: HttpClient.Response =
       HttpClient.request(
         method = "GET",
-        url = "http://localhost:8906/baz/raz.css",
+        url = "http://localhost:9060/baz/raz.css",
         headers = Map.empty,
         body = None
       )
