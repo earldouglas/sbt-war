@@ -1,6 +1,6 @@
 enablePlugins(SbtWar)
 libraryDependencies += "jakarta.servlet" % "jakarta.servlet-api" % "6.1.0" % Provided
-warPort := 8082
+warPort := (new java.net.ServerSocket(0)).getLocalPort()
 
 ////////////////////////////////////////////////////////////////////////
 
