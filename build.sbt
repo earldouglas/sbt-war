@@ -104,7 +104,7 @@ lazy val warRunner_6_0 =
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.56.0"
+      libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.57.0"
     )
 
 lazy val warRunner_6_1 =
