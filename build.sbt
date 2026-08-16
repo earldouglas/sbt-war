@@ -98,10 +98,10 @@ lazy val warRunner_8 =
       Compile / compile / javacOptions += "-g:lines",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "9.0.113",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % "9.0.113",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "9.0.113",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "9.0.113"
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "9.0.120",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % "9.0.120",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "9.0.120",
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "9.0.120"
     )
 
 lazy val warRunner_9 =
