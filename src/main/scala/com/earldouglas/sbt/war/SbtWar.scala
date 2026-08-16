@@ -44,7 +44,7 @@ object SbtWar extends AutoPlugin {
   }
 
   import autoImport._
-  import WebappComponentsPlugin.autoImport.servletSpec
+  import WebappComponentsPlugin.autoImport.warSpec
 
   override val requires: Plugins =
     WarPackagePlugin
@@ -126,9 +126,9 @@ object SbtWar extends AutoPlugin {
           .split("-")
           .toList match {
           case v :: Nil =>
-            s"""${v}_${servletSpec.value}"""
+            s"""${v}_${warSpec.value}"""
           case v :: t =>
-            s"""${v}_${servletSpec.value}-${t.mkString("-")}"""
+            s"""${v}_${warSpec.value}-${t.mkString("-")}"""
           case _ => throw new Exception("wat")
         }
 

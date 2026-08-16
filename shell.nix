@@ -228,16 +228,18 @@ pkgs.mkShell {
   shellHook = ''
     sbt-test() {
       sbt \
+        -Dsbt.server.autostart=false \
         javafmtCheckAll \
         scalafmtCheckAll \
         "scalafixAll --check" \
         +test \
-        publishLocal \
+        +publishLocal \
         +scripted
     }
 
     sbt-fmt() {
       sbt \
+        -Dsbt.server.autostart=false \
         scalafixAll \
         javafmtAll \
         scalafmtAll \
