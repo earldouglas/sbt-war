@@ -85,6 +85,8 @@ lazy val warRunner_3_1 = warRunner("3.1", "8.5.68")
 
 lazy val warRunner_4_0 = warRunner("4.0", "9.0.120")
 
+lazy val warRunner_5_0 = warRunner("5.0", "10.0.27")
+
 lazy val warRunner_6_0 = warRunner("6.0", "10.1.57")
 
 lazy val warRunner_6_1 = warRunner("6.1", "11.0.25")
@@ -123,6 +125,7 @@ lazy val sbtWar =
       warRunner_3_0,
       warRunner_3_1,
       warRunner_4_0,
+      warRunner_5_0,
       warRunner_6_0,
       warRunner_6_1
     )
