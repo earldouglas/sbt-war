@@ -134,7 +134,7 @@ sbt.version=1.12.9
 *project/plugins.sbt:*
 
 ```scala
-addSbtPlugin("com.earldouglas" % "sbt-war" % "5.2.1")
+addSbtPlugin("com.earldouglas" % "sbt-war" % "6.0.0")
 ```
 
 *build.sbt:*
@@ -142,6 +142,7 @@ addSbtPlugin("com.earldouglas" % "sbt-war" % "5.2.1")
 ```scala
 scalaVersion := "3.8.3"
 enablePlugins(SbtWar)
+libraryDependencies += "jakarta.servlet" % "jakarta.servlet-api" % "6.1.0" % Provided
 ```
 
 Add a servlet:

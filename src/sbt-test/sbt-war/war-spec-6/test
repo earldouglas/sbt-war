@@ -1,0 +1,19 @@
+# copy files from the template project
+> setup
+
+# load configuration copied from the template project
+> reload
+
+########################################################################
+
+# replace the incompatible code (jakarta) with compatible code (javax)
+$ copy-file servlet-3.0/servlet.scala src/main/scala/04-runners/servlet.scala
+
+# start the container
+> warStart
+> awaitOpen
+
+# verify that the endpoints are up
+> check
+> warStop
+> awaitClosed
