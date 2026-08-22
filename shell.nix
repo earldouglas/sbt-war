@@ -10,11 +10,11 @@ let
     let
       sbt-launch-jar =
         let
-          sbt-version = "2.0.6";
+          sbt-version = "2.0.7";
         in
         pkgs.fetchurl {
           url = "https://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/${sbt-version}/sbt-launch-${sbt-version}.jar";
-          hash = "sha256-SnDW1eUuxr+2wOEXhn5VRo2E7vnw44KNMUVu2GCjvUI=";
+          hash = "sha256-uH4NjG+XTsrgxEp8Ip+Xb+fCq2bqh5PPvdbbIJ/9PhI=";
         };
 
     in
