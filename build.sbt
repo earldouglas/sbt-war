@@ -59,68 +59,35 @@ def warRunnerVersion(servletSpec: String) =
     }
   }
 
-lazy val warRunner_3_0 =
-  project
-    .in(file("runners/3.0"))
+def warRunner(servletSpec: String, tomcatEmbedVersion: String): Project =
+  Project(
+    id = s"warRunner_${servletSpec.replaceAll("""\.""", "_")}",
+    base = file(s"runners/${servletSpec}")
+  )
     .settings(
       name := "war-runner",
-      version := warRunnerVersion("3.0").value,
+      version := warRunnerVersion(servletSpec).value,
       Compile / compile / javacOptions += "-g:lines",
+      Compile / sourceGenerators += Def.task(((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*").get.filter(_.isFile())).taskValue,
+      Test / sourceGenerators += Def.task(((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*").get.filter(_.isFile())).taskValue,
+      Test / resourceGenerators += Def.task(((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*").get.filter(_.isFile())).taskValue,
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.github.jsimone" % "webapp-runner" % "7.0.91.0"
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % tomcatEmbedVersion,
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % tomcatEmbedVersion,
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % tomcatEmbedVersion,
+      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % tomcatEmbedVersion
     )
 
-lazy val warRunner_3_1 =
-  project
-    .in(file("runners/3.1"))
-    .settings(
-      name := "war-runner",
-      version := warRunnerVersion("3.1").value,
-      Compile / compile / javacOptions += "-g:lines",
-      crossPaths := false, // exclude Scala suffix from artifact names
-      autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "8.5.68.1"
-    )
+lazy val warRunner_3_0 = warRunner("3.0", "8.5.68") // TODO use 7.0.x instead of 8.5.x
 
-lazy val warRunner_4_0 =
-  project
-    .in(file("runners/4.0"))
-    .settings(
-      name := "war-runner",
-      version := warRunnerVersion("4.0").value,
-      Compile / compile / javacOptions += "-g:lines",
-      crossPaths := false, // exclude Scala suffix from artifact names
-      autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "9.0.120.0"
-    )
+lazy val warRunner_3_1 = warRunner("3.1", "8.5.68")
 
-lazy val warRunner_6_0 =
-  project
-    .in(file("runners/6.0"))
-    .settings(
-      name := "war-runner",
-      version := warRunnerVersion("6.0").value,
-      Compile / compile / javacOptions += "-g:lines",
-      crossPaths := false, // exclude Scala suffix from artifact names
-      autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "com.heroku" % "webapp-runner" % "10.1.57.0"
-    )
+lazy val warRunner_4_0 = warRunner("4.0", "9.0.120")
 
-lazy val warRunner_6_1 =
-  project
-    .in(file("runners/6.1"))
-    .settings(
-      name := "war-runner",
-      version := warRunnerVersion("6.1").value,
-      Compile / compile / javacOptions += "-g:lines",
-      crossPaths := false, // exclude Scala suffix from artifact names
-      autoScalaLibrary := false, // exclude scala-library from dependencies
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % "11.0.25",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-el" % "11.0.25",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-jasper" % "11.0.25",
-      libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % "11.0.25"
-    )
+lazy val warRunner_6_0 = warRunner("6.0", "10.1.57")
+
+lazy val warRunner_6_1 = warRunner("6.1", "11.0.25")
 
 lazy val sbtWar =
   project
