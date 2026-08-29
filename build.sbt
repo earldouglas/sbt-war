@@ -23,7 +23,7 @@ ThisBuild / scalacOptions ++= {
 }
 
 ThisBuild / scalaVersion := "2.12.21"
-ThisBuild / crossScalaVersions := Seq("2.12.21", "3.8.4")
+ThisBuild / crossScalaVersions := Seq(scalaVersion.value, "3.8.4", "3.9.0")
 ThisBuild / javafmtFormatterCompatibleJavaVersion := 17
 
 // Scalafix
@@ -121,9 +121,11 @@ lazy val sbtWar =
       pluginCrossBuild / sbtVersion := {
         CrossVersion.partialVersion(scalaVersion.value) match {
           case Some((2, 12)) =>
-            (pluginCrossBuild / sbtVersion).value
-          case Some((3, _)) =>
-            "2.0.0"
+            "1.13.0"
+          case Some((3, 8)) =>
+            "2.0.9"
+          case Some((3, 9)) =>
+            "2.1.0-M3"
           case v =>
             throw new Exception(s"Unsupported Scala version ${v}")
         }
