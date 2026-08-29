@@ -23,7 +23,7 @@ ThisBuild / scalacOptions ++= {
 }
 
 ThisBuild / scalaVersion := "2.12.21"
-ThisBuild / crossScalaVersions := Seq("2.12.21", "3.8.4")
+ThisBuild / crossScalaVersions := Seq("2.12.21", "3.9.0")
 ThisBuild / javafmtFormatterCompatibleJavaVersion := 17
 
 // Scalafix
@@ -59,7 +59,10 @@ def warRunnerVersion(servletSpec: String) =
     }
   }
 
-def warRunner(servletSpec: String, tomcatEmbedVersion: String): Project =
+def warRunner(
+    servletSpec: String,
+    tomcatEmbedVersion: String
+): Project =
   Project(
     id = s"warRunner_${servletSpec.replaceAll("""\.""", "_")}",
     base = file(s"runners/${servletSpec}")
@@ -68,9 +71,24 @@ def warRunner(servletSpec: String, tomcatEmbedVersion: String): Project =
       name := "war-runner",
       version := warRunnerVersion(servletSpec).value,
       Compile / compile / javacOptions += "-g:lines",
-      Compile / sourceGenerators += Def.task(((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*").get.filter(_.isFile())).taskValue,
-      Test / sourceGenerators += Def.task(((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*").get.filter(_.isFile())).taskValue,
-      Test / resourceGenerators += Def.task(((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*").get.filter(_.isFile())).taskValue,
+      Compile / sourceGenerators += Def
+        .task(
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*").get
+            .filter(_.isFile())
+        )
+        .taskValue,
+      Test / sourceGenerators += Def
+        .task(
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*").get
+            .filter(_.isFile())
+        )
+        .taskValue,
+      Test / resourceGenerators += Def
+        .task(
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*").get
+            .filter(_.isFile())
+        )
+        .taskValue,
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % tomcatEmbedVersion,
@@ -79,7 +97,8 @@ def warRunner(servletSpec: String, tomcatEmbedVersion: String): Project =
       libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-websocket" % tomcatEmbedVersion
     )
 
-lazy val warRunner_3_0 = warRunner("3.0", "8.5.68") // TODO use 7.0.x instead of 8.5.x
+lazy val warRunner_3_0 =
+  warRunner("3.0", "8.5.68") // TODO use 7.0.x instead of 8.5.x
 
 lazy val warRunner_3_1 = warRunner("3.1", "8.5.68")
 
