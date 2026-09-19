@@ -23,7 +23,7 @@ ThisBuild / scalacOptions ++= {
 }
 
 ThisBuild / scalaVersion := "2.12.21"
-ThisBuild / crossScalaVersions := Seq("2.12.21", "3.8.4")
+ThisBuild / crossScalaVersions := Seq("2.12.21", "3.9.0")
 ThisBuild / javafmtFormatterCompatibleJavaVersion := 17
 
 // Scalafix
