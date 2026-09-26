@@ -8,7 +8,7 @@ let
 
   derivations = builtins.fetchGit {
     url = "https://git.earldouglas.com/earldouglas/derivations.git";
-    rev = "f51ff3ba66bd0fa32c9ec6246a39a0d2623fc90f";
+    rev = "dea734ec0060884de222afd122180817e123f7b5";
   };
 
   metals = (import "${derivations}/metals/default.nix") {
