@@ -11,12 +11,13 @@ object Compat:
   type PackageFile = HashedVirtualFileRef
 
   val toPackageFile: Initialize[Task[JavaFile => PackageFile]] =
-    Def.task:
-      (x: JavaFile) =>
-        val conv: FileConverter = fileConverter.value
-        conv.toVirtualFile(x.toPath())
+    Def.task: (x: JavaFile) =>
+      val conv: FileConverter = fileConverter.value
+      conv.toVirtualFile(x.toPath())
 
-  def fromPackageFile(file: TaskKey[HashedVirtualFileRef]): Initialize[Task[File]] =
+  def fromPackageFile(
+      file: TaskKey[HashedVirtualFileRef]
+  ): Initialize[Task[File]] =
     Def.task:
       fileConverter.value
         .toPath(file.value)
@@ -38,8 +39,7 @@ object Compat:
 
   def classpathFiles(c: Configuration): Initialize[Task[Seq[File]]] =
     Def.task:
-      (c / fullClasspath)
-        .value
+      (c / fullClasspath).value
         .map(_.data)
         .map(fileConverter.value.toPath(_))
         .map(_.toFile())

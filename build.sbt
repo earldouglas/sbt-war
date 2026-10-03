@@ -22,8 +22,8 @@ ThisBuild / scalacOptions ++= {
   }
 }
 
-ThisBuild / scalaVersion := "2.12.21"
-ThisBuild / crossScalaVersions := Seq(scalaVersion.value, "3.8.4", "3.9.0")
+ThisBuild / scalaVersion := "3.8.4"
+ThisBuild / crossScalaVersions := Seq("2.12.21", scalaVersion.value, "3.9.0")
 ThisBuild / javafmtFormatterCompatibleJavaVersion := 17
 
 // Scalafix
@@ -70,22 +70,23 @@ def warRunner(
     .settings(
       name := "war-runner",
       version := warRunnerVersion(servletSpec).value,
+      target := baseDirectory.value / "target", //s"war-runner-${servletSpec}",
       Compile / compile / javacOptions += "-g:lines",
       Compile / sourceGenerators += Def
         .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*").get
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*").get()
             .filter(_.isFile())
         )
         .taskValue,
       Test / sourceGenerators += Def
         .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*").get
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*").get()
             .filter(_.isFile())
         )
         .taskValue,
       Test / resourceGenerators += Def
         .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*").get
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*").get()
             .filter(_.isFile())
         )
         .taskValue,
@@ -123,7 +124,7 @@ lazy val sbtWar =
           case Some((2, 12)) =>
             "1.13.0"
           case Some((3, 8)) =>
-            "2.0.9"
+            "2.0.10"
           case Some((3, 9)) =>
             "2.1.0-M3"
           case v =>
@@ -133,7 +134,6 @@ lazy val sbtWar =
       //
       // scripted-plugin
       scriptedBufferLog := false,
-      watchSources ++= { (sourceDirectory.value ** "*").get },
       scriptedLaunchOpts += "-DtemplateDirectory=" + (sourceDirectory.value / "test" / "template"),
       scriptedBatchExecution := true,
       scriptedParallelInstances := 8,
@@ -158,17 +158,17 @@ ThisBuild / developers := List(
     id = "earldouglas",
     name = "James Earl Douglas",
     email = "james@earldouglas.com",
-    url = url("https://earldouglas.com/")
+    url = uri("https://earldouglas.com/")
   )
 )
 ThisBuild / homepage := Some(
-  url("https://github.com/earldouglas/sbt-war")
+  uri("https://github.com/earldouglas/sbt-war")
 )
 ThisBuild / licenses := List(
-  "BSD New" -> url("https://opensource.org/licenses/BSD-3-Clause")
+  "BSD New" -> uri("https://opensource.org/licenses/BSD-3-Clause")
 )
 ThisBuild / organizationHomepage := Some(
-  url("https://earldouglas.com/")
+  uri("https://earldouglas.com/")
 )
 ThisBuild / organizationName := "James Earl Douglas"
 ThisBuild / pomIncludeRepository := { _ => false }
@@ -182,7 +182,7 @@ ThisBuild / publishTo := {
 }
 ThisBuild / scmInfo := Some(
   ScmInfo(
-    url("https://github.com/earldouglas/sbt-war"),
+    uri("https://github.com/earldouglas/sbt-war"),
     "scm:git@github.com:earldouglas/sbt-war.git"
   )
 )
