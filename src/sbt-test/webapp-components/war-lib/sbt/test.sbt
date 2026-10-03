@@ -2,6 +2,38 @@ enablePlugins(WebappComponentsPlugin)
 
 ////////////////////////////////////////////////////////////////////////
 
+lazy val scalaLibraryDotJar: Def.Initialize[String] =
+  Def.setting {
+    CrossVersion.partialVersion(sbtVersion.value) match {
+      case Some((1, 13)) =>
+        s"scala-library-${scalaVersion.value}.jar"
+      case Some((2, 0)) =>
+        s"scala-library-${scalaVersion.value}.jar"
+      case Some((2, 1)) =>
+        "scala-library.jar"
+      case v =>
+        throw new Exception(s"Unsupported sbt version ${v}")
+    }
+  }
+
+lazy val dependencyJars: Def.Initialize[Set[String]] =
+  Def.setting {
+    Set(
+      "cats-core_3-2.9.0.jar",
+      "cats-effect-kernel_3-3.5.4.jar",
+      "cats-effect-std_3-3.5.4.jar",
+      "cats-effect_3-3.5.4.jar",
+      "cats-kernel_3-2.9.0.jar",
+      "h2-2.2.224.jar",
+      "logback-classic-1.5.8.jar",
+      "logback-core-1.5.8.jar",
+      scalaLibraryDotJar.value,
+      "scala-logging_3-3.9.5.jar",
+      s"scala3-library_3-${scalaVersion.value}.jar",
+      "slf4j-api-2.0.15.jar"
+    )
+  }
+
 TaskKey[Unit]("check-no-export-jars") := {
 
   val log: sbt.internal.util.ManagedLogger = streams.value.log
@@ -19,10 +51,14 @@ TaskKey[Unit]("check-no-export-jars") := {
       log.error(name)
       sys.error(
         s"""|${name}:
-            |  expected:
-            |${expected.mkString("    - ", "\n    - ", "")}
-            |  obtained:
-            |${obtained.mkString("    - ", "\n    - ", "")}
+            |  scala version: ${scalaVersion.value}
+            |  sbt version: ${sbtVersion.value}
+            |  sizes match: ${!sizesDoNotMatch}
+            |  mappings match: ${!mappingsDoNotMatch}
+            |  missing:
+            |${(expected -- obtained.keys.toSet).mkString("    - ", "\n    - ", "")}
+            |  unexpected:
+            |${(obtained.keys.toSet -- expected).mkString("    - ", "\n    - ", "")}
             |""".stripMargin
       )
     } else {
@@ -31,21 +67,7 @@ TaskKey[Unit]("check-no-export-jars") := {
 
   }
 
-  val expected: Set[String] =
-    Set(
-      "cats-core_3-2.9.0.jar",
-      "cats-effect-kernel_3-3.5.4.jar",
-      "cats-effect-std_3-3.5.4.jar",
-      "cats-effect_3-3.5.4.jar",
-      "cats-kernel_3-2.9.0.jar",
-      "h2-2.2.224.jar",
-      "logback-classic-1.5.8.jar",
-      "logback-core-1.5.8.jar",
-      "scala-library-2.13.16.jar",
-      "scala-logging_3-3.9.5.jar",
-      "scala3-library_3-3.7.4.jar",
-      "slf4j-api-2.0.15.jar"
-    )
+  val expected: Set[String] = dependencyJars.value
 
   assertContains(
     name = "WebappComponentsPlugin: warLib (exportJars := false)",
@@ -71,10 +93,14 @@ TaskKey[Unit]("check-export-jars") := {
       log.error(name)
       sys.error(
         s"""|${name}:
-            |  expected:
-            |${expected.mkString("    - ", "\n    - ", "")}
-            |  obtained:
-            |${obtained.mkString("    - ", "\n    - ", "")}
+            |  scala version: ${scalaVersion.value}
+            |  sbt version: ${sbtVersion.value}
+            |  sizes match: ${!sizesDoNotMatch}
+            |  mappings match: ${!mappingsDoNotMatch}
+            |  missing:
+            |${(expected -- obtained.keys.toSet).mkString("    - ", "\n    - ", "")}
+            |  unexpected:
+            |${(obtained.keys.toSet -- expected).mkString("    - ", "\n    - ", "")}
             |""".stripMargin
       )
     } else {
@@ -83,22 +109,7 @@ TaskKey[Unit]("check-export-jars") := {
 
   }
 
-  val expected: Set[String] =
-    Set(
-      "cats-core_3-2.9.0.jar",
-      "cats-effect-kernel_3-3.5.4.jar",
-      "cats-effect-std_3-3.5.4.jar",
-      "cats-effect_3-3.5.4.jar",
-      "cats-kernel_3-2.9.0.jar",
-      "h2-2.2.224.jar",
-      "logback-classic-1.5.8.jar",
-      "logback-core-1.5.8.jar",
-      "scala-library-2.13.16.jar",
-      "scala-logging_3-3.9.5.jar",
-      "scala3-library_3-3.7.4.jar",
-      "slf4j-api-2.0.15.jar",
-      "test_3-0.1.0-SNAPSHOT.jar"
-    )
+  val expected: Set[String] = dependencyJars.value + "test_3-0.1.0-SNAPSHOT.jar"
 
   assertContains(
     name = "WebappComponentsPlugin: warLib (exportJars := true)",
