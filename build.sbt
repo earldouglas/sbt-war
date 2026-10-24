@@ -23,7 +23,11 @@ ThisBuild / scalacOptions ++= {
 }
 
 ThisBuild / scalaVersion := "3.8.4"
-ThisBuild / crossScalaVersions := Seq("2.12.21", scalaVersion.value, "3.9.0")
+ThisBuild / crossScalaVersions := Seq(
+  "2.12.21",
+  scalaVersion.value,
+  "3.9.0"
+)
 ThisBuild / javafmtFormatterCompatibleJavaVersion := 17
 
 // Scalafix
@@ -70,25 +74,28 @@ def warRunner(
     .settings(
       name := "war-runner",
       version := warRunnerVersion(servletSpec).value,
-      target := baseDirectory.value / "target", //s"war-runner-${servletSpec}",
+      target := baseDirectory.value / ".." / ".." / "target" / "out" / name.value / servletSpec,
       Compile / compile / javacOptions += "-g:lines",
       Compile / run / mainClass := None,
       Compile / packageBin / mainClass := None,
       Compile / sourceGenerators += Def
         .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*").get()
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*")
+            .get()
             .filter(_.isFile())
         )
         .taskValue,
       Test / sourceGenerators += Def
         .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*").get()
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*")
+            .get()
             .filter(_.isFile())
         )
         .taskValue,
       Test / resourceGenerators += Def
         .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*").get()
+          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*")
+            .get()
             .filter(_.isFile())
         )
         .taskValue,

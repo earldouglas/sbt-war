@@ -11,7 +11,7 @@ class WebappComponentsConfigurationTest extends FunSuite {
 
     val configuration: WebappComponentsConfiguration =
       WebappComponentsConfiguration
-        .load("../../runner/src/test/resources/webapp-components.properties")
+        .load("runner/src/test/resources/webapp-components.properties")
 
     assertEquals(
       obtained = configuration.hostname,
@@ -37,7 +37,7 @@ class WebappComponentsConfigurationTest extends FunSuite {
       obtained = configuration.resourceMap.asScala.toMap,
       expected = List("bar.html", "foo.html", "baz/raz.css")
         .map(x =>
-          (x -> new File(s"../../src/test/fakeproject/src/main/webapp/${x}"))
+          (x -> new File(s"src/test/fakeproject/src/main/webapp/${x}"))
         )
         .toMap
     )

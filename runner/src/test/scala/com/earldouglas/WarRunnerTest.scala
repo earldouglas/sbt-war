@@ -9,7 +9,7 @@ class WarRunnerTest extends FunSuite {
     val thread: Thread =
       new Thread {
         override def run(): Unit = {
-          WarRunner.main(Array("../../runner/src/test/resources/war.properties"))
+          WarRunner.main(Array("runner/src/test/resources/war.properties"))
         }
       }
     thread.start()

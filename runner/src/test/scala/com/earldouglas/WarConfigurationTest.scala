@@ -9,7 +9,7 @@ class WarConfigurationTest extends FunSuite {
   test("load") {
 
     val configuration: WarConfiguration =
-      WarConfiguration.load("../../runner/src/test/resources/war.properties")
+      WarConfiguration.load("runner/src/test/resources/war.properties")
 
     assertEquals(
       obtained = configuration.port,
@@ -18,7 +18,7 @@ class WarConfigurationTest extends FunSuite {
 
     assertEquals(
       obtained = configuration.warFile,
-      expected = new File("../../src/test/fakeproject/src/main/webapp")
+      expected = new File("src/test/fakeproject/src/main/webapp")
     )
   }
 }

@@ -6,7 +6,7 @@ class WebappComponentsRunnerTest extends FunSuite {
 
   lazy val configuration: WebappComponentsConfiguration =
     WebappComponentsConfiguration
-      .load("../../runner/src/test/resources/webapp-components.properties")
+      .load("runner/src/test/resources/webapp-components.properties")
 
   lazy val runner: WebappComponentsRunner =
     new WebappComponentsRunner(configuration)
