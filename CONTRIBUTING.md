@@ -64,18 +64,33 @@ $ export SONATYPE_PASSWORD=...
 Set the old and new versions:
 
 ```
-$ export OLD_VERSION=5.2.1
-$ export NEW_VERSION=5.2.2
+$ export PRIOR_VERSION=5.2.1
+$ export OLD_VERSION=5.2.2
+$ export NEW_VERSION=5.2.3
 ```
 
 Update the documentation:
 
 ```
 $ git checkout -b v$NEW_VERSION
+$ sed -i "s/$OLD_VERSION/$NEW_VERSION/g" CONTRIBUTING.md
+$ sed -i "s/$PRIOR_VERSION/$OLD_VERSION/g" CONTRIBUTING.md
+$ git add CONTRIBUTING.md
 $ sed -i "s/$OLD_VERSION/$NEW_VERSION/g" README.md
 $ git add README.md
 $ git commit -m "sbt-war: $OLD_VERSION -> $NEW_VERSION"
 $ git push origin v$NEW_VERSION
+```
+
+Merge the branch into `main`.
+
+Create a tag:
+
+```
+$ git checkout main
+$ git pull
+$ git tag $NEW_VERSION -m "Version $NEW_VERSION"
+$ git push --tags origin
 ```
 
 Create a release in Sonatype:
@@ -92,14 +107,3 @@ Wait for it to be synced to Maven Central:
 
 * <https://repo1.maven.org/maven2/com/earldouglas/sbt-war_2.12_1.0/>
 * <https://repo1.maven.org/maven2/com/earldouglas/sbt-war_sbt2_3/>
-
-Merge the branch into `main`.
-
-Create a tag:
-
-```
-$ git checkout main
-$ git pull
-$ git tag $NEW_VERSION -m "Version $NEW_VERSION"
-$ git push --tags origin
-```
