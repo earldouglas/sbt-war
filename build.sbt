@@ -26,7 +26,8 @@ ThisBuild / scalaVersion := "3.8.4"
 ThisBuild / crossScalaVersions := Seq(
   "2.12.21",
   scalaVersion.value,
-  "3.9.0"
+  "3.9.0",
+  "3.10.0"
 )
 ThisBuild / javafmtFormatterCompatibleJavaVersion := 17
 
@@ -154,6 +155,8 @@ lazy val sbtWar =
           case Some((3, 8)) =>
             "2.0.11"
           case Some((3, 9)) =>
+            "2.1.0-RC1"
+          case Some((3, 10)) =>
             "2.1.0-RC1"
           case v =>
             throw new Exception(s"Unsupported Scala version ${v}")
