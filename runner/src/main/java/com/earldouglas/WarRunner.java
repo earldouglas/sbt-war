@@ -94,7 +94,17 @@ public class WarRunner {
             try {
 
               connector.stop();
+
+              try {
+                  final Object loader = context.getLoader().getClassLoader();
+                  final java.lang.reflect.Method method = loader.getClass().getMethod("setClearReferencesObjectStreamClassCaches", boolean.class);
+                  method.invoke(loader, false);
+              } catch (NoSuchMethodException e) {
+              } catch (Exception e) {
+              }
+
               context.stop();
+
               tomcat.stop();
 
               connector.destroy();
