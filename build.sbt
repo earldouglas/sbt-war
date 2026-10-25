@@ -124,7 +124,7 @@ lazy val sbtWar =
           case Some((2, 12)) =>
             "1.13.0"
           case Some((3, 8)) =>
-            "2.0.10"
+            "2.0.11"
           case Some((3, 9)) =>
             "2.1.0-M3"
           case v =>
