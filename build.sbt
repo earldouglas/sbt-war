@@ -154,7 +154,7 @@ lazy val sbtWar =
           case Some((3, 8)) =>
             "2.0.11"
           case Some((3, 9)) =>
-            "2.1.0-M3"
+            "2.1.0-RC1"
           case v =>
             throw new Exception(s"Unsupported Scala version ${v}")
         }
