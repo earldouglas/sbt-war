@@ -59,6 +59,9 @@ public class WarRunner {
 
     final Context context =
         tomcat.addWebapp(configuration.contextPath, configuration.warFile.getAbsolutePath());
+
+    context.setParentClassLoader(getClass().getClassLoader());
+
     ((StandardContext) context).setUnpackWAR(true);
 
     ((StandardJarScanFilter) ((StandardJarScanner) context.getJarScanner()).getJarScanFilter())
