@@ -93,6 +93,16 @@ def warRunner(
         )
         .taskValue,
       Test / scalacOptions += "-Wconf:cat=deprecation:silent",
+      Test / testGrouping := Def.uncached {
+        val defined = (Test / definedTests).value
+        defined.map { test =>
+          Tests.Group(
+            name = test.name,
+            tests = Seq(test),
+            runPolicy = Tests.SubProcess(ForkOptions())
+          )
+        }
+      },
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % tomcatEmbedVersion,
