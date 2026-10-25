@@ -11,7 +11,8 @@ import sbt._
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.concurrent.atomic.AtomicReference
+import java.util.UUID
+import scala.collection.concurrent.TrieMap
 import scala.sys.process.{Process => ScalaProcess}
 
 /** The top-level plugin to be used by default. From the required
@@ -20,6 +21,9 @@ import scala.sys.process.{Process => ScalaProcess}
   * components and a packaged WAR file.
   */
 object SbtWar extends AutoPlugin {
+
+  private val containerInstances: TrieMap[UUID, ScalaProcess] =
+    TrieMap.empty[UUID, ScalaProcess]
 
   implicit class Exscape(val x: File) {
     def getEscapedPath(): String =
@@ -38,6 +42,7 @@ object SbtWar extends AutoPlugin {
     lazy val warJoin = taskKey[Unit]("join container")
     lazy val warStop = taskKey[Unit]("stop container")
     lazy val warStart = taskKey[Unit]("quickstart container")
+    lazy val warProcess = settingKey[UUID]("war container instance")
     @transient
     lazy val warForkOptions =
       taskKey[ForkOptions]("container fork options")
@@ -52,17 +57,14 @@ object SbtWar extends AutoPlugin {
   override val projectConfigurations: Seq[Configuration] =
     Seq(War)
 
-  private lazy val containerInstance =
-    new AtomicReference[Option[ScalaProcess]](None)
-
-  private def stopContainerInstance(log: String => Unit): Unit =
-    containerInstance
-      .getAndSet(None)
-      .foreach { p =>
-        log("[sbt-war] Stopping server")
-        p.destroy()
-        p.exitValue() // block until the process exits
-      }
+  private def stopContainerInstance(
+      p: ScalaProcess,
+      log: String => Unit
+  ): Int = {
+    log("[sbt-war] Stopping server")
+    p.destroy()
+    p.exitValue() // block until the process exits
+  }
 
   private val runnerJars: Initialize[Task[Seq[File]]] =
     Compat.managedJars
@@ -90,9 +92,16 @@ object SbtWar extends AutoPlugin {
           .toFile()
       }
 
-      stopContainerInstance(streams.value.log.info(_))
+      val stream: TaskStreams = streams.value
 
-      streams.value.log.info("[sbt-war] Starting server")
+      containerInstances
+        .get(warProcess.value)
+        .foreach { p =>
+          stopContainerInstance(p, stream.log.info(_))
+        }
+
+      stream.log.info("[sbt-war] Starting server")
+
       val process: ScalaProcess =
         Fork.java.fork(
           warForkOptions.value,
@@ -103,19 +112,41 @@ object SbtWar extends AutoPlugin {
             runnerConfigFile.getPath()
           )
         )
-      containerInstance.set(Some(process))
+
+      containerInstances.put(warProcess.value, process)
     }
 
-  private val joinWar: Initialize[Task[Unit]] =
-    Def.task(containerInstance.get.map(_.exitValue()))
+  private val joinWar: Initialize[Task[Option[Int]]] =
+    Def.task {
+      containerInstances
+        .get(warProcess.value)
+        .map { p =>
+          p.exitValue()
+        }
+    }
 
-  private val stopWar: Initialize[Task[Unit]] =
-    Def.task(stopContainerInstance(streams.value.log.info(_)))
+  private val stopWar: Initialize[Task[Option[Int]]] =
+    Def.task {
+      val stream: TaskStreams = streams.value
+      containerInstances
+        .get(warProcess.value)
+        .map { p =>
+          stopContainerInstance(p, stream.log.info(_))
+        }
+    }
 
   private val onLoadSetting: Initialize[State => State] =
     Def.setting {
       (Global / onLoad).value
-        .compose(_.addExitHook(stopContainerInstance(println(_))))
+        .compose { state =>
+          state.addExitHook {
+            containerInstances
+              .get(warProcess.value)
+              .map { p =>
+                stopContainerInstance(p, println(_))
+              }
+          }
+        }
     }
 
   private val runnerLibrary: Initialize[ModuleID] =
@@ -176,9 +207,16 @@ object SbtWar extends AutoPlugin {
           .toFile()
       }
 
-      stopContainerInstance(streams.value.log.info(_))
+      val stream: TaskStreams = streams.value
 
-      streams.value.log.info("[sbt-war] Quickstarting server")
+      containerInstances
+        .get(warProcess.value)
+        .foreach { p =>
+          stopContainerInstance(p, stream.log.info(_))
+        }
+
+      stream.log.info("[sbt-war] Quickstarting server")
+
       val process: ScalaProcess =
         Fork.java.fork(
           warForkOptions.value,
@@ -189,7 +227,8 @@ object SbtWar extends AutoPlugin {
             runnerConfigFile.getPath()
           )
         )
-      containerInstance.set(Some(process))
+
+      containerInstances.put(warProcess.value, process)
     }
 
   def settingsFor(c: Configuration): Seq[Setting[?]] =
@@ -206,11 +245,12 @@ object SbtWar extends AutoPlugin {
         Global / onLoad := onLoadSetting.value,
         libraryDependencies += runnerLibrary.value,
         warForkOptions := forkOptions.value,
-        warJoin := joinWar.value,
+        warJoin := joinWar.value.getOrElse(()),
         warPort := 8080,
         warContextPath := "",
         warStartPackage := startWarFromPackage.value,
-        warStop := stopWar.value
+        warStop := stopWar.value.getOrElse(()),
+        warProcess := UUID.randomUUID()
       ),
       settingsFor(Runtime),
       settingsFor(Test)
