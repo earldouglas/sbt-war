@@ -72,6 +72,8 @@ def warRunner(
       version := warRunnerVersion(servletSpec).value,
       target := baseDirectory.value / "target", //s"war-runner-${servletSpec}",
       Compile / compile / javacOptions += "-g:lines",
+      Compile / run / mainClass := None,
+      Compile / packageBin / mainClass := None,
       Compile / sourceGenerators += Def
         .task(
           ((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*").get()
