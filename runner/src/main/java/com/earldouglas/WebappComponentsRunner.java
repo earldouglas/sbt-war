@@ -99,6 +99,8 @@ public class WebappComponentsRunner {
     final Context context =
         tomcat.addWebapp(configuration.contextPath, configuration.emptyWebappDir.getAbsolutePath());
 
+    context.setParentClassLoader(getClass().getClassLoader());
+
     ((StandardJarScanFilter) ((StandardJarScanner) context.getJarScanner()).getJarScanFilter())
         .setDefaultTldScan(false);
 
