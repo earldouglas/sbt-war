@@ -99,7 +99,15 @@ def warRunner(
           Tests.Group(
             name = test.name,
             tests = Seq(test),
-            runPolicy = Tests.SubProcess(ForkOptions())
+            runPolicy = Tests.SubProcess(
+              ForkOptions().withRunJVMOptions(
+                Vector(
+                  "--add-opens=java.base/java.io=ALL-UNNAMED",
+                  "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                  "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
+                )
+              )
+            )
           )
         }
       },
