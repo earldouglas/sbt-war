@@ -92,6 +92,7 @@ def warRunner(
             .filter(_.isFile())
         )
         .taskValue,
+      Test / scalacOptions += "-Wconf:cat=deprecation:silent",
       crossPaths := false, // exclude Scala suffix from artifact names
       autoScalaLibrary := false, // exclude scala-library from dependencies
       libraryDependencies += "org.apache.tomcat.embed" % "tomcat-embed-core" % tomcatEmbedVersion,
@@ -133,6 +134,7 @@ lazy val sbtWar =
             throw new Exception(s"Unsupported Scala version ${v}")
         }
       },
+      Test / scalacOptions += "-Wconf:cat=deprecation:silent",
       //
       // scripted-plugin
       scriptedBufferLog := false,
