@@ -87,7 +87,7 @@ copied from *src/main/webapp* to to the root of the WAR file.
 ## Getting started from a template
 
 ```
-$ sbt new https://git.earldouglas.com/earldouglas/sbt-war.g8.git
+$ sbt new https://gitlab.com/earldouglas/sbt-war.g8.git
 
 name [My Web Project]: hello sbt-war
 
