@@ -99,5 +99,5 @@ Create a tag and merge the branch into `main`:
 ```
 $ git tag $NEW_VERSION -m "Version $NEW_VERSION"
 $ git push --tags origin
-$ git push origin $NEW_VERSION:main
+$ git push origin v$NEW_VERSION:main
 ```
