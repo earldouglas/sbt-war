@@ -64,7 +64,6 @@ $ export SONATYPE_PASSWORD=...
 Set the old and new versions:
 
 ```
-$ export PRIOR_VERSION=5.2.1
 $ export OLD_VERSION=5.2.2
 $ export NEW_VERSION=5.2.3
 ```
@@ -73,9 +72,6 @@ Update the documentation:
 
 ```
 $ git checkout -b v$NEW_VERSION
-$ sed -i "s/$OLD_VERSION/$NEW_VERSION/g" CONTRIBUTING.md
-$ sed -i "s/$PRIOR_VERSION/$OLD_VERSION/g" CONTRIBUTING.md
-$ git add CONTRIBUTING.md
 $ sed -i "s/$OLD_VERSION/$NEW_VERSION/g" README.md
 $ git add README.md
 $ git commit -m "sbt-war: $OLD_VERSION -> $NEW_VERSION"
