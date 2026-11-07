@@ -78,16 +78,6 @@ $ git commit -m "sbt-war: $OLD_VERSION -> $NEW_VERSION"
 $ git push origin v$NEW_VERSION
 ```
 
-Merge the branch into `main`.
-
-Create a tag:
-
-```
-$ git checkout main
-$ git pull
-$ git tag $NEW_VERSION -m "Version $NEW_VERSION"
-$ git push --tags origin
-```
 
 Create a release in Sonatype:
 
@@ -103,3 +93,11 @@ Wait for it to be synced to Maven Central:
 
 * <https://repo1.maven.org/maven2/com/earldouglas/sbt-war_2.12_1.0/>
 * <https://repo1.maven.org/maven2/com/earldouglas/sbt-war_sbt2_3/>
+
+Create a tag and merge the branch into `main`:
+
+```
+$ git tag $NEW_VERSION -m "Version $NEW_VERSION"
+$ git push --tags origin
+$ git push origin $NEW_VERSION:main
+```
