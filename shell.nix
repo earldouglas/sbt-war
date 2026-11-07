@@ -7,8 +7,8 @@ let
   jdk = pkgs.openjdk17;
 
   derivations = builtins.fetchGit {
-    url = "https://git.earldouglas.com/earldouglas/derivations.git";
-    rev = "dea734ec0060884de222afd122180817e123f7b5";
+    url = "https://gitlab.com/earldouglas/derivations.git";
+    rev = "44146c8bb7dec004f2cb2adc2da392c7d7182fd5";
   };
 
   metals = (import "${derivations}/metals/default.nix") {
