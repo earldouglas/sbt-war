@@ -1,1 +1,1 @@
-addSbtPlugin("com.earldouglas" % "sbt-war" % "0.1.0-SNAPSHOT")
+addSbtPlugin("com.earldouglas" % "sbt-war" % sys.props("plugin.version"))

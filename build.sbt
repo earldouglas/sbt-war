@@ -5,27 +5,39 @@ ThisBuild / scalacOptions ++=
     "-feature",
     "-deprecation"
   )
-ThisBuild / scalacOptions ++= {
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 12)) =>
-      Seq(
-        "-Xsource:3",
-        "-Ywarn-unused-import",
-        s"-P:semanticdb:sourceroot:${baseDirectory.value}"
-      )
-    case Some((3, _)) =>
-      Seq(
-        "-Wunused:imports"
-      )
-    case v =>
-      throw new Exception(s"Unsupported Scala version ${v}")
+lazy val compilerSettings = Seq(
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 12)) =>
+        Seq(
+          "-Xsource:3",
+          "-Ywarn-unused-import",
+          s"-P:semanticdb:sourceroot:${baseDirectory.value}"
+        )
+      case Some((3, _)) =>
+        Seq(
+          "-Wunused:imports"
+        )
+      case v =>
+        throw new Exception(s"Unsupported Scala version ${v}")
+    }
+  },
+  libraryDependencies += {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 12)) =>
+        "org.scala-lang" % "scala-library" % scalaVersion.value % Test
+      case Some((3, _)) =>
+        "org.scala-lang" % "scala3-library_3" % scalaVersion.value % Test
+      case v =>
+        throw new Exception(s"Unsupported Scala version: ${v}")
+    }
   }
-}
+)
 
-ThisBuild / scalaVersion := "3.8.4"
+ThisBuild / scalaVersion := "3.9.0"
 ThisBuild / crossScalaVersions := Seq(
   "2.12.21",
-  scalaVersion.value
+  "3.9.0"
 )
 ThisBuild / javafmtFormatterCompatibleJavaVersion := 17
 
@@ -38,17 +50,11 @@ ThisBuild / libraryDependencies +=
   ("org.scalameta" %% "munit" % "1.3.6" % Test)
     .exclude("org.scala-lang", "scala3_library_3")
     .exclude("org.scala-lang", "scala-library")
-ThisBuild / libraryDependencies += {
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 12)) =>
-      "org.scala-lang" % "scala-library" % scalaVersion.value % Test
-    case Some((3, _)) =>
-      "org.scala-lang" % "scala3-library_3" % scalaVersion.value % Test
-    case v =>
-      throw new Exception(s"Unsupported Scala version: ${v}")
-  }
-}
 ThisBuild / Test / fork := true
+// Embedded-server suites share fixed ports and require a fresh JVM per group.
+Global / concurrentRestrictions += Tags.limit(Tags.ForkedTestGroup, 1)
+// Shared runner sources must not be compiled concurrently with different classpaths.
+Global / concurrentRestrictions += Tags.limit(Tags.Compile, 1)
 
 def warRunnerVersion(servletSpec: String) =
   Def.setting {
@@ -70,6 +76,7 @@ def warRunner(
     id = s"warRunner_${servletSpec.replaceAll("""\.""", "_")}",
     base = file(s"runners/${servletSpec}")
   )
+    .settings(compilerSettings)
     .settings(
       name := "war-runner",
       version := warRunnerVersion(servletSpec).value,
@@ -77,28 +84,14 @@ def warRunner(
       Compile / compile / javacOptions += "-g:lines",
       Compile / run / mainClass := None,
       Compile / packageBin / mainClass := None,
-      Compile / sourceGenerators += Def
-        .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java") ** "*")
-            .get()
-            .filter(_.isFile())
-        )
-        .taskValue,
-      Test / sourceGenerators += Def
-        .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala") ** "*")
-            .get()
-            .filter(_.isFile())
-        )
-        .taskValue,
-      Test / resourceGenerators += Def
-        .task(
-          ((baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources") ** "*")
-            .get()
-            .filter(_.isFile())
-        )
-        .taskValue,
+      Compile / unmanagedSourceDirectories +=
+        baseDirectory.value / ".." / ".." / "runner" / "src" / "main" / "java",
+      Test / unmanagedSourceDirectories +=
+        baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "scala",
+      Test / unmanagedResourceDirectories +=
+        baseDirectory.value / ".." / ".." / "runner" / "src" / "test" / "resources",
       Test / scalacOptions += "-Wconf:cat=deprecation:silent",
+      Test / testPersistentWorker := false,
       Test / testGrouping := Def.uncached {
         val defined = (Test / definedTests).value
         defined.map { test =>
@@ -143,15 +136,20 @@ lazy val sbtWar =
     .in(file("."))
     .enablePlugins(SbtPlugin)
     .enablePlugins(BuildInfoPlugin)
+    .settings(compilerSettings)
     .settings(
       name := "sbt-war",
+      scalacOptions ++= {
+        if (scalaBinaryVersion.value == "2.12") Seq("-release:8")
+        else Nil
+      },
       sbtPlugin := true,
       pluginCrossBuild / sbtVersion := {
         CrossVersion.partialVersion(scalaVersion.value) match {
           case Some((2, 12)) =>
             "1.13.0"
-          case Some((3, 8)) =>
-            "2.0.11"
+          case Some((3, _)) =>
+            "2.1.0"
           case v =>
             throw new Exception(s"Unsupported Scala version ${v}")
         }
@@ -161,6 +159,17 @@ lazy val sbtWar =
       // scripted-plugin
       scriptedBufferLog := false,
       scriptedLaunchOpts += "-DtemplateDirectory=" + (sourceDirectory.value / "test" / "template"),
+      scriptedLaunchOpts += "-Dplugin.version=" + version.value,
+      scriptedDependencies := scriptedDependencies
+        .dependsOn(
+          warRunner_3_0 / publishLocal,
+          warRunner_3_1 / publishLocal,
+          warRunner_4_0 / publishLocal,
+          warRunner_5_0 / publishLocal,
+          warRunner_6_0 / publishLocal,
+          warRunner_6_1 / publishLocal
+        )
+        .value,
       scriptedBatchExecution := true,
       scriptedParallelInstances := 8,
       //

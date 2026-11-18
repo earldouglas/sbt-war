@@ -1,4 +1,7 @@
-TaskKey[Unit]("setup") := {
+@transient
+lazy val setup = taskKey[Unit]("Copy the shared scripted fixture.")
+
+setup := {
   sbt.io.IO.copyDirectory(
     new java.io.File(sys.props("templateDirectory")),
     baseDirectory.value

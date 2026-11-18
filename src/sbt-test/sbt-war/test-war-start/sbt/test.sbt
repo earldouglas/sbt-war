@@ -4,7 +4,10 @@ warPort := 8081
 
 ////////////////////////////////////////////////////////////////////////
 
-TaskKey[Unit]("await-open") := {
+@transient
+lazy val awaitOpen = taskKey[Unit]("Run the awaitOpen scripted assertion.")
+
+awaitOpen := {
 
   def isOpen(port: Int): Boolean =
     try {
@@ -31,7 +34,10 @@ TaskKey[Unit]("await-open") := {
   awaitOpen(warPort.value)
 }
 
-TaskKey[Unit]("await-closed") := {
+@transient
+lazy val awaitClosed = taskKey[Unit]("Run the awaitClosed scripted assertion.")
+
+awaitClosed := {
 
   def isOpen(port: Int): Boolean =
     try {
@@ -58,7 +64,7 @@ TaskKey[Unit]("await-closed") := {
   awaitClosed(warPort.value)
 }
 
-def check(
+def checkResponse(
     log: sbt.internal.util.ManagedLogger,
     warPort: Int,
     path: String,
@@ -172,9 +178,12 @@ def check(
 
 }
 
-TaskKey[Unit]("check-test-200") := {
+@transient
+lazy val checkTest200 = taskKey[Unit]("Run the checkTest200 scripted assertion.")
 
-  check(
+checkTest200 := {
+
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/test",
@@ -184,9 +193,12 @@ TaskKey[Unit]("check-test-200") := {
 
 }
 
-TaskKey[Unit]("check-test-404") := {
+@transient
+lazy val checkTest404 = taskKey[Unit]("Run the checkTest404 scripted assertion.")
 
-  check(
+checkTest404 := {
+
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/test",

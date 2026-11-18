@@ -4,7 +4,10 @@ warPort := 8083
 
 ////////////////////////////////////////////////////////////////////////
 
-TaskKey[Unit]("await-open") := {
+@transient
+lazy val awaitOpen = taskKey[Unit]("Run the awaitOpen scripted assertion.")
+
+awaitOpen := {
 
   def isOpen(port: Int): Boolean =
     try {
@@ -31,7 +34,10 @@ TaskKey[Unit]("await-open") := {
   awaitOpen(warPort.value)
 }
 
-TaskKey[Unit]("await-closed") := {
+@transient
+lazy val awaitClosed = taskKey[Unit]("Run the awaitClosed scripted assertion.")
+
+awaitClosed := {
 
   def isOpen(port: Int): Boolean =
     try {
@@ -58,7 +64,7 @@ TaskKey[Unit]("await-closed") := {
   awaitClosed(warPort.value)
 }
 
-def check(
+def checkResponse(
     log: sbt.internal.util.ManagedLogger,
     warPort: Int,
     path: String,
@@ -172,11 +178,14 @@ def check(
 
 }
 
-TaskKey[Unit]("check") := {
+@transient
+lazy val check = taskKey[Unit]("Run the check scripted assertion.")
+
+check := {
 
   import scala.io.Source
 
-  check(
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/",
@@ -188,7 +197,7 @@ TaskKey[Unit]("check") := {
     )
   )
 
-  check(
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/count",
@@ -201,7 +210,7 @@ TaskKey[Unit]("check") := {
     )
   )
 
-  check(
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/count",
@@ -214,7 +223,7 @@ TaskKey[Unit]("check") := {
     )
   )
 
-  check(
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/count",
@@ -227,7 +236,7 @@ TaskKey[Unit]("check") := {
     )
   )
 
-  check(
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/count",
@@ -240,7 +249,7 @@ TaskKey[Unit]("check") := {
     )
   )
 
-  check(
+  checkResponse(
     log = streams.value.log,
     warPort = warPort.value,
     path = "/hello",

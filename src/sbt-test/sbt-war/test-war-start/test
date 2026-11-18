@@ -12,7 +12,7 @@
 > awaitOpen
 
 # verify that the test endpoint is now up
-> checkTest-200
--> checkTest-404
+> checkTest200
+-> checkTest404
 > warStop
 > awaitClosed

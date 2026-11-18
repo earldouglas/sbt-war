@@ -4,40 +4,14 @@ import munit.FunSuite
 
 class WarRunnerTest extends FunSuite {
 
-  override def beforeAll(): Unit = {
+  lazy val configuration: WarConfiguration =
+    WarConfiguration.load("runner/src/test/resources/war.properties")
 
-    val thread: Thread =
-      new Thread {
-        override def run(): Unit = {
-          WarRunner.main(Array("runner/src/test/resources/war.properties"))
-        }
-      }
-    thread.start()
+  lazy val runner: WarRunner = new WarRunner(configuration)
 
-    def isOpen(port: Int): Boolean =
-      try {
-        import java.net.Socket
-        import java.net.InetSocketAddress
-        val socket: Socket = new Socket()
-        socket.connect(new InetSocketAddress("localhost", port))
-        socket.close()
-        true
-      } catch {
-        case e: Exception => false
-      }
+  override def beforeAll(): Unit = runner.start.run()
 
-    def awaitOpen(port: Int, retries: Int = 40): Unit =
-      if (!isOpen(port)) {
-        if (retries > 0) {
-          Thread.sleep(250)
-          awaitOpen(port, retries - 1)
-        } else {
-          throw new Exception(s"expected port $port to be open")
-        }
-      }
-
-    awaitOpen(8080)
-  }
+  override def afterAll(): Unit = runner.stop.run()
 
   test("/foo.html") {
 

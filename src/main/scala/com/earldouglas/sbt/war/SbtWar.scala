@@ -9,6 +9,7 @@ import sbt.Plugins
 import sbt._
 
 import java.io.File
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.UUID
@@ -38,9 +39,13 @@ object SbtWar extends AutoPlugin {
     lazy val War = config("war").hide
     lazy val warPort = settingKey[Int]("container port")
     lazy val warContextPath = settingKey[String]("context path")
+    @transient
     lazy val warStartPackage = taskKey[Unit]("start container")
+    @transient
     lazy val warJoin = taskKey[Unit]("join container")
+    @transient
     lazy val warStop = taskKey[Unit]("stop container")
+    @transient
     lazy val warStart = taskKey[Unit]("quickstart container")
     lazy val warProcess = settingKey[UUID]("war container instance")
     @transient
@@ -78,7 +83,7 @@ object SbtWar extends AutoPlugin {
           (Compile / target).value / "war.properties"
 
         Files
-          .writeString(
+          .write(
             Paths.get(configurationFile.getPath()),
             s"""|hostname=localhost
                 |port=${warPort.value}
@@ -87,7 +92,7 @@ object SbtWar extends AutoPlugin {
                  .fromPackageFile(pkg)
                  .value
                  .getEscapedPath()}
-                |""".stripMargin
+                |""".stripMargin.getBytes(StandardCharsets.UTF_8)
           )
           .toFile()
       }
@@ -194,7 +199,7 @@ object SbtWar extends AutoPlugin {
           (Compile / target).value / "webapp-components.properties"
 
         Files
-          .writeString(
+          .write(
             Paths.get(configurationFile.getPath()),
             s"""|hostname=localhost
                 |port=${warPort.value}
@@ -202,7 +207,7 @@ object SbtWar extends AutoPlugin {
                 |emptyWebappDir=${emptyDir.getEscapedPath()}
                 |emptyClassesDir=${emptyDir.getEscapedPath()}
                 |resourceMap=${resourceMapString}
-                |""".stripMargin
+                |""".stripMargin.getBytes(StandardCharsets.UTF_8)
           )
           .toFile()
       }

@@ -2,7 +2,10 @@ enablePlugins(WebappComponentsPlugin)
 
 ////////////////////////////////////////////////////////////////////////
 
-TaskKey[Unit]("check-no-export-jars") := {
+@transient
+lazy val checkNoExportJars = taskKey[Unit]("Run the checkNoExportJars scripted assertion.")
+
+checkNoExportJars := {
 
   val log: sbt.internal.util.ManagedLogger = streams.value.log
 
@@ -97,7 +100,10 @@ TaskKey[Unit]("check-no-export-jars") := {
   )
 }
 
-TaskKey[Unit]("check-export-jars") := {
+@transient
+lazy val checkExportJars = taskKey[Unit]("Run the checkExportJars scripted assertion.")
+
+checkExportJars := {
 
   val log: sbt.internal.util.ManagedLogger = streams.value.log
 

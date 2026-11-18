@@ -2,7 +2,10 @@ enablePlugins(WebappComponentsPlugin)
 
 ////////////////////////////////////////////////////////////////////////
 
-TaskKey[Unit]("check") := {
+@transient
+lazy val check = taskKey[Unit]("Run the check scripted assertion.")
+
+check := {
 
   val log: sbt.internal.util.ManagedLogger = streams.value.log
 
